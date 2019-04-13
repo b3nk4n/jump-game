@@ -1,0 +1,265 @@
+package de.bsautermeister.jump.screens;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.concurrent.LinkedBlockingQueue;
+
+import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.physics.WorldContactListener;
+import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.scenes.Hud;
+import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Item;
+import de.bsautermeister.jump.sprites.ItemDef;
+import de.bsautermeister.jump.sprites.Mario;
+import de.bsautermeister.jump.sprites.Mushroom;
+import de.bsautermeister.jump.utils.GdxUtils;
+
+public class GameScreen extends ScreenAdapter {
+    private final JumpGame game;
+    private TextureAtlas atlas;
+
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private final Hud hud;
+
+    private TmxMapLoader mapLoader;
+    private TiledMap map;
+    private OrthogonalTiledMapRenderer mapRenderer;
+    private int mapWidth;
+    private int tilePixelWidth;
+    private float mapPixelWidth;
+
+    private final World world;
+    private final Box2DDebugRenderer box2DDebugRenderer;
+
+    private final Mario mario;
+
+    private final WorldCreator worldCreator;
+
+    private Array<Item> items;
+    private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+
+    public GameScreen(JumpGame game) {
+        this.game = game;
+        this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
+
+        this.camera = new OrthographicCamera();
+        this.viewport = new StretchViewport(GameConfig.WORLD_WIDTH / GameConfig.PPM, GameConfig.WORLD_HEIGHT / GameConfig.PPM, camera);
+        this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        this.hud = new Hud(game.getBatch());
+
+        this.mapLoader = new TmxMapLoader();
+
+        this.map = mapLoader.load("maps/level01.tmx");
+        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / GameConfig.PPM, game.getBatch());
+        this.mapWidth = map.getProperties().get("width", Integer.class);
+        this.tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
+        this.mapPixelWidth = mapWidth * tilePixelWidth / GameConfig.PPM;
+
+        this.world = new World(new Vector2(0,-10f), true);
+        this.box2DDebugRenderer = new Box2DDebugRenderer();
+        this.worldCreator = new WorldCreator(new GameCallbacks() {
+
+            @Override
+            public void coinHit(Vector2 position) {
+                spawnItem(new ItemDef(position, Mushroom.class));
+            }
+
+        }, world, map, atlas);
+
+        mario = new Mario(world, atlas);
+
+        world.setContactListener(new WorldContactListener());
+
+        items = new Array<Item>();
+        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+
+        reset();
+    }
+
+    private void reset() {
+        game.getMusicPlayer().play();
+    }
+
+    public void spawnItem(ItemDef itemDef) {
+        itemsToSpawn.add(itemDef);
+    }
+
+    public void handleSpawingItems() {
+        if (itemsToSpawn.isEmpty()) {
+            return;
+        }
+
+        ItemDef itemDef = itemsToSpawn.poll();
+        if (itemDef.getType() == Mushroom.class) {
+            items.add(new Mushroom(world, map, atlas, itemDef.getPosition().x, itemDef.getPosition().y));
+        }
+    }
+
+    public void update(float delta) {
+        handleInput(delta);
+        handleSpawingItems();
+
+        world.step(1 / 60f, 6, 2);
+
+        mario.update(delta);
+        checkPlayerInBounds();
+
+        for (Enemy enemy : worldCreator.getEnemies()) {
+            enemy.update(delta);
+
+            if (enemy.getX() < mario.getX() + 256 / GameConfig.PPM) {
+                enemy.setActive(true);
+            }
+        }
+
+        for (Item item : items) {
+            item.update(delta);
+        }
+
+        hud.update(delta);
+
+        upateCameraPosition();
+        camera.update();
+
+        mapRenderer.setView(camera);
+
+        if (mario.getState() == Mario.State.DEAD) {
+            game.getMusicPlayer().stop();
+        }
+    }
+
+    private void checkPlayerInBounds() {
+        float x = mario.getBody().getPosition().x;
+        if (x - mario.getBody().getFixtureList().get(0).getShape().getRadius() < 0) {
+            mario.getBody().setTransform(mario.getBody().getFixtureList().get(0).getShape().getRadius(),
+                    mario.getBody().getPosition().y, 0);
+
+        } else if (x + mario.getBody().getFixtureList().get(0).getShape().getRadius() > mapPixelWidth) {
+            mario.getBody().setTransform(mapPixelWidth - mario.getBody().getFixtureList().get(0).getShape().getRadius(),
+                    mario.getBody().getPosition().y, 0);
+        }
+    }
+
+    private void upateCameraPosition() {
+        if (mario.getState() == Mario.State.DEAD) {
+            return;
+        }
+
+        // snap camera position to the PPM pixel grid, otherwise there are rendering artifacts
+        camera.position.x = (float) Math.round(mario.getBody().getPosition().x * GameConfig.PPM) / GameConfig.PPM;
+        //camera.position.x = mario.getBody().getPosition().x; // no snapping runs smoother
+
+        // check camera in bounds
+        if (camera.position.x - viewport.getWorldWidth() / 2 < 0) {
+            camera.position.x = viewport.getWorldWidth() / 2;
+        } else if (camera.position.x + viewport.getWorldWidth() / 2 > mapPixelWidth) {
+            camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
+            camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
+        }
+    }
+
+    private void handleInput(float delta) {
+        if (mario.getState() == Mario.State.DEAD) {
+            return;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)
+                && mario.getState() != Mario.State.JUMPING && mario.getState() != Mario.State.FALLING) {
+            mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
+        }
+
+        boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        boolean leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        if (rightPressed && mario.getBody().getLinearVelocity().x <= 2) {
+            mario.getBody().applyLinearImpulse(new Vector2(0.1f, 0), mario.getBody().getWorldCenter(), true);
+        }
+        if (leftPressed && mario.getBody().getLinearVelocity().x >= -2) {
+            mario.getBody().applyLinearImpulse(new Vector2(-0.1f, 0), mario.getBody().getWorldCenter(), true);
+        }
+        if (!leftPressed && ! rightPressed) {
+            mario.getBody().setLinearVelocity(mario.getBody().getLinearVelocity().x * 0.8f, mario.getBody().getLinearVelocity().y);
+        }
+    }
+
+    @Override
+    public void render(float delta) {
+        update(delta);
+
+        GdxUtils.clearScreen(Color.BLACK);
+
+        mapRenderer.render();
+        box2DDebugRenderer.render(world, camera.combined);
+
+        SpriteBatch batch = game.getBatch();
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        renderGame(delta);
+        batch.end();
+
+        batch.setProjectionMatrix(hud.getStage().getCamera().combined);
+        renderHud();
+
+        if (isGameOver()) { // TODO possible to move this to update method?
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, false);
+    }
+
+    private void renderHud() {
+        hud.getStage().draw();
+    }
+
+    private void renderGame(float delta) {
+        mario.draw(game.getBatch());
+
+        for (Enemy enemy : worldCreator.getEnemies()) {
+            enemy.draw(game.getBatch());
+        }
+
+        for (Item item : items) {
+            item.draw(game.getBatch());
+        }
+    }
+
+    @Override
+    public void dispose() {
+        map.dispose();
+        mapRenderer.dispose();
+        world.dispose();
+        box2DDebugRenderer.dispose();
+        hud.dispose();
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
+    }
+
+    public boolean isGameOver() {
+        return mario.getState() == Mario.State.DEAD && mario.getStateTimer() > 3f;
+    }
+}
