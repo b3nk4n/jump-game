@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.scenes;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,17 +12,19 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.sprites.Mario;
 
 public class Hud implements Disposable {
     private final Stage stage;
     private final Viewport viewport;
 
-    private int worldTimer;
-    private float timeCount;
-    private static int score;
+    private Mario mario;
+
+    private int currentTTL;
+    private int currentScore;
 
     private Label countDownLabel;
-    private static Label scoreLabel;
+    private Label scoreLabel;
     private Label timeLabel;
     private Label levelLabel;
     private Label worldLabel;
@@ -31,10 +32,11 @@ public class Hud implements Disposable {
 
     private Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
-    public Hud(SpriteBatch batch) {
-        this.worldTimer = 300;
-        this.timeCount = 0;
-        this.score = 0;
+    public Hud(SpriteBatch batch, Mario mario) {
+        this.mario = mario;
+
+        this.currentTTL = 300;
+        this.currentScore = 0;
 
         this.viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
         this.stage = new Stage(viewport, batch);
@@ -47,8 +49,8 @@ public class Hud implements Disposable {
         table.setFillParent(true);
         table.top();
 
-        countDownLabel = new Label(getFormattedCountDown(worldTimer), labelStyle);
-        scoreLabel = new Label(getFormattedScore(score), labelStyle);
+        countDownLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
+        scoreLabel = new Label(getFormattedScore(currentScore), labelStyle);
         timeLabel = new Label("TIME", labelStyle);
         levelLabel = new Label("1-1", labelStyle);
         worldLabel = new Label("WORLD", labelStyle);
@@ -75,18 +77,24 @@ public class Hud implements Disposable {
     }
 
     public void update(float delta) {
-        timeCount += delta;
+        updateScore();
+        updateTimeToLive();
+    }
 
-        if (timeCount > 1) {
-            worldTimer--;
-            countDownLabel.setText(getFormattedCountDown(worldTimer));
-            timeCount = 0;
+    private void updateScore() {
+        int score = mario.getScore();
+        if (currentScore != score) {
+            currentScore = score;
+            scoreLabel.setText(getFormattedScore(currentScore));
         }
     }
 
-    public static void addScore(int value) { // TODO make it non-static, and actually store the score outside of the HUD (move score and time to Mario class?)
-        score += value;
-        scoreLabel.setText(getFormattedScore(score));
+    private void updateTimeToLive() {
+        int ttl = (int)Math.ceil(mario.getTimeToLive());
+        if (currentTTL != ttl) {
+            currentTTL = ttl;
+            countDownLabel.setText(getFormattedCountDown(currentTTL));
+        }
     }
 
     private static String getFormattedCountDown(int worldTimer) {

@@ -65,7 +65,6 @@ public class GameScreen extends ScreenAdapter {
         this.camera = new OrthographicCamera();
         this.viewport = new StretchViewport(GameConfig.WORLD_WIDTH / GameConfig.PPM, GameConfig.WORLD_HEIGHT / GameConfig.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
-        this.hud = new Hud(game.getBatch());
 
         this.mapLoader = new TmxMapLoader();
 
@@ -88,6 +87,8 @@ public class GameScreen extends ScreenAdapter {
         this.enemies = worldCreator.createEnemies();
 
         mario = new Mario(world, atlas);
+
+        this.hud = new Hud(game.getBatch(), mario);
 
         world.setContactListener(new WorldContactListener());
 

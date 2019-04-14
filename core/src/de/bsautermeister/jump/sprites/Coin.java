@@ -45,6 +45,6 @@ public class Coin extends InteractiveTileObject {
         sound.play();
 
         getCell().setTile(tileSet.getTile(BLANK_COIN_IDX));
-        Hud.addScore(100);
+        mario.addScore(100);
     }
 }

@@ -22,6 +22,9 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 
 public class Mario extends Sprite {
+
+    public static final float INITAL_TTL = 300;
+
     private World world;
     private Body body;
 
@@ -29,15 +32,14 @@ public class Mario extends Sprite {
         FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD
     }
 
-    private State currentState;
-    private State previousState;
-    private float stateTimer;
+    private GameObjectState<State> state;
+
     private boolean runningRight;
 
     private TextureRegion marioStand;
     private TextureRegion marioDead;
     private Animation<TextureRegion> marioRun;
-    private Animation<TextureRegion> marioJump; // TODO is actually just 1 frame
+    private Animation<TextureRegion> marioJump; // is actually just 1 frame
 
     private TextureRegion bigMarionStand;
     private TextureRegion bigMarioJump;
@@ -52,12 +54,12 @@ public class Mario extends Sprite {
     private boolean isDead;
     private boolean deadAnimationStarted = false;
 
+    private float timeToLive;
+    private int score;
+
     public Mario(World world, TextureAtlas atlas) {
         this.world = world;
-
-        currentState = State.STANDING;
-        previousState = State.STANDING;
-        stateTimer = 0;
+        state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
 
         setBounds(0, 0, 16 / GameConfig.PPM, 16 / GameConfig.PPM);
@@ -104,9 +106,15 @@ public class Mario extends Sprite {
         defineBody(startPostion);
 
         setRegion(marioStand);
+
+        timeToLive = INITAL_TTL;
+        score = 0;
     }
 
     public void update(float delta) {
+        state.upate(delta);
+        timeToLive -= delta;
+
         if (isBig) {
             setPosition(body.getPosition().x - getWidth() / 2,
                     body.getPosition().y - getHeight() / 2 - 6 / GameConfig.PPM);
@@ -135,7 +143,7 @@ public class Mario extends Sprite {
         }
 
         if (isDead) {
-            if (stateTimer <= 0.5f) {
+            if (state.timer() <= 0.5f) {
                 getBody().setActive(false);
             } else if (!deadAnimationStarted) {
                 getBody().setActive(true);
@@ -184,16 +192,14 @@ public class Mario extends Sprite {
     }
 
     private TextureRegion getFrame(float delta) {
-        currentState = getState();
-
         TextureRegion textureRegion;
-        switch (currentState) {
+        switch (state.current()) {
             case DEAD:
                 textureRegion = marioDead;
                 break;
             case GROWING:
-                textureRegion = growMario.getKeyFrame(stateTimer);
-                if (growMario.isAnimationFinished(stateTimer)) {
+                textureRegion = growMario.getKeyFrame(state.timer());
+                if (growMario.isAnimationFinished(state.timer())) {
                     runGrowAnimation = false;
                 }
                 break;
@@ -201,14 +207,14 @@ public class Mario extends Sprite {
                 if (isBig) {
                     textureRegion = bigMarioJump;
                 } else {
-                    textureRegion = marioJump.getKeyFrame(stateTimer);
+                    textureRegion = marioJump.getKeyFrame(state.timer());
                 }
                 break;
             case RUNNING:
                 if (isBig) {
-                    textureRegion = bigMarioRun.getKeyFrame(stateTimer, true);
+                    textureRegion = bigMarioRun.getKeyFrame(state.timer(), true);
                 } else {
-                    textureRegion = marioRun.getKeyFrame(stateTimer, true);
+                    textureRegion = marioRun.getKeyFrame(state.timer(), true);
                 }
                 break;
             case FALLING:
@@ -226,8 +232,6 @@ public class Mario extends Sprite {
             runningRight = true;
         }
 
-        stateTimer = currentState == previousState ? stateTimer + delta : 0;
-        previousState = currentState;
         return textureRegion;
     }
 
@@ -236,7 +240,7 @@ public class Mario extends Sprite {
             return State.DEAD;
         } else if (runGrowAnimation) {
             return State.GROWING;
-        } else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && previousState == State.JUMPING)) {
+        } else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && state.was(State.JUMPING))) {
             return State.JUMPING;
         } else if (body.getLinearVelocity().y < 0) {
             return State.FALLING;
@@ -290,7 +294,7 @@ public class Mario extends Sprite {
     }
 
     public float getStateTimer() {
-        return stateTimer;
+        return state.timer();
     }
 
     public void grow() {
@@ -333,5 +337,17 @@ public class Mario extends Sprite {
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
         }
+    }
+
+    public void addScore(int value) {
+        score += value;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public float getTimeToLive() {
+        return timeToLive;
     }
 }

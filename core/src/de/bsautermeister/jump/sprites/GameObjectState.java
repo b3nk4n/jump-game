@@ -23,6 +23,10 @@ public class GameObjectState<T extends Enum<T>> {
         return current == state;
     }
 
+    public boolean was(T state) {
+        return previous == state;
+    }
+
     public void resetTimer() {
         stateTimer = 0;
     }
