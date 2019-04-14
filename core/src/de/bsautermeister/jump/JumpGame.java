@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.screens.GameScreen;
 
@@ -33,14 +34,14 @@ public class JumpGame extends Game {
     public void create() {
         batch = new SpriteBatch();
         assetManager = new AssetManager();
-        assetManager.load("audio/sounds/coin.wav", Sound.class);
-        assetManager.load("audio/sounds/bump.wav", Sound.class);
-        assetManager.load("audio/sounds/breakblock.wav", Sound.class);
-        assetManager.load("audio/sounds/powerup_spawn.wav", Sound.class);
-        assetManager.load("audio/sounds/powerup.wav", Sound.class);
-        assetManager.load("audio/sounds/stomp.wav", Sound.class);
-        assetManager.load("audio/sounds/powerdown.wav", Sound.class);
-        assetManager.load("audio/sounds/mariodie.wav", Sound.class);
+        assetManager.load(AssetPaths.Sounds.COIN, Sound.class);
+        assetManager.load(AssetPaths.Sounds.BUMP, Sound.class);
+        assetManager.load(AssetPaths.Sounds.BREAK_BLOCK, Sound.class);
+        assetManager.load(AssetPaths.Sounds.POWERUP_SPAWN, Sound.class);
+        assetManager.load(AssetPaths.Sounds.POWERUP, Sound.class);
+        assetManager.load(AssetPaths.Sounds.STOMP, Sound.class);
+        assetManager.load(AssetPaths.Sounds.POWERDOWN, Sound.class);
+        assetManager.load(AssetPaths.Sounds.MARIO_DIE, Sound.class);
         assetManager.finishLoading();
 
         musicPlayer = new MusicPlayer();

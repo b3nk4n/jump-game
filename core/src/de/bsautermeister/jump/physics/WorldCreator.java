@@ -27,13 +27,12 @@ public class WorldCreator {
 
     private final World world;
     private final TiledMap map;
-
-    private final Array<Goomba> goombas;
-    private final Array<Koopa> koopas;
+    private TextureAtlas atlas;
 
     public WorldCreator(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas) {
         this.world = world;
         this.map = map;
+        this.atlas = atlas;
 
         buildPhysicalLayer("ground", BodyDef.BodyType.StaticBody, JumpGame.GROUND_BIT);
         buildPhysicalLayer("pipes", BodyDef.BodyType.StaticBody, JumpGame.OBJECT_BIT);
@@ -44,18 +43,6 @@ public class WorldCreator {
 
         for (MapObject mapObject : map.getLayers().get("coins").getObjects().getByType(RectangleMapObject.class)) {
             new Coin(callbacks, world, map, mapObject);
-        }
-
-        goombas = new Array<Goomba>();
-        for (MapObject mapObject : map.getLayers().get("goombas").getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            goombas.add(new Goomba(world, map, atlas, rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
-        }
-
-        koopas = new Array<Koopa>();
-        for (MapObject mapObject : map.getLayers().get("koopas").getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            koopas.add(new Koopa(world, map, atlas, rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
         }
     }
 
@@ -91,10 +78,17 @@ public class WorldCreator {
         return body;
     }
 
-    public Array<Enemy> getEnemies() {
+    public Array<Enemy> createEnemies() {
         Array<Enemy> enemies = new Array<Enemy>();
-        enemies.addAll(goombas);
-        enemies.addAll(koopas);
+        for (MapObject mapObject : map.getLayers().get("goombas").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+            enemies.add(new Goomba(world, map, atlas, rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
+        }
+
+        for (MapObject mapObject : map.getLayers().get("koopas").getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+            enemies.add(new Koopa(world, map, atlas, rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
+        }
         return enemies;
     }
 }

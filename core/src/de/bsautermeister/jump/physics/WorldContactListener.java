@@ -58,14 +58,14 @@ public class WorldContactListener implements ContactListener {
                 if (fixtureA.getFilterData().categoryBits == JumpGame.ITEM_BIT) {
                     ((Item) fixtureA.getUserData()).reverseVelocity(true, false);
                 } else {
-                    ((Item) fixtureB.getUserData()).reverseVelocity(true, false); // TODO de.bsautermeister.jump.sprites.Goomba cannot be cast to de.bsautermeister.jump.sprites.Item (when enemy jumped on head)
+                    ((Item) fixtureB.getUserData()).reverseVelocity(true, false);
                 }
                 break;
             case JumpGame.ITEM_BIT | JumpGame.MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits == JumpGame.ITEM_BIT) {
                     ((Item) fixtureA.getUserData()).use((Mario) fixtureB.getUserData());
                 } else {
-                    ((Item) fixtureB.getUserData()).use((Mario) fixtureA.getUserData()); // TODO here was a crash: ClassCastException: java.lang.String cannot be cast to de.bsautermeister.jump.sprites.Mario (on head as well?)
+                    ((Item) fixtureB.getUserData()).use((Mario) fixtureA.getUserData());
                 }
                 break;
         }

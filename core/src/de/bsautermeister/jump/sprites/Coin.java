@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.scenes.Hud;
 
 public class Coin extends InteractiveTileObject {
@@ -31,14 +32,14 @@ public class Coin extends InteractiveTileObject {
     public void onHeadHit(Mario mario) {
         Sound sound;
         if (getCell().getTile().getId() == BLANK_COIN_IDX) {
-            sound = JumpGame.assetManager.get("audio/sounds/bump.wav", Sound.class); // TODO is this sound ever played? We play it from Brick class
+            sound = JumpGame.assetManager.get(AssetPaths.Sounds.BUMP, Sound.class);
         } else {
             if (getMapObject().getProperties().containsKey("mushroom")) {
                 getCallbacks().coinHit(
                         new Vector2(getBody().getPosition().x, getBody().getPosition().y + 16 / GameConfig.PPM));
-                sound = JumpGame.assetManager.get("audio/sounds/powerup_spawn.wav", Sound.class);
+                sound = JumpGame.assetManager.get(AssetPaths.Sounds.POWERUP_SPAWN, Sound.class);
             } else {
-                sound = JumpGame.assetManager.get("audio/sounds/coin.wav", Sound.class);
+                sound = JumpGame.assetManager.get(AssetPaths.Sounds.COIN, Sound.class);
             }
         }
         sound.play();

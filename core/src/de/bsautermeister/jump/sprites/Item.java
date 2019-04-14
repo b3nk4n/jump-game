@@ -11,15 +11,13 @@ import de.bsautermeister.jump.GameConfig;
 
 public abstract class Item extends Sprite {
     private World world;
-    private TiledMap tiledMap;
     protected Vector2 velocity;
     private boolean markForDestory;
     private boolean destroyed;
     private Body body;
 
-    public Item(World world, TiledMap tiledMap, float x, float y) {
+    public Item(World world, float x, float y) {
         this.world = world;
-        this.tiledMap = tiledMap;
         setPosition(x, y);
         setBounds(getX(), getY(), 16 / GameConfig.PPM, 16 / GameConfig.PPM);
         body = defineBody();
@@ -37,15 +35,8 @@ public abstract class Item extends Sprite {
         }
     }
 
-    @Override
-    public void draw(Batch batch) {
-        if (!destroyed) {
-            super.draw(batch);
-        }
-    }
-
-    public void destroy() {
-        markForDestory = true; // TODO or inside use(), similar as in Goomba/Enemy?
+    public void destroyLater() {
+        markForDestory = true;
     }
 
     public void reverseVelocity(boolean reverseX, boolean reverseY) {
@@ -61,11 +52,11 @@ public abstract class Item extends Sprite {
         return world;
     }
 
-    public TiledMap getTiledMap() {
-        return tiledMap;
-    }
-
     public Body getBody() {
         return body;
+    }
+
+    public boolean canBeRemoved() {
+        return destroyed;
     }
 }

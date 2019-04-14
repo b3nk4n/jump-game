@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 
 public class Mario extends Sprite {
@@ -177,7 +178,7 @@ public class Mario extends Sprite {
                 new Vector2(2 / GameConfig.PPM, 6 / GameConfig.PPM));
         fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
         fixtureDef.shape = headShape;
-        fixtureDef.isSensor = true; // does not collide, but provides user-data TODO but we use it in the WorldContactListner, so it does collide?
+        fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
         timeToDefineBigMario = false;
     }
@@ -272,7 +273,7 @@ public class Mario extends Sprite {
                 new Vector2(2 / GameConfig.PPM, 6 / GameConfig.PPM));
         fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
         fixtureDef.shape = headShape;
-        fixtureDef.isSensor = true; // does not collide, but provides user-data TODO but we use it in the WorldContactListner, so it does collide?
+        fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
     }
 
@@ -297,7 +298,7 @@ public class Mario extends Sprite {
         timeToDefineBigMario = true;
         isBig = true;
         setBounds(getX(), getY(), getWidth(), getHeight() * 2);
-        JumpGame.assetManager.get("audio/sounds/powerup.wav", Sound.class).play();
+        JumpGame.assetManager.get(AssetPaths.Sounds.POWERUP, Sound.class).play();
     }
 
     public void hit(Enemy enemy) {
@@ -315,7 +316,7 @@ public class Mario extends Sprite {
             isBig = false;
             timeToRedefineMario = true;
             setBounds(getX(), getY(), getWidth(), getHeight() / 2);
-            JumpGame.assetManager.get("audio/sounds/powerdown.wav", Sound.class).play();
+            JumpGame.assetManager.get(AssetPaths.Sounds.POWERDOWN, Sound.class).play();
         } else {
             kill();
         }
@@ -325,7 +326,7 @@ public class Mario extends Sprite {
         if (isDead)
             return;
 
-        JumpGame.assetManager.get("audio/sounds/mariodie.wav", Sound.class).play();
+        JumpGame.assetManager.get(AssetPaths.Sounds.MARIO_DIE, Sound.class).play();
         isDead = true;
         Filter filter = new Filter();
         filter.maskBits = JumpGame.NOTHING_BIT;

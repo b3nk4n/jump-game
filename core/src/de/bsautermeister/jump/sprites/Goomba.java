@@ -2,7 +2,6 @@ package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -18,45 +18,56 @@ import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
 
 public class Goomba extends Enemy {
-    private float stateTimer;
+
+    public enum State {
+        WALKING, STOMPED, DEAD, REMOVABLE
+    }
+
+    private GameObjectState<State> state;
+
     private Animation<TextureRegion> walkAnimation;
-    private Array<TextureRegion> frames;
-    private boolean markForDestory;
-    private boolean destroyed;
     private TextureAtlas atlas;
 
     public Goomba(World world, TiledMap map, TextureAtlas atlas, float posX, float posY) {
         super(world, map, posX, posY);
 
+        this.state = new GameObjectState<State>(State.WALKING);
+
         this.atlas = atlas;
-        frames = new Array<TextureRegion>();
+        Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
             frames.add(new TextureRegion(atlas.findRegion("goomba"), i * 16, 0, 16, 16));
         }
         walkAnimation = new Animation(0.4f, frames);
-        stateTimer = 0;
         setBounds(getX(), getY(), 16 / GameConfig.PPM, 16 / GameConfig.PPM);
-        markForDestory = false;
-        destroyed = false;
     }
 
     @Override
     public void update(float delta) {
-        stateTimer += delta;
+        super.update(delta);
+        state.upate(delta);
 
-        if (markForDestory && !destroyed) {
-            getWorld().destroyBody(getBody());
-            destroyed = true;
-            setRegion(new TextureRegion(atlas.findRegion("goomba"), 32, 0, 16, 16));
-            stateTimer = 0;
-        }
-
-        if (!destroyed) {
-            getBody().setLinearVelocity(getVelocity());
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
-            setRegion(walkAnimation.getKeyFrame(stateTimer, true));
+        switch (state.current()) {
+            case WALKING:
+                getBody().setLinearVelocity(getVelocity());
+                setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
+                setRegion(walkAnimation.getKeyFrame(state.timer(), true));
+                break;
+            case STOMPED:
+                setRegion(new TextureRegion(atlas.findRegion("goomba"), 32, 0, 16, 16));
+                if (state.timer() > 1f) {
+                    state.set(State.REMOVABLE);
+                }
+                break;
+            case DEAD:
+                if (state.timer() > 5f) {
+                    state.set(State.REMOVABLE);
+                    destroyLater();
+                }
+                break;
         }
     }
 
@@ -92,7 +103,7 @@ public class Goomba extends Enemy {
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.restitution = 1.0f;
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_HEAD_BIT;
         fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
         body.createFixture(fixtureDef).setUserData(this);
@@ -107,17 +118,8 @@ public class Goomba extends Enemy {
     }
 
     @Override
-    public void draw(Batch batch) {
-        if (!destroyed || stateTimer < Enemy.TIME_TO_DISAPPEAR) {
-            super.draw(batch);
-        }
-    }
-
-    @Override
     public void onHeadHit(Mario mario) {
-        // reminder: we cannot delete any box2d body here, because we are in the middle of a step
-        markForDestory = true;
-        JumpGame.assetManager.get("audio/sounds/stomp.wav", Sound.class).play();
+        stomp();
     }
 
     @Override
@@ -125,10 +127,34 @@ public class Goomba extends Enemy {
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa) enemy;
             if (koopa.getState() == Koopa.State.MOVING_SHELL) {
-                markForDestory = true;
+                kill(State.DEAD);
             } else {
                 reverseVelocity(true, false);
             }
         }
+    }
+
+    private void kill(State killState) {
+        state.set(killState);
+        Filter filter = new Filter();
+        filter.maskBits = JumpGame.NOTHING_BIT;
+        for (Fixture fixture : getBody().getFixtureList()) {
+            fixture.setFilterData(filter);
+        }
+
+        if (killState != State.STOMPED) {
+            getBody().applyLinearImpulse(new Vector2(0, 5f), getBody().getWorldCenter(), true);
+        }
+    }
+
+    private void stomp() {
+        state.set(State.STOMPED);
+        destroyLater();
+        JumpGame.assetManager.get(AssetPaths.Sounds.STOMP, Sound.class).play();
+    }
+
+    @Override
+    public boolean canBeRemoved() {
+        return state.is(State.REMOVABLE);
     }
 }

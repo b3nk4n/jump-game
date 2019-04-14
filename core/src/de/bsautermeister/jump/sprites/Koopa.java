@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -18,22 +19,19 @@ import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
 
 public class Koopa extends Enemy {
     public static final float KICK_SPEED = 2f;
 
     public enum State {
-        WALKING, STANDING_SHELL, MOVING_SHELL, DEAD
+        WALKING, STANDING_SHELL, MOVING_SHELL, DEAD, REMOVABLE
     }
-    private State currentState;
-    private State previousState;
 
-    private float stateTimer;
+    private GameObjectState<State> state;
+
     private Animation<TextureRegion> walkAnimation;
     private Animation<TextureRegion> shellAnimation;
-    private Array<TextureRegion> frames;
-    private boolean markForDestory;
-    private boolean destroyed;
     private TextureAtlas atlas;
 
     private float deadRotation;
@@ -42,7 +40,7 @@ public class Koopa extends Enemy {
         super(world, map, posX, posY);
 
         this.atlas = atlas;
-        frames = new Array<TextureRegion>();
+        Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
             frames.add(new TextureRegion(atlas.findRegion("koopa"), i * 16, 0, 16, 24));
         }
@@ -54,52 +52,56 @@ public class Koopa extends Enemy {
         }
         shellAnimation = new Animation(0.4f, frames);
 
-        currentState = State.WALKING;
+        state = new GameObjectState<State>(State.WALKING);
 
-        stateTimer = 0;
         setBounds(getX(), getY(), 16 / GameConfig.PPM, 24 / GameConfig.PPM);
-        markForDestory = false;
-        destroyed = false;
 
         deadRotation = 0;
     }
 
     @Override
     public void update(float delta) {
+        super.update(delta);
+        state.upate(delta);
+
         setRegion(getFrame(delta));
 
-        if (currentState == State.STANDING_SHELL && stateTimer > 5f) {
-            currentState = State.WALKING;
+        if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
+            state.set(State.WALKING);
             getVelocity().x = 1;
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
                 getBody().getPosition().y - 8 / GameConfig.PPM);
 
-        if (currentState == State.DEAD) {
+        if (state.is(State.DEAD)) {
             deadRotation += delta * 90;
             rotate(deadRotation);
 
-            if (stateTimer > 5 && !destroyed) {
-                getWorld().destroyBody(getBody());
-                destroyed = true;
+            if (state.timer() > 5 && !isDestroyed()) {
+                state.set(State.REMOVABLE);
+                destroyLater();
             }
         } else {
             getBody().setLinearVelocity(getVelocity());
+        }
+
+        if (state.changed()) {
+            state.resetTimer();
         }
     }
 
     private TextureRegion getFrame(float delta) {
         TextureRegion textureRegion;
 
-        switch (currentState) {
+        switch (state.current()) {
             case MOVING_SHELL:
             case STANDING_SHELL:
-                textureRegion = shellAnimation.getKeyFrame(stateTimer, true);
+                textureRegion = shellAnimation.getKeyFrame(state.timer(), true);
                 break;
             case WALKING:
                 default:
-                textureRegion = walkAnimation.getKeyFrame(stateTimer, true);
+                textureRegion = walkAnimation.getKeyFrame(state.timer(), true);
                 break;
         }
 
@@ -108,9 +110,6 @@ public class Koopa extends Enemy {
         } else if (getVelocity().x < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
-
-        stateTimer = currentState == previousState ? stateTimer + delta : 0;
-        previousState = currentState;
 
         return textureRegion;
     }
@@ -147,7 +146,7 @@ public class Koopa extends Enemy {
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;
-        fixtureDef.restitution = 1.5f; // TODO otherwise it pumped of? check out how restitution behaves (bouncyness)
+        fixtureDef.restitution = 1f;
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_HEAD_BIT;
         fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
         body.createFixture(fixtureDef).setUserData(this);
@@ -157,9 +156,10 @@ public class Koopa extends Enemy {
 
     @Override
     public void onHeadHit(Mario mario) {
-        if (currentState != State.STANDING_SHELL) {
-            currentState = State.STANDING_SHELL;
+        if (!state.is(State.STANDING_SHELL)) {
+            state.set(State.STANDING_SHELL);
             getVelocity().x = 0;
+            JumpGame.assetManager.get(AssetPaths.Sounds.STOMP, Sound.class).play();
         } else {
             kick(mario.getX() <= getX() ? KICK_SPEED : -KICK_SPEED);
         }
@@ -168,42 +168,40 @@ public class Koopa extends Enemy {
     @Override
     public void onEnemyHit(Enemy enemy) {
         if (enemy instanceof Koopa) {
-            Koopa koopa = (Koopa) enemy;
-            if (koopa.currentState == State.MOVING_SHELL && currentState != State.MOVING_SHELL) {
+            Koopa otherKoopa = (Koopa) enemy;
+            if (!state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.MOVING_SHELL) {
                 kill();
-            } else if(currentState == State.MOVING_SHELL && koopa.currentState == State.WALKING) {
+            } else if(state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.WALKING) {
                 return;
             } else {
                 reverseVelocity(true, false);
             }
-        } else if (currentState != State.MOVING_SHELL) {
+        } else if (!state.is(State.MOVING_SHELL)) {
             reverseVelocity(true, false);
         }
     }
 
     public void kick(float speed) {
         getVelocity().x = speed;
-        currentState = State.MOVING_SHELL;
+        state.set(State.MOVING_SHELL);
     }
 
     public State getState() {
-        return currentState;
+        return state.current();
     }
 
-    @Override
-    public void draw(Batch batch) {
-        if (!destroyed) { // TODO are we doing this just because of a  BUG? Video 31, 11:00 (body is attached to something else!?) Better: WorldCreator: remove enemy from arrays
-            super.draw(batch);
-        }
-    }
-
-    public void kill() {
-        currentState = State.DEAD;
+    private void kill() {
+        state.set(State.DEAD);
         Filter filter = new Filter();
         filter.maskBits = JumpGame.NOTHING_BIT;
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
         }
         getBody().applyLinearImpulse(new Vector2(0, 5f), getBody().getWorldCenter(), true);
+    }
+
+    @Override
+    public boolean canBeRemoved() {
+        return state.is(State.REMOVABLE);
     }
 }

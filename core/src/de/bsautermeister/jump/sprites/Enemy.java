@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +14,8 @@ public abstract class Enemy extends Sprite {
     private TiledMap tiledMap;
     private Body body;
     private Vector2 velocity;
+    private boolean markForDestory;
+    private boolean destroyed;
 
     public Enemy(World world, TiledMap map, float posX, float posY) {
         this.world = world;
@@ -20,16 +23,29 @@ public abstract class Enemy extends Sprite {
         setPosition(posX, posY);
         this.body = defineBody();
         this.velocity = new Vector2(-1, -1);
+        markForDestory = false;
+        destroyed = false;
         setActive(false); // sleep and activate as soon as player gets close
     }
 
     protected abstract Body defineBody();
 
-    public abstract void update(float delta);
+    public void update(float delta) {
+        if (markForDestory && !destroyed) {
+            world.destroyBody(body);
+            destroyed = true;
+        }
+    }
+
+    public void destroyLater() {
+        markForDestory = true;
+    }
 
     public abstract void onHeadHit(Mario mario);
 
     public abstract void onEnemyHit(Enemy enemy);
+
+    public abstract boolean canBeRemoved();
 
     public void reverseVelocity(boolean reverseX, boolean reverseY) {
         if (reverseX) {
@@ -58,5 +74,9 @@ public abstract class Enemy extends Sprite {
 
     public Vector2 getVelocity() {
         return velocity;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }

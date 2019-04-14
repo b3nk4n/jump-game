@@ -14,8 +14,8 @@ import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 
 public class Mushroom extends Item {
-    public Mushroom(World world, TiledMap tiledMap, TextureAtlas atlas, float x, float y) {
-        super(world, tiledMap, x, y);
+    public Mushroom(World world, TextureAtlas atlas, float x, float y) {
+        super(world, x, y);
         setRegion(atlas.findRegion("mushroom"), 0, 0, 16, 16);
         velocity = new Vector2(0.7f, 0);
     }
@@ -45,7 +45,7 @@ public class Mushroom extends Item {
 
     @Override
     public void use(Mario mario) {
-        destroy();
+        destroyLater();
         mario.grow();
     }
 

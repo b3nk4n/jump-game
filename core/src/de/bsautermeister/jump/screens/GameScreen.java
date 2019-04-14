@@ -54,7 +54,7 @@ public class GameScreen extends ScreenAdapter {
     private final Mario mario;
 
     private final WorldCreator worldCreator;
-
+    private Array<Enemy> enemies;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
@@ -85,6 +85,7 @@ public class GameScreen extends ScreenAdapter {
             }
 
         }, world, map, atlas);
+        this.enemies = worldCreator.createEnemies();
 
         mario = new Mario(world, atlas);
 
@@ -111,7 +112,7 @@ public class GameScreen extends ScreenAdapter {
 
         ItemDef itemDef = itemsToSpawn.poll();
         if (itemDef.getType() == Mushroom.class) {
-            items.add(new Mushroom(world, map, atlas, itemDef.getPosition().x, itemDef.getPosition().y));
+            items.add(new Mushroom(world, atlas, itemDef.getPosition().x, itemDef.getPosition().y));
         }
     }
 
@@ -124,16 +125,24 @@ public class GameScreen extends ScreenAdapter {
         mario.update(delta);
         checkPlayerInBounds();
 
-        for (Enemy enemy : worldCreator.getEnemies()) {
+        for (Enemy enemy : enemies) {
             enemy.update(delta);
 
             if (enemy.getX() < mario.getX() + 256 / GameConfig.PPM) {
                 enemy.setActive(true);
             }
+
+            if (enemy.canBeRemoved()) {
+                enemies.removeValue(enemy, true);
+            }
         }
 
         for (Item item : items) {
             item.update(delta);
+
+            if (item.canBeRemoved()) {
+                items.removeValue(item, true);
+            }
         }
 
         hud.update(delta);
@@ -219,7 +228,7 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
         renderHud();
 
-        if (isGameOver()) { // TODO possible to move this to update method?
+        if (isGameOver()) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
@@ -237,7 +246,7 @@ public class GameScreen extends ScreenAdapter {
     private void renderGame(float delta) {
         mario.draw(game.getBatch());
 
-        for (Enemy enemy : worldCreator.getEnemies()) {
+        for (Enemy enemy : enemies) {
             enemy.draw(game.getBatch());
         }
 

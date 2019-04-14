@@ -84,7 +84,7 @@ public class Hud implements Disposable {
         }
     }
 
-    public static void addScore(int value) { // TODO make it non-static, and actually store the score outside of the HUD
+    public static void addScore(int value) { // TODO make it non-static, and actually store the score outside of the HUD (move score and time to Mario class?)
         score += value;
         scoreLabel.setText(getFormattedScore(score));
     }

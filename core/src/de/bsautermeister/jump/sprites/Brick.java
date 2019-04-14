@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.scenes.Hud;
 
 public class Brick extends InteractiveTileObject {
@@ -20,9 +21,9 @@ public class Brick extends InteractiveTileObject {
         if (mario.isBig()) {
             setCategoryFilter(JumpGame.DESTROYED_BIT);
             getCell().setTile(null);
-            JumpGame.assetManager.get("audio/sounds/breakblock.wav", Sound.class).play();
+            JumpGame.assetManager.get(AssetPaths.Sounds.BREAK_BLOCK, Sound.class).play();
         } else {
-            JumpGame.assetManager.get("audio/sounds/bump.wav", Sound.class).play();
+            JumpGame.assetManager.get(AssetPaths.Sounds.BUMP, Sound.class).play();
         }
     }
 }
