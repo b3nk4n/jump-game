@@ -2,6 +2,7 @@ package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,8 +29,11 @@ public class Mario extends Sprite {
     private World world;
     private Body body;
 
+    private int groundContactCounter;
+    private float jumpFixTimer;
+
     public enum State {
-        FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD
+        STANDING, JUMPING, WALKING, GROWING, DEAD
     }
 
     private GameObjectState<State> state;
@@ -38,12 +42,12 @@ public class Mario extends Sprite {
 
     private TextureRegion marioStand;
     private TextureRegion marioDead;
-    private Animation<TextureRegion> marioRun;
+    private Animation<TextureRegion> marioWalk;
     private Animation<TextureRegion> marioJump; // is actually just 1 frame
 
     private TextureRegion bigMarionStand;
     private TextureRegion bigMarioJump;
-    private Animation<TextureRegion> bigMarioRun;
+    private Animation<TextureRegion> bigMarioWalk;
     private Animation<TextureRegion> growMario;
 
     private boolean isBig;
@@ -51,7 +55,6 @@ public class Mario extends Sprite {
     private boolean timeToDefineBigMario;
     private boolean timeToRedefineMario;
 
-    private boolean isDead;
     private boolean deadAnimationStarted = false;
 
     private float timeToLive;
@@ -74,13 +77,13 @@ public class Mario extends Sprite {
         for (int i = 1; i < 4; i++) {
             frames.add(new TextureRegion(littleMarioTexture, i * 16, 0, 16, 16));
         }
-        marioRun = new Animation(0.1f, frames);
+        marioWalk = new Animation(0.1f, frames);
 
         frames.clear();
         for (int i = 1; i < 4; i++) {
             frames.add(new TextureRegion(bigMarioTexture, i * 16, 0, 16, 32));
         }
-        bigMarioRun = new Animation(0.1f, frames);
+        bigMarioWalk = new Animation(0.1f, frames);
 
         frames.clear();
         for (int i = 5; i < 6; i++) {
@@ -114,6 +117,7 @@ public class Mario extends Sprite {
     public void update(float delta) {
         state.upate(delta);
         timeToLive -= delta;
+        jumpFixTimer -= delta;
 
         if (isBig) {
             setPosition(body.getPosition().x - getWidth() / 2,
@@ -127,7 +131,7 @@ public class Mario extends Sprite {
 
         // these are called outside of the physics update loop
         if (timeToDefineBigMario) {
-            defineBigMario();
+            defineBigBody();
         } else if (timeToRedefineMario) {
             Vector2 position = getBody().getPosition();
             world.destroyBody(getBody());
@@ -142,7 +146,7 @@ public class Mario extends Sprite {
             kill();
         }
 
-        if (isDead) {
+        if (state.is(State.DEAD)) {
             if (state.timer() <= 0.5f) {
                 getBody().setActive(false);
             } else if (!deadAnimationStarted) {
@@ -153,7 +157,145 @@ public class Mario extends Sprite {
         }
     }
 
-    private void defineBigMario() { // TODO refactor with defineBody(), because 90% is duplicated
+    public void control(boolean upJustPressed, boolean up, boolean left, boolean right) {
+        if (upJustPressed && touchesGround() && !state.is(State.JUMPING)) {
+            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+            state.set(State.JUMPING);
+            jumpFixTimer = 0.25f;
+            return;
+        }
+        if (right && body.getLinearVelocity().x <= 2) {
+            body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
+
+        }
+        if (left && body.getLinearVelocity().x >= -2) {
+            body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+        }
+        if (!left && ! right) {
+            // horizontally decelerate fast, but don't stop immediately
+            body.setLinearVelocity(body.getLinearVelocity().x * 0.75f, body.getLinearVelocity().y);
+        }
+
+        if (!touchesGround()) {
+            if (jumpFixTimer > 0 || state.is(State.JUMPING)) {
+                // keep jumping state
+                return;
+            } else {
+                state.set(State.STANDING);
+            }
+        } else if (jumpFixTimer < 0) {
+            if (body.getLinearVelocity().x != 0) {
+                state.set(State.WALKING);
+            } else {
+                state.set(State.STANDING);
+            }
+        }
+    }
+
+    private TextureRegion getFrame(float delta) {
+        TextureRegion textureRegion;
+        switch (state.current()) {
+            case DEAD:
+                textureRegion = marioDead;
+                break;
+            case GROWING:
+                textureRegion = growMario.getKeyFrame(state.timer());
+                if (growMario.isAnimationFinished(state.timer())) {
+                    runGrowAnimation = false;
+                }
+                break;
+            case JUMPING:
+                if (isBig) {
+                    textureRegion = bigMarioJump;
+                } else {
+                    textureRegion = marioJump.getKeyFrame(state.timer());
+                }
+                break;
+            case WALKING:
+                if (isBig) {
+                    textureRegion = bigMarioWalk.getKeyFrame(state.timer(), true);
+                } else {
+                    textureRegion = marioWalk.getKeyFrame(state.timer(), true);
+                }
+                break;
+            case STANDING:
+            default:
+                textureRegion = isBig ? bigMarionStand : marioStand;
+                break;
+        }
+
+        if ((body.getLinearVelocity().x < 0 || !runningRight) && !textureRegion.isFlipX()) {
+            textureRegion.flip(true, false);
+            runningRight = false;
+        } else if ((body.getLinearVelocity().x > 0 || runningRight) && textureRegion.isFlipX()) {
+            textureRegion.flip(true, false);
+            runningRight = true;
+        }
+
+        return textureRegion;
+    }
+
+    /*public State getState() {
+        if (isDead) {
+            return State.DEAD;
+        } else if (runGrowAnimation) {
+            return State.GROWING;
+        } else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && state.was(State.JUMPING))) {
+            return State.JUMPING;
+        } else if (body.getLinearVelocity().y < 0) {
+            return State.FALLING;
+        } else if (body.getLinearVelocity().x > 0 || body.getLinearVelocity().x < 0) {
+            return State.WALKING;
+        }
+        return State.STANDING;
+    }*/
+
+    public State getState() {
+        return state.current();
+    }
+
+    private void defineBody(Vector2 position) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(position);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        body = world.createBody(bodyDef);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        CircleShape shape = new CircleShape();
+        shape.setRadius(6 / GameConfig.PPM);
+        fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
+                JumpGame.COIN_BIT |
+                JumpGame.BRICK_BIT |
+                JumpGame.ENEMY_BIT |
+                JumpGame.ENEMY_HEAD_BIT |
+                JumpGame.OBJECT_BIT |
+                JumpGame.ITEM_BIT;
+
+        fixtureDef.shape = shape;
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
+
+        // head
+        EdgeShape headShape = new EdgeShape();
+        headShape.set(new Vector2(-2 / GameConfig.PPM, 6 / GameConfig.PPM),
+                new Vector2(2 / GameConfig.PPM, 6 / GameConfig.PPM));
+        fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
+        fixtureDef.shape = headShape;
+        fixtureDef.isSensor = true; // does not collide in the physics simulation
+        body.createFixture(fixtureDef).setUserData(this);
+
+        // feet
+        EdgeShape feetShape = new EdgeShape();
+        feetShape.set(new Vector2(-2 / GameConfig.PPM, -6.5f / GameConfig.PPM),
+                new Vector2(2 / GameConfig.PPM, -6.5f / GameConfig.PPM));
+        fixtureDef.filter.categoryBits = JumpGame.MARIO_FEET_BIT;
+        fixtureDef.shape = feetShape;
+        fixtureDef.isSensor = true; // does not collide in the physics simulation
+        body.createFixture(fixtureDef).setUserData(this);
+    }
+
+    private void defineBigBody() { // TODO refactor with defineBody(), because 90% is duplicated
         Vector2 currentPosition = getBody().getPosition();
         world.destroyBody(getBody());
 
@@ -189,94 +331,13 @@ public class Mario extends Sprite {
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
         timeToDefineBigMario = false;
-    }
 
-    private TextureRegion getFrame(float delta) {
-        TextureRegion textureRegion;
-        switch (state.current()) {
-            case DEAD:
-                textureRegion = marioDead;
-                break;
-            case GROWING:
-                textureRegion = growMario.getKeyFrame(state.timer());
-                if (growMario.isAnimationFinished(state.timer())) {
-                    runGrowAnimation = false;
-                }
-                break;
-            case JUMPING:
-                if (isBig) {
-                    textureRegion = bigMarioJump;
-                } else {
-                    textureRegion = marioJump.getKeyFrame(state.timer());
-                }
-                break;
-            case RUNNING:
-                if (isBig) {
-                    textureRegion = bigMarioRun.getKeyFrame(state.timer(), true);
-                } else {
-                    textureRegion = marioRun.getKeyFrame(state.timer(), true);
-                }
-                break;
-            case FALLING:
-            case STANDING:
-            default:
-                textureRegion = isBig ? bigMarionStand : marioStand;
-                break;
-        }
-
-        if ((body.getLinearVelocity().x < 0 || !runningRight) && !textureRegion.isFlipX()) {
-            textureRegion.flip(true, false);
-            runningRight = false;
-        } else if ((body.getLinearVelocity().x > 0 || runningRight) && textureRegion.isFlipX()) {
-            textureRegion.flip(true, false);
-            runningRight = true;
-        }
-
-        return textureRegion;
-    }
-
-    public State getState() {
-        if (isDead) {
-            return State.DEAD;
-        } else if (runGrowAnimation) {
-            return State.GROWING;
-        } else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && state.was(State.JUMPING))) {
-            return State.JUMPING;
-        } else if (body.getLinearVelocity().y < 0) {
-            return State.FALLING;
-        } else if (body.getLinearVelocity().x > 0 || body.getLinearVelocity().x < 0) {
-            return State.RUNNING;
-        }
-        return State.STANDING;
-    }
-
-    private void defineBody(Vector2 position) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(position);
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bodyDef);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(6 / GameConfig.PPM);
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.COIN_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.ENEMY_BIT |
-                JumpGame.ENEMY_HEAD_BIT |
-                JumpGame.OBJECT_BIT |
-                JumpGame.ITEM_BIT;
-
-        fixtureDef.shape = shape;
-        Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-
-        EdgeShape headShape = new EdgeShape();
-        headShape.set(new Vector2(-2 / GameConfig.PPM, 6 / GameConfig.PPM),
-                new Vector2(2 / GameConfig.PPM, 6 / GameConfig.PPM));
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
-        fixtureDef.shape = headShape;
+        // feet
+        EdgeShape feetShape = new EdgeShape();
+        feetShape.set(new Vector2(-2 / GameConfig.PPM, -20.5f / GameConfig.PPM),
+                new Vector2(2 / GameConfig.PPM, -20.5f / GameConfig.PPM));
+        fixtureDef.filter.categoryBits = JumpGame.MARIO_FEET_BIT;
+        fixtureDef.shape = feetShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
     }
@@ -290,7 +351,7 @@ public class Mario extends Sprite {
     }
 
     public boolean isDead() {
-        return isDead;
+        return state.is(State.DEAD);
     }
 
     public float getStateTimer() {
@@ -298,10 +359,12 @@ public class Mario extends Sprite {
     }
 
     public void grow() {
-        runGrowAnimation = true;
-        timeToDefineBigMario = true;
-        isBig = true;
-        setBounds(getX(), getY(), getWidth(), getHeight() * 2);
+        if (!isBig()) {
+            runGrowAnimation = true;
+            timeToDefineBigMario = true;
+            isBig = true;
+            setBounds(getX(), getY(), getWidth(), getHeight() * 2);
+        }
         JumpGame.assetManager.get(AssetPaths.Sounds.POWERUP, Sound.class).play();
     }
 
@@ -327,11 +390,11 @@ public class Mario extends Sprite {
     }
 
     private void kill() {
-        if (isDead)
+        if (state.is(State.DEAD))
             return;
 
+        state.set(State.DEAD);
         JumpGame.assetManager.get(AssetPaths.Sounds.MARIO_DIE, Sound.class).play();
-        isDead = true;
         Filter filter = new Filter();
         filter.maskBits = JumpGame.NOTHING_BIT;
         for (Fixture fixture : getBody().getFixtureList()) {
@@ -349,5 +412,17 @@ public class Mario extends Sprite {
 
     public float getTimeToLive() {
         return timeToLive;
+    }
+
+    public void touchGround() {
+        groundContactCounter++;
+    }
+
+    public void leftGround() {
+        groundContactCounter--;
+    }
+
+    public boolean touchesGround() {
+        return groundContactCounter > 0;
     }
 }

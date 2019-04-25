@@ -193,22 +193,11 @@ public class GameScreen extends ScreenAdapter {
             return;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)
-                && mario.getState() != Mario.State.JUMPING && mario.getState() != Mario.State.FALLING) {
-            mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
-        }
-
+        boolean upJustPressed = Gdx.input.isKeyJustPressed(Input.Keys.UP);
+        boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         boolean leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        if (rightPressed && mario.getBody().getLinearVelocity().x <= 2) {
-            mario.getBody().applyLinearImpulse(new Vector2(0.1f, 0), mario.getBody().getWorldCenter(), true);
-        }
-        if (leftPressed && mario.getBody().getLinearVelocity().x >= -2) {
-            mario.getBody().applyLinearImpulse(new Vector2(-0.1f, 0), mario.getBody().getWorldCenter(), true);
-        }
-        if (!leftPressed && ! rightPressed) {
-            mario.getBody().setLinearVelocity(mario.getBody().getLinearVelocity().x * 0.8f, mario.getBody().getLinearVelocity().y);
-        }
+        mario.control(upJustPressed, upPressed, leftPressed, rightPressed);
     }
 
     @Override

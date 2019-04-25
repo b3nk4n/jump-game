@@ -68,12 +68,32 @@ public class WorldContactListener implements ContactListener {
                     ((Item) fixtureB.getUserData()).use((Mario) fixtureA.getUserData());
                 }
                 break;
+            case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
+                Mario mario = (Mario)(fixtureA.getFilterData().categoryBits == JumpGame.MARIO_FEET_BIT
+                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                mario.touchGround();
         }
     }
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
 
+        int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
+
+        switch (collisionDef) {
+            case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
+                Mario mario = (Mario)(fixtureA.getFilterData().categoryBits == JumpGame.MARIO_FEET_BIT
+                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                mario.leftGround();
+        }
     }
 
     @Override

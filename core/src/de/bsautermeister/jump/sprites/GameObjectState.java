@@ -6,7 +6,9 @@ public class GameObjectState<T extends Enum<T>> {
     private float stateTimer;
 
     public GameObjectState(T initialState) {
-        set(initialState);
+        current = initialState;
+        previous = initialState;
+        resetTimer();
     }
 
     public void upate(float delta) {
@@ -14,6 +16,10 @@ public class GameObjectState<T extends Enum<T>> {
     }
 
     public void set(T state) {
+        if (current == state) {
+            return;
+        }
+
         previous = current;
         current = state;
         resetTimer();
