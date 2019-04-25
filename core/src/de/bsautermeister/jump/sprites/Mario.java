@@ -2,7 +2,6 @@ package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -33,7 +32,7 @@ public class Mario extends Sprite {
     private float jumpFixTimer;
 
     public enum State {
-        STANDING, JUMPING, WALKING, GROWING, DEAD
+        STANDING, JUMPING, WALKING, DEAD
     }
 
     private GameObjectState<State> state;
@@ -48,10 +47,11 @@ public class Mario extends Sprite {
     private TextureRegion bigMarionStand;
     private TextureRegion bigMarioJump;
     private Animation<TextureRegion> bigMarioWalk;
-    private Animation<TextureRegion> growMario;
+
+    private static final float GROW_TIME = 1f;
+    private float growingTimer;
 
     private boolean isBig;
-    private boolean runGrowAnimation;
     private boolean timeToDefineBigMario;
     private boolean timeToRedefineMario;
 
@@ -92,17 +92,6 @@ public class Mario extends Sprite {
         marioJump = new Animation(0.1f, frames);
         bigMarioJump = new TextureRegion(bigMarioTexture, 5 * 16, 0, 16, 32);
 
-        frames.clear();
-        // growing animation
-        TextureRegion halfSizeMario = new TextureRegion(bigMarioTexture, 15 * 16, 0, 16, 32);
-        frames.add(halfSizeMario);
-        frames.add(bigMarionStand);
-        frames.add(halfSizeMario);
-        frames.add(bigMarionStand);
-        frames.add(halfSizeMario);
-        frames.add(bigMarionStand);
-        growMario = new Animation<TextureRegion>(0.33f, frames);
-
         marioDead = new TextureRegion(littleMarioTexture, 6 * 16, 0, 16, 16);
 
         Vector2 startPostion = new Vector2(32 / GameConfig.PPM, 32 / GameConfig.PPM);
@@ -127,7 +116,21 @@ public class Mario extends Sprite {
                     body.getPosition().y - getHeight() / 2);
         }
 
-        setRegion(getFrame(delta));
+        if (isGrowing()) {
+            growingTimer -= delta;
+        }
+
+        TextureRegion textureRegion = getFrame(delta);
+        setRegion(textureRegion);
+
+        // set texture bounds always at the bottom of the body
+        float textureWidth = textureRegion.getRegionWidth() / GameConfig.PPM;
+        float textureHeight = textureRegion.getRegionHeight() / GameConfig.PPM;
+        float yOffset = 0f;
+        if (isGrowing() && textureRegion.getRegionHeight() == 16) {
+            yOffset = 7.5f / GameConfig.PPM;
+        }
+        setBounds(getX(), getY() - yOffset, textureWidth, textureHeight);
 
         // these are called outside of the physics update loop
         if (timeToDefineBigMario) {
@@ -194,25 +197,25 @@ public class Mario extends Sprite {
 
     private TextureRegion getFrame(float delta) {
         TextureRegion textureRegion;
+
+        boolean useBigTexture = isBig;
+        if (isGrowing()) {
+            useBigTexture = (int)(((growingTimer - (int)growingTimer)) * 8) % 2 == 0 ? isBig : false;
+        }
+
         switch (state.current()) {
             case DEAD:
                 textureRegion = marioDead;
                 break;
-            case GROWING:
-                textureRegion = growMario.getKeyFrame(state.timer());
-                if (growMario.isAnimationFinished(state.timer())) {
-                    runGrowAnimation = false;
-                }
-                break;
             case JUMPING:
-                if (isBig) {
+                if (useBigTexture) {
                     textureRegion = bigMarioJump;
                 } else {
                     textureRegion = marioJump.getKeyFrame(state.timer());
                 }
                 break;
             case WALKING:
-                if (isBig) {
+                if (useBigTexture) {
                     textureRegion = bigMarioWalk.getKeyFrame(state.timer(), true);
                 } else {
                     textureRegion = marioWalk.getKeyFrame(state.timer(), true);
@@ -220,7 +223,7 @@ public class Mario extends Sprite {
                 break;
             case STANDING:
             default:
-                textureRegion = isBig ? bigMarionStand : marioStand;
+                textureRegion = useBigTexture ? bigMarionStand : marioStand;
                 break;
         }
 
@@ -234,21 +237,6 @@ public class Mario extends Sprite {
 
         return textureRegion;
     }
-
-    /*public State getState() {
-        if (isDead) {
-            return State.DEAD;
-        } else if (runGrowAnimation) {
-            return State.GROWING;
-        } else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && state.was(State.JUMPING))) {
-            return State.JUMPING;
-        } else if (body.getLinearVelocity().y < 0) {
-            return State.FALLING;
-        } else if (body.getLinearVelocity().x > 0 || body.getLinearVelocity().x < 0) {
-            return State.WALKING;
-        }
-        return State.STANDING;
-    }*/
 
     public State getState() {
         return state.current();
@@ -360,10 +348,9 @@ public class Mario extends Sprite {
 
     public void grow() {
         if (!isBig()) {
-            runGrowAnimation = true;
+            growingTimer = GROW_TIME;
             timeToDefineBigMario = true;
             isBig = true;
-            setBounds(getX(), getY(), getWidth(), getHeight() * 2);
         }
         JumpGame.assetManager.get(AssetPaths.Sounds.POWERUP, Sound.class).play();
     }
@@ -382,7 +369,6 @@ public class Mario extends Sprite {
         if (isBig) {
             isBig = false;
             timeToRedefineMario = true;
-            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
             JumpGame.assetManager.get(AssetPaths.Sounds.POWERDOWN, Sound.class).play();
         } else {
             kill();
@@ -424,5 +410,9 @@ public class Mario extends Sprite {
 
     public boolean touchesGround() {
         return groundContactCounter > 0;
+    }
+
+    public boolean isGrowing() {
+        return growingTimer > 0;
     }
 }
