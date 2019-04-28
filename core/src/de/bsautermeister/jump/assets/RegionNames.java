@@ -7,4 +7,11 @@ public interface RegionNames {
     String GOOMBA = "goomba";
     String TURTLE = "turle";
     String MUSHROOM = "mushroom";
+
+    String LOADING_LOGO = "title";
+    String LOADING_ANIMATION = "loading";
+    String LOADING_FRAME = "frame";
+    String LOADING_BAR_HIDDEN = "loading-hidden";
+    String LOADING_BACKGROUND = "screen-bg";
+    String LOADING_FRAME_BACKGROUND = "frame-bg";
 }

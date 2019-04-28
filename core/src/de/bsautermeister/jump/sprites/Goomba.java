@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.sprites;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,9 +15,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.assets.AssetPaths;
 
 public class Goomba extends Enemy {
 
@@ -31,8 +30,9 @@ public class Goomba extends Enemy {
     private Animation<TextureRegion> walkAnimation;
     private TextureAtlas atlas;
 
-    public Goomba(World world, TiledMap map, TextureAtlas atlas, float posX, float posY) {
-        super(world, map, posX, posY);
+    public Goomba(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas,
+                  float posX, float posY) {
+        super(callbacks, world, map, posX, posY);
 
         this.state = new GameObjectState<State>(State.WALKING);
 
@@ -148,9 +148,10 @@ public class Goomba extends Enemy {
     }
 
     private void stomp() {
+        getCallbacks().stomp(this);
+
         state.set(State.STOMPED);
         destroyLater();
-        JumpGame.assetManager.get(AssetPaths.Sounds.STOMP, Sound.class).play();
     }
 
     @Override

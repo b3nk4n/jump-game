@@ -13,6 +13,7 @@ public class AssetPacker {
         settings.maxHeight = 1024;
 
         pack(settings, "gameplay");
+        pack(settings, "loading");
     }
 
     private static void pack(TexturePacker.Settings settings, String name) {

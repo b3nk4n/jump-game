@@ -2,6 +2,7 @@ package de.bsautermeister.jump.assets;
 
 public interface AssetPaths {
     interface Atlas {
+        String LOADING = "loading/loading.atlas";
         String GAMEPLAY = "gameplay/gameplay.atlas";
     }
 
@@ -14,5 +15,9 @@ public interface AssetPaths {
         String POWERUP = "audio/sounds/powerup.wav";
         String POWERDOWN = "audio/sounds/powerdown.wav";
         String MARIO_DIE = "audio/sounds/mariodie.wav";
+    }
+
+    interface Music {
+        String BACKGROUND_AUDIO = "audio/music/mario_music.ogg";
     }
 }

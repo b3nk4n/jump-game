@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.screens;
 
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,17 +9,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.GameConfig;
-import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
-public class GameOverScreen extends ScreenAdapter {
+public class GameOverScreen extends ScreenBase {
     private Viewport viewport;
     private Stage stage;
 
-    private JumpGame game;
-
-    public GameOverScreen(JumpGame game) {
-        this.game = game;
+    public GameOverScreen(GameApp game) {
+        super(game);
         this.viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
 

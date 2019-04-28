@@ -1,7 +1,6 @@
 package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -10,12 +9,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 
 public class Mushroom extends Item {
-    public Mushroom(World world, TextureAtlas atlas, float x, float y) {
-        super(world, x, y);
+    public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
+        super(callbacks, world, x, y);
         setRegion(atlas.findRegion("mushroom"), 0, 0, 16, 16);
         velocity = new Vector2(0.7f, 0);
     }
@@ -45,6 +45,7 @@ public class Mushroom extends Item {
 
     @Override
     public void use(Mario mario) {
+        getCallbacks().use(mario, this);
         destroyLater();
         mario.grow();
     }

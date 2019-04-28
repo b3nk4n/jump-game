@@ -7,9 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
+import de.bsautermeister.jump.GameCallbacks;
+
 public abstract class Enemy extends Sprite {
     public static final int TIME_TO_DISAPPEAR = 1;
-    
+
+    private GameCallbacks callbacks;
     private World world;
     private TiledMap tiledMap;
     private Body body;
@@ -17,7 +20,8 @@ public abstract class Enemy extends Sprite {
     private boolean markForDestory;
     private boolean destroyed;
 
-    public Enemy(World world, TiledMap map, float posX, float posY) {
+    public Enemy(GameCallbacks callbacks, World world, TiledMap map, float posX, float posY) {
+        this.callbacks = callbacks;
         this.world = world;
         this.tiledMap = map;
         setPosition(posX, posY);
@@ -78,5 +82,9 @@ public abstract class Enemy extends Sprite {
 
     public boolean isDestroyed() {
         return destroyed;
+    }
+
+    public GameCallbacks getCallbacks() {
+        return callbacks;
     }
 }

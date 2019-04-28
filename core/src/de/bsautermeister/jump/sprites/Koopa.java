@@ -1,8 +1,6 @@
 package de.bsautermeister.jump.sprites;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,9 +15,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.assets.AssetPaths;
 
 public class Koopa extends Enemy {
     public static final float KICK_SPEED = 2f;
@@ -36,8 +34,9 @@ public class Koopa extends Enemy {
 
     private float deadRotation;
 
-    public Koopa(World world, TiledMap map, TextureAtlas atlas, float posX, float posY) {
-        super(world, map, posX, posY);
+    public Koopa(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas,
+                 float posX, float posY) {
+        super(callbacks, world, map, posX, posY);
 
         this.atlas = atlas;
         Array<TextureRegion> frames = new Array<TextureRegion>();
@@ -159,7 +158,7 @@ public class Koopa extends Enemy {
         if (!state.is(State.STANDING_SHELL)) {
             state.set(State.STANDING_SHELL);
             getVelocity().x = 0;
-            JumpGame.assetManager.get(AssetPaths.Sounds.STOMP, Sound.class).play();
+            getCallbacks().stomp(this);
         } else {
             kick(mario.getX() <= getX() ? KICK_SPEED : -KICK_SPEED);
         }

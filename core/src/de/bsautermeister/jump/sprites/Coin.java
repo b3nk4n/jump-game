@@ -1,19 +1,14 @@
 package de.bsautermeister.jump.sprites;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.assets.AssetPaths;
-import de.bsautermeister.jump.scenes.Hud;
 
 public class Coin extends InteractiveTileObject {
 
@@ -30,21 +25,23 @@ public class Coin extends InteractiveTileObject {
 
     @Override
     public void onHeadHit(Mario mario) {
-        Sound sound;
-        if (getCell().getTile().getId() == BLANK_COIN_IDX) {
-            sound = JumpGame.assetManager.get(AssetPaths.Sounds.BUMP, Sound.class);
-        } else {
-            if (getMapObject().getProperties().containsKey("mushroom")) {
-                getCallbacks().coinHit(
-                        new Vector2(getBody().getPosition().x, getBody().getPosition().y + 16 / GameConfig.PPM));
-                sound = JumpGame.assetManager.get(AssetPaths.Sounds.POWERUP_SPAWN, Sound.class);
-            } else {
-                sound = JumpGame.assetManager.get(AssetPaths.Sounds.COIN, Sound.class);
-            }
-        }
-        sound.play();
+        getCallbacks().hit(
+                mario,
+                this,
+                new Vector2(getBody().getPosition().x, getBody().getPosition().y + 16 / GameConfig.PPM));
 
+        setBlank();
+    }
+
+    public boolean hasMushroom() {
+        return getMapObject().getProperties().containsKey("mushroom");
+    }
+
+    public boolean isBlank() {
+        return getCell().getTile().getId() == BLANK_COIN_IDX;
+    }
+
+    private void setBlank() {
         getCell().setTile(tileSet.getTile(BLANK_COIN_IDX));
-        mario.addScore(100);
     }
 }

@@ -16,11 +16,10 @@ public class MusicPlayer implements Disposable {
     private float targetVolume = 1.0f;
     private Music music;
 
-    public void setup(String filePath, float volume) {
+    public void selectMusic(String filePath) {
         FileHandle fileHandle = Gdx.files.internal(filePath);
         music = Gdx.audio.newMusic(fileHandle);
         music.setLooping(true);
-        setVolume(volume, true);
     }
 
     public void update(float delta) {

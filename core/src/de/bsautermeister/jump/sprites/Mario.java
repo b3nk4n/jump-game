@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.sprites;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,15 +15,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 
 public class Mario extends Sprite {
 
-    public static final float INITAL_TTL = 300;
+    private static final float INITAL_TTL = 300;
 
+    private GameCallbacks callbacks;
     private World world;
     private Body body;
 
@@ -60,7 +60,8 @@ public class Mario extends Sprite {
     private float timeToLive;
     private int score;
 
-    public Mario(World world, TextureAtlas atlas) {
+    public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
+        this.callbacks = callbacks;
         this.world = world;
         state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
@@ -352,16 +353,17 @@ public class Mario extends Sprite {
             timeToDefineBigMario = true;
             isBig = true;
         }
-        JumpGame.assetManager.get(AssetPaths.Sounds.POWERUP, Sound.class).play();
     }
 
     public void hit(Enemy enemy) {
+        callbacks.hit(this, enemy);
+
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa)enemy;
             if (koopa.getState() == Koopa.State.STANDING_SHELL) {
                 koopa.kick(getX() <= enemy.getX() ? Koopa.KICK_SPEED : -Koopa.KICK_SPEED);
             } else {
-                kill();
+                kill(); // TODO do not kill if mario is BIG!
             }
             return;
         }
@@ -369,7 +371,6 @@ public class Mario extends Sprite {
         if (isBig) {
             isBig = false;
             timeToRedefineMario = true;
-            JumpGame.assetManager.get(AssetPaths.Sounds.POWERDOWN, Sound.class).play();
         } else {
             kill();
         }
@@ -379,8 +380,9 @@ public class Mario extends Sprite {
         if (state.is(State.DEAD))
             return;
 
+        callbacks.gameOver();
+
         state.set(State.DEAD);
-        JumpGame.assetManager.get(AssetPaths.Sounds.MARIO_DIE, Sound.class).play();
         Filter filter = new Filter();
         filter.maskBits = JumpGame.NOTHING_BIT;
         for (Fixture fixture : getBody().getFixtureList()) {

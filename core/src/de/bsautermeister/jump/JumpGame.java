@@ -1,16 +1,14 @@
 package de.bsautermeister.jump;
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.bsautermeister.jump.assets.AssetPaths;
-import de.bsautermeister.jump.audio.MusicPlayer;
-import de.bsautermeister.jump.screens.GameScreen;
+import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.screens.LoadingScreen;
 
-public class JumpGame extends Game {
+public class JumpGame extends GameApp {
     private SpriteBatch batch;
 
     public static final short NOTHING_BIT = 0;
@@ -26,62 +24,20 @@ public class JumpGame extends Game {
     public static final short MARIO_HEAD_BIT = 512;
     public static final short MARIO_FEET_BIT = 1024;
 
-    // TODO use no static context of AssetManager, but pass it around, especially in Android
-    public static AssetManager assetManager;
-
-    private MusicPlayer musicPlayer;
-
     @Override
     public void create() {
+        super.create();
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         batch = new SpriteBatch();
-        assetManager = new AssetManager();
-        assetManager.load(AssetPaths.Sounds.COIN, Sound.class);
-        assetManager.load(AssetPaths.Sounds.BUMP, Sound.class);
-        assetManager.load(AssetPaths.Sounds.BREAK_BLOCK, Sound.class);
-        assetManager.load(AssetPaths.Sounds.POWERUP_SPAWN, Sound.class);
-        assetManager.load(AssetPaths.Sounds.POWERUP, Sound.class);
-        assetManager.load(AssetPaths.Sounds.STOMP, Sound.class);
-        assetManager.load(AssetPaths.Sounds.POWERDOWN, Sound.class);
-        assetManager.load(AssetPaths.Sounds.MARIO_DIE, Sound.class);
-        assetManager.finishLoading();
 
-        musicPlayer = new MusicPlayer();
-        musicPlayer.setup("audio/music/mario_music.ogg", 1.0f);
+        getMusicPlayer().selectMusic(AssetPaths.Music.BACKGROUND_AUDIO);
+        getMusicPlayer().setVolume(1.0f, true);
 
-        setScreen(new GameScreen(this));
-    }
-
-    @Override
-    public void render() {
-        super.render();
-
-        float delta = Gdx.graphics.getDeltaTime();
-        musicPlayer.update(delta);
-    }
-
-    @Override
-    public void dispose() {
-        batch.dispose();
-        musicPlayer.dispose();
-    }
-
-    @Override
-    public void pause() {
-        super.pause();
-        musicPlayer.pause();
-    }
-
-    @Override
-    public void resume() {
-        super.resume();
-        musicPlayer.play();
+        setScreen(new LoadingScreen(this));
     }
 
     public SpriteBatch getBatch() {
         return batch;
-    }
-
-    public MusicPlayer getMusicPlayer() {
-        return musicPlayer;
     }
 }

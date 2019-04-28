@@ -7,16 +7,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 
 public abstract class Item extends Sprite {
+    private GameCallbacks callbacks;
     private World world;
     protected Vector2 velocity;
     private boolean markForDestory;
     private boolean destroyed;
     private Body body;
 
-    public Item(World world, float x, float y) {
+    public Item(GameCallbacks callbacks, World world, float x, float y) {
+        this.callbacks = callbacks;
         this.world = world;
         setPosition(x, y);
         setBounds(getX(), getY(), 16 / GameConfig.PPM, 16 / GameConfig.PPM);
@@ -58,5 +61,9 @@ public abstract class Item extends Sprite {
 
     public boolean canBeRemoved() {
         return destroyed;
+    }
+
+    public GameCallbacks getCallbacks() {
+        return callbacks;
     }
 }

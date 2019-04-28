@@ -2,7 +2,7 @@ package de.bsautermeister.jump.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,11 +21,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
-import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
+import de.bsautermeister.jump.sprites.Brick;
+import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemDef;
@@ -33,8 +36,7 @@ import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.utils.GdxUtils;
 
-public class GameScreen extends ScreenAdapter {
-    private final JumpGame game;
+public class GameScreen extends ScreenBase {
     private TextureAtlas atlas;
 
     private OrthographicCamera camera;
@@ -58,8 +60,65 @@ public class GameScreen extends ScreenAdapter {
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
-    public GameScreen(JumpGame game) {
-        this.game = game;
+    private Sound bumpSound;
+    private Sound powerupSpawnSound;
+    private Sound powerupSound;
+    private Sound coinSound;
+    private Sound breakBlockSound;
+    private Sound stompSound;
+    private Sound powerDownSound;
+    private Sound marioDieSound;
+
+    private GameCallbacks callbacks = new GameCallbacks() {
+        @Override
+        public void stomp(Enemy enemy) {
+            stompSound.play();
+            mario.addScore(50);
+        }
+
+        @Override
+        public void use(Mario mario, Item item) {
+            powerupSound.play();
+        }
+
+        @Override
+        public void hit(Mario mario, Enemy enemy) {
+            if (mario.isBig()) {
+                powerDownSound.play(); // TODO play other sound if Koopa was kicked
+            }
+        }
+
+        @Override
+        public void hit(Mario mario, Brick brick) {
+            if (mario.isBig()) {
+                breakBlockSound.play();
+            } else {
+               bumpSound.play();
+            }
+        }
+
+        @Override
+        public void hit(Mario mario, Coin coin, Vector2 position) {
+            if (coin.isBlank()) {
+                bumpSound.play();
+            } else if (coin.hasMushroom()) {
+                spawnItem(new ItemDef(position, Mushroom.class));
+                powerupSpawnSound.play();
+                mario.addScore(500);
+            } else {
+                coinSound.play();
+                mario.addScore(100);
+            }
+        }
+
+        @Override
+        public void gameOver() {
+            marioDieSound.play();
+        }
+    };
+
+    public GameScreen(GameApp game) {
+        super(game);
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
         this.camera = new OrthographicCamera();
@@ -76,17 +135,10 @@ public class GameScreen extends ScreenAdapter {
 
         this.world = new World(new Vector2(0,-10f), true);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
-        this.worldCreator = new WorldCreator(new GameCallbacks() {
-
-            @Override
-            public void coinHit(Vector2 position) {
-                spawnItem(new ItemDef(position, Mushroom.class));
-            }
-
-        }, world, map, atlas);
+        this.worldCreator = new WorldCreator(callbacks, world, map, atlas);
         this.enemies = worldCreator.createEnemies();
 
-        mario = new Mario(world, atlas);
+        mario = new Mario(callbacks, world, atlas);
 
         this.hud = new Hud(game.getBatch(), mario);
 
@@ -99,21 +151,35 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void reset() {
-        game.getMusicPlayer().play();
+        getGame().getMusicPlayer().play();
     }
 
-    public void spawnItem(ItemDef itemDef) {
+    @Override
+    public void show() {
+        super.show();
+
+        bumpSound = getAssetManager().get(AssetDescriptors.Sounds.BUMP);
+        powerupSpawnSound = getAssetManager().get(AssetDescriptors.Sounds.POWERUP_SPAWN);
+        powerupSound = getAssetManager().get(AssetDescriptors.Sounds.POWERUP);
+        coinSound = getAssetManager().get(AssetDescriptors.Sounds.COIN);
+        breakBlockSound = getAssetManager().get(AssetDescriptors.Sounds.BREAK_BLOCK);
+        stompSound = getAssetManager().get(AssetDescriptors.Sounds.STOMP);
+        powerDownSound = getAssetManager().get(AssetDescriptors.Sounds.POWERDOWN);
+        marioDieSound = getAssetManager().get(AssetDescriptors.Sounds.MARIO_DIE);
+    }
+
+    private void spawnItem(ItemDef itemDef) {
         itemsToSpawn.add(itemDef);
     }
 
-    public void handleSpawingItems() {
+    private void handleSpawingItems() {
         if (itemsToSpawn.isEmpty()) {
             return;
         }
 
         ItemDef itemDef = itemsToSpawn.poll();
         if (itemDef.getType() == Mushroom.class) {
-            items.add(new Mushroom(world, atlas, itemDef.getPosition().x, itemDef.getPosition().y));
+            items.add(new Mushroom(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y));
         }
     }
 
@@ -154,7 +220,7 @@ public class GameScreen extends ScreenAdapter {
         mapRenderer.setView(camera);
 
         if (mario.getState() == Mario.State.DEAD) {
-            game.getMusicPlayer().stop();
+            getGame().getMusicPlayer().stop();
         }
     }
 
@@ -209,7 +275,7 @@ public class GameScreen extends ScreenAdapter {
         mapRenderer.render();
         box2DDebugRenderer.render(world, camera.combined);
 
-        SpriteBatch batch = game.getBatch();
+        SpriteBatch batch = getGame().getBatch();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         renderGame(delta);
@@ -219,8 +285,7 @@ public class GameScreen extends ScreenAdapter {
         renderHud();
 
         if (isGameOver()) {
-            game.setScreen(new GameOverScreen(game));
-            dispose();
+            getGame().setScreen(new GameOverScreen(getGame()));
         }
     }
 
@@ -234,14 +299,14 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void renderGame(float delta) {
-        mario.draw(game.getBatch());
+        mario.draw(getGame().getBatch());
 
         for (Enemy enemy : enemies) {
-            enemy.draw(game.getBatch());
+            enemy.draw(getGame().getBatch());
         }
 
         for (Item item : items) {
-            item.draw(game.getBatch());
+            item.draw(getGame().getBatch());
         }
     }
 
@@ -258,7 +323,7 @@ public class GameScreen extends ScreenAdapter {
         return atlas;
     }
 
-    public boolean isGameOver() {
+    private boolean isGameOver() {
         return mario.getState() == Mario.State.DEAD && mario.getStateTimer() > 3f;
     }
 }
