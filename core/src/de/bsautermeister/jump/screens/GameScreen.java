@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -21,6 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
@@ -260,10 +262,26 @@ public class GameScreen extends ScreenBase {
         }
 
         boolean upJustPressed = Gdx.input.isKeyJustPressed(Input.Keys.UP);
-        boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         boolean leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        mario.control(upJustPressed, upPressed, leftPressed, rightPressed);
+
+        int pointer = 0;
+        while (Gdx.input.isTouched(pointer)) {
+            float x = Gdx.input.getX(pointer);
+
+            x = x / Gdx.graphics.getWidth();
+
+            if (x > 0.6) {
+                upJustPressed = true;
+            } else if (x < 0.2) {
+                leftPressed = true;
+            } else if (x < 0.4) {
+                rightPressed = true;
+            }
+            pointer++;
+        }
+
+        mario.control(upJustPressed, leftPressed, rightPressed);
     }
 
     @Override
@@ -273,8 +291,11 @@ public class GameScreen extends ScreenBase {
         GdxUtils.clearScreen(Color.BLACK);
 
         mapRenderer.render();
-        box2DDebugRenderer.render(world, camera.combined);
+        if (GameConfig.DEBUG_MODE) {
+            box2DDebugRenderer.render(world, camera.combined);
+        }
 
+        viewport.apply();
         SpriteBatch batch = getGame().getBatch();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -295,6 +316,7 @@ public class GameScreen extends ScreenBase {
     }
 
     private void renderHud() {
+        // TODO hud viewport apply?
         hud.getStage().draw();
     }
 

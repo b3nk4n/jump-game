@@ -6,8 +6,8 @@ public interface GameConfig {
     int LOG_LEVEL = Logger.DEBUG;
     boolean DEBUG_MODE = false;
 
-    float HUD_WIDTH = 720; // still world units!
-    float HUD_HEIGHT = 1280; // still world units!
+    float HUD_WIDTH = 1280; // still world units!
+    float HUD_HEIGHT = 720; // still world units!
 
     int WORLD_WIDTH = 400;
     int WORLD_HEIGHT = 208;
