@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -37,6 +38,10 @@ public class GameOverScreen extends ScreenBase {
     public void render(float delta) {
         GdxUtils.clearScreen(Color.BLACK);
         stage.draw();
+
+        if (Gdx.input.isTouched()) {
+            setScreen(new GameScreen(getGame()));
+        }
     }
 
     @Override

@@ -261,7 +261,7 @@ public class GameScreen extends ScreenBase {
             return;
         }
 
-        boolean upJustPressed = Gdx.input.isKeyJustPressed(Input.Keys.UP);
+        boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         boolean leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
 
@@ -272,7 +272,7 @@ public class GameScreen extends ScreenBase {
             x = x / Gdx.graphics.getWidth();
 
             if (x > 0.6) {
-                upJustPressed = true;
+                upPressed = true;
             } else if (x < 0.2) {
                 leftPressed = true;
             } else if (x < 0.4) {
@@ -281,7 +281,7 @@ public class GameScreen extends ScreenBase {
             pointer++;
         }
 
-        mario.control(upJustPressed, leftPressed, rightPressed);
+        mario.control(upPressed, leftPressed, rightPressed);
     }
 
     @Override

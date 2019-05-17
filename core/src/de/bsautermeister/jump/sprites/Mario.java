@@ -161,8 +161,8 @@ public class Mario extends Sprite {
         }
     }
 
-    public void control(boolean upJustPressed, boolean left, boolean right) { // TODO upJustPressed still needed? Or is upPressed enough?
-        if (upJustPressed && touchesGround() && !state.is(State.JUMPING)) {
+    public void control(boolean up, boolean left, boolean right) {
+        if (up && touchesGround() && !state.is(State.JUMPING)) {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             jumpFixTimer = 0.25f;
