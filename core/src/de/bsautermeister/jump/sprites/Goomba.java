@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -108,12 +109,17 @@ public class Goomba extends Enemy {
         fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
         body.createFixture(fixtureDef).setUserData(this);
 
-        /*EdgeShape headShape = new EdgeShape();
-        headShape.set(new Vector2(-2 / GameConfig.PPM, 6 / GameConfig.PPM),
-                new Vector2(2 / GameConfig.PPM, 6 / GameConfig.PPM));
-        fixtureDef.shape = headShape;
-        fixtureDef.isSensor = true; // does not collide, but provides user-data
-        body.createFixture(fixtureDef).setUserData("head");*/
+        EdgeShape sideShape = new EdgeShape();
+        fixtureDef.shape = sideShape;
+        fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
+        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT;
+        fixtureDef.isSensor = true;
+        sideShape.set(new Vector2(-6 / GameConfig.PPM, -1 / GameConfig.PPM),
+                new Vector2(-6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        body.createFixture(fixtureDef).setUserData(this);
+        sideShape.set(new Vector2(6 / GameConfig.PPM, -1 / GameConfig.PPM),
+                new Vector2(6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        body.createFixture(fixtureDef).setUserData(this);
         return body;
     }
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -148,6 +149,18 @@ public class Koopa extends Enemy {
         fixtureDef.restitution = 1f;
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_HEAD_BIT;
         fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
+        body.createFixture(fixtureDef).setUserData(this);
+
+        EdgeShape sideShape = new EdgeShape();
+        fixtureDef.shape = sideShape;
+        fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
+        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT;
+        fixtureDef.isSensor = true;
+        sideShape.set(new Vector2(-6 / GameConfig.PPM, -1 / GameConfig.PPM),
+                new Vector2(-6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        body.createFixture(fixtureDef).setUserData(this);
+        sideShape.set(new Vector2(6 / GameConfig.PPM, -1 / GameConfig.PPM),
+                new Vector2(6 / GameConfig.PPM, 1 / GameConfig.PPM));
         body.createFixture(fixtureDef).setUserData(this);
 
         return body;

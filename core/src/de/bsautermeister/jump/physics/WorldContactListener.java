@@ -43,6 +43,13 @@ public class WorldContactListener implements ContactListener {
                     ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
                 }
                 break;
+            case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
+                if (fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_SIDE_BIT) {
+                    ((Enemy) fixtureA.getUserData()).reverseVelocity(true, false);
+                } else {
+                    ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
+                }
+                break;
             case JumpGame.ENEMY_BIT: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
                 ((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
