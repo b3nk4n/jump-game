@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.physics.box2d.World;
 
 import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 
 public class Brick extends InteractiveTileObject {
@@ -15,9 +16,12 @@ public class Brick extends InteractiveTileObject {
 
     @Override
     public void onHeadHit(Mario mario) {
-        getCallbacks().hit(mario, this);
+        float xDistance = Math.abs(mario.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
+        boolean closeEnough = xDistance < GameConfig.BLOCK_SIZE / 2 / GameConfig.PPM;
 
-        if (mario.isBig()) {
+        getCallbacks().hit(mario, this, closeEnough);
+
+        if (closeEnough && mario.isBig()) {
             setCategoryFilter(JumpGame.DESTROYED_BIT);
             getCell().setTile(null);
         }

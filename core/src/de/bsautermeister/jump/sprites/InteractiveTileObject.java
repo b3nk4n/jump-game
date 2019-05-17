@@ -47,8 +47,8 @@ public abstract class InteractiveTileObject {
 
     public TiledMapTileLayer.Cell getCell() {
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("graphics");
-        return layer.getCell((int)(body.getPosition().x * GameConfig.PPM / 16),
-                ((int)(body.getPosition().y * GameConfig.PPM / 16)));
+        return layer.getCell((int)(body.getPosition().x * GameConfig.PPM / GameConfig.BLOCK_SIZE),
+                ((int)(body.getPosition().y * GameConfig.PPM / GameConfig.BLOCK_SIZE)));
     }
 
     public World getWorld() {

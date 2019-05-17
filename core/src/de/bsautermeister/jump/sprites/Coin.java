@@ -25,12 +25,17 @@ public class Coin extends InteractiveTileObject {
 
     @Override
     public void onHeadHit(Mario mario) {
+        float xDistance = Math.abs(mario.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
+        boolean closeEnough = xDistance < GameConfig.BLOCK_SIZE / 2 / GameConfig.PPM;
         getCallbacks().hit(
                 mario,
                 this,
-                new Vector2(getBody().getPosition().x, getBody().getPosition().y + 16 / GameConfig.PPM));
+                new Vector2(getBody().getPosition().x, getBody().getPosition().y + GameConfig.BLOCK_SIZE / GameConfig.PPM),
+                closeEnough);
 
-        setBlank();
+        if(closeEnough) {
+            setBlank();
+        }
     }
 
     public boolean hasMushroom() {

@@ -66,36 +66,36 @@ public class Mario extends Sprite {
         state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
 
-        setBounds(0, 0, 16 / GameConfig.PPM, 16 / GameConfig.PPM);
+        setBounds(0, 0, GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
 
         TextureRegion littleMarioTexture = atlas.findRegion(RegionNames.LITTLE_MARIO);
         TextureRegion bigMarioTexture = atlas.findRegion(RegionNames.BIG_MARIO);
 
-        marioStand = new TextureRegion(littleMarioTexture, 0, 0, 16, 16);
-        bigMarionStand = new TextureRegion(bigMarioTexture, 0, 0, 16, 32);
+        marioStand = new TextureRegion(littleMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+        bigMarionStand = new TextureRegion(bigMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 1; i < 4; i++) {
-            frames.add(new TextureRegion(littleMarioTexture, i * 16, 0, 16, 16));
+            frames.add(new TextureRegion(littleMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
         }
         marioWalk = new Animation(0.1f, frames);
 
         frames.clear();
         for (int i = 1; i < 4; i++) {
-            frames.add(new TextureRegion(bigMarioTexture, i * 16, 0, 16, 32));
+            frames.add(new TextureRegion(bigMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE));
         }
         bigMarioWalk = new Animation(0.1f, frames);
 
         frames.clear();
         for (int i = 5; i < 6; i++) {
-            frames.add(new TextureRegion(littleMarioTexture, i * 16, 0, 16, 16));
+            frames.add(new TextureRegion(littleMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
         }
         marioJump = new Animation(0.1f, frames);
-        bigMarioJump = new TextureRegion(bigMarioTexture, 5 * 16, 0, 16, 32);
+        bigMarioJump = new TextureRegion(bigMarioTexture, 5 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
-        marioDead = new TextureRegion(littleMarioTexture, 6 * 16, 0, 16, 16);
+        marioDead = new TextureRegion(littleMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
 
-        Vector2 startPostion = new Vector2(32 / GameConfig.PPM, 32 / GameConfig.PPM);
+        Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
         defineBody(startPostion);
 
         setRegion(marioStand);
@@ -128,7 +128,7 @@ public class Mario extends Sprite {
         float textureWidth = textureRegion.getRegionWidth() / GameConfig.PPM;
         float textureHeight = textureRegion.getRegionHeight() / GameConfig.PPM;
         float yOffset = 0f;
-        if (isGrowing() && textureRegion.getRegionHeight() == 16) {
+        if (isGrowing() && textureRegion.getRegionHeight() == GameConfig.BLOCK_SIZE) {
             yOffset = 7.5f / GameConfig.PPM;
         }
         setBounds(getX(), getY() - yOffset, textureWidth, textureHeight);

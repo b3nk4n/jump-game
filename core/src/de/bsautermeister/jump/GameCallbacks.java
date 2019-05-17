@@ -13,7 +13,7 @@ public interface GameCallbacks {
     void stomp(Enemy enemy);
     void use(Mario mario, Item item);
     void hit(Mario mario, Enemy enemy);
-    void hit(Mario mario, Brick brick);
-    void hit(Mario mario, Coin coin, Vector2 position);
+    void hit(Mario mario, Brick brick, boolean closeEnough);
+    void hit(Mario mario, Coin coin, Vector2 position, boolean closeEnough);
     void gameOver();
 }

@@ -97,8 +97,10 @@ public class GameScreen extends ScreenBase {
         }
 
         @Override
-        public void hit(Mario mario, Brick brick) {
-            if (mario.isBig()) {
+        public void hit(Mario mario, Brick brick, boolean closeEnough) {
+            if (!closeEnough) {
+                bumpSound.play();
+            } else if (mario.isBig()) {
                 breakBlockSound.play();
             } else {
                bumpSound.play();
@@ -106,8 +108,8 @@ public class GameScreen extends ScreenBase {
         }
 
         @Override
-        public void hit(Mario mario, Coin coin, Vector2 position) {
-            if (coin.isBlank()) {
+        public void hit(Mario mario, Coin coin, Vector2 position, boolean closeEnough) {
+            if (coin.isBlank() || !closeEnough) {
                 bumpSound.play();
             } else if (coin.hasMushroom()) {
                 spawnItem(new ItemDef(position, Mushroom.class));

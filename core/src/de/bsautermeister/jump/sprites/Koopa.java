@@ -41,19 +41,19 @@ public class Koopa extends Enemy {
         this.atlas = atlas;
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * 16, 0, 16, 24));
+            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
         }
         walkAnimation = new Animation(0.2f, frames);
 
         frames.clear();
         for (int i = 4; i < 6; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * 16, 0, 16, 24));
+            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
         }
         shellAnimation = new Animation(0.4f, frames);
 
         state = new GameObjectState<State>(State.WALKING);
 
-        setBounds(getX(), getY(), 16 / GameConfig.PPM, 24 / GameConfig.PPM);
+        setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, (int)(1.5f * GameConfig.BLOCK_SIZE) / GameConfig.PPM);
 
         deadRotation = 0;
     }

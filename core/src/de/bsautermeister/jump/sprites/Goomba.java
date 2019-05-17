@@ -39,10 +39,10 @@ public class Goomba extends Enemy {
         this.atlas = atlas;
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("goomba"), i * 16, 0, 16, 16));
+            frames.add(new TextureRegion(atlas.findRegion("goomba"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
         }
         walkAnimation = new Animation(0.4f, frames);
-        setBounds(getX(), getY(), 16 / GameConfig.PPM, 16 / GameConfig.PPM);
+        setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Goomba extends Enemy {
                 setRegion(walkAnimation.getKeyFrame(state.timer(), true));
                 break;
             case STOMPED:
-                setRegion(new TextureRegion(atlas.findRegion("goomba"), 32, 0, 16, 16));
+                setRegion(new TextureRegion(atlas.findRegion("goomba"), 2 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
                 if (state.timer() > 1f) {
                     state.set(State.REMOVABLE);
                 }

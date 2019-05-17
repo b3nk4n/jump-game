@@ -12,5 +12,7 @@ public interface GameConfig {
     int WORLD_WIDTH = 400;
     int WORLD_HEIGHT = 208;
 
+    int BLOCK_SIZE = 16;
+
     float PPM = 100f;
 }
