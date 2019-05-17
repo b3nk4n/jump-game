@@ -39,12 +39,14 @@ public interface AssetDescriptors {
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.POWERDOWN, Sound.class);
         AssetDescriptor<Sound> MARIO_DIE =
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.MARIO_DIE, Sound.class);
+        AssetDescriptor<Sound> JUMP =
+                new AssetDescriptor<Sound>(AssetPaths.Sounds.JUMP, Sound.class);
     }
 
     public static final AssetDescriptor[] ALL = {
             Atlas.LOADING, Atlas. GAMEPLAY,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.POWERUP_SPAWN, Sounds.POWERUP,
-            Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE
+            Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE, Sounds.JUMP
     };
 
 }

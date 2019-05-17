@@ -9,6 +9,7 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Mario;
 
 public interface GameCallbacks {
+    void jump();
     void stomp(Enemy enemy);
     void use(Mario mario, Item item);
     void hit(Mario mario, Enemy enemy);

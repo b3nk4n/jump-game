@@ -70,8 +70,14 @@ public class GameScreen extends ScreenBase {
     private Sound stompSound;
     private Sound powerDownSound;
     private Sound marioDieSound;
+    private Sound jumpSound;
 
     private GameCallbacks callbacks = new GameCallbacks() {
+        @Override
+        public void jump() {
+            jumpSound.play(0.33f);
+        }
+
         @Override
         public void stomp(Enemy enemy) {
             stompSound.play();
@@ -168,6 +174,7 @@ public class GameScreen extends ScreenBase {
         stompSound = getAssetManager().get(AssetDescriptors.Sounds.STOMP);
         powerDownSound = getAssetManager().get(AssetDescriptors.Sounds.POWERDOWN);
         marioDieSound = getAssetManager().get(AssetDescriptors.Sounds.MARIO_DIE);
+        jumpSound = getAssetManager().get(AssetDescriptors.Sounds.JUMP);
     }
 
     private void spawnItem(ItemDef itemDef) {

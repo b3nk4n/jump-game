@@ -166,6 +166,7 @@ public class Mario extends Sprite {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             jumpFixTimer = 0.25f;
+            callbacks.jump();
             return;
         }
         if (right && body.getLinearVelocity().x <= 2) {

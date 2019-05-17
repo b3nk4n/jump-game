@@ -15,6 +15,7 @@ public interface AssetPaths {
         String POWERUP = "audio/sounds/powerup.wav";
         String POWERDOWN = "audio/sounds/powerdown.wav";
         String MARIO_DIE = "audio/sounds/mariodie.wav";
+        String JUMP = "audio/sounds/jump.wav";
     }
 
     interface Music {
