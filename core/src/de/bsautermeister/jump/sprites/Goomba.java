@@ -134,10 +134,10 @@ public class Goomba extends Enemy {
             Koopa koopa = (Koopa) enemy;
             if (koopa.getState() == Koopa.State.MOVING_SHELL) {
                 kill(State.DEAD);
-            } else {
-                reverseVelocity(true, false);
+                return;
             }
         }
+        reverseVelocity(true, false);
     }
 
     private void kill(State killState) {
