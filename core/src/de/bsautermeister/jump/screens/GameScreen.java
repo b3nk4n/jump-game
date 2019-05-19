@@ -71,6 +71,7 @@ public class GameScreen extends ScreenBase {
     private Sound powerDownSound;
     private Sound marioDieSound;
     private Sound jumpSound;
+    private Sound enemyKilledSound;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -119,6 +120,11 @@ public class GameScreen extends ScreenBase {
                 coinSound.play();
                 mario.addScore(100);
             }
+        }
+
+        @Override
+        public void killed(Enemy enemy) {
+            enemyKilledSound.play();
         }
 
         @Override
@@ -177,6 +183,7 @@ public class GameScreen extends ScreenBase {
         powerDownSound = getAssetManager().get(AssetDescriptors.Sounds.POWERDOWN);
         marioDieSound = getAssetManager().get(AssetDescriptors.Sounds.MARIO_DIE);
         jumpSound = getAssetManager().get(AssetDescriptors.Sounds.JUMP);
+        enemyKilledSound = getAssetManager().get(AssetDescriptors.Sounds.KILLED);
     }
 
     private void spawnItem(ItemDef itemDef) {

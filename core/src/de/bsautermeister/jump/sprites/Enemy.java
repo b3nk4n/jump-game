@@ -66,6 +66,8 @@ public abstract class Enemy extends Sprite {
             fixture.setFilterData(filter);
         }
 
+        callbacks.killed(this);
+
         if (applyPush) {
             getBody().applyLinearImpulse(new Vector2(0, 3.5f), getBody().getWorldCenter(), true);
         }

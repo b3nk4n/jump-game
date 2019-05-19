@@ -23,7 +23,7 @@ public class Brick extends InteractiveTileObject {
         if (closeEnough && mario.isBig()) {
             // kill enemies on top
             for (Enemy enemyOnTop : getEnemiesOnTop()) {
-                enemyOnTop.kill(true); // TODO: set state DEAD missing here for enemy
+                enemyOnTop.kill(true);
             }
 
             // remove brick

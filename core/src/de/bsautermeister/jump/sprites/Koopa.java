@@ -57,7 +57,10 @@ public class Koopa extends Enemy {
     @Override
     public void update(float delta) {
         super.update(delta);
-        state.upate(delta);
+
+        if (!isDead()) {
+            state.upate(delta);
+        }
 
         setRegion(getFrame(delta));
 

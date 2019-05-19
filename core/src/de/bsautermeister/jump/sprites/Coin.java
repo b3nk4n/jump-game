@@ -32,7 +32,12 @@ public class Coin extends InteractiveTileObject {
                 new Vector2(getBody().getPosition().x, getBody().getPosition().y + GameConfig.BLOCK_SIZE / GameConfig.PPM),
                 closeEnough);
 
-        if(closeEnough) {
+        if(closeEnough && !isBlank()) {
+            // kill enemies on top
+            for (Enemy enemyOnTop : getEnemiesOnTop()) {
+                enemyOnTop.kill(true);
+            }
+
             setBlank();
         }
     }

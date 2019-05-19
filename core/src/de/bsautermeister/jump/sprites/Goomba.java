@@ -48,7 +48,10 @@ public class Goomba extends Enemy {
     @Override
     public void update(float delta) {
         super.update(delta);
-        state.upate(delta);
+
+        if (!isDead()) {
+            state.upate(delta);
+        }
 
         switch (state.current()) {
             case WALKING:
