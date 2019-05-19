@@ -36,7 +36,8 @@ public class WorldContactListener implements ContactListener {
                     ((Enemy) fixtureB.getUserData()).onHeadHit((Mario) fixtureA.getUserData());
                 }
                 break;
-            case JumpGame.ENEMY_BIT | JumpGame.OBJECT_BIT: // TODO: enemy vs. ground collusion? Using side-sensors? or a bottom shape below the circle?
+            case JumpGame.ENEMY_BIT | JumpGame.OBJECT_BIT:
+            case JumpGame.ENEMY_BIT | JumpGame.COLLIDER_BIT:
                 if (fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_BIT) {
                     ((Enemy) fixtureA.getUserData()).reverseVelocity(true, false);
                 } else {

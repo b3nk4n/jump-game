@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -50,6 +51,29 @@ public class Koopa extends Enemy {
         shellAnimation = new Animation(0.4f, frames);
 
         state = new GameObjectState<State>(State.WALKING);
+        state.setStateCallback(new GameObjectState.StateCallback<State>() {
+            @Override
+            public void changed(State previousState, State newState) {
+                if (previousState != State.MOVING_SHELL && newState != State.MOVING_SHELL) {
+                    return;
+                }
+
+                Filter oldFilter = getBody().getFixtureList().get(0).getFilterData();
+                short upatedMaskBits = oldFilter.maskBits;
+
+                if (previousState == State.MOVING_SHELL) {
+                    upatedMaskBits |= ~JumpGame.COLLIDER_BIT;
+                } else if (newState == State.MOVING_SHELL) {
+                    upatedMaskBits &= ~JumpGame.COLLIDER_BIT;
+                }
+
+                Filter filter = new Filter();
+                filter.categoryBits = oldFilter.categoryBits;
+                filter.maskBits = upatedMaskBits;
+
+                getBody().getFixtureList().get(0).setFilterData(filter);
+            }
+        });
 
         setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, (int)(1.5f * GameConfig.BLOCK_SIZE) / GameConfig.PPM);
     }
@@ -124,7 +148,8 @@ public class Koopa extends Enemy {
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
                 JumpGame.OBJECT_BIT |
-                JumpGame.ENEMY_BIT;
+                JumpGame.ENEMY_BIT |
+                JumpGame.COLLIDER_BIT;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);

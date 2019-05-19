@@ -33,6 +33,7 @@ public class WorldCreator {
     public static final String BRICKS_KEY = "bricks";
     public static final String GOOMBAS_KEY = "goombas";
     public static final String KOOPAS_KEY = "koopas";
+    public static final String COLLIDER_KEY = "collider";
 
     private final World world;
     private final TiledMap map;
@@ -47,6 +48,7 @@ public class WorldCreator {
 
         buildPhysicalLayer(GROUND_KEY, BodyDef.BodyType.StaticBody, JumpGame.GROUND_BIT);
         buildPhysicalLayer(PIPES_KEY, BodyDef.BodyType.StaticBody, JumpGame.OBJECT_BIT);
+        buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT);
 
         for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             new Brick(callbacks, world, map, mapObject);

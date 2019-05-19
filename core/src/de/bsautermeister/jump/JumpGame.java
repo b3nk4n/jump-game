@@ -25,6 +25,7 @@ public class JumpGame extends GameApp {
     public static final short MARIO_FEET_BIT = 1024;
     public static final short ENEMY_SIDE_BIT = 2048;
     public static final short BLOCK_TOP_BIT = 4096;
+    public static final short COLLIDER_BIT = 8192;
 
     @Override
     public void create() {

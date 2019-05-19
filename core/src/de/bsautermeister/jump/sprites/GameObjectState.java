@@ -1,14 +1,24 @@
 package de.bsautermeister.jump.sprites;
 
 public class GameObjectState<T extends Enum<T>> {
+
+    public interface StateCallback<T> {
+        void changed(T previousState, T newState);
+    }
+
     private T current;
     private T previous;
     private float stateTimer;
+    private StateCallback<T> stateCallback;
 
     public GameObjectState(T initialState) {
         current = initialState;
         previous = initialState;
         resetTimer();
+    }
+
+    public void setStateCallback(StateCallback<T> stateCallback) {
+        this.stateCallback = stateCallback;
     }
 
     public void upate(float delta) {
@@ -20,9 +30,14 @@ public class GameObjectState<T extends Enum<T>> {
             return;
         }
 
+        T beforeChange = previous;
         previous = current;
         current = state;
         resetTimer();
+
+        if (stateCallback != null) {
+            stateCallback.changed(beforeChange, current);
+        }
     }
 
     public boolean is(T state) {

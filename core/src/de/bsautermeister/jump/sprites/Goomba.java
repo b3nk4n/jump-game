@@ -99,7 +99,8 @@ public class Goomba extends Enemy {
                 JumpGame.MARIO_BIT |
                 JumpGame.OBJECT_BIT |
                 JumpGame.ENEMY_BIT |
-                JumpGame.BLOCK_TOP_BIT;
+                JumpGame.BLOCK_TOP_BIT |
+                JumpGame.COLLIDER_BIT;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
