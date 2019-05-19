@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.ObjectSet;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
@@ -24,22 +25,25 @@ public abstract class InteractiveTileObject {
     private final Rectangle bounds;
     private final Body body;
 
-    public InteractiveTileObject(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
+    private final ObjectSet<Enemy> enemiesOnTop;
+
+    public InteractiveTileObject(GameCallbacks callbacks, short categoryBit, World world, TiledMap map, MapObject mapObject) {
         this.callbacks = callbacks;
         this.world = world;
         this.map = map;
         this.mapObject = mapObject;
         this.bounds = ((RectangleMapObject)mapObject).getRectangle();
-        this.body = defineBody();
+        this.enemiesOnTop = new ObjectSet<Enemy>();
+        this.body = defineBody(categoryBit);
     }
 
-    private Body defineBody() {
-        return WorldCreator.createBody(this, world, bounds, BodyDef.BodyType.StaticBody);
+    private Body defineBody(short categoryBit) {
+        return WorldCreator.createBody(this, world, bounds, BodyDef.BodyType.StaticBody, categoryBit);
     }
 
     public abstract void onHeadHit(Mario mario);
 
-    public void setCategoryFilter(short filterBit) {
+    public void updateCategoryFilter(short filterBit) {
         Filter filter = new Filter();
         filter.categoryBits = filterBit;
         body.getFixtureList().get(0).setFilterData(filter);
@@ -69,5 +73,21 @@ public abstract class InteractiveTileObject {
 
     public GameCallbacks getCallbacks() {
         return callbacks;
+    }
+
+    public void stepOnBlock(Enemy enemy) {
+        if (!enemiesOnTop.contains(enemy)) {
+            enemiesOnTop.add(enemy);
+        }
+    }
+
+    public void stepOffBlock(Enemy enemy) {
+        if (enemiesOnTop.contains(enemy)) {
+            enemiesOnTop.remove(enemy);
+        }
+    }
+
+    public ObjectSet<Enemy> getEnemiesOnTop() {
+        return enemiesOnTop;
     }
 }

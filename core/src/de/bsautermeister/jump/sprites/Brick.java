@@ -10,8 +10,7 @@ import de.bsautermeister.jump.JumpGame;
 
 public class Brick extends InteractiveTileObject {
     public Brick(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
-        super(callbacks, world, map, mapObject);
-        setCategoryFilter(JumpGame.BRICK_BIT);
+        super(callbacks, JumpGame.BRICK_BIT, world, map, mapObject);
     }
 
     @Override
@@ -22,7 +21,13 @@ public class Brick extends InteractiveTileObject {
         getCallbacks().hit(mario, this, closeEnough);
 
         if (closeEnough && mario.isBig()) {
-            setCategoryFilter(JumpGame.DESTROYED_BIT);
+            // kill enemies on top
+            for (Enemy enemyOnTop : getEnemiesOnTop()) {
+                enemyOnTop.kill(true); // TODO: set state DEAD missing here for enemy
+            }
+
+            // remove brick
+            updateCategoryFilter(JumpGame.DESTROYED_BIT);
             getCell().setTile(null);
         }
     }

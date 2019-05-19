@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -23,7 +22,7 @@ import de.bsautermeister.jump.JumpGame;
 public class Goomba extends Enemy {
 
     public enum State {
-        WALKING, STOMPED, DEAD, REMOVABLE
+        WALKING, STOMPED
     }
 
     private GameObjectState<State> state;
@@ -53,20 +52,28 @@ public class Goomba extends Enemy {
 
         switch (state.current()) {
             case WALKING:
-                getBody().setLinearVelocity(getVelocity());
+                if (!isDead()) {
+                    getBody().setLinearVelocity(getVelocity());
+                }
                 setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
-                setRegion(walkAnimation.getKeyFrame(state.timer(), true));
+                TextureRegion frame = walkAnimation.getKeyFrame(state.timer(), true);
+
+                if (getVelocity().x > 0 && !frame.isFlipX()) { // TODO same in Koopa. Move this to base class?
+                    frame.flip(true, false);
+                } else if (getVelocity().x < 0 && frame.isFlipX()) {
+                    frame.flip(true, false);
+                }
+
+                if (isDead() && !frame.isFlipY()) {
+                    frame.flip(false, true);
+                }
+
+                setRegion(frame);
                 break;
             case STOMPED:
                 setRegion(new TextureRegion(atlas.findRegion("goomba"), 2 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
                 if (state.timer() > 1f) {
-                    state.set(State.REMOVABLE);
-                }
-                break;
-            case DEAD:
-                if (state.timer() > 5f) {
-                    state.set(State.REMOVABLE);
-                    destroyLater();
+                    markRemovable();
                 }
                 break;
         }
@@ -88,7 +95,8 @@ public class Goomba extends Enemy {
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
                 JumpGame.OBJECT_BIT |
-                JumpGame.ENEMY_BIT;
+                JumpGame.ENEMY_BIT |
+                JumpGame.BLOCK_TOP_BIT;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -133,24 +141,11 @@ public class Goomba extends Enemy {
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa) enemy;
             if (koopa.getState() == Koopa.State.MOVING_SHELL) {
-                kill(State.DEAD);
+                kill(true);
                 return;
             }
         }
         reverseVelocity(true, false);
-    }
-
-    private void kill(State killState) {
-        state.set(killState);
-        Filter filter = new Filter();
-        filter.maskBits = JumpGame.NOTHING_BIT;
-        for (Fixture fixture : getBody().getFixtureList()) {
-            fixture.setFilterData(filter);
-        }
-
-        if (killState != State.STOMPED) {
-            getBody().applyLinearImpulse(new Vector2(0, 5f), getBody().getWorldCenter(), true);
-        }
     }
 
     private void stomp() {
@@ -158,10 +153,5 @@ public class Goomba extends Enemy {
 
         state.set(State.STOMPED);
         destroyLater();
-    }
-
-    @Override
-    public boolean canBeRemoved() {
-        return state.is(State.REMOVABLE);
     }
 }

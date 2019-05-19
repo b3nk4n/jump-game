@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -24,7 +23,7 @@ public class Koopa extends Enemy {
     public static final float KICK_SPEED = 2f;
 
     public enum State {
-        WALKING, STANDING_SHELL, MOVING_SHELL, DEAD, REMOVABLE
+        WALKING, STANDING_SHELL, MOVING_SHELL
     }
 
     private GameObjectState<State> state;
@@ -32,8 +31,6 @@ public class Koopa extends Enemy {
     private Animation<TextureRegion> walkAnimation;
     private Animation<TextureRegion> shellAnimation;
     private TextureAtlas atlas;
-
-    private float deadRotation;
 
     public Koopa(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas,
                  float posX, float posY) {
@@ -55,8 +52,6 @@ public class Koopa extends Enemy {
         state = new GameObjectState<State>(State.WALKING);
 
         setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, (int)(1.5f * GameConfig.BLOCK_SIZE) / GameConfig.PPM);
-
-        deadRotation = 0;
     }
 
     @Override
@@ -74,15 +69,7 @@ public class Koopa extends Enemy {
         setPosition(getBody().getPosition().x - getWidth() / 2,
                 getBody().getPosition().y - 8 / GameConfig.PPM);
 
-        if (state.is(State.DEAD)) {
-            deadRotation += delta * 90;
-            rotate(deadRotation);
-
-            if (state.timer() > 5 && !isDestroyed()) {
-                state.set(State.REMOVABLE);
-                destroyLater();
-            }
-        } else {
+        if (!isDead()) {
             getBody().setLinearVelocity(getVelocity());
         }
 
@@ -109,6 +96,10 @@ public class Koopa extends Enemy {
             textureRegion.flip(true, false);
         } else if (getVelocity().x < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
+        }
+
+        if (isDead() && !textureRegion.isFlipY()) {
+            textureRegion.flip(false, true);
         }
 
         return textureRegion;
@@ -182,7 +173,7 @@ public class Koopa extends Enemy {
         if (enemy instanceof Koopa) {
             Koopa otherKoopa = (Koopa) enemy;
             if (!state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.MOVING_SHELL) {
-                kill();
+                kill(true);
             } else if(state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.WALKING) {
                 return;
             } else {
@@ -200,20 +191,5 @@ public class Koopa extends Enemy {
 
     public State getState() {
         return state.current();
-    }
-
-    private void kill() {
-        state.set(State.DEAD);
-        Filter filter = new Filter();
-        filter.maskBits = JumpGame.NOTHING_BIT;
-        for (Fixture fixture : getBody().getFixtureList()) {
-            fixture.setFilterData(filter);
-        }
-        getBody().applyLinearImpulse(new Vector2(0, 5f), getBody().getWorldCenter(), true);
-    }
-
-    @Override
-    public boolean canBeRemoved() {
-        return state.is(State.REMOVABLE);
     }
 }

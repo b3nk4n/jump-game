@@ -17,8 +17,7 @@ public class Coin extends InteractiveTileObject {
     private static TiledMapTileSet tileSet;
 
     public Coin(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
-        super(callbacks, world, map, mapObject);
-        setCategoryFilter(JumpGame.COIN_BIT);
+        super(callbacks, JumpGame.COIN_BIT, world, map, mapObject);;
 
         tileSet = map.getTileSets().getTileSet("tileset");
     }

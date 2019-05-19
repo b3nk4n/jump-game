@@ -82,6 +82,14 @@ public class WorldContactListener implements ContactListener {
                 Mario mario = (Mario)(fixtureA.getFilterData().categoryBits == JumpGame.MARIO_FEET_BIT
                         ? fixtureA.getUserData() : fixtureB.getUserData());
                 mario.touchGround();
+                break;
+            case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
+                Enemy enemy = (Enemy)(fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_BIT
+                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                InteractiveTileObject block = (InteractiveTileObject) (fixtureA.getFilterData().categoryBits == JumpGame.BLOCK_TOP_BIT
+                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                block.stepOnBlock(enemy);
+                break;
         }
     }
 
@@ -100,6 +108,14 @@ public class WorldContactListener implements ContactListener {
                 Mario mario = (Mario)(fixtureA.getFilterData().categoryBits == JumpGame.MARIO_FEET_BIT
                         ? fixtureA.getUserData() : fixtureB.getUserData());
                 mario.leftGround();
+                break;
+            case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
+                Enemy enemy = (Enemy)(fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_BIT
+                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                InteractiveTileObject block = (InteractiveTileObject) (fixtureA.getFilterData().categoryBits == JumpGame.BLOCK_TOP_BIT
+                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                block.stepOffBlock(enemy);
+                break;
         }
     }
 

@@ -203,25 +203,8 @@ public class GameScreen extends ScreenBase {
         mario.update(delta);
         checkPlayerInBounds();
 
-        for (Enemy enemy : enemies) {
-            enemy.update(delta);
-
-            if (enemy.getX() < mario.getX() + 256 / GameConfig.PPM) {
-                enemy.setActive(true);
-            }
-
-            if (enemy.canBeRemoved()) {
-                enemies.removeValue(enemy, true);
-            }
-        }
-
-        for (Item item : items) {
-            item.update(delta);
-
-            if (item.canBeRemoved()) {
-                items.removeValue(item, true);
-            }
-        }
+        updateEnemies(delta);
+        updateItems(delta);
 
         hud.update(delta);
 
@@ -232,6 +215,30 @@ public class GameScreen extends ScreenBase {
 
         if (mario.getState() == Mario.State.DEAD) {
             getGame().getMusicPlayer().stop();
+        }
+    }
+
+    private void updateItems(float delta) {
+        for (Item item : items) {
+            item.update(delta);
+
+            if (item.canBeRemoved()) {
+                items.removeValue(item, true);
+            }
+        }
+    }
+
+    private void updateEnemies(float delta) {
+        for (Enemy enemy : enemies) {
+            enemy.update(delta);
+
+            if (enemy.getX() < mario.getX() + 256 / GameConfig.PPM) {
+                enemy.setActive(true);
+            }
+
+            if (enemy.isRemovable()) {
+                enemies.removeValue(enemy, true);
+            }
         }
     }
 

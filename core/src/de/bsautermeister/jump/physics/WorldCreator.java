@@ -5,8 +5,10 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -84,6 +86,18 @@ public class WorldCreator {
         if (parent != null) {
             fixture.setUserData(parent); // TODO refactor this (Part 12: 6min)
         }
+
+        if (categoryBit == JumpGame.BRICK_BIT | categoryBit == JumpGame.COIN_BIT) {
+            EdgeShape topCornerShape = new EdgeShape();
+            fixtureDef.shape = topCornerShape;
+            fixtureDef.filter.categoryBits = JumpGame.BLOCK_TOP_BIT;
+            fixtureDef.filter.maskBits = JumpGame.ENEMY_BIT;
+            fixtureDef.isSensor = true;
+            topCornerShape.set(new Vector2(-6 / GameConfig.PPM, 8.5f / GameConfig.PPM),
+                    new Vector2(6 / GameConfig.PPM, 8.5f / GameConfig.PPM));
+            body.createFixture(fixtureDef).setUserData(parent);
+        }
+
         return body;
     }
 
