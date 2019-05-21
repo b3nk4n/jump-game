@@ -20,76 +20,60 @@ public class WorldContactListener implements ContactListener {
 
         int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
+        Item item;
+        Mario mario;
+        Enemy enemy;
+        InteractiveTileObject tileObject;
         switch (collisionDef) {
             case JumpGame.MARIO_HEAD_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_HEAD_BIT | JumpGame.COIN_BIT:
-                if (fixtureA.getFilterData().categoryBits == JumpGame.MARIO_HEAD_BIT) {
-                    ((InteractiveTileObject) fixtureB.getUserData()).onHeadHit((Mario) fixtureA.getUserData());
-                } else {
-                    ((InteractiveTileObject) fixtureA.getUserData()).onHeadHit((Mario) fixtureB.getUserData());
-                }
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_HEAD_BIT);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.COIN_BIT | JumpGame.BRICK_BIT);
+                tileObject.onHeadHit(mario);
                 break;
             case JumpGame.ENEMY_HEAD_BIT | JumpGame.MARIO_BIT: // TODO: check, if mario is landing very fast, he could also touch the body instead of thus the head, and die
-                if (fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_HEAD_BIT) {
-                    ((Enemy) fixtureA.getUserData()).onHeadHit((Mario) fixtureB.getUserData());
-                } else {
-                    ((Enemy) fixtureB.getUserData()).onHeadHit((Mario) fixtureA.getUserData());
-                }
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_HEAD_BIT);
+                enemy.onHeadHit(mario);
                 break;
             case JumpGame.ENEMY_BIT | JumpGame.OBJECT_BIT:
             case JumpGame.ENEMY_BIT | JumpGame.COLLIDER_BIT:
-                if (fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_BIT) {
-                    ((Enemy) fixtureA.getUserData()).reverseVelocity(true, false);
-                } else {
-                    ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
-                }
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
+                enemy.reverseVelocity(true, false);
                 break;
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
-                if (fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_SIDE_BIT) {
-                    ((Enemy) fixtureA.getUserData()).reverseVelocity(true, false);
-                } else {
-                    ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
-                }
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
+                enemy.reverseVelocity(true, false);
                 break;
             case JumpGame.ENEMY_BIT: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
                 ((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
                 break;
             case JumpGame.MARIO_BIT | JumpGame.ENEMY_BIT:
-                if (fixtureA.getFilterData().categoryBits == JumpGame.MARIO_BIT) {
-                    ((Mario) fixtureA.getUserData()).hit((Enemy) fixtureB.getUserData());
-                } else {
-                    ((Mario) fixtureB.getUserData()).hit((Enemy) fixtureA.getUserData());
-                }
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
+                mario.hit(enemy);
                 break;
             case JumpGame.ITEM_BIT | JumpGame.OBJECT_BIT:
-                if (fixtureA.getFilterData().categoryBits == JumpGame.ITEM_BIT) {
-                    ((Item) fixtureA.getUserData()).reverseVelocity(true, false);
-                } else {
-                    ((Item) fixtureB.getUserData()).reverseVelocity(true, false);
-                }
+                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
+                item.reverseVelocity(true, false);
                 break;
             case JumpGame.ITEM_BIT | JumpGame.MARIO_BIT:
-                if (fixtureA.getFilterData().categoryBits == JumpGame.ITEM_BIT) {
-                    ((Item) fixtureA.getUserData()).use((Mario) fixtureB.getUserData());
-                } else {
-                    ((Item) fixtureB.getUserData()).use((Mario) fixtureA.getUserData());
-                }
+                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
+                item.use(mario); // TODO mario.use(item) would make more sense :)
                 break;
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
-                Mario mario = (Mario)(fixtureA.getFilterData().categoryBits == JumpGame.MARIO_FEET_BIT
-                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
                 mario.touchGround();
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
-                Enemy enemy = (Enemy)(fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_BIT
-                        ? fixtureA.getUserData() : fixtureB.getUserData());
-                InteractiveTileObject block = (InteractiveTileObject) (fixtureA.getFilterData().categoryBits == JumpGame.BLOCK_TOP_BIT
-                        ? fixtureA.getUserData() : fixtureB.getUserData());
-                block.stepOnBlock(enemy);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+                tileObject.stepOnBlock(enemy); // TODO enemy.stopOnBlock, or rename?
                 break;
         }
     }
@@ -101,23 +85,28 @@ public class WorldContactListener implements ContactListener {
 
         int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
+        Mario mario;
+        Enemy enemy;
+        InteractiveTileObject tileObject;
         switch (collisionDef) {
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
-                Mario mario = (Mario)(fixtureA.getFilterData().categoryBits == JumpGame.MARIO_FEET_BIT
-                        ? fixtureA.getUserData() : fixtureB.getUserData());
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
                 mario.leftGround();
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
-                Enemy enemy = (Enemy)(fixtureA.getFilterData().categoryBits == JumpGame.ENEMY_BIT
-                        ? fixtureA.getUserData() : fixtureB.getUserData());
-                InteractiveTileObject block = (InteractiveTileObject) (fixtureA.getFilterData().categoryBits == JumpGame.BLOCK_TOP_BIT
-                        ? fixtureA.getUserData() : fixtureB.getUserData());
-                block.stepOffBlock(enemy);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+                tileObject.stepOffBlock(enemy); // TODO enemy.stopOffBlock, or rename?
                 break;
         }
+    }
+
+    private Object resolveUserData(Fixture fixtureA, Fixture fixtureB, int categoryBits) {
+        return ((fixtureA.getFilterData().categoryBits & categoryBits) != 0)
+                ? fixtureA.getUserData() : fixtureB.getUserData();
     }
 
     @Override
