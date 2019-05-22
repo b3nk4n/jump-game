@@ -44,7 +44,7 @@ public class Mushroom extends Item {
     }
 
     @Override
-    public void use(Mario mario) {
+    public void usedBy(Mario mario) {
         getCallbacks().use(mario, this);
         destroyLater();
         mario.grow();

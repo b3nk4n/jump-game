@@ -29,7 +29,7 @@ public abstract class Item extends Sprite {
     }
 
     public abstract Body defineBody();
-    public abstract void use(Mario mario);
+    public abstract void usedBy(Mario mario);
 
     public void update(float delta) {
         if (markForDestory && !destroyed) {

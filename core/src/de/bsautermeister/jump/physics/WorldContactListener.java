@@ -61,7 +61,7 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.ITEM_BIT | JumpGame.MARIO_BIT:
                 item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
-                item.use(mario); // TODO mario.use(item) would make more sense :)
+                item.usedBy(mario);
                 break;
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
@@ -73,7 +73,7 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.stepOnBlock(enemy); // TODO enemy.stopOnBlock, or rename?
+                tileObject.enemySteppedOn(enemy); // TODO enemy.stopOnBlock, or rename?
                 break;
         }
     }
@@ -99,7 +99,7 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.stepOffBlock(enemy); // TODO enemy.stopOffBlock, or rename?
+                tileObject.enemySteppedOff(enemy); // TODO enemy.stopOffBlock, or rename?
                 break;
         }
     }

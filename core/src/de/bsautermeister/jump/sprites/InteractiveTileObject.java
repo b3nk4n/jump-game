@@ -75,13 +75,13 @@ public abstract class InteractiveTileObject {
         return callbacks;
     }
 
-    public void stepOnBlock(Enemy enemy) {
+    public void enemySteppedOn(Enemy enemy) {
         if (!enemiesOnTop.contains(enemy)) {
             enemiesOnTop.add(enemy);
         }
     }
 
-    public void stepOffBlock(Enemy enemy) {
+    public void enemySteppedOff(Enemy enemy) {
         if (enemiesOnTop.contains(enemy)) {
             enemiesOnTop.remove(enemy);
         }
