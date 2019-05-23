@@ -11,7 +11,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -22,7 +21,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
@@ -34,6 +32,7 @@ import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemDef;
+import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.utils.GdxUtils;
@@ -71,7 +70,7 @@ public class GameScreen extends ScreenBase {
     private Sound powerDownSound;
     private Sound marioDieSound;
     private Sound jumpSound;
-    private Sound enemyKilledSound;
+    private Sound kickedSound;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -85,6 +84,7 @@ public class GameScreen extends ScreenBase {
             mario.addScore(50);
         }
 
+
         @Override
         public void use(Mario mario, Item item) {
             powerupSound.play();
@@ -93,7 +93,7 @@ public class GameScreen extends ScreenBase {
         @Override
         public void hit(Mario mario, Enemy enemy) {
             if (mario.isBig()) {
-                powerDownSound.play(); // TODO play other sound if Koopa was kicked
+                powerDownSound.play();
             }
         }
 
@@ -123,8 +123,19 @@ public class GameScreen extends ScreenBase {
         }
 
         @Override
-        public void killed(Enemy enemy) {
-            enemyKilledSound.play();
+        public void kicked(Enemy enemy) {
+            kickedSound.play();
+            mario.addScore(50);
+        }
+
+        @Override
+        public void hitWall(Enemy enemy) {
+            if (enemy instanceof Koopa) {
+                Koopa koopa = (Koopa) enemy;
+                if (koopa.getState() == Koopa.State.MOVING_SHELL) {
+                    bumpSound.play();
+                }
+            }
         }
 
         @Override
@@ -183,7 +194,7 @@ public class GameScreen extends ScreenBase {
         powerDownSound = getAssetManager().get(AssetDescriptors.Sounds.POWERDOWN);
         marioDieSound = getAssetManager().get(AssetDescriptors.Sounds.MARIO_DIE);
         jumpSound = getAssetManager().get(AssetDescriptors.Sounds.JUMP);
-        enemyKilledSound = getAssetManager().get(AssetDescriptors.Sounds.KILLED);
+        kickedSound = getAssetManager().get(AssetDescriptors.Sounds.KICKED);
     }
 
     private void spawnItem(ItemDef itemDef) {

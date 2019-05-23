@@ -356,25 +356,26 @@ public class Mario extends Sprite {
         }
     }
 
-    public void hit(Enemy enemy) {
-        callbacks.hit(this, enemy);
+    private void smaller(Enemy enemy) {
+        if (isBig) {
+            isBig = false;
+            timeToRedefineMario = true;
+            callbacks.hit(this, enemy);
+        } else {
+            kill();
+        }
+    }
 
+    public void hit(Enemy enemy) {
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa)enemy;
             if (koopa.getState() == Koopa.State.STANDING_SHELL) {
                 koopa.kick(getX() <= enemy.getX() ? Koopa.KICK_SPEED : -Koopa.KICK_SPEED);
-            } else {
-                kill(); // TODO do not kill if mario is BIG!
+                return;
             }
-            return;
         }
 
-        if (isBig) {
-            isBig = false;
-            timeToRedefineMario = true;
-        } else {
-            kill();
-        }
+        smaller(enemy);
     }
 
     private void kill() {

@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.sprites;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -66,7 +65,7 @@ public abstract class Enemy extends Sprite {
             fixture.setFilterData(filter);
         }
 
-        callbacks.killed(this);
+        callbacks.kicked(this);
 
         if (applyPush) {
             getBody().applyLinearImpulse(new Vector2(0, 3.5f), getBody().getWorldCenter(), true);
@@ -88,6 +87,7 @@ public abstract class Enemy extends Sprite {
         if (reverseY) {
             velocity.y = -velocity.y;
         }
+        callbacks.hitWall(this);
     }
 
     public void setActive(boolean active) {
