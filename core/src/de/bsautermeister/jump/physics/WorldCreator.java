@@ -107,13 +107,13 @@ public class WorldCreator {
         Array<Enemy> enemies = new Array<Enemy>();
         for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            enemies.add(new Goomba(callbacks, world, map, atlas,
+            enemies.add(new Goomba(callbacks, world, atlas,
                     rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
         }
 
         for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            enemies.add(new Koopa(callbacks, world, map, atlas,
+            enemies.add(new Koopa(callbacks, world, atlas,
                     rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
         }
         return enemies;

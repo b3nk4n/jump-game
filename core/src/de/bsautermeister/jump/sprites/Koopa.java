@@ -33,9 +33,9 @@ public class Koopa extends Enemy {
     private Animation<TextureRegion> shellAnimation;
     private TextureAtlas atlas;
 
-    public Koopa(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas,
+    public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
-        super(callbacks, world, map, posX, posY);
+        super(callbacks, world, posX, posY);
 
         this.atlas = atlas;
         Array<TextureRegion> frames = new Array<TextureRegion>();
@@ -220,7 +220,7 @@ public class Koopa extends Enemy {
     public void kick(boolean directionRight) {
         state.set(State.MOVING_SHELL);
         getVelocity().x = directionRight ? KICK_SPEED : -KICK_SPEED;
-        getCallbacks().killed(this);
+        getCallbacks().kicked(this);
     }
 
     public State getState() {

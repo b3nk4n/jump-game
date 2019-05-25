@@ -3,7 +3,6 @@ package de.bsautermeister.jump.sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -30,9 +29,9 @@ public class Goomba extends Enemy {
     private Animation<TextureRegion> walkAnimation;
     private TextureAtlas atlas;
 
-    public Goomba(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas,
+    public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
-        super(callbacks, world, map, posX, posY);
+        super(callbacks, world, posX, posY);
 
         this.state = new GameObjectState<State>(State.WALKING);
 
@@ -156,6 +155,6 @@ public class Goomba extends Enemy {
         getCallbacks().stomp(this);
 
         state.set(State.STOMPED);
-        destroyLater();
+        markDestroyBody();
     }
 }

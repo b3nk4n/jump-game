@@ -241,13 +241,29 @@ public class GameScreen extends ScreenBase {
         }
     }
 
+    private void postUpdate() {
+        for (Enemy enemy : enemies) {
+            enemy.postUpdate();
+
+            if (enemy.isRemovable()) {
+                enemy.dispose();
+                enemies.removeValue(enemy, true);
+            }
+        }
+
+        for (Item item : items) {
+            item.postUpdate();
+
+            if (item.isRemovable()) {
+                item.dispose();
+                items.removeValue(item, true);
+            }
+        }
+    }
+
     private void updateItems(float delta) {
         for (Item item : items) {
             item.update(delta);
-
-            if (item.canBeRemoved()) {
-                items.removeValue(item, true);
-            }
         }
     }
 
@@ -257,10 +273,6 @@ public class GameScreen extends ScreenBase {
 
             if (enemy.getX() < mario.getX() + 256 / GameConfig.PPM) {
                 enemy.setActive(true);
-            }
-
-            if (enemy.isRemovable()) {
-                enemies.removeValue(enemy, true);
             }
         }
     }
@@ -326,6 +338,7 @@ public class GameScreen extends ScreenBase {
     @Override
     public void render(float delta) {
         update(delta);
+        postUpdate();
 
         GdxUtils.clearScreen(Color.BLACK);
 
