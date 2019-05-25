@@ -25,10 +25,14 @@ public class Brick extends InteractiveTileObject {
             enemyOnTop.kill(true);
         }
 
-        if (closeEnough && mario.isBig()) {
-            // remove brick
-            updateCategoryFilter(JumpGame.DESTROYED_BIT);
-            getCell().setTile(null);
+        if (closeEnough) {
+            if (mario.isBig()) {
+                // remove brick
+                updateCategoryFilter(JumpGame.DESTROYED_BIT);
+                getCell().setTile(null);
+            } else {
+                bumpUp();
+            }
         }
     }
 }

@@ -40,6 +40,8 @@ public class WorldCreator {
     private TextureAtlas atlas;
     private GameCallbacks callbacks;
 
+    private static Array<InteractiveTileObject> tileObjects = new Array<InteractiveTileObject>();
+
     public WorldCreator(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas) {
         this.callbacks = callbacks;
         this.world = world;
@@ -51,11 +53,11 @@ public class WorldCreator {
         buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT);
 
         for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            new Brick(callbacks, world, map, mapObject);
+            tileObjects.add(new Brick(callbacks, world, map, mapObject));
         }
 
         for (MapObject mapObject : map.getLayers().get(COINS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            new Coin(callbacks, world, map, mapObject);
+            tileObjects.add(new Coin(callbacks, world, map, mapObject));
         }
     }
 
@@ -117,5 +119,9 @@ public class WorldCreator {
                     rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
         }
         return enemies;
+    }
+
+    public static Array<InteractiveTileObject> getTileObjects() {
+        return tileObjects;
     }
 }

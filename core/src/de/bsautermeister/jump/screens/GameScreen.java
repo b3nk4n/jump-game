@@ -30,6 +30,7 @@ import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
@@ -228,6 +229,10 @@ public class GameScreen extends ScreenBase {
 
         updateEnemies(delta);
         updateItems(delta);
+
+        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+            tileObject.update(delta);
+        }
 
         hud.update(delta);
 
