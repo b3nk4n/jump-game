@@ -125,6 +125,11 @@ public class GameScreen extends ScreenBase {
         @Override
         public void kicked(Enemy enemy) {
             kickedSound.play();
+        }
+
+        @Override
+        public void killed(Enemy enemy) {
+            kickedSound.play();
             mario.addScore(50);
         }
 

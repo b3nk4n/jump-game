@@ -149,6 +149,7 @@ public class Koopa extends Enemy {
                 JumpGame.MARIO_BIT |
                 JumpGame.OBJECT_BIT |
                 JumpGame.ENEMY_BIT |
+                JumpGame.BLOCK_TOP_BIT |
                 JumpGame.COLLIDER_BIT;
 
         fixtureDef.shape = shape;
@@ -188,12 +189,16 @@ public class Koopa extends Enemy {
     @Override
     public void onHeadHit(Mario mario) {
         if (!state.is(State.STANDING_SHELL)) {
-            state.set(State.STANDING_SHELL);
-            getVelocity().x = 0;
-            getCallbacks().stomp(this);
+            stomp();
         } else {
-            kick(mario.getX() <= getX() ? KICK_SPEED : -KICK_SPEED);
+            kick(mario.getX() <= getX());
         }
+    }
+
+    private void stomp() {
+        state.set(State.STANDING_SHELL);
+        getVelocity().x = 0;
+        getCallbacks().stomp(this);
     }
 
     @Override
@@ -212,9 +217,10 @@ public class Koopa extends Enemy {
         }
     }
 
-    public void kick(float speed) {
-        getVelocity().x = speed;
+    public void kick(boolean directionRight) {
         state.set(State.MOVING_SHELL);
+        getVelocity().x = directionRight ? KICK_SPEED : -KICK_SPEED;
+        getCallbacks().killed(this);
     }
 
     public State getState() {

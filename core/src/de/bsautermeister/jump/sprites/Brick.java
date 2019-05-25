@@ -20,12 +20,12 @@ public class Brick extends InteractiveTileObject {
 
         getCallbacks().hit(mario, this, closeEnough);
 
-        if (closeEnough && mario.isBig()) {
-            // kill enemies on top
-            for (Enemy enemyOnTop : getEnemiesOnTop()) {
-                enemyOnTop.kill(true);
-            }
+        // kill enemies on top
+        for (Enemy enemyOnTop : getEnemiesOnTop()) {
+            enemyOnTop.kill(true);
+        }
 
+        if (closeEnough && mario.isBig()) {
             // remove brick
             updateCategoryFilter(JumpGame.DESTROYED_BIT);
             getCell().setTile(null);

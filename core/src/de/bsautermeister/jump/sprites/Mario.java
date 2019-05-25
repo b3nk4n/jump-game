@@ -370,7 +370,7 @@ public class Mario extends Sprite {
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa)enemy;
             if (koopa.getState() == Koopa.State.STANDING_SHELL) {
-                koopa.kick(getX() <= enemy.getX() ? Koopa.KICK_SPEED : -Koopa.KICK_SPEED);
+                koopa.kick(getX() <= enemy.getX());
                 return;
             }
         }

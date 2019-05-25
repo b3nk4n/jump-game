@@ -17,6 +17,7 @@ public interface GameCallbacks {
     void hit(Mario mario, Brick brick, boolean closeEnough);
     void hit(Mario mario, Coin coin, Vector2 position, boolean closeEnough);
     void hitWall(Enemy enemy);
+    void killed(Enemy enemy);
     void kicked(Enemy enemy);
     void gameOver();
 }

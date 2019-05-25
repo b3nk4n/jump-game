@@ -73,7 +73,7 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.enemySteppedOn(enemy); // TODO enemy.stopOnBlock, or rename?
+                tileObject.enemySteppedOn(enemy);
                 break;
         }
     }
