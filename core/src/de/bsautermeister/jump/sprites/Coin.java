@@ -39,7 +39,6 @@ public class Coin extends InteractiveTileObject {
             }
 
             setBlank();
-
             bumpUp();
         }
     }
@@ -53,6 +52,8 @@ public class Coin extends InteractiveTileObject {
     }
 
     private void setBlank() {
-        getCell().setTile(tileSet.getTile(BLANK_COIN_IDX));
+        getCell().setTile(
+                new DynamicTiledMapTile(
+                        tileSet.getTile(BLANK_COIN_IDX)));
     }
 }

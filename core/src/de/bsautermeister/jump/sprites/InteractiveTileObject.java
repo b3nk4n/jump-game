@@ -51,17 +51,19 @@ public abstract class InteractiveTileObject {
         float totalProgress = bumpUpAnimationTimer / BUMP_UP_ANIMATION_TIME;
 
         TiledMapTile tile = cell.getTile();
-        float offset = 0f;
-        if (totalProgress < 1f) {
-            float animationProgress;
-            if (totalProgress <= 0.5f) {
-                animationProgress = totalProgress * 2;
-            } else {
-                animationProgress = 1.0f - (totalProgress * 2 - 1f);
+        if (tile != null) {
+            float offset = 0f;
+            if (totalProgress < 1f) {
+                float animationProgress;
+                if (totalProgress <= 0.5f) {
+                    animationProgress = totalProgress * 2;
+                } else {
+                    animationProgress = 1.0f - (totalProgress * 2 - 1f);
+                }
+                offset = bumpUpInterpolation.apply(animationProgress) * 5f;
             }
-            offset = bumpUpInterpolation.apply(animationProgress) * 5f;
+            tile.setOffsetY(offset);
         }
-        tile.setOffsetY(offset);
     }
 
     public void bumpUp() {
