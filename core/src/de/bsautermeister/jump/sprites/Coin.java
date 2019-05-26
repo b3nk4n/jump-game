@@ -36,6 +36,10 @@ public class Coin extends InteractiveTileObject {
             // kill enemies on top
             for (Enemy enemyOnTop : getEnemiesOnTop()) {
                 enemyOnTop.kill(true);
+
+                // ensure that enemy is un-registered from enemies on top, because Box2D does not seem
+                // to call endContact anymore
+                enemySteppedOff(enemyOnTop);
             }
 
             setBlank();

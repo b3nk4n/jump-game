@@ -110,7 +110,7 @@ public abstract class InteractiveTileObject {
 
     public void enemySteppedOff(Enemy enemy) {
         if (enemiesOnTop.contains(enemy)) {
-            enemiesOnTop.remove(enemy); // TODO step off not called when enemy was killed? When small mario hits the brick again, the kicked sound is played again
+            enemiesOnTop.remove(enemy);
         }
     }
 

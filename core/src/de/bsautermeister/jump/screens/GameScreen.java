@@ -45,11 +45,8 @@ public class GameScreen extends ScreenBase {
     private Viewport viewport;
     private final Hud hud;
 
-    private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
-    private int mapWidth;
-    private int tilePixelWidth;
     private float mapPixelWidth;
 
     private final World world;
@@ -158,12 +155,10 @@ public class GameScreen extends ScreenBase {
         this.viewport = new StretchViewport(GameConfig.WORLD_WIDTH / GameConfig.PPM, GameConfig.WORLD_HEIGHT / GameConfig.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        this.mapLoader = new TmxMapLoader();
-
-        this.map = mapLoader.load("maps/level01.tmx");
+        this.map = new TmxMapLoader().load("maps/level01.tmx");
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / GameConfig.PPM, game.getBatch());
-        this.mapWidth = map.getProperties().get("width", Integer.class);
-        this.tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
+        float mapWidth = map.getProperties().get("width", Integer.class);
+        float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
         this.mapPixelWidth = mapWidth * tilePixelWidth / GameConfig.PPM;
 
         this.world = new World(new Vector2(0,-10f), true);

@@ -78,19 +78,19 @@ public class Mario extends Sprite {
         for (int i = 1; i < 4; i++) {
             frames.add(new TextureRegion(littleMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
         }
-        marioWalk = new Animation(0.1f, frames);
+        marioWalk = new Animation<TextureRegion>(0.1f, frames);
 
         frames.clear();
         for (int i = 1; i < 4; i++) {
             frames.add(new TextureRegion(bigMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE));
         }
-        bigMarioWalk = new Animation(0.1f, frames);
+        bigMarioWalk = new Animation<TextureRegion>(0.1f, frames);
 
         frames.clear();
         for (int i = 5; i < 6; i++) {
             frames.add(new TextureRegion(littleMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
         }
-        marioJump = new Animation(0.1f, frames);
+        marioJump = new Animation<TextureRegion>(0.1f, frames);
         bigMarioJump = new TextureRegion(bigMarioTexture, 5 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         marioDead = new TextureRegion(littleMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
