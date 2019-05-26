@@ -10,6 +10,7 @@ public class GameObjectState<T extends Enum<T>> {
     private T previous;
     private float stateTimer;
     private StateCallback<T> stateCallback;
+    private boolean frozen;
 
     public GameObjectState(T initialState) {
         current = initialState;
@@ -22,6 +23,10 @@ public class GameObjectState<T extends Enum<T>> {
     }
 
     public void upate(float delta) {
+        if (frozen) {
+            return;
+        }
+
         stateTimer += delta;
     }
 
@@ -66,5 +71,17 @@ public class GameObjectState<T extends Enum<T>> {
 
     public float timer() {
         return stateTimer;
+    }
+
+    public void freeze() {
+        frozen = true;
+    }
+
+    public void unfreeze() {
+        frozen = false;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
     }
 }

@@ -169,6 +169,7 @@ public class Mario extends Sprite {
     }
 
     public void control(boolean up, boolean left, boolean right) {
+        state.unfreeze();
         isTurning = right && body.getLinearVelocity().x < 0 || left && body.getLinearVelocity().x > 0;
 
         if (up && touchesGround() && !state.is(State.JUMPING)) {
@@ -195,7 +196,8 @@ public class Mario extends Sprite {
                 // keep jumping state
                 return;
             } else {
-                state.set(State.STANDING);
+                state.set(State.WALKING);
+                state.freeze();
             }
         } else if (jumpFixTimer < 0) {
             if (body.getLinearVelocity().x != 0) {
