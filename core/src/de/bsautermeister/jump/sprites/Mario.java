@@ -41,12 +41,16 @@ public class Mario extends Sprite {
 
     private TextureRegion marioStand;
     private TextureRegion marioDead;
+    private TextureRegion marioTurn;
     private Animation<TextureRegion> marioWalk;
     private Animation<TextureRegion> marioJump; // is actually just 1 frame
 
-    private TextureRegion bigMarionStand;
+    private TextureRegion bigMarioStand;
     private TextureRegion bigMarioJump;
+    private TextureRegion bigMarioTurn;
     private Animation<TextureRegion> bigMarioWalk;
+
+    private boolean isTurning;
 
     private static final float GROW_TIME = 1f;
     private float growingTimer;
@@ -72,7 +76,7 @@ public class Mario extends Sprite {
         TextureRegion bigMarioTexture = atlas.findRegion(RegionNames.BIG_MARIO);
 
         marioStand = new TextureRegion(littleMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
-        bigMarionStand = new TextureRegion(bigMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+        bigMarioStand = new TextureRegion(bigMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 1; i < 4; i++) {
@@ -94,6 +98,9 @@ public class Mario extends Sprite {
         bigMarioJump = new TextureRegion(bigMarioTexture, 5 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         marioDead = new TextureRegion(littleMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+
+        marioTurn = new TextureRegion(littleMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+        bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
         defineBody(startPostion);
@@ -162,6 +169,8 @@ public class Mario extends Sprite {
     }
 
     public void control(boolean up, boolean left, boolean right) {
+        isTurning = right && body.getLinearVelocity().x < 0 || left && body.getLinearVelocity().x > 0;
+
         if (up && touchesGround() && !state.is(State.JUMPING)) {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
@@ -218,16 +227,27 @@ public class Mario extends Sprite {
                 break;
             case WALKING:
                 if (useBigTexture) {
-                    textureRegion = bigMarioWalk.getKeyFrame(state.timer(), true);
+                    if (isTurning) {
+                        textureRegion = bigMarioTurn;
+                    } else {
+                        textureRegion = bigMarioWalk.getKeyFrame(state.timer(), true);
+                    }
+
                 } else {
-                    textureRegion = marioWalk.getKeyFrame(state.timer(), true);
+                    if (isTurning) {
+                        textureRegion = marioTurn;
+                    } else {
+                        textureRegion = marioWalk.getKeyFrame(state.timer(), true);
+                    }
                 }
                 break;
             case STANDING:
             default:
-                textureRegion = useBigTexture ? bigMarionStand : marioStand;
+                textureRegion = useBigTexture ? bigMarioStand : marioStand;
                 break;
         }
+
+
 
         if ((body.getLinearVelocity().x < 0 || !runningRight) && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
@@ -235,6 +255,10 @@ public class Mario extends Sprite {
         } else if ((body.getLinearVelocity().x > 0 || runningRight) && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             runningRight = true;
+        }
+
+        if (isTurning && state.is(State.WALKING)) {
+            textureRegion.flip(true, false);
         }
 
         return textureRegion;
