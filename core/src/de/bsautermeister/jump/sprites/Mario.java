@@ -32,7 +32,7 @@ public class Mario extends Sprite {
     private float jumpFixTimer;
 
     public enum State {
-        STANDING, JUMPING, WALKING, DEAD
+        STANDING, CROUCHING, JUMPING, WALKING, DEAD
     }
 
     private GameObjectState<State> state;
@@ -49,6 +49,7 @@ public class Mario extends Sprite {
     private TextureRegion bigMarioJump;
     private TextureRegion bigMarioTurn;
     private Animation<TextureRegion> bigMarioWalk;
+    private TextureRegion bigMarioCrouch;
 
     private boolean isTurning;
 
@@ -101,6 +102,8 @@ public class Mario extends Sprite {
 
         marioTurn = new TextureRegion(littleMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
         bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+
+        bigMarioCrouch = new TextureRegion(bigMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
         defineBody(startPostion);
@@ -168,7 +171,7 @@ public class Mario extends Sprite {
         }
     }
 
-    public void control(boolean up, boolean left, boolean right) {
+    public void control(boolean up, boolean down, boolean left, boolean right) {
         state.unfreeze();
         isTurning = right && body.getLinearVelocity().x < 0 || left && body.getLinearVelocity().x > 0;
 
@@ -179,14 +182,14 @@ public class Mario extends Sprite {
             callbacks.jump();
             return;
         }
-        if (right && body.getLinearVelocity().x <= 2) {
+        if (right && body.getLinearVelocity().x <= 2 && !down) {
             body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
 
         }
-        if (left && body.getLinearVelocity().x >= -2) {
+        if (left && body.getLinearVelocity().x >= -2 && !down) {
             body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
         }
-        if (!left && ! right) {
+        if ((!left && ! right) || down) {
             // horizontally decelerate fast, but don't stop immediately
             body.setLinearVelocity(body.getLinearVelocity().x * 0.75f, body.getLinearVelocity().y);
         }
@@ -200,7 +203,9 @@ public class Mario extends Sprite {
                 state.freeze();
             }
         } else if (jumpFixTimer < 0) {
-            if (body.getLinearVelocity().x != 0) {
+            if (down && isBig) {
+                state.set(State.CROUCHING);
+            } else if (body.getLinearVelocity().x != 0) {
                 state.set(State.WALKING);
             } else {
                 state.set(State.STANDING);
@@ -242,6 +247,9 @@ public class Mario extends Sprite {
                         textureRegion = marioWalk.getKeyFrame(state.timer(), true);
                     }
                 }
+                break;
+            case CROUCHING:
+                textureRegion = bigMarioCrouch;
                 break;
             case STANDING:
             default:
