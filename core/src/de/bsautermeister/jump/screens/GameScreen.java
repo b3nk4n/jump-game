@@ -376,7 +376,6 @@ public class GameScreen extends ScreenBase {
     }
 
     private void renderHud() {
-        // TODO hud viewport apply?
         hud.getStage().draw();
     }
 

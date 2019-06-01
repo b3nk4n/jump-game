@@ -27,6 +27,7 @@ public class Goomba extends Enemy {
     private GameObjectState<State> state;
 
     private Animation<TextureRegion> walkAnimation;
+    private TextureRegion stompedTexture;
     private TextureAtlas atlas;
 
     public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
@@ -36,12 +37,19 @@ public class Goomba extends Enemy {
         this.state = new GameObjectState<State>(State.WALKING);
 
         this.atlas = atlas;
+        initTextures(atlas);
+
+        setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
+    }
+
+    private void initTextures(TextureAtlas atlas) {
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
             frames.add(new TextureRegion(atlas.findRegion("goomba"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
         }
         walkAnimation = new Animation(0.4f, frames);
-        setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
+
+        stompedTexture = new TextureRegion(atlas.findRegion("goomba"), 2 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
     }
 
     @Override
@@ -50,35 +58,41 @@ public class Goomba extends Enemy {
 
         if (!isDead()) {
             state.upate(delta);
+            getBody().setLinearVelocity(getVelocity());
         }
+
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
+        setRegion(getFrame(delta));
+
+        if (state.is(State.STOMPED) && state.timer() > 1f) {
+            markRemovable();
+        }
+    }
+
+    private TextureRegion getFrame(float delta) {
+        TextureRegion textureRegion;
 
         switch (state.current()) {
-            case WALKING:
-                if (!isDead()) {
-                    getBody().setLinearVelocity(getVelocity());
-                }
-                setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
-                TextureRegion frame = walkAnimation.getKeyFrame(state.timer(), true);
-
-                if (getVelocity().x > 0 && !frame.isFlipX()) { // TODO same in Koopa. Move this to base class?
-                    frame.flip(true, false);
-                } else if (getVelocity().x < 0 && frame.isFlipX()) {
-                    frame.flip(true, false);
-                }
-
-                if (isDead() && !frame.isFlipY()) {
-                    frame.flip(false, true);
-                }
-
-                setRegion(frame);
-                break;
             case STOMPED:
-                setRegion(new TextureRegion(atlas.findRegion("goomba"), 2 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
-                if (state.timer() > 1f) {
-                    markRemovable();
-                }
+                textureRegion = stompedTexture;
+                break;
+            case WALKING:
+            default:
+                textureRegion = walkAnimation.getKeyFrame(state.timer(), true);
                 break;
         }
+
+        if (getVelocity().x > 0 && !textureRegion.isFlipX()) {
+            textureRegion.flip(true, false);
+        } else if (getVelocity().x < 0 && textureRegion.isFlipX()) {
+            textureRegion.flip(true, false);
+        }
+
+        if (isDead() && !textureRegion.isFlipY()) {
+            textureRegion.flip(false, true);
+        }
+
+        return textureRegion;
     }
 
     @Override

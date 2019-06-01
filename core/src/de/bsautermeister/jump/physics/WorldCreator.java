@@ -68,10 +68,6 @@ public class WorldCreator {
         }
     }
 
-    public static Body createBody(InteractiveTileObject parent, World world, Rectangle bounds, BodyDef.BodyType bodyType) {
-        return createBody(parent, world, bounds, bodyType, JumpGame.GROUND_BIT);
-    }
-
     public static Body createBody(InteractiveTileObject parent, World world, Rectangle bounds, BodyDef.BodyType bodyType, short categoryBit) {
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -88,7 +84,7 @@ public class WorldCreator {
         fixtureDef.filter.categoryBits = categoryBit;
         Fixture fixture = body.createFixture(fixtureDef);
         if (parent != null) {
-            fixture.setUserData(parent); // TODO refactor this (Part 12: 6min)
+            fixture.setUserData(parent);
         }
 
         if (categoryBit == JumpGame.BRICK_BIT | categoryBit == JumpGame.COIN_BIT) {

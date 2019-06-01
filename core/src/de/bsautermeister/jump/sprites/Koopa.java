@@ -38,17 +38,7 @@ public class Koopa extends Enemy {
         super(callbacks, world, posX, posY);
 
         this.atlas = atlas;
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
-        }
-        walkAnimation = new Animation(0.2f, frames);
-
-        frames.clear();
-        for (int i = 4; i < 6; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
-        }
-        shellAnimation = new Animation(0.4f, frames);
+        initTextures(atlas);
 
         state = new GameObjectState<State>(State.WALKING);
         state.setStateCallback(new GameObjectState.StateCallback<State>() {
@@ -78,30 +68,36 @@ public class Koopa extends Enemy {
         setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, (int)(1.5f * GameConfig.BLOCK_SIZE) / GameConfig.PPM);
     }
 
+    private void initTextures(TextureAtlas atlas) {
+        Array<TextureRegion> frames = new Array<TextureRegion>();
+        for (int i = 0; i < 2; i++) {
+            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
+        }
+        walkAnimation = new Animation(0.2f, frames);
+
+        frames.clear();
+        for (int i = 4; i < 6; i++) {
+            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
+        }
+        shellAnimation = new Animation(0.4f, frames);
+    }
+
     @Override
     public void update(float delta) {
         super.update(delta);
 
         if (!isDead()) {
             state.upate(delta);
+            getBody().setLinearVelocity(getVelocity());
         }
 
+        setPosition(getBody().getPosition().x - getWidth() / 2,
+                getBody().getPosition().y - 8 / GameConfig.PPM);
         setRegion(getFrame(delta));
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
             state.set(State.WALKING);
             getVelocity().x = 1;
-        }
-
-        setPosition(getBody().getPosition().x - getWidth() / 2,
-                getBody().getPosition().y - 8 / GameConfig.PPM);
-
-        if (!isDead()) {
-            getBody().setLinearVelocity(getVelocity());
-        }
-
-        if (state.changed()) {
-            state.resetTimer();
         }
     }
 
@@ -114,7 +110,7 @@ public class Koopa extends Enemy {
                 textureRegion = shellAnimation.getKeyFrame(state.timer(), true);
                 break;
             case WALKING:
-                default:
+            default:
                 textureRegion = walkAnimation.getKeyFrame(state.timer(), true);
                 break;
         }
