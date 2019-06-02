@@ -36,6 +36,7 @@ import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
+import de.bsautermeister.jump.sprites.SpinningCoin;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase {
@@ -58,6 +59,8 @@ public class GameScreen extends ScreenBase {
     private Array<Enemy> enemies;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+
+    private Array<SpinningCoin> spinningCoins;
 
     private Sound bumpSound;
     private Sound powerupSpawnSound;
@@ -116,6 +119,7 @@ public class GameScreen extends ScreenBase {
                 mario.addScore(500);
             } else {
                 coinSound.play();
+                spinningCoins.add(new SpinningCoin(atlas, coin.getBody().getWorldCenter()));
                 mario.addScore(100);
             }
         }
@@ -175,6 +179,8 @@ public class GameScreen extends ScreenBase {
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
+        spinningCoins = new Array<SpinningCoin>();
+
         reset();
     }
 
@@ -227,6 +233,14 @@ public class GameScreen extends ScreenBase {
 
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.update(delta);
+        }
+
+        for(SpinningCoin spinningCoin : spinningCoins) {
+            if (spinningCoin.isFinished()) {
+                spinningCoins.removeValue(spinningCoin, true);
+            } else {
+                spinningCoin.update(delta);
+            }
         }
 
         hud.update(delta);
@@ -380,14 +394,18 @@ public class GameScreen extends ScreenBase {
     }
 
     private void renderGame(float delta) {
-        mario.draw(getGame().getBatch());
+        for (SpinningCoin spinningCoin : spinningCoins) {
+            spinningCoin.draw(getBatch());
+        }
+
+        mario.draw(getBatch());
 
         for (Enemy enemy : enemies) {
-            enemy.draw(getGame().getBatch());
+            enemy.draw(getBatch());
         }
 
         for (Item item : items) {
-            item.draw(getGame().getBatch());
+            item.draw(getBatch());
         }
     }
 

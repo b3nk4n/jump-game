@@ -7,6 +7,7 @@ public interface RegionNames {
     String GOOMBA = "goomba";
     String TURTLE = "turle";
     String MUSHROOM = "mushroom";
+    String SPINNING_COIN = "spin_coin";
 
     String LOADING_LOGO = "title";
     String LOADING_ANIMATION = "loading";

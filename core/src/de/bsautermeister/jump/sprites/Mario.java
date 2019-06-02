@@ -72,7 +72,18 @@ public class Mario extends Sprite {
         runningRight = true;
 
         setBounds(0, 0, GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
+        initTextures(atlas);
 
+        Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
+        defineBody(startPostion);
+
+        setRegion(marioStand);
+
+        timeToLive = INITAL_TTL;
+        score = 0;
+    }
+
+    private void initTextures(TextureAtlas atlas) {
         TextureRegion littleMarioTexture = atlas.findRegion(RegionNames.LITTLE_MARIO);
         TextureRegion bigMarioTexture = atlas.findRegion(RegionNames.BIG_MARIO);
 
@@ -104,14 +115,6 @@ public class Mario extends Sprite {
         bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         bigMarioCrouch = new TextureRegion(bigMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
-
-        Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
-        defineBody(startPostion);
-
-        setRegion(marioStand);
-
-        timeToLive = INITAL_TTL;
-        score = 0;
     }
 
     public void update(float delta) {
