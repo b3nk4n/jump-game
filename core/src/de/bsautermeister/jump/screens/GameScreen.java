@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -55,7 +56,6 @@ public class GameScreen extends ScreenBase {
 
     private final Mario mario;
 
-    private final WorldCreator worldCreator;
     private Array<Enemy> enemies;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
@@ -167,7 +167,7 @@ public class GameScreen extends ScreenBase {
 
         this.world = new World(new Vector2(0,-10f), true);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
-        this.worldCreator = new WorldCreator(callbacks, world, map, atlas);
+        WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
         this.enemies = worldCreator.createEnemies();
 
         mario = new Mario(callbacks, world, atlas);
@@ -220,7 +220,7 @@ public class GameScreen extends ScreenBase {
     }
 
     public void update(float delta) {
-        handleInput(delta);
+        handleInput();
         handleSpawingItems();
 
         world.step(1 / 60f, 6, 2);
@@ -321,7 +321,7 @@ public class GameScreen extends ScreenBase {
         }
     }
 
-    private void handleInput(float delta) {
+    private void handleInput() {
         if (mario.getState() == Mario.State.DEAD) {
             return;
         }
@@ -364,17 +364,17 @@ public class GameScreen extends ScreenBase {
 
         GdxUtils.clearScreen(Color.BLACK);
 
-        mapRenderer.render();
+        viewport.apply();
+        SpriteBatch batch = getBatch();
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        renderBackground(batch);
+        renderForeground(batch);
+        batch.end();
+
         if (GameConfig.DEBUG_MODE) {
             box2DDebugRenderer.render(world, camera.combined);
         }
-
-        viewport.apply();
-        SpriteBatch batch = getGame().getBatch();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        renderGame(delta);
-        batch.end();
 
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
         renderHud();
@@ -384,29 +384,35 @@ public class GameScreen extends ScreenBase {
         }
     }
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, false);
+    private void renderBackground(SpriteBatch batch) {
+        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_KEY));
+
+        for (SpinningCoin spinningCoin : spinningCoins) {
+            spinningCoin.draw(batch);
+        }
+    }
+
+    private void renderForeground(SpriteBatch batch) {
+        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
+
+        for (Item item : items) {
+            item.draw(batch);
+        }
+
+        for (Enemy enemy : enemies) {
+            enemy.draw(batch);
+        }
+
+        mario.draw(batch);
     }
 
     private void renderHud() {
         hud.getStage().draw();
     }
 
-    private void renderGame(float delta) {
-        for (SpinningCoin spinningCoin : spinningCoins) {
-            spinningCoin.draw(getBatch());
-        }
-
-        mario.draw(getBatch());
-
-        for (Enemy enemy : enemies) {
-            enemy.draw(getBatch());
-        }
-
-        for (Item item : items) {
-            item.draw(getBatch());
-        }
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, false);
     }
 
     @Override
@@ -416,10 +422,6 @@ public class GameScreen extends ScreenBase {
         world.dispose();
         box2DDebugRenderer.dispose();
         hud.dispose();
-    }
-
-    public TextureAtlas getAtlas() {
-        return atlas;
     }
 
     private boolean isGameOver() {

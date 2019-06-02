@@ -27,6 +27,9 @@ import de.bsautermeister.jump.sprites.Koopa;
 
 public class WorldCreator {
 
+    public static final String BACKGROUND_KEY = "backgroundColor";
+    public static final String GRAPHICS_KEY = "graphics";
+
     public static final String GROUND_KEY = "ground";
     public static final String PIPES_KEY = "pipes";
     public static final String COINS_KEY = "coins";
