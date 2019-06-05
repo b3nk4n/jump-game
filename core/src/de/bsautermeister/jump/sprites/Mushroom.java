@@ -17,7 +17,7 @@ public class Mushroom extends Item {
     public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
         super(callbacks, world, x, y);
         setRegion(atlas.findRegion("mushroom"), 0, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
-        velocity = new Vector2(0.7f, 0);
+        velocity = new Vector2(0.6f, 0);
     }
 
     @Override
@@ -35,7 +35,8 @@ public class Mushroom extends Item {
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
-                JumpGame.OBJECT_BIT;
+                JumpGame.OBJECT_BIT |
+                JumpGame.BLOCK_TOP_BIT;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);

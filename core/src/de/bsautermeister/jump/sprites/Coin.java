@@ -42,6 +42,16 @@ public class Coin extends InteractiveTileObject {
                 enemySteppedOff(enemyOnTop);
             }
 
+            // reverse items on top
+            for (Item itemOnTop : getItemsOnTop()) {
+                itemOnTop.reverseVelocity(true, false);
+                itemOnTop.bounceUp();
+
+                // ensure that item is un-registered from items on top, because Box2D does not seem
+                // to call endContact anymore
+                itemSteppedOff(itemOnTop);
+            }
+
             setBlank();
             bumpUp();
         }

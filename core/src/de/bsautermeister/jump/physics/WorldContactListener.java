@@ -75,6 +75,11 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
                 tileObject.enemySteppedOn(enemy);
                 break;
+            case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
+                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+                tileObject.itemSteppedOn(item);
+                break;
         }
     }
 
@@ -85,6 +90,7 @@ public class WorldContactListener implements ContactListener {
 
         int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
+        Item item;
         Mario mario;
         Enemy enemy;
         InteractiveTileObject tileObject;
@@ -100,6 +106,11 @@ public class WorldContactListener implements ContactListener {
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
                 tileObject.enemySteppedOff(enemy);
+                break;
+            case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
+                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+                tileObject.itemSteppedOff(item);
                 break;
         }
     }

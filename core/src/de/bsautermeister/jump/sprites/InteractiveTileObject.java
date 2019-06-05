@@ -24,7 +24,8 @@ public abstract class InteractiveTileObject {
     private final Rectangle bounds;
     private final Body body;
 
-    private final ObjectSet<Enemy> enemiesOnTop;
+    private final ObjectSet<Enemy> enemiesOnTop; // TODO are these two sets combinable?
+    private final ObjectSet<Item> itemsOnTop;
 
     private float bumpUpAnimationTimer;
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
@@ -37,6 +38,7 @@ public abstract class InteractiveTileObject {
         this.mapObject = (RectangleMapObject)mapObject;
         this.bounds = this.mapObject.getRectangle();
         this.enemiesOnTop = new ObjectSet<Enemy>();
+        this.itemsOnTop = new ObjectSet<Item>();
         this.body = defineBody(categoryBit);
         this.bumpUpAnimationTimer = BUMP_UP_ANIMATION_TIME;
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("graphics");
@@ -116,5 +118,21 @@ public abstract class InteractiveTileObject {
 
     public ObjectSet<Enemy> getEnemiesOnTop() {
         return enemiesOnTop;
+    }
+
+    public void itemSteppedOn(Item item) {
+        if (!itemsOnTop.contains(item)) {
+            itemsOnTop.add(item);
+        }
+    }
+
+    public void itemSteppedOff(Item item) {
+        if (itemsOnTop.contains(item)) {
+            itemsOnTop.remove(item);
+        }
+    }
+
+    public ObjectSet<Item> getItemsOnTop() {
+        return itemsOnTop;
     }
 }

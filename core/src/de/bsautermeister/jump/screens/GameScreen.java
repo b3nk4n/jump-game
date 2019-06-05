@@ -340,10 +340,10 @@ public class GameScreen extends ScreenBase {
             y = y / Gdx.graphics.getHeight();
 
             if (x > 0.6) {
-                if (y < 0.1) {
+                if (y < 0.9) {
                     upPressed = true;
                 } else {
-                    downPressed = true;
+                    downPressed = true; // TODO use swipe down and keep pressed for crouch, otherwise jump
                 }
             } else if (x < 0.2) {
                 leftPressed = true;

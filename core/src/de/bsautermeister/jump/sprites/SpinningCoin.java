@@ -54,7 +54,6 @@ public class SpinningCoin extends Sprite {
                 animationProgress = 1.0f - (totalProgress * 2 - 1f);
             }
             offset = bumpUpInterpolation.apply(animationProgress) * ANIMATION_OFFSET_Y;
-            System.out.println(getX() + " - " + (spawnPosition.y + offset));
         }
         setY(spawnPosition.y + offset);
     }

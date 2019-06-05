@@ -207,7 +207,7 @@ public class Mario extends Sprite {
             }
         } else if (jumpFixTimer < 0) {
             if (down && isBig) {
-                state.set(State.CROUCHING);
+                state.set(State.CROUCHING); // TODO crouch stops when started while walking
             } else if (body.getLinearVelocity().x != 0) {
                 state.set(State.WALKING);
             } else {

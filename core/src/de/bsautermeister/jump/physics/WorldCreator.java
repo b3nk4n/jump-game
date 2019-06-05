@@ -94,7 +94,7 @@ public class WorldCreator {
             EdgeShape topCornerShape = new EdgeShape();
             fixtureDef.shape = topCornerShape;
             fixtureDef.filter.categoryBits = JumpGame.BLOCK_TOP_BIT;
-            fixtureDef.filter.maskBits = JumpGame.ENEMY_BIT;
+            fixtureDef.filter.maskBits = JumpGame.ENEMY_BIT | JumpGame.ITEM_BIT;
             fixtureDef.isSensor = true;
             topCornerShape.set(new Vector2(-6 / GameConfig.PPM, 8.5f / GameConfig.PPM),
                     new Vector2(6 / GameConfig.PPM, 8.5f / GameConfig.PPM));

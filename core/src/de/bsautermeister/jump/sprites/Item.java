@@ -63,6 +63,10 @@ public abstract class Item extends Sprite implements Disposable {
         }
     }
 
+    public void bounceUp() {
+        body.applyLinearImpulse(new Vector2(0, 1.5f), body.getWorldCenter(), true);
+    }
+
     public World getWorld() {
         return world;
     }
