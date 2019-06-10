@@ -75,7 +75,7 @@ public class Mario extends Sprite {
         initTextures(atlas);
 
         Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
-        defineBody(startPostion);
+        defineSmallBody(startPostion);
 
         setRegion(marioStand);
 
@@ -148,13 +148,15 @@ public class Mario extends Sprite {
 
         // these are called outside of the physics update loop
         if (timeToDefineBigMario) {
-            defineBigBody();
+            Vector2 currentPosition = getBody().getPosition();
+            world.destroyBody(getBody());
+            defineBigBody(currentPosition);
             timeToDefineBigMario = false;
         } else if (timeToRedefineMario) {
             Vector2 position = getBody().getPosition();
             world.destroyBody(getBody());
 
-            defineBody(position);
+            defineSmallBody(position);
 
             timeToRedefineMario = false;
         }
@@ -282,15 +284,14 @@ public class Mario extends Sprite {
         return state.current();
     }
 
-    private void defineBody(Vector2 position) {
+    private void defineSmallBody(Vector2 position) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.set(new float[] {
+        final float[] SMALL_POLYGON_VERTICES = {
                 -3f / GameConfig.PPM, 6f / GameConfig.PPM,
                 3f / GameConfig.PPM, 6f / GameConfig.PPM,
                 5f / GameConfig.PPM, -2f / GameConfig.PPM,
@@ -299,65 +300,22 @@ public class Mario extends Sprite {
                 -3f / GameConfig.PPM, -4.5f / GameConfig.PPM,
                 -5f / GameConfig.PPM, -4f / GameConfig.PPM,
                 -5f / GameConfig.PPM, -2f / GameConfig.PPM
-        });
+        };
+        createBodyFixture(fixtureDef, SMALL_POLYGON_VERTICES);
 
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.COIN_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.ENEMY_BIT |
-                JumpGame.ENEMY_HEAD_BIT |
-                JumpGame.OBJECT_BIT |
-                JumpGame.ITEM_BIT;
-
-        fixtureDef.shape = shape;
-        Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-
-        // feet edge shape to circumvent edge-to-edge collision
-        EdgeShape feetShape = new EdgeShape();
-        feetShape.set(-4.66f / GameConfig.PPM, -6.5f  / GameConfig.PPM,
-                4.66f / GameConfig.PPM, -6.5f / GameConfig.PPM);
-        fixtureDef.shape = feetShape;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.COIN_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.OBJECT_BIT;
-        fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-
-        // head
-        EdgeShape headShape = new EdgeShape();
-        headShape.set(new Vector2(-2 / GameConfig.PPM, 6.1f / GameConfig.PPM),
-                new Vector2(2 / GameConfig.PPM, 6.1f / GameConfig.PPM));
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
-        fixtureDef.shape = headShape;
-        fixtureDef.isSensor = true; // does not collide in the physics simulation
-        body.createFixture(fixtureDef).setUserData(this);
-
-        // sensor to indicate we are standing on ground
-        EdgeShape groundSensorShape = new EdgeShape();
-        groundSensorShape.set(new Vector2(-4.66f / GameConfig.PPM, -7f / GameConfig.PPM),
-                new Vector2(4.66f / GameConfig.PPM, -7f / GameConfig.PPM));
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_FEET_BIT;
-        fixtureDef.shape = groundSensorShape;
-        fixtureDef.isSensor = true; // does not collide in the physics simulation
-        body.createFixture(fixtureDef).setUserData(this);
+        createFeetFixture(fixtureDef, 9.33f, -6.5f);
+        createHeadSensorFixture(fixtureDef, 4f, 6.1f);
+        createGroundSensorFixture(fixtureDef, 9f, -7f);
     }
 
-    private void defineBigBody() { // TODO refactor with defineBody(), because 90% is duplicated
-        Vector2 currentPosition = getBody().getPosition();
-        world.destroyBody(getBody());
-
+    private void defineBigBody(Vector2 position) {
         BodyDef bodyDef = new BodyDef();
-        //bodyDef.position.set(currentPosition.add(0, 10 / GameConfig.PPM));
-        bodyDef.position.set(currentPosition);
+        bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.set(new float[] {
+        final float[] BIG_POLYGON_VERTICES = {
                 -2.5f / GameConfig.PPM, 21f / GameConfig.PPM,
                 2.5f / GameConfig.PPM, 21f / GameConfig.PPM,
                 5.5f / GameConfig.PPM, 8f / GameConfig.PPM,
@@ -366,7 +324,18 @@ public class Mario extends Sprite {
                 -3f / GameConfig.PPM, -4.5f / GameConfig.PPM,
                 -5.5f / GameConfig.PPM, -1f / GameConfig.PPM,
                 -5.5f / GameConfig.PPM, 8f / GameConfig.PPM,
-        });
+        };
+        createBodyFixture(fixtureDef, BIG_POLYGON_VERTICES);
+
+        createFeetFixture(fixtureDef, 10f, -6.5f);
+        createHeadSensorFixture(fixtureDef, 4f, 21.1f);
+        createGroundSensorFixture(fixtureDef, 9.33f, -7f);
+    }
+
+    private void createBodyFixture(FixtureDef fixtureDef, float[] smallPolygonVertices) {
+        PolygonShape shape = new PolygonShape();
+        shape.set(smallPolygonVertices);
+
         fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -379,11 +348,15 @@ public class Mario extends Sprite {
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+    }
 
-        // feet edge shape to circumvent edge-to-edge collision
-        EdgeShape feetShape = new EdgeShape();
-        feetShape.set(-5f / GameConfig.PPM, -6.5f  / GameConfig.PPM,
-                5f / GameConfig.PPM, -6.5f / GameConfig.PPM);
+    /**
+     * Feet as edge shape to circumvent edge-to-edge collision.
+     */
+    private void createFeetFixture(FixtureDef fixtureDef, float width, float bottomY) {
+        Fixture fixture;EdgeShape feetShape = new EdgeShape();
+        feetShape.set(-width / 2 / GameConfig.PPM, bottomY  / GameConfig.PPM,
+                width / 2 / GameConfig.PPM, bottomY / GameConfig.PPM);
         fixtureDef.shape = feetShape;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -391,20 +364,25 @@ public class Mario extends Sprite {
                 JumpGame.OBJECT_BIT;
         fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+    }
 
-        // head
+    private void createHeadSensorFixture(FixtureDef fixtureDef, float width, float topY) {
         EdgeShape headShape = new EdgeShape();
-        headShape.set(new Vector2(-2f / GameConfig.PPM, 21.1f / GameConfig.PPM),
-                new Vector2(2f / GameConfig.PPM, 21.1f / GameConfig.PPM));
+        headShape.set(new Vector2(width / 2 / GameConfig.PPM, topY / GameConfig.PPM),
+                new Vector2(width / 2 / GameConfig.PPM, topY / GameConfig.PPM));
         fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
+    }
 
-        // sensor to indicate we are standing on ground
+    /**
+     * Sensor to indicate we are standing on ground.
+     */
+    private void createGroundSensorFixture(FixtureDef fixtureDef, float width, float bottomY) {
         EdgeShape groundSensorShape = new EdgeShape();
-        groundSensorShape.set(new Vector2(-4.5f / GameConfig.PPM, -7f / GameConfig.PPM),
-                new Vector2(4.5f / GameConfig.PPM, -7f / GameConfig.PPM));
+        groundSensorShape.set(new Vector2(-width / 2 / GameConfig.PPM, bottomY / GameConfig.PPM),
+                new Vector2(width / 2 / GameConfig.PPM, bottomY / GameConfig.PPM));
         fixtureDef.filter.categoryBits = JumpGame.MARIO_FEET_BIT;
         fixtureDef.shape = groundSensorShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
