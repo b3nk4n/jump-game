@@ -62,14 +62,14 @@ public class Goomba extends Enemy {
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
-        setRegion(getFrame(delta));
+        setRegion(getFrame());
 
         if (state.is(State.STOMPED) && state.timer() > 1f) {
             markRemovable();
         }
     }
 
-    private TextureRegion getFrame(float delta) {
+    private TextureRegion getFrame() {
         TextureRegion textureRegion;
 
         switch (state.current()) {
@@ -124,7 +124,7 @@ public class Goomba extends Enemy {
         Vector2[] vertices = new Vector2[4];
         vertices[0] = new Vector2(-5, 8).scl(1 / GameConfig.PPM);
         vertices[1] = new Vector2(5, 8).scl(1 / GameConfig.PPM);
-        vertices[2] = new Vector2(-5, 3).scl(1 / GameConfig.PPM);
+        vertices[2] = new Vector2(-3, 3).scl(1 / GameConfig.PPM);
         vertices[3] = new Vector2(3, 3).scl(1 / GameConfig.PPM);
         headShape.set(vertices);
 

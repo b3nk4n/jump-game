@@ -134,7 +134,7 @@ public class Mario extends Sprite {
             growingTimer -= delta;
         }
 
-        TextureRegion textureRegion = getFrame(delta);
+        TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
 
         // set texture bounds always at the bottom of the body
@@ -155,9 +155,7 @@ public class Mario extends Sprite {
         } else if (timeToRedefineMario) {
             Vector2 position = getBody().getPosition();
             world.destroyBody(getBody());
-
             defineSmallBody(position);
-
             timeToRedefineMario = false;
         }
 
@@ -190,7 +188,6 @@ public class Mario extends Sprite {
         }
         if (right && body.getLinearVelocity().x <= 2 && !down) {
             body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
-
         }
         if (left && body.getLinearVelocity().x >= -2 && !down) {
             body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
@@ -210,16 +207,22 @@ public class Mario extends Sprite {
             }
         } else if (jumpFixTimer < 0) {
             if (down && isBig) {
-                state.set(State.CROUCHING); // TODO crouch stops when started while walking
+                state.set(State.CROUCHING);
             } else if (body.getLinearVelocity().x != 0) {
                 state.set(State.WALKING);
             } else {
                 state.set(State.STANDING);
             }
         }
+
+        if (right && !left) {
+            runningRight = true;
+        } else if (!right && left) {
+            runningRight = false;
+        }
     }
 
-    private TextureRegion getFrame(float delta) {
+    private TextureRegion getFrame() {
         TextureRegion textureRegion;
 
         boolean useBigTexture = isBig;
@@ -263,17 +266,9 @@ public class Mario extends Sprite {
                 break;
         }
 
-
-
-        if ((body.getLinearVelocity().x < 0 || !runningRight) && !textureRegion.isFlipX()) {
+        if (!runningRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-            runningRight = false;
-        } else if ((body.getLinearVelocity().x > 0 || runningRight) && textureRegion.isFlipX()) {
-            textureRegion.flip(true, false);
-            runningRight = true;
-        }
-
-        if (isTurning && state.is(State.WALKING)) {
+        } else if (runningRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 

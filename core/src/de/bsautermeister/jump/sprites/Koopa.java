@@ -93,7 +93,7 @@ public class Koopa extends Enemy {
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
                 getBody().getPosition().y - 8 / GameConfig.PPM);
-        setRegion(getFrame(delta));
+        setRegion(getFrame());
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
             state.set(State.WALKING);
@@ -101,7 +101,7 @@ public class Koopa extends Enemy {
         }
     }
 
-    private TextureRegion getFrame(float delta) {
+    private TextureRegion getFrame() {
         TextureRegion textureRegion;
 
         switch (state.current()) {
@@ -130,7 +130,7 @@ public class Koopa extends Enemy {
 
     @Override
     protected Body defineBody() {
-        BodyDef bodyDef = new BodyDef(); // TODO refactor: this is a copy of Goomba.defineBody()
+        BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = getWorld().createBody(bodyDef);
@@ -157,7 +157,7 @@ public class Koopa extends Enemy {
         Vector2[] vertices = new Vector2[4];
         vertices[0] = new Vector2(-5, 8).scl(1 / GameConfig.PPM);
         vertices[1] = new Vector2(5, 8).scl(1 / GameConfig.PPM);
-        vertices[2] = new Vector2(-5, 3).scl(1 / GameConfig.PPM);
+        vertices[2] = new Vector2(-3, 3).scl(1 / GameConfig.PPM);
         vertices[3] = new Vector2(3, 3).scl(1 / GameConfig.PPM);
         headShape.set(vertices);
 
