@@ -19,10 +19,25 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.tools.GameTimer;
 
 public class Mario extends Sprite {
 
     private static final float INITAL_TTL = 300;
+
+    private static final short NORMAL_FILTER_BITS = JumpGame.GROUND_BIT |
+    JumpGame.COIN_BIT |
+    JumpGame.BRICK_BIT |
+    JumpGame.ENEMY_BIT |
+    JumpGame.ENEMY_HEAD_BIT |
+    JumpGame.OBJECT_BIT |
+    JumpGame.ITEM_BIT;
+
+    private static final short CHANGE_SIZE_FILTER_BITS = JumpGame.GROUND_BIT |
+            JumpGame.COIN_BIT |
+            JumpGame.BRICK_BIT |
+            JumpGame.OBJECT_BIT |
+            JumpGame.ITEM_BIT;
 
     private GameCallbacks callbacks;
     private World world;
@@ -53,12 +68,10 @@ public class Mario extends Sprite {
 
     private boolean isTurning;
 
-    private static final float GROW_TIME = 1f;
-    private float growingTimer;
+    private final GameTimer changeSizeTimer;
 
     private boolean isBig;
-    private boolean timeToDefineBigMario;
-    private boolean timeToRedefineMario;
+    private boolean markRedefineBody;
 
     private boolean deadAnimationStarted = false;
 
@@ -75,12 +88,28 @@ public class Mario extends Sprite {
         initTextures(atlas);
 
         Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
-        defineSmallBody(startPostion);
+        defineSmallBody(startPostion, true);
 
         setRegion(marioStand);
 
         timeToLive = INITAL_TTL;
         score = 0;
+
+        changeSizeTimer = new GameTimer(2f);
+        changeSizeTimer.setCallbacks(new GameTimer.TimerCallbacks() {
+            @Override
+            public void onStart() {
+                // body is already created to not collide with enemies when changing the body
+            }
+
+            @Override
+            public void onFinish() {
+                Filter filter = new Filter();
+                filter.categoryBits = JumpGame.MARIO_BIT;
+                filter.maskBits = NORMAL_FILTER_BITS;
+                getBody().getFixtureList().get(0).setFilterData(filter);
+            }
+        });
     }
 
     private void initTextures(TextureAtlas atlas) {
@@ -122,41 +151,42 @@ public class Mario extends Sprite {
         timeToLive -= delta;
         jumpFixTimer -= delta;
 
-        if (isBig) {
-            setPosition(body.getPosition().x - getWidth() / 2,
-                    body.getPosition().y - getHeight() / 2 + 7.8f / GameConfig.PPM);
-        } else {
-            setPosition(body.getPosition().x - getWidth() / 2,
-                    body.getPosition().y - getHeight() / 2);
-        }
-
-        if (isGrowing()) {
-            growingTimer -= delta;
+        if (isChangingSize()) {
+            changeSizeTimer.update(delta);
         }
 
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
 
         // set texture bounds always at the bottom of the body
+        float x = body.getPosition().x - getWidth() / 2;
+        float y = body.getPosition().y - getHeight() / 2;
+        if (isBig) {
+            y += 7.8f / GameConfig.PPM;
+        }
+
         float textureWidth = textureRegion.getRegionWidth() / GameConfig.PPM;
         float textureHeight = textureRegion.getRegionHeight() / GameConfig.PPM;
         float yOffset = 0f;
-        if (isGrowing() && textureRegion.getRegionHeight() == GameConfig.BLOCK_SIZE) {
+        if (isChangingSize() && isBig() && textureRegion.getRegionHeight() == GameConfig.BLOCK_SIZE) {
+            yOffset = -7.5f / GameConfig.PPM;
+        } else if (isChangingSize() && !isBig() && textureRegion.getRegionHeight() > GameConfig.BLOCK_SIZE) {
             yOffset = 7.5f / GameConfig.PPM;
         }
-        setBounds(getX(), getY() - yOffset, textureWidth, textureHeight);
+
+        setBounds(x, y + yOffset, textureWidth, textureHeight);
 
         // these are called outside of the physics update loop
-        if (timeToDefineBigMario) {
+        if (markRedefineBody && isBig()) {
             Vector2 currentPosition = getBody().getPosition();
             world.destroyBody(getBody());
-            defineBigBody(currentPosition);
-            timeToDefineBigMario = false;
-        } else if (timeToRedefineMario) {
+            defineBigBody(currentPosition, false);
+            markRedefineBody = false;
+        } else if (markRedefineBody && !isBig()) {
             Vector2 position = getBody().getPosition();
             world.destroyBody(getBody());
-            defineSmallBody(position);
-            timeToRedefineMario = false;
+            defineSmallBody(position, false);
+            markRedefineBody = false;
         }
 
         // check fallen out of game
@@ -226,8 +256,8 @@ public class Mario extends Sprite {
         TextureRegion textureRegion;
 
         boolean useBigTexture = isBig;
-        if (isGrowing()) {
-            useBigTexture = (int)(((growingTimer - (int)growingTimer)) * 8) % 2 == 0 ? isBig : false;
+        if (isChangingSize()) {
+            useBigTexture = (int)(((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
         }
 
         switch (state.current()) {
@@ -279,7 +309,7 @@ public class Mario extends Sprite {
         return state.current();
     }
 
-    private void defineSmallBody(Vector2 position) {
+    private void defineSmallBody(Vector2 position, boolean normalFilterMask) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -296,14 +326,14 @@ public class Mario extends Sprite {
                 -5f / GameConfig.PPM, -4f / GameConfig.PPM,
                 -5f / GameConfig.PPM, -2f / GameConfig.PPM
         };
-        createBodyFixture(fixtureDef, SMALL_POLYGON_VERTICES);
+        createBodyFixture(fixtureDef, SMALL_POLYGON_VERTICES, normalFilterMask);
 
         createFeetFixture(fixtureDef, 9.33f, -6.5f);
         createHeadSensorFixture(fixtureDef, 4f, 6.1f);
         createGroundSensorFixture(fixtureDef, 9f, -7f);
     }
 
-    private void defineBigBody(Vector2 position) {
+    private void defineBigBody(Vector2 position, boolean normalFilterMask) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -320,25 +350,18 @@ public class Mario extends Sprite {
                 -5.5f / GameConfig.PPM, -1f / GameConfig.PPM,
                 -5.5f / GameConfig.PPM, 8f / GameConfig.PPM,
         };
-        createBodyFixture(fixtureDef, BIG_POLYGON_VERTICES);
-
+        createBodyFixture(fixtureDef, BIG_POLYGON_VERTICES, normalFilterMask);
         createFeetFixture(fixtureDef, 10f, -6.5f);
         createHeadSensorFixture(fixtureDef, 4f, 21.1f);
         createGroundSensorFixture(fixtureDef, 9.33f, -7f);
     }
 
-    private void createBodyFixture(FixtureDef fixtureDef, float[] smallPolygonVertices) {
+    private void createBodyFixture(FixtureDef fixtureDef, float[] smallPolygonVertices, boolean normalFilterMask) {
         PolygonShape shape = new PolygonShape();
         shape.set(smallPolygonVertices);
-
         fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.COIN_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.ENEMY_BIT |
-                JumpGame.ENEMY_HEAD_BIT |
-                JumpGame.OBJECT_BIT |
-                JumpGame.ITEM_BIT;
+        fixtureDef.filter.maskBits = normalFilterMask ?
+                NORMAL_FILTER_BITS : CHANGE_SIZE_FILTER_BITS;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -402,16 +425,17 @@ public class Mario extends Sprite {
 
     public void grow() {
         if (!isBig()) {
-            growingTimer = GROW_TIME;
-            timeToDefineBigMario = true;
+            changeSizeTimer.restart();
             isBig = true;
+            markRedefineBody = true;
         }
     }
 
-    private void smaller(Enemy enemy) {
-        if (isBig) {
+    private void shrinkOrKill(Enemy enemy) {
+        if (isBig()) {
+            changeSizeTimer.restart();
             isBig = false;
-            timeToRedefineMario = true;
+            markRedefineBody = true;
             callbacks.hit(this, enemy);
         } else {
             kill();
@@ -427,7 +451,9 @@ public class Mario extends Sprite {
             }
         }
 
-        smaller(enemy);
+        if (!isInvincible()) {
+            shrinkOrKill(enemy);
+        }
     }
 
     private void kill() {
@@ -468,7 +494,11 @@ public class Mario extends Sprite {
         return groundContactCounter > 0;
     }
 
-    public boolean isGrowing() {
-        return growingTimer > 0;
+    public boolean isChangingSize() {
+        return changeSizeTimer.isRunning();
+    }
+
+    public boolean isInvincible() {
+        return isChangingSize();
     }
 }
