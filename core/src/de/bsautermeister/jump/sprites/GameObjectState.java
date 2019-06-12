@@ -40,6 +40,8 @@ public class GameObjectState<T extends Enum<T>> {
         current = state;
         resetTimer();
 
+        frozen = false;
+
         if (stateCallback != null) {
             stateCallback.changed(beforeChange, current);
         }

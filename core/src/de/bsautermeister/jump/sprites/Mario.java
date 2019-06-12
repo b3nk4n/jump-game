@@ -196,6 +196,7 @@ public class Mario extends Sprite {
 
         if (state.is(State.DEAD)) {
             if (state.timer() <= 0.5f) {
+                getBody().setLinearVelocity(Vector2.Zero);
                 getBody().setActive(false);
             } else if (!deadAnimationStarted) {
                 getBody().setActive(true);
@@ -463,6 +464,7 @@ public class Mario extends Sprite {
         callbacks.gameOver();
 
         state.set(State.DEAD);
+
         Filter filter = new Filter();
         filter.maskBits = JumpGame.NOTHING_BIT;
         for (Fixture fixture : getBody().getFixtureList()) {

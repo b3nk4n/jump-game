@@ -71,7 +71,8 @@ public abstract class Enemy extends Sprite implements Disposable {
         callbacks.killed(this);
 
         if (applyPush) {
-            getBody().applyLinearImpulse(new Vector2(0, 3.5f), getBody().getWorldCenter(), true);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().x / 2, 0);
+            getBody().applyLinearImpulse(new Vector2(0, 3f), getBody().getWorldCenter(), true);
         }
     }
 
