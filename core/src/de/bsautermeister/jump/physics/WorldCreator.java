@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.physics;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -56,7 +57,7 @@ public class WorldCreator {
         buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT);
 
         for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            tileObjects.add(new Brick(callbacks, world, map, mapObject));
+            tileObjects.add(new Brick(callbacks, world, map, atlas, mapObject));
         }
 
         for (MapObject mapObject : map.getLayers().get(COINS_KEY).getObjects().getByType(RectangleMapObject.class)) {

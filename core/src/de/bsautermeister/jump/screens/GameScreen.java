@@ -404,6 +404,10 @@ public class GameScreen extends ScreenBase {
         }
 
         mario.draw(batch);
+
+        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+            tileObject.draw(batch);
+        }
     }
 
     private void renderHud() {

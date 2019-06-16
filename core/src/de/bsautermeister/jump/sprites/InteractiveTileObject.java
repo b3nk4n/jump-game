@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -36,7 +37,11 @@ public abstract class InteractiveTileObject {
         this.callbacks = callbacks;
         this.world = world;
         this.mapObject = (RectangleMapObject)mapObject;
-        this.bounds = this.mapObject.getRectangle();
+        Rectangle screenBounds = this.mapObject.getRectangle();
+        this.bounds = new Rectangle(screenBounds.x / GameConfig.PPM,
+                screenBounds.y / GameConfig.PPM,
+                screenBounds.width / GameConfig.PPM,
+                screenBounds.height / GameConfig.PPM);
         this.enemiesOnTop = new ObjectSet<Enemy>();
         this.itemsOnTop = new ObjectSet<Item>();
         this.body = defineBody(categoryBit);
@@ -68,12 +73,16 @@ public abstract class InteractiveTileObject {
         }
     }
 
+    public void draw(SpriteBatch batch) {
+        // usually tile objects are rendered by the tilemap already
+    }
+
     public void bumpUp() {
         bumpUpAnimationTimer = 0;
     }
 
     private Body defineBody(short categoryBit) {
-        return WorldCreator.createBody(this, world, bounds, BodyDef.BodyType.StaticBody, categoryBit);
+        return WorldCreator.createBody(this, world, mapObject.getRectangle(), BodyDef.BodyType.StaticBody, categoryBit);
     }
 
     public abstract void onHeadHit(Mario mario);
@@ -134,5 +143,9 @@ public abstract class InteractiveTileObject {
 
     public ObjectSet<Item> getItemsOnTop() {
         return itemsOnTop;
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
     }
 }

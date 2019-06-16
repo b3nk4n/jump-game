@@ -11,6 +11,13 @@ big_mario
   orig: 336, 32
   offset: 0, 0
   index: -1
+brick_fragment
+  rotate: false
+  xy: 36, 2
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
 fireball
   rotate: false
   xy: 2, 2

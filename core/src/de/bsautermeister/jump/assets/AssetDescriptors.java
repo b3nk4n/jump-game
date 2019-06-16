@@ -45,7 +45,7 @@ public interface AssetDescriptors {
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.KICKED, Sound.class);
     }
 
-    public static final AssetDescriptor[] ALL = {
+    AssetDescriptor[] ALL = {
             Atlas.LOADING, Atlas. GAMEPLAY,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.POWERUP_SPAWN, Sounds.POWERUP,
             Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE, Sounds.JUMP, Sounds.KICKED
