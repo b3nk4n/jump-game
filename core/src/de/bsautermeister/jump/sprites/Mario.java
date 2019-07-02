@@ -1,6 +1,10 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.tools.GameTimer;
 
@@ -66,6 +71,8 @@ public class Mario extends Sprite {
     private Animation<TextureRegion> bigMarioWalk;
     private TextureRegion bigMarioCrouch;
 
+    ParticleEffect slideEffect = new ParticleEffect();
+
     private boolean isTurning;
 
     private final GameTimer changeSizeTimer;
@@ -94,6 +101,9 @@ public class Mario extends Sprite {
 
         timeToLive = INITAL_TTL;
         score = 0;
+
+        slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
+        slideEffect.scaleEffect(0.1f / GameConfig.PPM);
 
         changeSizeTimer = new GameTimer(2f);
         changeSizeTimer.setCallbacks(new GameTimer.TimerCallbacks() {
@@ -204,6 +214,21 @@ public class Mario extends Sprite {
                 deadAnimationStarted = true;
             }
         }
+
+        if (isTurning && touchesGround() && !isDead()) {
+            slideEffect.setPosition(getX() + getWidth() / 2, getY());
+            slideEffect.start();
+
+            // particle emission direction
+            ParticleEmitter.ScaledNumericValue angle = slideEffect.getEmitters().get(0).getAngle();
+            if (textureRegion.isFlipX()) {
+                angle.setLow(-10f);
+                angle.setHigh(30f);
+            } else {
+                angle.setLow(150f);
+                angle.setHigh(190f);
+            }
+        }
     }
 
     public void control(boolean up, boolean down, boolean left, boolean right) {
@@ -304,6 +329,13 @@ public class Mario extends Sprite {
         }
 
         return textureRegion;
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        super.draw(batch);
+
+        slideEffect.draw(batch, Gdx.graphics.getDeltaTime());
     }
 
     public State getState() {

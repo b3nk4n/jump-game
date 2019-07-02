@@ -48,9 +48,16 @@ little_mario
   index: -1
 mushroom
   rotate: false
-  xy: 294, 12
+  xy: 488, 46
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 340, 4
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 spin_coin

@@ -22,4 +22,8 @@ public interface AssetPaths {
     interface Music {
         String BACKGROUND_AUDIO = "audio/music/mario_music.ogg";
     }
+
+    interface Pfx {
+        String SLIDE_SMOKE = "pfx/slide-smoke.pfx";
+    }
 }
