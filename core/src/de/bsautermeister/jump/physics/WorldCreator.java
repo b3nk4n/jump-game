@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.physics;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -38,6 +37,7 @@ public class WorldCreator {
     public static final String GOOMBAS_KEY = "goombas";
     public static final String KOOPAS_KEY = "koopas";
     public static final String COLLIDER_KEY = "collider";
+    public static final String WATER_KEY = "water";
 
     private final World world;
     private final TiledMap map;
@@ -119,6 +119,15 @@ public class WorldCreator {
                     rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
         }
         return enemies;
+    }
+
+    public Array<Rectangle> getWaterRegions() {
+        Array<Rectangle> waterRegions = new Array<Rectangle>();
+        for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+            waterRegions.add(rect);
+        }
+        return waterRegions;
     }
 
     public static Array<InteractiveTileObject> getTileObjects() {

@@ -6,70 +6,70 @@ filter: Nearest,Nearest
 repeat: none
 frame
   rotate: false
-  xy: 2, 155
+  xy: 4, 172
   size: 540, 60
   orig: 540, 60
   offset: 0, 0
   index: -1
 frame-bg
   rotate: false
-  xy: 726, 154
+  xy: 4, 4
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
   index: -1
 loading
   rotate: false
-  xy: 2, 104
+  xy: 4, 119
   size: 501, 49
   orig: 501, 49
   offset: 0, 0
   index: 0
 loading
   rotate: false
-  xy: 2, 53
+  xy: 4, 66
   size: 501, 49
   orig: 501, 49
   offset: 0, 0
   index: 1
 loading
   rotate: false
-  xy: 2, 2
+  xy: 4, 13
   size: 501, 49
   orig: 501, 49
   offset: 0, 0
   index: 2
 loading
   rotate: false
-  xy: 505, 103
+  xy: 509, 118
   size: 501, 49
   orig: 501, 49
   offset: 0, 0
   index: 3
 loading
   rotate: false
-  xy: 505, 52
+  xy: 509, 65
   size: 501, 49
   orig: 501, 49
   offset: 0, 0
   index: 4
 loading-hidden
   rotate: false
-  xy: 726, 161
+  xy: 732, 178
   size: 33, 54
   orig: 33, 54
   offset: 0, 0
   index: -1
 screen-bg
   rotate: false
-  xy: 733, 154
+  xy: 509, 56
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
   index: -1
 title
   rotate: false
-  xy: 544, 154
+  xy: 548, 171
   size: 180, 61
   orig: 180, 61
   offset: 0, 0

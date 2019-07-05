@@ -1,69 +1,76 @@
 
 gameplay.png
-size: 512,64
+size: 512,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 big_mario
   rotate: false
-  xy: 2, 30
+  xy: 4, 204
   size: 336, 32
   orig: 336, 32
   offset: 0, 0
   index: -1
 brick_fragment
   rotate: false
-  xy: 36, 2
+  xy: 4, 4
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 fireball
   rotate: false
-  xy: 2, 2
+  xy: 72, 172
   size: 32, 8
   orig: 32, 8
   offset: 0, 0
   index: -1
 goomba
   rotate: false
-  xy: 438, 46
+  xy: 232, 184
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 koopa
   rotate: false
-  xy: 340, 38
+  xy: 344, 212
   size: 96, 24
   orig: 96, 24
   offset: 0, 0
   index: -1
 little_mario
   rotate: false
-  xy: 2, 12
+  xy: 4, 184
   size: 224, 16
   orig: 224, 16
   offset: 0, 0
   index: -1
 mushroom
   rotate: false
-  xy: 488, 46
+  xy: 284, 184
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 particle
   rotate: false
-  xy: 340, 4
+  xy: 4, 16
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 spin_coin
   rotate: false
-  xy: 228, 12
+  xy: 444, 220
   size: 64, 16
   orig: 64, 16
+  offset: 0, 0
+  index: -1
+water
+  rotate: false
+  xy: 4, 52
+  size: 64, 128
+  orig: 64, 128
   offset: 0, 0
   index: -1

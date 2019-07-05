@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -24,6 +27,7 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
@@ -151,6 +155,11 @@ public class GameScreen extends ScreenBase {
         }
     };
 
+    private float gameTime;
+    private final Array<Rectangle> waterRegions;
+    private ShaderProgram waterShader;
+    private TextureRegion waterTexture;
+
     public GameScreen(GameApp game) {
         super(game);
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
@@ -181,7 +190,24 @@ public class GameScreen extends ScreenBase {
 
         spinningCoins = new Array<SpinningCoin>();
 
+        waterShader = loadShader("shader/water.fs");
+        waterTexture = atlas.findRegion(RegionNames.WATER);
+        waterRegions = worldCreator.getWaterRegions();
+
         reset();
+    }
+
+    private ShaderProgram loadShader(String fragmentShaderPath) {
+        ShaderProgram shader = new ShaderProgram(
+                Gdx.files.internal("shader/default.vs"),
+                Gdx.files.internal(fragmentShaderPath)
+        );
+
+        if (!shader.isCompiled()) {
+            Gdx.app.error(getClass().getSimpleName(), shader.getLog());
+        }
+
+        return shader;
     }
 
     private void reset() {
@@ -308,9 +334,11 @@ public class GameScreen extends ScreenBase {
             return;
         }
 
-        // snap camera position to the PPM pixel grid, otherwise there are rendering artifacts
-        camera.position.x = (float) Math.round(mario.getBody().getPosition().x * GameConfig.PPM) / GameConfig.PPM;
-        //camera.position.x = mario.getBody().getPosition().x; // no snapping runs smoother
+        // A) snap camera position to the PPM pixel grid, otherwise there are rendering artifacts
+        //camera.position.x = (float) Math.round(mario.getBody().getPosition().x * GameConfig.PPM) / GameConfig.PPM;
+
+        // B) no snapping runs smoother
+        camera.position.x = mario.getBody().getPosition().x;
 
         // check camera in bounds
         if (camera.position.x - viewport.getWorldWidth() / 2 < 0) {
@@ -359,6 +387,8 @@ public class GameScreen extends ScreenBase {
 
     @Override
     public void render(float delta) {
+        gameTime += delta;
+
         update(delta);
         postUpdate();
 
@@ -367,6 +397,7 @@ public class GameScreen extends ScreenBase {
         viewport.apply();
         SpriteBatch batch = getBatch();
         batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
         renderBackground(batch);
         renderForeground(batch);
@@ -402,8 +433,18 @@ public class GameScreen extends ScreenBase {
         for (Enemy enemy : enemies) {
             enemy.draw(batch);
         }
-
         mario.draw(batch);
+
+        ShaderProgram prevShader = batch.getShader();
+        for (Rectangle waterRegion : waterRegions) {
+            batch.setShader(waterShader);
+            waterShader.setUniformf("u_time", gameTime);
+            waterShader.setUniformf("u_width", waterRegion.getWidth());
+            batch.draw(waterTexture, waterRegion.getX() / GameConfig.PPM, (waterRegion.getY() - 1f) / GameConfig.PPM,
+                    waterRegion.getWidth() / GameConfig.PPM, waterRegion.getHeight() / GameConfig.PPM);
+        }
+
+        batch.setShader(prevShader);
 
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.draw(batch);
