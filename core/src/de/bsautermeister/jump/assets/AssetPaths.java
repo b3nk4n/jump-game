@@ -17,6 +17,7 @@ public interface AssetPaths {
         String MARIO_DIE = "audio/sounds/mariodie.wav";
         String JUMP = "audio/sounds/jump.wav";
         String KICKED = "audio/sounds/kicked.wav";
+        String SPLASH = "audio/sounds/splash.wav";
     }
 
     interface Music {
@@ -25,5 +26,6 @@ public interface AssetPaths {
 
     interface Pfx {
         String SLIDE_SMOKE = "pfx/slide-smoke.pfx";
+        String SPLASH = "pfx/splash.pfx";
     }
 }

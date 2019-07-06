@@ -52,7 +52,7 @@ public class Mario extends Sprite {
     private float jumpFixTimer;
 
     public enum State {
-        STANDING, CROUCHING, JUMPING, WALKING, DEAD
+        STANDING, CROUCHING, JUMPING, WALKING, DROWNING, DEAD
     }
 
     private GameObjectState<State> state;
@@ -72,6 +72,7 @@ public class Mario extends Sprite {
     private TextureRegion bigMarioCrouch;
 
     ParticleEffect slideEffect = new ParticleEffect();
+    ParticleEffect splashEffect = new ParticleEffect();
 
     private boolean isTurning;
 
@@ -91,12 +92,13 @@ public class Mario extends Sprite {
         state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
 
-        setBounds(0, 0, GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
         initTextures(atlas);
 
         Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
         defineSmallBody(startPostion, true);
 
+        setBounds(body.getPosition().x, body.getPosition().y,
+                GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
         setRegion(marioStand);
 
         timeToLive = INITAL_TTL;
@@ -104,6 +106,9 @@ public class Mario extends Sprite {
 
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
         slideEffect.scaleEffect(0.1f / GameConfig.PPM);
+
+        splashEffect.load(Gdx.files.internal(AssetPaths.Pfx.SPLASH), atlas);
+        splashEffect.scaleEffect(0.1f / GameConfig.PPM);
 
         changeSizeTimer = new GameTimer(2f);
         changeSizeTimer.setCallbacks(new GameTimer.TimerCallbacks() {
@@ -165,6 +170,17 @@ public class Mario extends Sprite {
             changeSizeTimer.update(delta);
         }
 
+        if (!isDead() && isBelowWaterLevel()) {
+            if (!state.is(State.DROWNING)) {
+                splashEffect.setPosition(getX() + getWidth() / 2, getY());
+                splashEffect.start();
+                callbacks.touchedWater(this);
+            }
+
+            body.setLinearVelocity(Vector2.Zero);
+            state.set(State.DROWNING);
+        }
+
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
 
@@ -200,7 +216,7 @@ public class Mario extends Sprite {
         }
 
         // check fallen out of game
-        if (getY() < 0) {
+        if (isOutOfGame()) {
             kill();
         }
 
@@ -210,7 +226,9 @@ public class Mario extends Sprite {
                 getBody().setActive(false);
             } else if (!deadAnimationStarted) {
                 getBody().setActive(true);
-                getBody().applyLinearImpulse(new Vector2(0, 4.5f), getBody().getWorldCenter(), true); // TODO currently this is dependent on the speed when Mario died
+                if (!isOutOfGame()) {
+                    getBody().applyLinearImpulse(new Vector2(0, 4.5f), getBody().getWorldCenter(), true);
+                }
                 deadAnimationStarted = true;
             }
         }
@@ -232,6 +250,10 @@ public class Mario extends Sprite {
     }
 
     public void control(boolean up, boolean down, boolean left, boolean right) {
+        if (state.is(State.DEAD) || state.is(State.DROWNING)) {
+            return;
+        }
+
         state.unfreeze();
         isTurning = right && body.getLinearVelocity().x < 0 || left && body.getLinearVelocity().x > 0;
 
@@ -287,6 +309,7 @@ public class Mario extends Sprite {
         }
 
         switch (state.current()) {
+            case DROWNING:
             case DEAD:
                 textureRegion = marioDead;
                 break;
@@ -336,6 +359,7 @@ public class Mario extends Sprite {
         super.draw(batch);
 
         slideEffect.draw(batch, Gdx.graphics.getDeltaTime());
+        splashEffect.draw(batch, Gdx.graphics.getDeltaTime());
     }
 
     public State getState() {
@@ -534,5 +558,13 @@ public class Mario extends Sprite {
 
     public boolean isInvincible() {
         return isChangingSize();
+    }
+
+    private boolean isBelowWaterLevel() {
+        return getY() < GameConfig.BLOCK_SIZE / GameConfig.PPM * 0.66;
+    }
+
+    private boolean isOutOfGame() {
+        return getY() + getHeight() < 0;
     }
 }

@@ -19,5 +19,6 @@ public interface GameCallbacks {
     void hitWall(Enemy enemy);
     void killed(Enemy enemy);
     void kicked(Enemy enemy);
+    void touchedWater(Mario mario);
     void gameOver();
 }
