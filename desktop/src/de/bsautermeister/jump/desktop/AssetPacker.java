@@ -13,6 +13,7 @@ public class AssetPacker {
         settings.maxHeight = 1024;
         settings.paddingX = 4;
         settings.paddingY = 4;
+        settings.debug = false;
 
         pack(settings, "gameplay");
         pack(settings, "loading");

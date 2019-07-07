@@ -64,12 +64,14 @@ public class Mario extends Sprite {
     private TextureRegion marioTurn;
     private Animation<TextureRegion> marioWalk;
     private Animation<TextureRegion> marioJump; // is actually just 1 frame
+    private TextureRegion marioDrown;
 
     private TextureRegion bigMarioStand;
     private TextureRegion bigMarioJump;
     private TextureRegion bigMarioTurn;
     private Animation<TextureRegion> bigMarioWalk;
     private TextureRegion bigMarioCrouch;
+    private TextureRegion bigMarioDrown;
 
     ParticleEffect slideEffect = new ParticleEffect();
     ParticleEffect splashEffect = new ParticleEffect();
@@ -159,6 +161,9 @@ public class Mario extends Sprite {
         bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
 
         bigMarioCrouch = new TextureRegion(bigMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+
+        marioDrown = new TextureRegion(littleMarioTexture, 7 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+        bigMarioDrown = new TextureRegion(bigMarioTexture, 7 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
     }
 
     public void update(float delta) {
@@ -185,22 +190,11 @@ public class Mario extends Sprite {
         setRegion(textureRegion);
 
         // set texture bounds always at the bottom of the body
-        float x = body.getPosition().x - getWidth() / 2;
-        float y = body.getPosition().y - getHeight() / 2;
-        if (isBig) {
-            y += 7.8f / GameConfig.PPM;
-        }
-
+        float leftX = body.getPosition().x - getWidth() / 2;
+        float bottomY = body.getPosition().y - 8f / GameConfig.PPM;
         float textureWidth = textureRegion.getRegionWidth() / GameConfig.PPM;
         float textureHeight = textureRegion.getRegionHeight() / GameConfig.PPM;
-        float yOffset = 0f;
-        if (isChangingSize() && isBig() && textureRegion.getRegionHeight() == GameConfig.BLOCK_SIZE) {
-            yOffset = -7.5f / GameConfig.PPM;
-        } else if (isChangingSize() && !isBig() && textureRegion.getRegionHeight() > GameConfig.BLOCK_SIZE) {
-            yOffset = 7.5f / GameConfig.PPM;
-        }
-
-        setBounds(x, y + yOffset, textureWidth, textureHeight);
+        setBounds(leftX, bottomY, textureWidth, textureHeight);
 
         // these are called outside of the physics update loop
         if (markRedefineBody && isBig()) {
@@ -310,6 +304,8 @@ public class Mario extends Sprite {
 
         switch (state.current()) {
             case DROWNING:
+                textureRegion = useBigTexture ? bigMarioDrown : marioDrown;
+                break;
             case DEAD:
                 textureRegion = marioDead;
                 break;
