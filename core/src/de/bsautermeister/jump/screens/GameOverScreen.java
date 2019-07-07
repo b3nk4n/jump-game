@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -19,7 +19,7 @@ public class GameOverScreen extends ScreenBase {
 
     public GameOverScreen(GameApp game) {
         super(game);
-        this.viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+        this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);

@@ -14,8 +14,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 
 public class Goomba extends Enemy {
@@ -39,17 +39,17 @@ public class Goomba extends Enemy {
         this.atlas = atlas;
         initTextures(atlas);
 
-        setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
+        setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
     private void initTextures(TextureAtlas atlas) {
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("goomba"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
+            frames.add(new TextureRegion(atlas.findRegion("goomba"), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
         }
         walkAnimation = new Animation(0.4f, frames);
 
-        stompedTexture = new TextureRegion(atlas.findRegion("goomba"), 2 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+        stompedTexture = new TextureRegion(atlas.findRegion("goomba"), 2 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Goomba extends Enemy {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 / GameConfig.PPM);
+        shape.setRadius(6 / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -122,10 +122,10 @@ public class Goomba extends Enemy {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5, 8).scl(1 / GameConfig.PPM);
-        vertices[1] = new Vector2(5, 8).scl(1 / GameConfig.PPM);
-        vertices[2] = new Vector2(-3, 3).scl(1 / GameConfig.PPM);
-        vertices[3] = new Vector2(3, 3).scl(1 / GameConfig.PPM);
+        vertices[0] = new Vector2(-5, 8).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(5, 8).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-3, 3).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(3, 3).scl(1 / Cfg.PPM);
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;
@@ -139,11 +139,11 @@ public class Goomba extends Enemy {
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT;
         fixtureDef.isSensor = true;
-        sideShape.set(new Vector2(-6 / GameConfig.PPM, -1 / GameConfig.PPM),
-                new Vector2(-6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
+                new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(this);
-        sideShape.set(new Vector2(6 / GameConfig.PPM, -1 / GameConfig.PPM),
-                new Vector2(6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
+                new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(this);
         return body;
     }

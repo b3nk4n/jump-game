@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 
 public class Brick extends InteractiveTileObject {
@@ -54,7 +54,7 @@ public class Brick extends InteractiveTileObject {
     @Override
     public void onHeadHit(Mario mario) {
         float xDistance = Math.abs(mario.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
-        boolean closeEnough = xDistance < GameConfig.BLOCK_SIZE / 2 / GameConfig.PPM;
+        boolean closeEnough = xDistance < Cfg.BLOCK_SIZE / 2 / Cfg.PPM;
 
         getCallbacks().hit(mario, this, closeEnough);
 

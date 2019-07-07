@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
@@ -20,7 +20,7 @@ import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class LoadingScreen extends ScreenBase {
-    private static final Logger LOGGER = new Logger(LoadingScreen.class.getName(), GameConfig.LOG_LEVEL);
+    private static final Logger LOGGER = new Logger(LoadingScreen.class.getName(), Cfg.LOG_LEVEL);
 
     private Viewport viewport;
     private Stage stage;
@@ -44,7 +44,7 @@ public class LoadingScreen extends ScreenBase {
 
     @Override
     public void show() {
-        viewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
+        viewport = new FitViewport(Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
 
         // Tell the manager to load assets for the loading screen
         getAssetManager().load(AssetDescriptors.Atlas.LOADING);

@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
 
 public abstract class Item extends Sprite implements Disposable {
     private GameCallbacks callbacks;
@@ -21,7 +21,7 @@ public abstract class Item extends Sprite implements Disposable {
         this.callbacks = callbacks;
         this.world = world;
         setPosition(x, y);
-        setBounds(getX(), getY(), 16 / GameConfig.PPM, 16 / GameConfig.PPM);
+        setBounds(getX(), getY(), 16 / Cfg.PPM, 16 / Cfg.PPM);
         body = defineBody();
         destroyBody = new MarkedAction();
     }
@@ -30,7 +30,7 @@ public abstract class Item extends Sprite implements Disposable {
     public abstract void usedBy(Mario mario);
 
     public void update(float delta) {
-        boolean outOfBounds = getBody().getPosition().y < - GameConfig.BLOCK_SIZE / GameConfig.PPM;
+        boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE / Cfg.PPM;
         if (outOfBounds) {
             destroyBody.mark();
         }

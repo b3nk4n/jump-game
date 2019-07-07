@@ -3,7 +3,6 @@ package de.bsautermeister.jump.sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -16,8 +15,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 
 public class Koopa extends Enemy {
@@ -65,19 +64,19 @@ public class Koopa extends Enemy {
             }
         });
 
-        setBounds(getX(), getY(), GameConfig.BLOCK_SIZE / GameConfig.PPM, (int)(1.5f * GameConfig.BLOCK_SIZE) / GameConfig.PPM);
+        setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
     }
 
     private void initTextures(TextureAtlas atlas) {
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
+            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
         }
         walkAnimation = new Animation(0.2f, frames);
 
         frames.clear();
         for (int i = 4; i < 6; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, (int)(1.5f * GameConfig.BLOCK_SIZE)));
+            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
         }
         shellAnimation = new Animation(0.4f, frames);
     }
@@ -92,7 +91,7 @@ public class Koopa extends Enemy {
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
-                getBody().getPosition().y - 8 / GameConfig.PPM);
+                getBody().getPosition().y - 8 / Cfg.PPM);
         setRegion(getFrame());
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
@@ -137,7 +136,7 @@ public class Koopa extends Enemy {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 / GameConfig.PPM);
+        shape.setRadius(6 / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -155,10 +154,10 @@ public class Koopa extends Enemy {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5, 8).scl(1 / GameConfig.PPM);
-        vertices[1] = new Vector2(5, 8).scl(1 / GameConfig.PPM);
-        vertices[2] = new Vector2(-3, 3).scl(1 / GameConfig.PPM);
-        vertices[3] = new Vector2(3, 3).scl(1 / GameConfig.PPM);
+        vertices[0] = new Vector2(-5, 8).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(5, 8).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-3, 3).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(3, 3).scl(1 / Cfg.PPM);
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;
@@ -172,11 +171,11 @@ public class Koopa extends Enemy {
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT;
         fixtureDef.isSensor = true;
-        sideShape.set(new Vector2(-6 / GameConfig.PPM, -1 / GameConfig.PPM),
-                new Vector2(-6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
+                new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(this);
-        sideShape.set(new Vector2(6 / GameConfig.PPM, -1 / GameConfig.PPM),
-                new Vector2(6 / GameConfig.PPM, 1 / GameConfig.PPM));
+        sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
+                new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(this);
 
         return body;

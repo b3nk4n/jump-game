@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
@@ -171,16 +171,16 @@ public class GameScreen extends ScreenBase {
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
         this.camera = new OrthographicCamera();
-        this.viewport = new StretchViewport(GameConfig.WORLD_WIDTH / GameConfig.PPM, GameConfig.WORLD_HEIGHT / GameConfig.PPM, camera);
+        this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         this.map = new TmxMapLoader().load("maps/level01.tmx");
-        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / GameConfig.PPM, game.getBatch());
+        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, game.getBatch());
         float mapWidth = map.getProperties().get("width", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
-        this.mapPixelWidth = mapWidth * tilePixelWidth / GameConfig.PPM;
+        this.mapPixelWidth = mapWidth * tilePixelWidth / Cfg.PPM;
 
-        this.world = new World(new Vector2(0,-10f), true);
+        this.world = new World(new Vector2(0,-9.81f), true);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
         this.enemies = worldCreator.createEnemies();
@@ -256,7 +256,7 @@ public class GameScreen extends ScreenBase {
         handleInput();
         handleSpawingItems();
 
-        world.step(1 / 60f, 6, 2);
+        world.step(1 / 60f, 8, 3);
 
         mario.update(delta);
         checkPlayerInBounds();
@@ -318,7 +318,7 @@ public class GameScreen extends ScreenBase {
         for (Enemy enemy : enemies) {
             enemy.update(delta);
 
-            if (enemy.getX() < mario.getX() + 256 / GameConfig.PPM) {
+            if (enemy.getX() < mario.getX() + 256 / Cfg.PPM) {
                 enemy.setActive(true);
             }
         }
@@ -342,7 +342,7 @@ public class GameScreen extends ScreenBase {
         }
 
         // A) snap camera position to the PPM pixel grid, otherwise there are rendering artifacts
-        //camera.position.x = (float) Math.round(mario.getBody().getPosition().x * GameConfig.PPM) / GameConfig.PPM;
+        //camera.position.x = (float) Math.round(mario.getBody().getPosition().x * Cfg.PPM) / Cfg.PPM;
 
         // B) no snapping runs smoother
         camera.position.x = mario.getBody().getPosition().x;
@@ -410,7 +410,7 @@ public class GameScreen extends ScreenBase {
         renderForeground(batch);
         batch.end();
 
-        if (GameConfig.DEBUG_MODE) {
+        if (Cfg.DEBUG_MODE) {
             box2DDebugRenderer.render(world, camera.combined);
         }
 
@@ -447,8 +447,8 @@ public class GameScreen extends ScreenBase {
             batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_width", waterRegion.getWidth());
-            batch.draw(waterTexture, waterRegion.getX() / GameConfig.PPM, (waterRegion.getY() - 1f) / GameConfig.PPM,
-                    waterRegion.getWidth() / GameConfig.PPM, waterRegion.getHeight() / GameConfig.PPM);
+            batch.draw(waterTexture, waterRegion.getX() / Cfg.PPM, (waterRegion.getY() - 1f) / Cfg.PPM,
+                    waterRegion.getWidth() / Cfg.PPM, waterRegion.getHeight() / Cfg.PPM);
         }
 
         batch.setShader(prevShader);

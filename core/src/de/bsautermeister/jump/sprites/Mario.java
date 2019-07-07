@@ -19,8 +19,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
@@ -96,21 +96,21 @@ public class Mario extends Sprite {
 
         initTextures(atlas);
 
-        Vector2 startPostion = new Vector2(2 * GameConfig.BLOCK_SIZE / GameConfig.PPM, 2 * GameConfig.BLOCK_SIZE / GameConfig.PPM);
-        defineSmallBody(startPostion, true);
+        Vector2 startPosition = new Vector2(2 * Cfg.BLOCK_SIZE / Cfg.PPM, 2 * Cfg.BLOCK_SIZE / Cfg.PPM);
+        defineSmallBody(startPosition, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
-                GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
+                Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         setRegion(marioStand);
 
         timeToLive = INITAL_TTL;
         score = 0;
 
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
-        slideEffect.scaleEffect(0.1f / GameConfig.PPM);
+        slideEffect.scaleEffect(0.1f / Cfg.PPM);
 
         splashEffect.load(Gdx.files.internal(AssetPaths.Pfx.SPLASH), atlas);
-        splashEffect.scaleEffect(0.1f / GameConfig.PPM);
+        splashEffect.scaleEffect(0.1f / Cfg.PPM);
 
         changeSizeTimer = new GameTimer(2f);
         changeSizeTimer.setCallbacks(new GameTimer.TimerCallbacks() {
@@ -133,37 +133,37 @@ public class Mario extends Sprite {
         TextureRegion littleMarioTexture = atlas.findRegion(RegionNames.LITTLE_MARIO);
         TextureRegion bigMarioTexture = atlas.findRegion(RegionNames.BIG_MARIO);
 
-        marioStand = new TextureRegion(littleMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
-        bigMarioStand = new TextureRegion(bigMarioTexture, 0, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+        marioStand = new TextureRegion(littleMarioTexture, 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
+        bigMarioStand = new TextureRegion(bigMarioTexture, 0, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 1; i < 4; i++) {
-            frames.add(new TextureRegion(littleMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
+            frames.add(new TextureRegion(littleMarioTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
         }
         marioWalk = new Animation<TextureRegion>(0.1f, frames);
 
         frames.clear();
         for (int i = 1; i < 4; i++) {
-            frames.add(new TextureRegion(bigMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE));
+            frames.add(new TextureRegion(bigMarioTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE));
         }
         bigMarioWalk = new Animation<TextureRegion>(0.1f, frames);
 
         frames.clear();
         for (int i = 5; i < 6; i++) {
-            frames.add(new TextureRegion(littleMarioTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
+            frames.add(new TextureRegion(littleMarioTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
         }
         marioJump = new Animation<TextureRegion>(0.1f, frames);
-        bigMarioJump = new TextureRegion(bigMarioTexture, 5 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+        bigMarioJump = new TextureRegion(bigMarioTexture, 5 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
 
-        marioDead = new TextureRegion(littleMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+        marioDead = new TextureRegion(littleMarioTexture, 6 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
 
-        marioTurn = new TextureRegion(littleMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
-        bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+        marioTurn = new TextureRegion(littleMarioTexture, 4 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
+        bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
 
-        bigMarioCrouch = new TextureRegion(bigMarioTexture, 6 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+        bigMarioCrouch = new TextureRegion(bigMarioTexture, 6 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
 
-        marioDrown = new TextureRegion(littleMarioTexture, 7 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
-        bigMarioDrown = new TextureRegion(bigMarioTexture, 7 * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, 2 * GameConfig.BLOCK_SIZE);
+        marioDrown = new TextureRegion(littleMarioTexture, 7 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
+        bigMarioDrown = new TextureRegion(bigMarioTexture, 7 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
     }
 
     public void update(float delta) {
@@ -191,9 +191,9 @@ public class Mario extends Sprite {
 
         // set texture bounds always at the bottom of the body
         float leftX = body.getPosition().x - getWidth() / 2;
-        float bottomY = body.getPosition().y - 8f / GameConfig.PPM;
-        float textureWidth = textureRegion.getRegionWidth() / GameConfig.PPM;
-        float textureHeight = textureRegion.getRegionHeight() / GameConfig.PPM;
+        float bottomY = body.getPosition().y - 8f / Cfg.PPM;
+        float textureWidth = textureRegion.getRegionWidth() / Cfg.PPM;
+        float textureHeight = textureRegion.getRegionHeight() / Cfg.PPM;
         setBounds(leftX, bottomY, textureWidth, textureHeight);
 
         // these are called outside of the physics update loop
@@ -370,14 +370,14 @@ public class Mario extends Sprite {
 
         FixtureDef fixtureDef = new FixtureDef();
         final float[] SMALL_POLYGON_VERTICES = {
-                -3f / GameConfig.PPM, 6f / GameConfig.PPM,
-                3f / GameConfig.PPM, 6f / GameConfig.PPM,
-                5f / GameConfig.PPM, -2f / GameConfig.PPM,
-                5f / GameConfig.PPM, -4f / GameConfig.PPM,
-                3f / GameConfig.PPM, -4.5f / GameConfig.PPM,
-                -3f / GameConfig.PPM, -4.5f / GameConfig.PPM,
-                -5f / GameConfig.PPM, -4f / GameConfig.PPM,
-                -5f / GameConfig.PPM, -2f / GameConfig.PPM
+                -3f / Cfg.PPM, 6f / Cfg.PPM,
+                3f / Cfg.PPM, 6f / Cfg.PPM,
+                5f / Cfg.PPM, -2f / Cfg.PPM,
+                5f / Cfg.PPM, -4f / Cfg.PPM,
+                3f / Cfg.PPM, -4.5f / Cfg.PPM,
+                -3f / Cfg.PPM, -4.5f / Cfg.PPM,
+                -5f / Cfg.PPM, -4f / Cfg.PPM,
+                -5f / Cfg.PPM, -2f / Cfg.PPM
         };
         createBodyFixture(fixtureDef, SMALL_POLYGON_VERTICES, normalFilterMask);
 
@@ -394,14 +394,14 @@ public class Mario extends Sprite {
 
         FixtureDef fixtureDef = new FixtureDef();
         final float[] BIG_POLYGON_VERTICES = {
-                -2.5f / GameConfig.PPM, 21f / GameConfig.PPM,
-                2.5f / GameConfig.PPM, 21f / GameConfig.PPM,
-                5.5f / GameConfig.PPM, 8f / GameConfig.PPM,
-                5.5f / GameConfig.PPM, -1f / GameConfig.PPM,
-                3f / GameConfig.PPM, -4.5f / GameConfig.PPM,
-                -3f / GameConfig.PPM, -4.5f / GameConfig.PPM,
-                -5.5f / GameConfig.PPM, -1f / GameConfig.PPM,
-                -5.5f / GameConfig.PPM, 8f / GameConfig.PPM,
+                -2.5f / Cfg.PPM, 21f / Cfg.PPM,
+                2.5f / Cfg.PPM, 21f / Cfg.PPM,
+                5.5f / Cfg.PPM, 8f / Cfg.PPM,
+                5.5f / Cfg.PPM, -1f / Cfg.PPM,
+                3f / Cfg.PPM, -4.5f / Cfg.PPM,
+                -3f / Cfg.PPM, -4.5f / Cfg.PPM,
+                -5.5f / Cfg.PPM, -1f / Cfg.PPM,
+                -5.5f / Cfg.PPM, 8f / Cfg.PPM,
         };
         createBodyFixture(fixtureDef, BIG_POLYGON_VERTICES, normalFilterMask);
         createFeetFixture(fixtureDef, 10f, -6.5f);
@@ -426,8 +426,8 @@ public class Mario extends Sprite {
      */
     private void createFeetFixture(FixtureDef fixtureDef, float width, float bottomY) {
         Fixture fixture;EdgeShape feetShape = new EdgeShape();
-        feetShape.set(-width / 2 / GameConfig.PPM, bottomY  / GameConfig.PPM,
-                width / 2 / GameConfig.PPM, bottomY / GameConfig.PPM);
+        feetShape.set(-width / 2 / Cfg.PPM, bottomY  / Cfg.PPM,
+                width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -439,8 +439,8 @@ public class Mario extends Sprite {
 
     private void createHeadSensorFixture(FixtureDef fixtureDef, float width, float topY) {
         EdgeShape headShape = new EdgeShape();
-        headShape.set(new Vector2(width / 2 / GameConfig.PPM, topY / GameConfig.PPM),
-                new Vector2(width / 2 / GameConfig.PPM, topY / GameConfig.PPM));
+        headShape.set(new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM),
+                new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
         fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
@@ -452,8 +452,8 @@ public class Mario extends Sprite {
      */
     private void createGroundSensorFixture(FixtureDef fixtureDef, float width, float bottomY) {
         EdgeShape groundSensorShape = new EdgeShape();
-        groundSensorShape.set(new Vector2(-width / 2 / GameConfig.PPM, bottomY / GameConfig.PPM),
-                new Vector2(width / 2 / GameConfig.PPM, bottomY / GameConfig.PPM));
+        groundSensorShape.set(new Vector2(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM),
+                new Vector2(width / 2 / Cfg.PPM, bottomY / Cfg.PPM));
         fixtureDef.filter.categoryBits = JumpGame.MARIO_FEET_BIT;
         fixtureDef.shape = groundSensorShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
@@ -557,7 +557,7 @@ public class Mario extends Sprite {
     }
 
     private boolean isBelowWaterLevel() {
-        return getY() < GameConfig.BLOCK_SIZE / GameConfig.PPM * 0.66;
+        return getY() < Cfg.BLOCK_SIZE / Cfg.PPM * 0.66;
     }
 
     private boolean isOutOfGame() {

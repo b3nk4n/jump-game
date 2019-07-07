@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
 
 public class BrickFragment extends Sprite implements Pool.Poolable {
@@ -17,7 +17,7 @@ public class BrickFragment extends Sprite implements Pool.Poolable {
     public void init(TextureAtlas atlas, Vector2 centerPosition, Vector2 velocity,
                      float rotationSpeed) {
         setRegion(atlas.findRegion(RegionNames.BRICK_FRAGMENT));
-        setSize(8f / GameConfig.PPM, 8f / GameConfig.PPM);
+        setSize(8f / Cfg.PPM, 8f / Cfg.PPM);
         setCenter(centerPosition.x, centerPosition.y);
         setOrigin(getWidth() / 2f, getHeight() / 2f);
         this.velocity.set(velocity);

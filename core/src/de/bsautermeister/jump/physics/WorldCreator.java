@@ -15,8 +15,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
@@ -79,11 +79,11 @@ public class WorldCreator {
         Body body;
 
         bodyDef.type = bodyType;
-        bodyDef.position.set((bounds.getX() + bounds.getWidth() / 2) / GameConfig.PPM,
-                (bounds.getY() + bounds.getHeight() / 2) / GameConfig.PPM);
+        bodyDef.position.set((bounds.getX() + bounds.getWidth() / 2) / Cfg.PPM,
+                (bounds.getY() + bounds.getHeight() / 2) / Cfg.PPM);
         body = world.createBody(bodyDef);
-        shape.setAsBox(bounds.getWidth() / 2 / GameConfig.PPM,
-                bounds.getHeight() / 2 / GameConfig.PPM);
+        shape.setAsBox(bounds.getWidth() / 2 / Cfg.PPM,
+                bounds.getHeight() / 2 / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = categoryBit;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -97,8 +97,8 @@ public class WorldCreator {
             fixtureDef.filter.categoryBits = JumpGame.BLOCK_TOP_BIT;
             fixtureDef.filter.maskBits = JumpGame.ENEMY_BIT | JumpGame.ITEM_BIT;
             fixtureDef.isSensor = true;
-            topCornerShape.set(new Vector2(-6 / GameConfig.PPM, 8.5f / GameConfig.PPM),
-                    new Vector2(6 / GameConfig.PPM, 8.5f / GameConfig.PPM));
+            topCornerShape.set(new Vector2(-6 / Cfg.PPM, 8.5f / Cfg.PPM),
+                    new Vector2(6 / Cfg.PPM, 8.5f / Cfg.PPM));
             body.createFixture(fixtureDef).setUserData(parent);
         }
 
@@ -110,13 +110,13 @@ public class WorldCreator {
         for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
             enemies.add(new Goomba(callbacks, world, atlas,
-                    rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
+                    rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
         }
 
         for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
             enemies.add(new Koopa(callbacks, world, atlas,
-                    rect.getX() / GameConfig.PPM, rect.getY() / GameConfig.PPM));
+                    rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
         }
         return enemies;
     }

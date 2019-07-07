@@ -2,9 +2,9 @@ package de.bsautermeister.jump;
 
 import com.badlogic.gdx.utils.Logger;
 
-public interface GameConfig {
+public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
-    boolean DEBUG_MODE = false;
+    boolean DEBUG_MODE = true;
 
     float HUD_WIDTH = 1280; // still world units!
     float HUD_HEIGHT = 720; // still world units!

@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.sprites.Mario;
 
 public class Hud implements Disposable {
@@ -38,7 +38,7 @@ public class Hud implements Disposable {
         this.currentTTL = 300;
         this.currentScore = 0;
 
-        this.viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+        this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, batch);
         this.stage.addActor(buildUi());
     }

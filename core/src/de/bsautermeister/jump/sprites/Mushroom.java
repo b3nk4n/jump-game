@@ -10,13 +10,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 
 public class Mushroom extends Item {
     public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
         super(callbacks, world, x, y);
-        setRegion(atlas.findRegion("mushroom"), 0, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE);
+        setRegion(atlas.findRegion("mushroom"), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
         velocity = new Vector2(0.6f, 0);
     }
 
@@ -29,7 +29,7 @@ public class Mushroom extends Item {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 / GameConfig.PPM);
+        shape.setRadius(6 / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ITEM_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |

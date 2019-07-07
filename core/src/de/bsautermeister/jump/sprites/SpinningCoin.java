@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
 
 public class SpinningCoin extends Sprite {
@@ -16,13 +16,13 @@ public class SpinningCoin extends Sprite {
     private Animation<TextureRegion> spinningAnimation;
     private float stateTime;
     private static final float ANIMATION_TIME = 0.5f;
-    private static final float ANIMATION_OFFSET_Y = 4 * GameConfig.BLOCK_SIZE / GameConfig.PPM;
+    private static final float ANIMATION_OFFSET_Y = 4 * Cfg.BLOCK_SIZE / Cfg.PPM;
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
 
     public SpinningCoin(TextureAtlas atlas, Vector2 position) {
-        spawnPosition = new Vector2(position.x - (GameConfig.BLOCK_SIZE / 2f / GameConfig.PPM),
-                position.y - (GameConfig.BLOCK_SIZE / 2f / GameConfig.PPM));
-        setBounds(0, 0, GameConfig.BLOCK_SIZE / GameConfig.PPM, GameConfig.BLOCK_SIZE / GameConfig.PPM);
+        spawnPosition = new Vector2(position.x - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM),
+                position.y - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM));
+        setBounds(0, 0, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         setPosition(spawnPosition.x, spawnPosition.y);
         initTextures(atlas);
         stateTime = 0;
@@ -33,7 +33,7 @@ public class SpinningCoin extends Sprite {
         TextureRegion spinningCoinTexture = atlas.findRegion(RegionNames.SPINNING_COIN);
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 4; i++) {
-            frames.add(new TextureRegion(spinningCoinTexture, i * GameConfig.BLOCK_SIZE, 0, GameConfig.BLOCK_SIZE, GameConfig.BLOCK_SIZE));
+            frames.add(new TextureRegion(spinningCoinTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
         }
         spinningAnimation = new Animation<TextureRegion>(0.1f, frames);
     }

@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectSet;
 
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.physics.WorldCreator;
 
 public abstract class InteractiveTileObject {
@@ -38,17 +38,17 @@ public abstract class InteractiveTileObject {
         this.world = world;
         this.mapObject = (RectangleMapObject)mapObject;
         Rectangle screenBounds = this.mapObject.getRectangle();
-        this.bounds = new Rectangle(screenBounds.x / GameConfig.PPM,
-                screenBounds.y / GameConfig.PPM,
-                screenBounds.width / GameConfig.PPM,
-                screenBounds.height / GameConfig.PPM);
+        this.bounds = new Rectangle(screenBounds.x / Cfg.PPM,
+                screenBounds.y / Cfg.PPM,
+                screenBounds.width / Cfg.PPM,
+                screenBounds.height / Cfg.PPM);
         this.enemiesOnTop = new ObjectSet<Enemy>();
         this.itemsOnTop = new ObjectSet<Item>();
         this.body = defineBody(categoryBit);
         this.bumpUpAnimationTimer = BUMP_UP_ANIMATION_TIME;
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("graphics");
-        this.cell =  layer.getCell((int)(body.getPosition().x * GameConfig.PPM / GameConfig.BLOCK_SIZE),
-                ((int)(body.getPosition().y * GameConfig.PPM / GameConfig.BLOCK_SIZE)));
+        this.cell =  layer.getCell((int)(body.getPosition().x * Cfg.PPM / Cfg.BLOCK_SIZE),
+                ((int)(body.getPosition().y * Cfg.PPM / Cfg.BLOCK_SIZE)));
         cell.setTile(new DynamicTiledMapTile(cell.getTile()));
     }
 

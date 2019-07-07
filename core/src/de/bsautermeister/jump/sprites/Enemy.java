@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.GameConfig;
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 
 public abstract class Enemy extends Sprite implements Disposable {
@@ -36,7 +36,7 @@ public abstract class Enemy extends Sprite implements Disposable {
     protected abstract Body defineBody();
 
     public void update(float delta) {
-        boolean outOfBounds = getBody().getPosition().y < - GameConfig.BLOCK_SIZE / GameConfig.PPM;
+        boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE / Cfg.PPM;
         if (outOfBounds) {
             markRemovable();
         }
