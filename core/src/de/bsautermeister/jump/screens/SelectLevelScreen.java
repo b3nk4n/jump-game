@@ -18,11 +18,11 @@ import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
-public class MenuScreen extends ScreenBase {
+public class SelectLevelScreen extends ScreenBase {
     private final Viewport viewport;
     private final Stage stage;
 
-    public MenuScreen(GameApp game) {
+    public SelectLevelScreen(GameApp game) {
         super(game);
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
@@ -41,21 +41,29 @@ public class MenuScreen extends ScreenBase {
         table.center();
         table.setFillParent(true);
 
-        Button playButton = new Button(skin, Styles.Button.PLAY);
-        playButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                play();
-            }
-        });
-        table.add(playButton);
+        table.add(createLevelButton(skin, 1));
+        table.add(createLevelButton(skin, 2));
+        //table.row();
+        //table.add(createLevelButton(skin, 3));
+        //table.add(createLevelButton(skin, 4));
 
         table.pack();
         stage.addActor(table);
     }
 
-    private void play() {
-        setScreen(new SelectLevelScreen(getGame()));
+    private Button createLevelButton(Skin skin, final int level) {
+        Button playButton = new Button(skin, Styles.Button.PLAY);
+        playButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playLevel(level);
+            }
+        });
+        return playButton;
+    }
+
+    private void playLevel(int level) {
+        setScreen(new GameScreen(getGame(), level));
     }
 
     @Override

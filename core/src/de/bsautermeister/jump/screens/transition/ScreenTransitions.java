@@ -2,11 +2,9 @@ package de.bsautermeister.jump.screens.transition;
 
 import com.badlogic.gdx.math.Interpolation;
 
-public final class ScreenTransitions {
-    public static final ScreenTransition FADE = new FadeScreenTransition(0.75f, Interpolation.fade);
-    public static final ScreenTransition SCLAE = new ScaleScreenTransition(0.75f, Interpolation.elastic, true);
-    public static final ScreenTransition SLIDE = new SlideScreenTransition(0.75f, Interpolation.circleIn, true, Direction.LEFT);
-
-    private ScreenTransitions() {
-    }
+public interface ScreenTransitions {
+    ScreenTransition FADE = new FadeScreenTransition(0.75f, Interpolation.fade);
+    ScreenTransition SCLAE = new ScaleScreenTransition(0.75f, Interpolation.elastic, true);
+    ScreenTransition SLIDE_LEFT = new SlideScreenTransition(0.75f, Interpolation.circleIn, true, Direction.LEFT);
+    ScreenTransition SLIDE_RIGHT = new SlideScreenTransition(0.75f, Interpolation.circleIn, true, Direction.RIGHT);
 }
