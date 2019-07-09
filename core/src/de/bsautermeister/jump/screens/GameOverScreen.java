@@ -14,14 +14,17 @@ import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameOverScreen extends ScreenBase {
-    private Viewport viewport;
-    private Stage stage;
+    private final Viewport viewport;
+    private final Stage stage;
 
     public GameOverScreen(GameApp game) {
         super(game);
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
+        initialize();
+    }
 
+    private void initialize() {
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
         Table table = new Table();

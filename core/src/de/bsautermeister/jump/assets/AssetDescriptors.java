@@ -3,6 +3,7 @@ package de.bsautermeister.jump.assets;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public interface AssetDescriptors {
 
@@ -13,13 +14,15 @@ public interface AssetDescriptors {
     interface Atlas {
         AssetDescriptor<TextureAtlas> LOADING =
                 new AssetDescriptor<TextureAtlas>(AssetPaths.Atlas.LOADING, TextureAtlas.class);
-
         AssetDescriptor<TextureAtlas> GAMEPLAY =
                 new AssetDescriptor<TextureAtlas>(AssetPaths.Atlas.GAMEPLAY, TextureAtlas.class);
+        AssetDescriptor<TextureAtlas> UI =
+                new AssetDescriptor<TextureAtlas>(AssetPaths.Atlas.UI, TextureAtlas.class);
     }
 
     interface Skins {
-
+        AssetDescriptor<Skin> UI =
+                new AssetDescriptor<Skin>(AssetPaths.Skins.UI, Skin.class);
     }
 
     interface Sounds {
@@ -48,7 +51,7 @@ public interface AssetDescriptors {
     }
 
     AssetDescriptor[] ALL = {
-            Atlas.LOADING, Atlas. GAMEPLAY,
+            Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.POWERUP_SPAWN, Sounds.POWERUP,
             Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE, Sounds.JUMP, Sounds.KICKED,
             Sounds.SPLASH

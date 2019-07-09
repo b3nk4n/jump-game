@@ -4,6 +4,11 @@ public interface AssetPaths {
     interface Atlas {
         String LOADING = "loading/loading.atlas";
         String GAMEPLAY = "gameplay/gameplay.atlas";
+        String UI = "ui/ui.atlas";
+    }
+
+    interface Skins {
+        String UI = "ui/ui.skin";
     }
 
     interface Sounds {

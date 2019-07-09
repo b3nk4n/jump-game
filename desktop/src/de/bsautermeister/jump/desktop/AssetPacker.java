@@ -17,6 +17,7 @@ public class AssetPacker {
 
         pack(settings, "gameplay");
         pack(settings, "loading");
+        pack(settings, "ui");
     }
 
     private static void pack(TexturePacker.Settings settings, String name) {

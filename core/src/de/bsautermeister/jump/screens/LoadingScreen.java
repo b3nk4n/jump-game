@@ -141,7 +141,7 @@ public class LoadingScreen extends ScreenBase {
 
         if (getAssetManager().update() && percent > 0.99f && !isLoadingFinished) {
             isLoadingFinished = true;
-            setScreen(new GameScreen(getGame()));
+            setScreen(new MenuScreen(getGame()));
         }
     }
 
