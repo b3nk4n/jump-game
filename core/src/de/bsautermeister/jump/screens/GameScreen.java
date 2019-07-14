@@ -28,6 +28,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
@@ -77,6 +78,8 @@ public class GameScreen extends ScreenBase {
     private Sound jumpSound;
     private Sound kickedSound;
     private Sound splashSound;
+
+    private MusicPlayer musicPlayer;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -169,6 +172,7 @@ public class GameScreen extends ScreenBase {
     public GameScreen(GameApp game, int level) {
         super(game);
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
+        this.musicPlayer = game.getMusicPlayer();
 
         this.camera = new OrthographicCamera();
         this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
@@ -217,7 +221,10 @@ public class GameScreen extends ScreenBase {
     }
 
     private void reset() {
-        getGame().getMusicPlayer().play();
+        musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
+        musicPlayer.setVolume(1.0f, true);
+
+        musicPlayer.play();
     }
 
     @Override
@@ -284,7 +291,12 @@ public class GameScreen extends ScreenBase {
         mapRenderer.setView(camera);
 
         if (mario.getState() == Mario.State.DEAD) {
-            getGame().getMusicPlayer().stop();
+            musicPlayer.stop();
+        }
+
+        if (mario.getTimeToLive() <= 60 && !musicPlayer.isSelected(AssetPaths.Music.HURRY_AUDIO)) {
+            musicPlayer.selectMusic(AssetPaths.Music.HURRY_AUDIO);
+            musicPlayer.play();
         }
     }
 

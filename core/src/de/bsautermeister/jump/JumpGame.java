@@ -34,9 +34,6 @@ public class JumpGame extends GameApp {
 
         batch = new SpriteBatch();
 
-        getMusicPlayer().selectMusic(AssetPaths.Music.BACKGROUND_AUDIO);
-        getMusicPlayer().setVolume(1.0f, true);
-
         setScreen(new LoadingScreen(this));
     }
 

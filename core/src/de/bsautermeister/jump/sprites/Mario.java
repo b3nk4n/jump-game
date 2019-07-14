@@ -28,7 +28,7 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Mario extends Sprite {
 
-    public static final float INITAL_TTL = 30;
+    public static final float INITAL_TTL = 200;
 
     private static final short NORMAL_FILTER_BITS = JumpGame.GROUND_BIT |
     JumpGame.COIN_BIT |

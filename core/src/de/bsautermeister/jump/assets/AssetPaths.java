@@ -26,7 +26,8 @@ public interface AssetPaths {
     }
 
     interface Music {
-        String BACKGROUND_AUDIO = "audio/music/mario_music.ogg";
+        String NORMAL_AUDIO = "audio/music/mario_music.ogg";
+        String HURRY_AUDIO = "audio/music/mario_hurry.mp3";
     }
 
     interface Pfx {
