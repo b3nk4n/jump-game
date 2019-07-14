@@ -26,6 +26,7 @@ public class MenuScreen extends ScreenBase {
         super(game);
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
+        this.stage.setDebugAll(Cfg.DEBUG_MODE);
     }
 
     @Override
@@ -48,14 +49,14 @@ public class MenuScreen extends ScreenBase {
                 play();
             }
         });
-        table.add(playButton);
+        table.add(playButton).pad(8f);
 
         table.pack();
         stage.addActor(table);
     }
 
     private void play() {
-        setScreen(new SelectLevelScreen(getGame()));
+        setScreen(new SelectLevelScreen(getGame(), 1));
     }
 
     @Override

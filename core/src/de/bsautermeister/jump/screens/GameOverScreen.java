@@ -43,7 +43,7 @@ public class GameOverScreen extends ScreenBase {
         stage.draw();
 
         if (Gdx.input.isTouched()) {
-            setScreen(new SelectLevelScreen(getGame()));
+            setScreen(new SelectLevelScreen(getGame(), 1));
         }
     }
 

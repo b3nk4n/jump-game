@@ -15,4 +15,6 @@ public interface Cfg {
     int BLOCK_SIZE = 16;
 
     float PPM = 100f;
+
+    int LEVEL_PAGES = 3;
 }

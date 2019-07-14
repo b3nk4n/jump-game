@@ -16,16 +16,20 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.screens.transition.ScreenTransitions;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class SelectLevelScreen extends ScreenBase {
     private final Viewport viewport;
     private final Stage stage;
+    private final int page;
 
-    public SelectLevelScreen(GameApp game) {
+    public SelectLevelScreen(GameApp game, int page) {
         super(game);
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
+        this.stage.setDebugAll(Cfg.DEBUG_MODE);
+        this.page = page;
     }
 
     @Override
@@ -41,29 +45,54 @@ public class SelectLevelScreen extends ScreenBase {
         table.center();
         table.setFillParent(true);
 
-        table.add(createLevelButton(skin, 1));
-        table.add(createLevelButton(skin, 2));
-        //table.row();
-        //table.add(createLevelButton(skin, 3));
-        //table.add(createLevelButton(skin, 4));
+        Button leftButton = new Button(skin, Styles.Button.ARROW_LEFT);
+        leftButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new SelectLevelScreen(getGame(), page - 1), ScreenTransitions.SLIDE_RIGHT);
+            }
+        });
+        leftButton.setVisible(page > 1);
+        table.add(leftButton).center();
+
+        Table levelTable = new Table();
+        levelTable.add(createLevelButton(skin, page,1)).pad(8f);
+        levelTable.add(createLevelButton(skin, page,2)).pad(8f);
+        levelTable.add(createLevelButton(skin, page,3)).pad(8f);
+        levelTable.row();
+        levelTable.add(createLevelButton(skin, page, 4)).pad(8f);
+        levelTable.add(createLevelButton(skin, page, 5)).pad(8f);
+        levelTable.add(createLevelButton(skin, page, 6)).pad(8f);
+        levelTable.pack();
+        table.add(levelTable).expandX();
+
+        Button rightButton = new Button(skin, Styles.Button.ARROW_RIGHT);
+        rightButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setScreen(new SelectLevelScreen(getGame(), page + 1), ScreenTransitions.SLIDE_LEFT);
+            }
+        });
+        rightButton.setVisible(page < Cfg.LEVEL_PAGES);
+        table.add(rightButton).center();
 
         table.pack();
         stage.addActor(table);
     }
 
-    private Button createLevelButton(Skin skin, final int level) {
+    private Button createLevelButton(Skin skin, final int stage, final int level) {
         Button playButton = new Button(skin, Styles.Button.PLAY);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                playLevel(level);
+                playLevel(stage, level);
             }
         });
         return playButton;
     }
 
-    private void playLevel(int level) {
-        setScreen(new GameScreen(getGame(), level));
+    private void playLevel(int stage, int level) {
+        setScreen(new GameScreen(getGame(), stage, level));
     }
 
     @Override

@@ -1,9 +1,37 @@
 
 ui.png
-size: 128,64
+size: 512,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+arrow_left
+  rotate: false
+  xy: 112, 12
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+arrow_left_down
+  rotate: false
+  xy: 158, 12
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+arrow_right
+  rotate: false
+  xy: 204, 12
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+arrow_right_down
+  rotate: false
+  xy: 250, 12
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
 play
   rotate: false
   xy: 4, 4

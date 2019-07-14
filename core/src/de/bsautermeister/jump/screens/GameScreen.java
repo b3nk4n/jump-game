@@ -169,7 +169,7 @@ public class GameScreen extends ScreenBase {
     private ShaderProgram waterShader;
     private TextureRegion waterTexture;
 
-    public GameScreen(GameApp game, int level) {
+    public GameScreen(GameApp game, int stage, int level) {
         super(game);
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
         this.musicPlayer = game.getMusicPlayer();
@@ -178,7 +178,7 @@ public class GameScreen extends ScreenBase {
         this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
+        this.map = new TmxMapLoader().load(String.format("maps/level%02d_%02d.tmx", stage, level));
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, game.getBatch());
         float mapWidth = map.getProperties().get("width", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
