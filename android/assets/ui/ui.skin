@@ -36,7 +36,8 @@
   "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
     "play": {
       "up": "play",
-      "down": "play_down"
+      "down": "play_down",
+      "disabled": "play_disabled"
     },
     "arrow_left": {
       "up": "arrow_left",

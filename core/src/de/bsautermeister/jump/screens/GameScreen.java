@@ -30,6 +30,7 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
@@ -46,7 +47,8 @@ import de.bsautermeister.jump.sprites.SpinningCoin;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase {
-    private TextureAtlas atlas;
+    private final GameStats gameStats;
+    private final TextureAtlas atlas;
 
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -171,6 +173,7 @@ public class GameScreen extends ScreenBase {
 
     public GameScreen(GameApp game, int stage, int level) {
         super(game);
+        this.gameStats = new GameStats();
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
         this.musicPlayer = game.getMusicPlayer();
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,16 +17,20 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.screens.transition.ScreenTransitions;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class SelectLevelScreen extends ScreenBase {
+    private final GameStats gameStats;
+
     private final Viewport viewport;
     private final Stage stage;
     private final int page;
 
     public SelectLevelScreen(GameApp game, int page) {
         super(game);
+        this.gameStats = new GameStats();
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
         this.stage.setDebugAll(Cfg.DEBUG_MODE);
@@ -56,13 +61,12 @@ public class SelectLevelScreen extends ScreenBase {
         table.add(leftButton).center();
 
         Table levelTable = new Table();
-        levelTable.add(createLevelButton(skin, page,1)).pad(8f);
-        levelTable.add(createLevelButton(skin, page,2)).pad(8f);
-        levelTable.add(createLevelButton(skin, page,3)).pad(8f);
-        levelTable.row();
-        levelTable.add(createLevelButton(skin, page, 4)).pad(8f);
-        levelTable.add(createLevelButton(skin, page, 5)).pad(8f);
-        levelTable.add(createLevelButton(skin, page, 6)).pad(8f);
+        for (int r = 1; r <= Cfg.LEVEL_ROWS; ++r) {
+            for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
+                levelTable.add(createLevelButton(skin, page,r * c)).pad(8f);
+            }
+            levelTable.row();
+        }
         levelTable.pack();
         table.add(levelTable).expandX();
 
@@ -81,6 +85,8 @@ public class SelectLevelScreen extends ScreenBase {
     }
 
     private Button createLevelButton(Skin skin, final int stage, final int level) {
+        int highestUnlockedLevel = gameStats.getHighestFinishedLevel() + 1;
+        int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_PAGE + level;
         Button playButton = new Button(skin, Styles.Button.PLAY);
         playButton.addListener(new ClickListener() {
             @Override
@@ -88,6 +94,9 @@ public class SelectLevelScreen extends ScreenBase {
                 playLevel(stage, level);
             }
         });
+        playButton.setDisabled(absoluteLevel > highestUnlockedLevel);
+        playButton.setTouchable(absoluteLevel > highestUnlockedLevel ?
+                Touchable.disabled : Touchable.enabled);
         return playButton;
     }
 
