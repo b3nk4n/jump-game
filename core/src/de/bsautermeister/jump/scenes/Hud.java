@@ -35,9 +35,6 @@ public class Hud implements Disposable {
     public Hud(SpriteBatch batch, Mario mario) {
         this.mario = mario;
 
-        this.currentTTL = 300;
-        this.currentScore = 0;
-
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, batch);
         this.stage.addActor(buildUi());

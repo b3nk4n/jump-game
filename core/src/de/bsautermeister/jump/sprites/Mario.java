@@ -28,7 +28,7 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Mario extends Sprite {
 
-    private static final float INITAL_TTL = 300;
+    public static final float INITAL_TTL = 30;
 
     private static final short NORMAL_FILTER_BITS = JumpGame.GROUND_BIT |
     JumpGame.COIN_BIT |
@@ -170,6 +170,11 @@ public class Mario extends Sprite {
         state.upate(delta);
         timeToLive -= delta;
         jumpFixTimer -= delta;
+
+        if (timeToLive <= 0) {
+            timeToLive = 0;
+            kill();
+        }
 
         if (isChangingSize()) {
             changeSizeTimer.update(delta);
