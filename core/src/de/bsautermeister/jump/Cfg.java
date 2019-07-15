@@ -20,4 +20,6 @@ public interface Cfg {
     int LEVEL_ROWS = 2;
     int LEVEL_COLUMNS = 3;
     int LEVELS_PER_PAGE = LEVEL_COLUMNS * LEVEL_ROWS;
+
+    float GOAL_REACHED_FINISH_DELAY = 2f;
 }

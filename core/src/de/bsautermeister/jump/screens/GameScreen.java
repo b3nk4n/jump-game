@@ -23,8 +23,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
@@ -63,9 +63,13 @@ public class GameScreen extends ScreenBase {
 
     private final Mario mario;
 
+    private Vector2 goal;
     private Array<Enemy> enemies;
     private Array<Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+
+    private boolean levelCompleted;
+    private float levelCompletedTimer;
 
     private Array<SpinningCoin> spinningCoins;
 
@@ -94,7 +98,6 @@ public class GameScreen extends ScreenBase {
             stompSound.play();
             mario.addScore(50);
         }
-
 
         @Override
         public void use(Mario mario, Item item) {
@@ -171,8 +174,11 @@ public class GameScreen extends ScreenBase {
     private ShaderProgram waterShader;
     private TextureRegion waterTexture;
 
-    public GameScreen(GameApp game, int stage, int level) {
+    private final int level;
+
+    public GameScreen(GameApp game, int level) {
         super(game);
+        this.level = level;
         this.gameStats = new GameStats();
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
         this.musicPlayer = game.getMusicPlayer();
@@ -181,7 +187,7 @@ public class GameScreen extends ScreenBase {
         this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        this.map = new TmxMapLoader().load(String.format("maps/level%02d_%02d.tmx", stage, level));
+        this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, game.getBatch());
         float mapWidth = map.getProperties().get("width", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
@@ -191,6 +197,8 @@ public class GameScreen extends ScreenBase {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
         this.enemies = worldCreator.createEnemies();
+        this.waterRegions = worldCreator.getWaterRegions();
+        this.goal = worldCreator.getGoal();
 
         mario = new Mario(callbacks, world, atlas);
 
@@ -203,24 +211,13 @@ public class GameScreen extends ScreenBase {
 
         spinningCoins = new Array<SpinningCoin>();
 
-        waterShader = loadShader("shader/water.fs");
+        waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         waterTexture = atlas.findRegion(RegionNames.WATER);
-        waterRegions = worldCreator.getWaterRegions();
+
+        levelCompleted = false;
+        levelCompletedTimer = 0;
 
         reset();
-    }
-
-    private ShaderProgram loadShader(String fragmentShaderPath) {
-        ShaderProgram shader = new ShaderProgram(
-                Gdx.files.internal("shader/default.vs"),
-                Gdx.files.internal(fragmentShaderPath)
-        );
-
-        if (!shader.isCompiled()) {
-            Gdx.app.error(getClass().getSimpleName(), shader.getLog());
-        }
-
-        return shader;
     }
 
     private void reset() {
@@ -251,7 +248,7 @@ public class GameScreen extends ScreenBase {
         itemsToSpawn.add(itemDef);
     }
 
-    private void handleSpawingItems() {
+    private void handleSpawningItems() {
         if (itemsToSpawn.isEmpty()) {
             return;
         }
@@ -263,10 +260,13 @@ public class GameScreen extends ScreenBase {
     }
 
     public void update(float delta) {
-        handleInput();
-        handleSpawingItems();
-
         world.step(1 / 60f, 8, 3);
+
+        if (!levelCompleted) {
+            handleInput();
+        }
+
+        handleSpawningItems();
 
         mario.update(delta);
         checkPlayerInBounds();
@@ -301,6 +301,14 @@ public class GameScreen extends ScreenBase {
             musicPlayer.selectMusic(AssetPaths.Music.HURRY_AUDIO);
             musicPlayer.play();
         }
+
+        if (levelCompleted) {
+            levelCompletedTimer += delta;
+
+            if (levelCompletedTimer >= Cfg.GOAL_REACHED_FINISH_DELAY) {
+                setScreen(new GameScreen(getGame(), level + 1));
+            }
+        }
     }
 
     private void postUpdate() {
@@ -321,6 +329,10 @@ public class GameScreen extends ScreenBase {
                 items.removeValue(item, true);
             }
         }
+
+        if (mario.getBody().getPosition().dst2(goal) < 0.0075f) {
+            completeLevel();
+        }
     }
 
     private void updateItems(float delta) {
@@ -336,6 +348,15 @@ public class GameScreen extends ScreenBase {
             if (enemy.getX() < mario.getX() + 256 / Cfg.PPM) {
                 enemy.setActive(true);
             }
+        }
+    }
+
+    private void completeLevel() {
+        if (!levelCompleted) {
+            levelCompleted = true;
+            mario.setLevelCompleted(true);
+            gameStats.setHighestFinishedLevel(level);
+            musicPlayer.setVolume(0f, false);
         }
     }
 

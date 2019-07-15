@@ -38,7 +38,7 @@ public class Mario extends Sprite {
     JumpGame.OBJECT_BIT |
     JumpGame.ITEM_BIT;
 
-    private static final short CHANGE_SIZE_FILTER_BITS = JumpGame.GROUND_BIT |
+    private static final short NO_ENEMY_FILTER_BITS = JumpGame.GROUND_BIT |
             JumpGame.COIN_BIT |
             JumpGame.BRICK_BIT |
             JumpGame.OBJECT_BIT |
@@ -87,6 +87,8 @@ public class Mario extends Sprite {
 
     private float timeToLive;
     private int score;
+
+    private boolean levelCompleted;
 
     public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         this.callbacks = callbacks;
@@ -168,7 +170,10 @@ public class Mario extends Sprite {
 
     public void update(float delta) {
         state.upate(delta);
-        timeToLive -= delta;
+
+        if (!levelCompleted) {
+            timeToLive -= delta;
+        }
         jumpFixTimer -= delta;
 
         if (timeToLive <= 0) {
@@ -419,7 +424,7 @@ public class Mario extends Sprite {
         shape.set(smallPolygonVertices);
         fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
         fixtureDef.filter.maskBits = normalFilterMask ?
-                NORMAL_FILTER_BITS : CHANGE_SIZE_FILTER_BITS;
+                NORMAL_FILTER_BITS : NO_ENEMY_FILTER_BITS;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -567,5 +572,17 @@ public class Mario extends Sprite {
 
     private boolean isOutOfGame() {
         return getY() + getHeight() < 0;
+    }
+
+    public void setLevelCompleted(boolean levelCompleted) {
+        this.levelCompleted = levelCompleted;
+
+        body.setActive(false);
+
+        /*Filter filter = new Filter();
+        filter.maskBits = NO_ENEMY_FILTER_BITS;
+        for (Fixture fixture : getBody().getFixtureList()) {
+            fixture.setFilterData(filter);
+        }*/
     }
 }

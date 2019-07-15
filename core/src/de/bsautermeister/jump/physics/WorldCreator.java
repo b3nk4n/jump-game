@@ -38,6 +38,7 @@ public class WorldCreator {
     public static final String KOOPAS_KEY = "koopas";
     public static final String COLLIDER_KEY = "collider";
     public static final String WATER_KEY = "water";
+    public static final String GOAL_KEY = "goal";
 
     private final World world;
     private final TiledMap map;
@@ -125,12 +126,22 @@ public class WorldCreator {
         Array<Rectangle> waterRegions = new Array<Rectangle>();
         for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            waterRegions.add(rect);
+            waterRegions.add(rect); // TODO do PPM caluclation here?
         }
         return waterRegions;
     }
 
     public static Array<InteractiveTileObject> getTileObjects() {
         return tileObjects;
+    }
+
+    public Vector2 getGoal() {
+        Rectangle rect = map.getLayers()
+                .get(GOAL_KEY)
+                .getObjects()
+                .getByType(RectangleMapObject.class)
+                .first()
+                .getRectangle();
+        return new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
     }
 }
