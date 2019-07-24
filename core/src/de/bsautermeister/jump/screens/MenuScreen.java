@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.screens;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,7 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.logging.FileHandler;
+
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
@@ -46,17 +50,33 @@ public class MenuScreen extends ScreenBase {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                play();
+                playNewGame();
             }
         });
         table.add(playButton).pad(8f);
+
+        if (JumpGame.hasSavedData()) {
+            Button continueButton = new Button(skin, Styles.Button.CONTINUE);
+            continueButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    continueGame();
+                }
+            });
+            table.add(continueButton).pad(8f);
+        }
 
         table.pack();
         stage.addActor(table);
     }
 
-    private void play() {
+    private void playNewGame() {
         setScreen(new SelectLevelScreen(getGame(), 1));
+    }
+
+    private void continueGame() {
+        FileHandle fileHandle = JumpGame.getSavedDataHandle();
+        setScreen(new GameScreen(getGame(), fileHandle));
     }
 
     @Override

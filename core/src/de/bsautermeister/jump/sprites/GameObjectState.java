@@ -1,6 +1,12 @@
 package de.bsautermeister.jump.sprites;
 
-public class GameObjectState<T extends Enum<T>> {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import de.bsautermeister.jump.serializer.BinarySerializable;
+
+public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
 
     public interface StateCallback<T> {
         void changed(T previousState, T newState);
@@ -86,4 +92,21 @@ public class GameObjectState<T extends Enum<T>> {
     public boolean isFrozen() {
         return frozen;
     }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeUTF(current.name());
+        out.writeUTF(previous.name());
+        out.writeFloat(stateTimer);
+        out.writeBoolean(frozen);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        current = (T) Enum.valueOf(current.getClass(), in.readUTF());
+        previous = (T) Enum.valueOf(previous.getClass(), in.readUTF());
+        stateTimer = in.readFloat();
+        frozen = in.readBoolean();
+    }
+
 }

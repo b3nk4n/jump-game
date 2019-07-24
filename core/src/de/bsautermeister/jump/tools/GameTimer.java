@@ -1,6 +1,12 @@
 package de.bsautermeister.jump.tools;
 
-public class GameTimer {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import de.bsautermeister.jump.serializer.BinarySerializable;
+
+public class GameTimer implements BinarySerializable {
     private float value;
     private final float resetValue;
     private TimerCallbacks callbacks;
@@ -56,5 +62,17 @@ public class GameTimer {
     public interface TimerCallbacks {
         void onStart();
         void onFinish();
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeFloat(value);
+        out.writeBoolean(isStarted);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        value = in.readFloat();
+        isStarted = in.readBoolean();
     }
 }

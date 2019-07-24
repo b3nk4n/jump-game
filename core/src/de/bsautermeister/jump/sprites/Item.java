@@ -6,10 +6,17 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.UUID;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public abstract class Item extends Sprite implements Disposable {
+public abstract class Item extends Sprite implements BinarySerializable, Disposable {
+    private String id;
     private GameCallbacks callbacks;
     private World world;
     protected Vector2 velocity;
@@ -18,6 +25,7 @@ public abstract class Item extends Sprite implements Disposable {
     private MarkedAction destroyBody;
 
     public Item(GameCallbacks callbacks, World world, float x, float y) {
+        this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
         setPosition(x, y);
@@ -67,6 +75,10 @@ public abstract class Item extends Sprite implements Disposable {
         body.applyLinearImpulse(new Vector2(0, 1.5f), body.getWorldCenter(), true);
     }
 
+    public String getId() {
+        return id;
+    }
+
     public World getWorld() {
         return world;
     }
@@ -81,5 +93,26 @@ public abstract class Item extends Sprite implements Disposable {
 
     public GameCallbacks getCallbacks() {
         return callbacks;
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeUTF(id);
+        out.writeFloat(body.getPosition().x);
+        out.writeFloat(body.getPosition().y);
+        out.writeFloat(body.getLinearVelocity().x);
+        out.writeFloat(body.getLinearVelocity().y);
+        out.writeFloat(velocity.x);
+        out.writeFloat(velocity.y);
+        destroyBody.write(out);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        id = in.readUTF();
+        body.setTransform(in.readFloat(), in.readFloat(), 0);
+        body.setLinearVelocity(in.readFloat(), in.readFloat());
+        velocity.set(in.readFloat(), in.readFloat());
+        destroyBody.read(in);
     }
 }

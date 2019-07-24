@@ -52,7 +52,9 @@ public class WorldCreator {
         this.world = world;
         this.map = map;
         this.atlas = atlas;
+    }
 
+    public void buildFromMap() {
         buildPhysicalLayer(GROUND_KEY, BodyDef.BodyType.StaticBody, JumpGame.GROUND_BIT);
         buildPhysicalLayer(PIPES_KEY, BodyDef.BodyType.StaticBody, JumpGame.OBJECT_BIT);
         buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT);

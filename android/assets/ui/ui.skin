@@ -39,6 +39,10 @@
       "down": "play_down",
       "disabled": "play_disabled"
     },
+    "continue": {
+      "up": "continue",
+      "down": "continue_down"
+    },
     "arrow_left": {
       "up": "arrow_left",
       "down": "arrow_left_down"

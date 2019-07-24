@@ -8,10 +8,15 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public class SpinningCoin extends Sprite {
+public class SpinningCoin extends Sprite implements BinarySerializable {
     private final Vector2 spawnPosition;
     private Animation<TextureRegion> spinningAnimation;
     private float stateTime;
@@ -65,5 +70,22 @@ public class SpinningCoin extends Sprite {
     public boolean isFinished() {
         // finish before it actually reaches its starting position
         return getProgress() > 0.8f;
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeFloat(spawnPosition.x);
+        out.writeFloat(spawnPosition.y);
+        out.writeFloat(stateTime);
+        out.writeFloat(getX());
+        out.writeFloat(getY());
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        spawnPosition.set(in.readFloat(), in.readFloat());
+        stateTime = in.readFloat();
+        setX(in.readFloat());
+        setY(in.readFloat());
     }
 }

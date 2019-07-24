@@ -1,6 +1,12 @@
 package de.bsautermeister.jump.sprites;
 
-public class MarkedAction {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import de.bsautermeister.jump.serializer.BinarySerializable;
+
+public class MarkedAction implements BinarySerializable {
     private boolean marked;
     private boolean done;
 
@@ -22,5 +28,17 @@ public class MarkedAction {
 
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeBoolean(marked);
+        out.writeBoolean(done);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        marked = in.readBoolean();
+        done = in.readBoolean();
     }
 }

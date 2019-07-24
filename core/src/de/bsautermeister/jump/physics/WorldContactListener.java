@@ -73,12 +73,12 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.enemySteppedOn(enemy);
+                tileObject.enemySteppedOn(enemy.getId());
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
                 item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.itemSteppedOn(item);
+                tileObject.itemSteppedOn(item.getId());
                 break;
         }
     }
@@ -105,12 +105,12 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.enemySteppedOff(enemy);
+                tileObject.enemySteppedOff(enemy.getId());
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
                 item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.itemSteppedOff(item);
+                tileObject.itemSteppedOff(item.getId());
                 break;
         }
     }

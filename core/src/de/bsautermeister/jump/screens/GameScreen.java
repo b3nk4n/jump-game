@@ -3,6 +3,7 @@ package de.bsautermeister.jump.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,13 +19,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Logger;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
@@ -34,9 +41,12 @@ import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
+import de.bsautermeister.jump.serializer.BinarySerializable;
+import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemDef;
@@ -46,26 +56,29 @@ import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.SpinningCoin;
 import de.bsautermeister.jump.utils.GdxUtils;
 
-public class GameScreen extends ScreenBase {
-    private final GameStats gameStats;
-    private final TextureAtlas atlas;
+public class GameScreen extends ScreenBase implements BinarySerializable {
+
+    private static final Logger LOG = new Logger(GameScreen.class.getName(), Cfg.LOG_LEVEL);
+
+    private GameStats gameStats;
+    private TextureAtlas atlas;
 
     private OrthographicCamera camera;
     private Viewport viewport;
-    private final Hud hud;
+    private Hud hud;
 
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private float mapPixelWidth;
 
-    private final World world;
-    private final Box2DDebugRenderer box2DDebugRenderer;
+    private World world;
+    private Box2DDebugRenderer box2DDebugRenderer;
 
-    private final Mario mario;
+    private Mario mario;
 
     private Vector2 goal;
-    private Array<Enemy> enemies;
-    private Array<Item> items;
+    private ObjectMap<String, Enemy> enemies;
+    private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
 
     private boolean levelCompleted;
@@ -138,6 +151,23 @@ public class GameScreen extends ScreenBase {
         }
 
         @Override
+        public void indirectEnemyHit(InteractiveTileObject tileObject, String enemyId) {
+            Enemy enemy = enemies.get(enemyId);
+            if (enemy != null) {
+                enemy.kill(true);
+            }
+        }
+
+        @Override
+        public void indirectItemHit(InteractiveTileObject tileObject, String itemId) {
+            Item item = items.get(itemId);
+            if (item != null) {
+                item.reverseVelocity(true, false);
+                item.bounceUp();
+            }
+        }
+
+        @Override
         public void kicked(Enemy enemy) {
             kickedSound.play();
         }
@@ -170,11 +200,12 @@ public class GameScreen extends ScreenBase {
     };
 
     private float gameTime;
-    private final Array<Rectangle> waterRegions;
-    private ShaderProgram waterShader;
+    private Array<Rectangle> waterRegions;
+    private final ShaderProgram waterShader;
     private TextureRegion waterTexture;
 
-    private final int level;
+    private FileHandle gameToLoad;
+    private int level;
 
     public GameScreen(GameApp game, int level) {
         super(game);
@@ -183,48 +214,67 @@ public class GameScreen extends ScreenBase {
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
         this.musicPlayer = game.getMusicPlayer();
 
-        this.camera = new OrthographicCamera();
-        this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
-        this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
-
-        this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
-        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, game.getBatch());
-        float mapWidth = map.getProperties().get("width", Integer.class);
-        float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
-        this.mapPixelWidth = mapWidth * tilePixelWidth / Cfg.PPM;
-
         this.world = new World(new Vector2(0,-9.81f), true);
+        this.world.setContactListener(new WorldContactListener());
         this.box2DDebugRenderer = new Box2DDebugRenderer();
-        WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
-        this.enemies = worldCreator.createEnemies();
-        this.waterRegions = worldCreator.getWaterRegions();
-        this.goal = worldCreator.getGoal();
 
-        mario = new Mario(callbacks, world, atlas);
+        enemies = new ObjectMap<String, Enemy>();
 
-        this.hud = new Hud(game.getBatch(), mario);
-
-        world.setContactListener(new WorldContactListener());
-
-        items = new Array<Item>();
+        items = new ObjectMap();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
         spinningCoins = new Array<SpinningCoin>();
 
+        mario = new Mario(callbacks, world, atlas);
+
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
+    }
+
+    public GameScreen(GameApp game, FileHandle fileHandle) {
+        //super(game);
+        this(game, 1); // TODO whatever
+        this.gameToLoad = fileHandle;
+    }
+
+    private void reset() {
+        this.camera = new OrthographicCamera();
+        this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
+        this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+
+        initMap(level);
+
+        WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
+        if (gameToLoad != null) {
+            worldCreator.buildFromMap();
+            load(gameToLoad);
+        } else {
+            worldCreator.buildFromMap();
+            for (Enemy enemy : worldCreator.createEnemies()) {
+                this.enemies.put(enemy.getId(), enemy);
+            }
+        }
+        this.waterRegions = worldCreator.getWaterRegions();
+        this.goal = worldCreator.getGoal();
+
+        this.hud = new Hud(getGame().getBatch(), mario);
+
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
         levelCompleted = false;
         levelCompletedTimer = 0;
 
-        reset();
-    }
-
-    private void reset() {
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(1.0f, true);
 
         musicPlayer.play();
+    }
+
+    private void initMap(int level) {
+        this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
+        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, getGame().getBatch());
+        float mapWidth = map.getProperties().get("width", Integer.class);
+        float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
+        this.mapPixelWidth = mapWidth * tilePixelWidth / Cfg.PPM;
     }
 
     @Override
@@ -242,6 +292,20 @@ public class GameScreen extends ScreenBase {
         jumpSound = getAssetManager().get(AssetDescriptors.Sounds.JUMP);
         kickedSound = getAssetManager().get(AssetDescriptors.Sounds.KICKED);
         splashSound = getAssetManager().get(AssetDescriptors.Sounds.SPLASH);
+
+        if (JumpGame.hasSavedData()) {
+            //load(gameToLoad); // TODO duplicated?
+            // ensure to not load this saved game later anymore
+            //JumpGame.deleteSavedData();
+        }
+
+        reset();
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        save();
     }
 
     private void spawnItem(ItemDef itemDef) {
@@ -255,7 +319,8 @@ public class GameScreen extends ScreenBase {
 
         ItemDef itemDef = itemsToSpawn.poll();
         if (itemDef.getType() == Mushroom.class) {
-            items.add(new Mushroom(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y));
+            Mushroom mushroom = new Mushroom(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+            items.put(mushroom.getId(), mushroom);
         }
     }
 
@@ -312,21 +377,21 @@ public class GameScreen extends ScreenBase {
     }
 
     private void postUpdate() {
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemies.values()) {
             enemy.postUpdate();
 
             if (enemy.isRemovable()) {
                 enemy.dispose();
-                enemies.removeValue(enemy, true);
+                enemies.remove(enemy.getId());
             }
         }
 
-        for (Item item : items) {
+        for (Item item : items.values()) {
             item.postUpdate();
 
             if (item.isRemovable()) {
                 item.dispose();
-                items.removeValue(item, true);
+                items.remove(item.getId());
             }
         }
 
@@ -336,13 +401,13 @@ public class GameScreen extends ScreenBase {
     }
 
     private void updateItems(float delta) {
-        for (Item item : items) {
+        for (Item item : items.values()) {
             item.update(delta);
         }
     }
 
     private void updateEnemies(float delta) {
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
 
             if (enemy.getX() < mario.getX() + 256 / Cfg.PPM) {
@@ -469,11 +534,11 @@ public class GameScreen extends ScreenBase {
     private void renderForeground(SpriteBatch batch) {
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
 
-        for (Item item : items) {
+        for (Item item : items.values()) {
             item.draw(batch);
         }
 
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemies.values()) {
             enemy.draw(batch);
         }
         mario.draw(batch);
@@ -514,5 +579,96 @@ public class GameScreen extends ScreenBase {
 
     private boolean isGameOver() {
         return mario.getState() == Mario.State.DEAD && mario.getStateTimer() > 3f;
+    }
+
+    private void load(FileHandle handle) {
+        if (handle.exists()) {
+            if (!BinarySerializer.read(this, handle.read())) {
+                LOG.error("Could not load game state");
+            }
+
+            JumpGame.deleteSavedData();
+        }
+    }
+
+    private void save() {
+        // TODO don't do anything in case player is dead or level is finished
+
+        // TODO pause the game?
+
+        final FileHandle fileHandle = JumpGame.getSavedDataHandle();
+        if (!BinarySerializer.write(this, fileHandle.write(false))) {
+            LOG.error("Could not save game state");
+        }
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeInt(level);
+        out.writeBoolean(levelCompleted);
+        out.writeFloat(levelCompletedTimer);
+        out.writeFloat(gameTime);
+        mario.write(out);
+        out.writeInt(enemies.size);
+        for (Enemy enemy : enemies.values()) {
+            out.writeUTF(enemy.getClass().getName());
+            enemy.write(out);
+        }
+        out.writeInt(items.size);
+        for (Item item : items.values()) {
+            out.writeUTF(item.getClass().getName());
+            item.write(out);
+        }
+        out.writeInt(spinningCoins.size);
+        for (SpinningCoin spinningCoin : spinningCoins) {
+            spinningCoin.write(out);
+        }
+        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+            tileObject.write(out);
+        }
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        level = in.readInt();
+        levelCompleted = in.readBoolean();
+        levelCompletedTimer = in.readFloat();
+        gameTime = in.readFloat();
+        mario.read(in);
+        int numEnemies = in.readInt();
+        for (int i = 0; i < numEnemies; ++i) {
+            String enemyType = in.readUTF();
+            Enemy enemy;
+            if (enemyType.equals(Goomba.class.getName())) {
+                enemy = new Goomba(callbacks, world, atlas, 0, 0);
+            } else if (enemyType.equals(Koopa.class.getName())) {
+                enemy = new Koopa(callbacks, world, atlas, 0, 0);
+            } else {
+                throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
+            }
+            enemy.read(in);
+            enemies.put(enemy.getId(), enemy);
+        }
+        int numItems = in.readInt();
+        for (int i = 0; i < numItems; ++i) {
+            String itemType = in.readUTF();
+            Item item;
+            if (itemType.equals(Mushroom.class.getName())) {
+                item = new Mushroom(callbacks, world, atlas, 0, 0);
+            } else {
+                throw new IllegalArgumentException("Unknown item type: " + itemType);
+            }
+            item.read(in);
+            items.put(item.getId(), item);
+        }
+        int numSpinningCoins = in.readInt();
+        for (int i = 0; i < numSpinningCoins; ++i) {
+            SpinningCoin spinningCoin = new SpinningCoin(atlas, Vector2.Zero);
+            spinningCoin.read(in);
+            spinningCoins.add(spinningCoin);
+        }
+        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+            tileObject.read(in);
+        }
     }
 }

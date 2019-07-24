@@ -6,6 +6,10 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
@@ -13,6 +17,8 @@ import de.bsautermeister.jump.JumpGame;
 public class Coin extends InteractiveTileObject {
 
     private final static int BLANK_COIN_IDX = 28;
+
+    private boolean blank;
 
     private static TiledMapTileSet tileSet;
 
@@ -34,8 +40,8 @@ public class Coin extends InteractiveTileObject {
 
         if(closeEnough && !isBlank()) {
             // kill enemies on top
-            for (Enemy enemyOnTop : getEnemiesOnTop()) {
-                enemyOnTop.kill(true);
+            for (String enemyOnTop : getEnemiesOnTop()) {
+                getCallbacks().indirectEnemyHit(this, enemyOnTop);
 
                 // ensure that enemy is un-registered from enemies on top, because Box2D does not seem
                 // to call endContact anymore
@@ -43,9 +49,8 @@ public class Coin extends InteractiveTileObject {
             }
 
             // reverse items on top
-            for (Item itemOnTop : getItemsOnTop()) {
-                itemOnTop.reverseVelocity(true, false);
-                itemOnTop.bounceUp();
+            for (String itemOnTop : getItemsOnTop()) {
+                getCallbacks().indirectItemHit(this, itemOnTop);
 
                 // ensure that item is un-registered from items on top, because Box2D does not seem
                 // to call endContact anymore
@@ -62,12 +67,29 @@ public class Coin extends InteractiveTileObject {
     }
 
     public boolean isBlank() {
-        return getCell().getTile().getId() == BLANK_COIN_IDX;
+        return blank;
     }
 
     private void setBlank() {
+        blank = true;
         getCell().setTile(
                 new DynamicTiledMapTile(
                         tileSet.getTile(BLANK_COIN_IDX)));
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        super.write(out);
+        out.writeBoolean(blank);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        super.read(in);
+        blank = in.readBoolean();
+
+        if (blank) {
+            setBlank();
+        }
     }
 }

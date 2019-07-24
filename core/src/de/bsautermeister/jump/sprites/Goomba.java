@@ -14,12 +14,16 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Goomba extends Enemy {
-
     public enum State {
         WALKING, STOMPED
     }
@@ -170,5 +174,17 @@ public class Goomba extends Enemy {
 
         state.set(State.STOMPED);
         markDestroyBody();
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        super.write(out);
+        state.write(out);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        super.read(in);
+        state.read(in);
     }
 }

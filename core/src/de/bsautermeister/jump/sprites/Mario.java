@@ -19,14 +19,19 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
-public class Mario extends Sprite {
+public class Mario extends Sprite implements BinarySerializable {
 
     public static final float INITAL_TTL = 200;
 
@@ -377,7 +382,6 @@ public class Mario extends Sprite {
         bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
-
         FixtureDef fixtureDef = new FixtureDef();
         final float[] SMALL_POLYGON_VERTICES = {
                 -3f / Cfg.PPM, 6f / Cfg.PPM,
@@ -584,5 +588,49 @@ public class Mario extends Sprite {
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
         }*/
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+
+        out.writeFloat(body.getPosition().x);
+        out.writeFloat(body.getPosition().y);
+        out.writeFloat(body.getLinearVelocity().x);
+        out.writeFloat(body.getLinearVelocity().y);
+        out.writeFloat(jumpFixTimer);
+        state.write(out);
+        out.writeBoolean(runningRight);
+        out.writeBoolean(isTurning);
+        changeSizeTimer.write(out);
+        out.writeBoolean(isBig);
+        out.writeBoolean(markRedefineBody);
+        out.writeBoolean(deadAnimationStarted);
+        out.writeFloat(timeToLive);
+        out.writeInt(score);
+        out.writeBoolean(levelCompleted);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        body.setTransform(in.readFloat(), in.readFloat(), 0);
+        body.setLinearVelocity(in.readFloat(), in.readFloat());
+        jumpFixTimer = in.readFloat();
+        state.read(in);
+        runningRight = in.readBoolean();
+        isTurning = in.readBoolean();
+        changeSizeTimer.read(in);
+        isBig = in.readBoolean();
+        markRedefineBody = in.readBoolean();
+        deadAnimationStarted = in.readBoolean();
+        timeToLive = in.readFloat();
+        score = in.readInt();
+        levelCompleted = in.readBoolean();
+
+        // this is just a lazy workaround, that is needed because we generally create a small mario by default
+        if (isBig) {
+            Vector2 currentPosition = body.getPosition();
+            world.destroyBody(getBody());
+            defineBigBody(currentPosition, !changeSizeTimer.isRunning());
+        }
     }
 }

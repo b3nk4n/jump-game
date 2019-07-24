@@ -8,11 +8,18 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.UUID;
+
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public abstract class Enemy extends Sprite implements Disposable {
+public abstract class Enemy extends Sprite implements BinarySerializable, Disposable {
+    private String id;
     private GameCallbacks callbacks;
     private World world;
     private Body body;
@@ -24,6 +31,7 @@ public abstract class Enemy extends Sprite implements Disposable {
     private MarkedAction destroyBody;
 
     public Enemy(GameCallbacks callbacks, World world, float posX, float posY) {
+        this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
         setPosition(posX, posY);
@@ -94,6 +102,10 @@ public abstract class Enemy extends Sprite implements Disposable {
         callbacks.hitWall(this);
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setActive(boolean active) {
         body.setActive(active);
     }
@@ -124,5 +136,30 @@ public abstract class Enemy extends Sprite implements Disposable {
 
     public boolean isRemovable() {
         return removable;
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeUTF(id);
+        out.writeFloat(body.getPosition().x);
+        out.writeFloat(body.getPosition().y);
+        out.writeFloat(body.getLinearVelocity().x);
+        out.writeFloat(body.getLinearVelocity().y);
+        out.writeFloat(velocity.x);
+        out.writeFloat(velocity.y);
+        out.writeBoolean(dead);
+        out.writeBoolean(removable);
+        destroyBody.write(out);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        id = in.readUTF();
+        body.setTransform(in.readFloat(), in.readFloat(), 0);
+        body.setLinearVelocity(in.readFloat(), in.readFloat());
+        velocity.set(in.readFloat(), in.readFloat());
+        dead = in.readBoolean();
+        removable = in.readBoolean();
+        destroyBody.read(in);
     }
 }

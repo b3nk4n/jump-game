@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+// TODO resume music a) at the right position and b) with the correct track (e.g. hurry music)
 public class MusicPlayer implements Disposable {
     private final static float VOLUME_CHANGE_IN_SECONDS = 2.0f;
 

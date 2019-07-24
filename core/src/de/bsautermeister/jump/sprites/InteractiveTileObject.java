@@ -14,19 +14,25 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectSet;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public abstract class InteractiveTileObject {
+public abstract class InteractiveTileObject implements BinarySerializable {
+    private String id;
     private final GameCallbacks callbacks;
     private final World world;
     private final RectangleMapObject mapObject;
     private final Rectangle bounds;
     private final Body body;
 
-    private final ObjectSet<Enemy> enemiesOnTop; // TODO are these two sets combinable?
-    private final ObjectSet<Item> itemsOnTop;
+    private final ObjectSet<String> enemiesOnTop; // TODO are these two sets combinable? Yes!
+    private final ObjectSet<String> itemsOnTop;
 
     private float bumpUpAnimationTimer;
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
@@ -42,13 +48,15 @@ public abstract class InteractiveTileObject {
                 screenBounds.y / Cfg.PPM,
                 screenBounds.width / Cfg.PPM,
                 screenBounds.height / Cfg.PPM);
-        this.enemiesOnTop = new ObjectSet<Enemy>();
-        this.itemsOnTop = new ObjectSet<Item>();
+        this.enemiesOnTop = new ObjectSet<String>();
+        this.itemsOnTop = new ObjectSet<String>();
         this.body = defineBody(categoryBit);
         this.bumpUpAnimationTimer = BUMP_UP_ANIMATION_TIME;
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("graphics");
-        this.cell =  layer.getCell((int)(body.getPosition().x * Cfg.PPM / Cfg.BLOCK_SIZE),
-                ((int)(body.getPosition().y * Cfg.PPM / Cfg.BLOCK_SIZE)));
+        int cellX = (int)(body.getPosition().x * Cfg.PPM / Cfg.BLOCK_SIZE);
+        int cellY = ((int)(body.getPosition().y * Cfg.PPM / Cfg.BLOCK_SIZE));
+        this.id = cellX + "|" + cellY;
+        this.cell =  layer.getCell(cellX, cellY);
         cell.setTile(new DynamicTiledMapTile(cell.getTile()));
     }
 
@@ -93,6 +101,10 @@ public abstract class InteractiveTileObject {
         body.getFixtureList().get(0).setFilterData(filter);
     }
 
+    public String getId() {
+        return id;
+    }
+
     public World getWorld() {
         return world;
     }
@@ -113,39 +125,67 @@ public abstract class InteractiveTileObject {
         return callbacks;
     }
 
-    public void enemySteppedOn(Enemy enemy) {
-        if (!enemiesOnTop.contains(enemy)) {
-            enemiesOnTop.add(enemy);
+    public void enemySteppedOn(String enemyId) {
+        if (!enemiesOnTop.contains(enemyId)) {
+            enemiesOnTop.add(enemyId);
         }
     }
 
-    public void enemySteppedOff(Enemy enemy) {
-        if (enemiesOnTop.contains(enemy)) {
-            enemiesOnTop.remove(enemy);
+    public void enemySteppedOff(String enemyId) {
+        if (enemiesOnTop.contains(enemyId)) {
+            enemiesOnTop.remove(enemyId);
         }
     }
 
-    public ObjectSet<Enemy> getEnemiesOnTop() {
+    public ObjectSet<String> getEnemiesOnTop() {
         return enemiesOnTop;
     }
 
-    public void itemSteppedOn(Item item) {
-        if (!itemsOnTop.contains(item)) {
-            itemsOnTop.add(item);
+    public void itemSteppedOn(String itemId) {
+        if (!itemsOnTop.contains(itemId)) {
+            itemsOnTop.add(itemId);
         }
     }
 
-    public void itemSteppedOff(Item item) {
-        if (itemsOnTop.contains(item)) {
-            itemsOnTop.remove(item);
+    public void itemSteppedOff(String itemId) {
+        if (itemsOnTop.contains(itemId)) {
+            itemsOnTop.remove(itemId);
         }
     }
 
-    public ObjectSet<Item> getItemsOnTop() {
+    public ObjectSet<String> getItemsOnTop() {
         return itemsOnTop;
     }
 
     public Rectangle getBounds() {
         return bounds;
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeUTF(id);
+        out.writeFloat(bumpUpAnimationTimer);
+        out.writeInt(enemiesOnTop.size);
+        for (String id : enemiesOnTop) {
+            out.writeUTF(id);
+        }
+        out.writeInt(itemsOnTop.size);
+        for (String id : itemsOnTop) {
+            out.writeUTF(id);
+        }
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        id = in.readUTF();
+        bumpUpAnimationTimer = in.readFloat();
+        int numEnemies = in.readInt();
+        for (int i = 0; i < numEnemies; ++i) {
+            enemiesOnTop.add(in.readUTF());
+        }
+        int numItems = in.readInt();
+        for (int i = 0; i < numItems; ++i) {
+            itemsOnTop.add(in.readUTF());
+        }
     }
 }
