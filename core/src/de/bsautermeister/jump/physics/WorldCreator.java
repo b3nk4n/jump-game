@@ -147,8 +147,7 @@ public class WorldCreator {
                 Rectangle rect = mapObject.getRectangle();
                 Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
                 Platform platform = new Platform(callbacks, world, atlas,
-                        (rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM,
-                        startAngle != null ? startAngle : 0, bouncerRegions);
+                        toPPM(rect), startAngle != null ? startAngle : 0, bouncerRegions);
                 platforms.add(platform);
             }
         }
@@ -160,11 +159,15 @@ public class WorldCreator {
         if (hasLayer(map, WATER_KEY)) {
             for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                waterRegions.add(new Rectangle(rect.x / Cfg.PPM, rect.y / Cfg.PPM,
-                        rect.width / Cfg.PPM, rect.height / Cfg.PPM));
+                waterRegions.add(toPPM(rect));
             }
         }
         return waterRegions;
+    }
+
+    private Rectangle toPPM(Rectangle rect) {
+        return new Rectangle(rect.x / Cfg.PPM, rect.y / Cfg.PPM,
+                rect.width / Cfg.PPM, rect.height / Cfg.PPM);
     }
 
     private Array<PlatformBouncer> getPlatformBouncerRegions() {
@@ -174,9 +177,7 @@ public class WorldCreator {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 Integer angle = (Integer) mapObject.getProperties().get("bounce_angle");
                 PlatformBouncer platformBouncer = new PlatformBouncer(
-                        new Rectangle(rect.x / Cfg.PPM, rect.y / Cfg.PPM,
-                                rect.width / Cfg.PPM, rect.height / Cfg.PPM),
-                        angle != null ? angle : 0
+                        toPPM(rect), angle != null ? angle : 0
                 );
                 bouncerRegions.add(platformBouncer);
             }

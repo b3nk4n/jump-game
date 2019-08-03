@@ -6,77 +6,91 @@ filter: Nearest,Nearest
 repeat: none
 big_mario
   rotate: false
-  xy: 4, 212
+  xy: 4, 196
   size: 336, 32
   orig: 336, 32
   offset: 0, 0
   index: -1
 brick_fragment
   rotate: false
-  xy: 40, 48
+  xy: 56, 32
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 fireball
   rotate: false
-  xy: 284, 200
+  xy: 72, 128
   size: 32, 8
   orig: 32, 8
   offset: 0, 0
   index: -1
 goomba
   rotate: false
-  xy: 232, 192
+  xy: 4, 24
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 koopa
   rotate: false
-  xy: 344, 220
+  xy: 344, 204
   size: 96, 24
   orig: 96, 24
   offset: 0, 0
   index: -1
 little_mario
   rotate: false
-  xy: 4, 192
+  xy: 4, 176
   size: 224, 16
   orig: 224, 16
   offset: 0, 0
   index: -1
 mushroom
   rotate: false
-  xy: 4, 4
+  xy: 108, 156
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 particle
   rotate: false
-  xy: 4, 24
+  xy: 72, 140
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-platform
+platform2
   rotate: false
-  xy: 72, 172
+  xy: 4, 4
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+platform3
+  rotate: false
+  xy: 232, 176
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
+platform4
+  rotate: false
+  xy: 444, 212
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
 spin_coin
   rotate: false
-  xy: 444, 228
+  xy: 444, 192
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 water
   rotate: false
-  xy: 4, 60
+  xy: 4, 44
   size: 64, 128
   orig: 64, 128
   offset: 0, 0

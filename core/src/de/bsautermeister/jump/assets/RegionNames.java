@@ -10,7 +10,9 @@ public interface RegionNames {
     String SPINNING_COIN = "spin_coin";
     String BRICK_FRAGMENT = "brick_fragment";
     String WATER = "water";
-    String PLATFORM = "platform";
+    String PLATFORM2 = "platform2";
+    String PLATFORM3 = "platform3";
+    String PLATFORM4 = "platform4";
 
     String LOADING_LOGO = "title";
     String LOADING_ANIMATION = "loading";

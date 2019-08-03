@@ -37,13 +37,28 @@ public class Platform extends Sprite implements BinarySerializable {
 
     private Array<PlatformBouncer> bouncerRegions;
 
-    public Platform(GameCallbacks callbacks, World world, TextureAtlas atlas, float posX, float posY,
+    public Platform(GameCallbacks callbacks, World world, TextureAtlas atlas, Rectangle bounds,
                     int startAngle, Array<PlatformBouncer> bouncerRegions) {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
-        setBounds(posX, posY, 3 * Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-        setRegion(atlas.findRegion(RegionNames.PLATFORM));
+        setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+
+        int width = Math.round(bounds.width / (Cfg.BLOCK_SIZE / Cfg.PPM));
+        switch (width) {
+            case 2:
+                setRegion(atlas.findRegion(RegionNames.PLATFORM2));
+                break;
+            case 3:
+                setRegion(atlas.findRegion(RegionNames.PLATFORM3));
+                break;
+            case 4:
+                setRegion(atlas.findRegion(RegionNames.PLATFORM4));
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported block_width for platform: " + width);
+        }
+
         this.body = defineBody();
         this.currentVelocity = new Vector2();
         this.targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(SPEED);

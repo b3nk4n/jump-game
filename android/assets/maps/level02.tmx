@@ -165,22 +165,22 @@
   <properties>
    <property name="start_angle" type="int" value="0"/>
   </properties>
-  <object id="81" x="2736" y="96" width="16" height="16">
+  <object id="81" x="2736" y="96" width="48" height="16">
    <properties>
     <property name="start_angle" type="int" value="180"/>
    </properties>
   </object>
-  <object id="82" x="2496" y="48" width="16" height="16">
+  <object id="82" x="2496" y="48" width="64" height="16">
    <properties>
     <property name="start_angle" type="int" value="0"/>
    </properties>
   </object>
-  <object id="86" x="2352" y="96" width="16" height="16">
+  <object id="86" x="2352" y="96" width="32" height="16">
    <properties>
     <property name="start_angle" type="int" value="270"/>
    </properties>
   </object>
-  <object id="91" x="288" y="96" width="16" height="16">
+  <object id="91" x="288" y="96" width="48" height="16">
    <properties>
     <property name="start_angle" type="int" value="180"/>
    </properties>
