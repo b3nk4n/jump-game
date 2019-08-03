@@ -86,7 +86,7 @@ public class SelectLevelScreen extends ScreenBase {
 
     private Button createLevelButton(Skin skin, final int stage, final int level) {
         int highestUnlockedLevel = gameStats.getHighestFinishedLevel() + 1;
-        final int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_PAGE + level;
+        final int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
         Button playButton = new Button(skin, Styles.Button.PLAY);
         playButton.addListener(new ClickListener() {
             @Override

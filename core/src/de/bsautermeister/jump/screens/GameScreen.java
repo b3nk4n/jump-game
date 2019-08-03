@@ -273,7 +273,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.waterRegions = worldCreator.getWaterRegions();
         this.goal = worldCreator.getGoal();
 
-        this.hud = new Hud(getGame().getBatch(), mario);
+        this.hud = new Hud(getGame().getBatch());
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
@@ -369,7 +369,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
-        hud.update(delta);
+        hud.update(level, mario.getScore(), mario.getTimeToLive());
 
         upateCameraPosition();
         camera.update();

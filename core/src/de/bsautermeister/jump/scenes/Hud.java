@@ -18,10 +18,9 @@ public class Hud implements Disposable {
     private final Stage stage;
     private final Viewport viewport;
 
-    private Mario mario;
-
     private int currentTTL;
     private int currentScore;
+    private int currentLevel;
 
     private Label countDownLabel;
     private Label scoreLabel;
@@ -32,9 +31,7 @@ public class Hud implements Disposable {
 
     private Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
-    public Hud(SpriteBatch batch, Mario mario) {
-        this.mario = mario;
-
+    public Hud(SpriteBatch batch) {
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, batch);
         this.stage.addActor(buildUi());
@@ -49,7 +46,7 @@ public class Hud implements Disposable {
         countDownLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
         scoreLabel = new Label(getFormattedScore(currentScore), labelStyle);
         timeLabel = new Label("TIME", labelStyle);
-        levelLabel = new Label("1-1", labelStyle);
+        levelLabel = new Label(getFormattedLevel(currentLevel), labelStyle);
         worldLabel = new Label("WORLD", labelStyle);
         marioLabel = new Label("MARIO", labelStyle);
 
@@ -73,21 +70,28 @@ public class Hud implements Disposable {
         return table;
     }
 
-    public void update(float delta) {
-        updateScore();
-        updateTimeToLive();
+    public void update(int level, int score, float ttl) {
+        updateLevel(level);
+        updateScore(score);
+        updateTimeToLive(ttl);
     }
 
-    private void updateScore() {
-        int score = mario.getScore();
+    private void updateLevel(int level) {
+        if (currentLevel != level) {
+            currentLevel = level;
+            levelLabel.setText(getFormattedLevel(currentLevel));
+        }
+    }
+
+    private void updateScore(int score) {
         if (currentScore != score) {
             currentScore = score;
             scoreLabel.setText(getFormattedScore(currentScore));
         }
     }
 
-    private void updateTimeToLive() {
-        int ttl = (int)Math.ceil(mario.getTimeToLive());
+    private void updateTimeToLive(float timeToLive) {
+        int ttl = (int)Math.ceil(timeToLive);
         if (currentTTL != ttl) {
             currentTTL = ttl;
             countDownLabel.setText(getFormattedCountDown(currentTTL));
@@ -100,6 +104,13 @@ public class Hud implements Disposable {
 
     private static String getFormattedScore(int score) {
         return String.format("%06d", score);
+    }
+
+    private static String getFormattedLevel(int level) {
+        int stage = (level - 1) / Cfg.LEVELS_PER_STAGE + 1;
+        int stageLevel = (level - 1) % Cfg.LEVELS_PER_STAGE + 1;
+
+        return String.format("%d-%d", stage, stageLevel);
     }
 
     public Stage getStage() {
