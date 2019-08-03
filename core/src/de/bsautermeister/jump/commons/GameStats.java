@@ -7,6 +7,7 @@ public class GameStats {
     private final Preferences prefs;
 
     public static final String KEY_HIGHEST_FINISHED_LEVEL = "highestFinishedLevel";
+    public static final String KEY_LAST_STARTED_LEVEL = "lastStartedLevel";
 
     private Integer cachedHighestLevel;
 
@@ -28,5 +29,14 @@ public class GameStats {
             cachedHighestLevel = prefs.getInteger(KEY_HIGHEST_FINISHED_LEVEL);
         }
         return cachedHighestLevel;
+    }
+
+    public int getLastStartedLevel() {
+        return prefs.getInteger(KEY_LAST_STARTED_LEVEL, 1);
+    }
+
+    public void setLastStartedLevel(int level) {
+        prefs.putInteger(KEY_LAST_STARTED_LEVEL, level);
+        prefs.flush();
     }
 }

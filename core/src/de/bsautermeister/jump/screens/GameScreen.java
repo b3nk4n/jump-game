@@ -81,7 +81,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
-    private ObjectMap<String, Platform> platforms;
+    private Array<Platform> platforms;
 
     private boolean levelCompleted;
     private float levelCompletedTimer;
@@ -207,7 +207,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private TextureRegion waterTexture;
 
     private FileHandle gameToLoad;
-    private int level;
+    private Integer level;
 
     public GameScreen(GameApp game, int level) {
         super(game);
@@ -221,7 +221,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
 
         enemies = new ObjectMap<String, Enemy>();
-        platforms = new ObjectMap<String, Platform>();
+        platforms = new Array<Platform>();
 
         items = new ObjectMap();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
@@ -235,7 +235,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     public GameScreen(GameApp game, FileHandle fileHandle) {
         //super(game);
-        this(game, 1); // TODO whatever
+        this(game, -1); // TODO whatever
         this.gameToLoad = fileHandle;
     }
 
@@ -244,19 +244,30 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
+        if (level == -1) {
+            level = gameStats.getLastStartedLevel();
+        } else {
+            gameStats.setLastStartedLevel(level);
+        }
+
+        LOG.debug("Init map level: " + level);
+
         initMap(level);
 
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
         if (gameToLoad != null) {
             worldCreator.buildFromMap();
+            for (Platform platform : worldCreator.createPlatforms()) {
+                this.platforms.add(platform);
+            }
             load(gameToLoad);
         } else {
             worldCreator.buildFromMap();
+            for (Platform platform : worldCreator.createPlatforms()) {
+                this.platforms.add(platform);
+            }
             for (Enemy enemy : worldCreator.createEnemies()) {
                 this.enemies.put(enemy.getId(), enemy);
-            }
-            for (Platform platform : worldCreator.createPlatforms()) {
-                this.platforms.put(platform.getId(), platform);
             }
         }
         this.waterRegions = worldCreator.getWaterRegions();
@@ -424,7 +435,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     private void updatePlatforms(float delta) {
-        for (Platform platform : platforms.values()) {
+        for (Platform platform : platforms) {
             platform.update(delta);
 
             if (platform.getX() < mario.getX() + 256 / Cfg.PPM) {
@@ -551,7 +562,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private void renderForeground(SpriteBatch batch) {
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
 
-        for (Platform platform : platforms.values()) {
+        for (Platform platform : platforms) {
             platform.draw(batch);
         }
 
@@ -649,6 +660,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.write(out);
         }
+        for (Platform platform : platforms) {
+            platform.write(out);
+        }
     }
 
     @Override
@@ -692,6 +706,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.read(in);
+        }
+        for (Platform platform : platforms) {
+            platform.read(in);
         }
     }
 }

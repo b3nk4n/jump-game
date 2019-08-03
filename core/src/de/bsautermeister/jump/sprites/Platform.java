@@ -160,6 +160,8 @@ public class Platform extends Sprite implements BinarySerializable {
         out.writeFloat(body.getLinearVelocity().y);
         out.writeFloat(currentVelocity.x);
         out.writeFloat(currentVelocity.y);
+        out.writeFloat(targetVelocity.x);
+        out.writeFloat(targetVelocity.y);
     }
 
     @Override
@@ -168,5 +170,6 @@ public class Platform extends Sprite implements BinarySerializable {
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         currentVelocity.set(in.readFloat(), in.readFloat());
+        targetVelocity.set(in.readFloat(), in.readFloat());
     }
 }
