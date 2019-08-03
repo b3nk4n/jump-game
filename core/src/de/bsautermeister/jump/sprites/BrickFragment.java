@@ -38,7 +38,7 @@ public class BrickFragment extends Sprite implements Pool.Poolable, BinarySerial
     }
 
     public void update(float delta) {
-        velocity.set(velocity.x * 0.99f, velocity.y - 0.0075f);
+        velocity.set(velocity.x * 0.99f, velocity.y - 0.05f);
         setPosition(getX() + velocity.x * delta, getY() + velocity.y * delta);
         setRotation(getRotation() + rotationSpeed * delta);
 

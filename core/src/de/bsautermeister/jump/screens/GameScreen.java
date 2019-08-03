@@ -53,6 +53,7 @@ import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
+import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.SpinningCoin;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -80,6 +81,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
+    private ObjectMap<String, Platform> platforms;
 
     private boolean levelCompleted;
     private float levelCompletedTimer;
@@ -219,6 +221,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
 
         enemies = new ObjectMap<String, Enemy>();
+        platforms = new ObjectMap<String, Platform>();
 
         items = new ObjectMap();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
@@ -251,6 +254,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             worldCreator.buildFromMap();
             for (Enemy enemy : worldCreator.createEnemies()) {
                 this.enemies.put(enemy.getId(), enemy);
+            }
+            for (Platform platform : worldCreator.createPlatforms()) {
+                this.platforms.put(platform.getId(), platform);
             }
         }
         this.waterRegions = worldCreator.getWaterRegions();
@@ -338,6 +344,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         updateEnemies(delta);
         updateItems(delta);
+        updatePlatforms(delta);
 
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.update(delta);
@@ -412,6 +419,16 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
             if (enemy.getX() < mario.getX() + 256 / Cfg.PPM) {
                 enemy.setActive(true);
+            }
+        }
+    }
+
+    private void updatePlatforms(float delta) {
+        for (Platform platform : platforms.values()) {
+            platform.update(delta);
+
+            if (platform.getX() < mario.getX() + 256 / Cfg.PPM) {
+                platform.setActive(true);
             }
         }
     }
@@ -534,6 +551,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private void renderForeground(SpriteBatch batch) {
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
 
+        for (Platform platform : platforms.values()) {
+            platform.draw(batch);
+        }
+
         for (Item item : items.values()) {
             item.draw(batch);
         }
@@ -547,14 +568,16 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (Rectangle waterRegion : waterRegions) {
             batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
-            waterShader.setUniformf("u_width", waterRegion.getWidth());
-            batch.draw(waterTexture, waterRegion.getX() / Cfg.PPM, (waterRegion.getY() - 1f) / Cfg.PPM,
-                    waterRegion.getWidth() / Cfg.PPM, waterRegion.getHeight() / Cfg.PPM);
+            waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
+            batch.draw(waterTexture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
+                    waterRegion.getWidth(), waterRegion.getHeight());
         }
 
         batch.setShader(prevShader);
 
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+            // tile-objects itself are drawn in the GRAPHICS layer, while this draw-call renders the
+            // particle fragments in case of a destroyed brick
             tileObject.draw(batch);
         }
     }

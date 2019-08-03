@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.physics;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -18,12 +19,14 @@ import com.badlogic.gdx.utils.Array;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Koopa;
+import de.bsautermeister.jump.sprites.Platform;
 
 public class WorldCreator {
 
@@ -39,6 +42,8 @@ public class WorldCreator {
     public static final String COLLIDER_KEY = "collider";
     public static final String WATER_KEY = "water";
     public static final String GOAL_KEY = "goal";
+    public static final String BOUNCERS_KEY = "bouncers";
+    public static final String PLATFORMS_KEY = "platforms";
 
     private final World world;
     private final TiledMap map;
@@ -55,9 +60,9 @@ public class WorldCreator {
     }
 
     public void buildFromMap() {
-        buildPhysicalLayer(GROUND_KEY, BodyDef.BodyType.StaticBody, JumpGame.GROUND_BIT);
-        buildPhysicalLayer(PIPES_KEY, BodyDef.BodyType.StaticBody, JumpGame.OBJECT_BIT);
-        buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT);
+        buildPhysicalLayer(GROUND_KEY, BodyDef.BodyType.StaticBody, JumpGame.GROUND_BIT, false);
+        buildPhysicalLayer(PIPES_KEY, BodyDef.BodyType.StaticBody, JumpGame.OBJECT_BIT, false);
+        buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT, true);
 
         for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             tileObjects.add(new Brick(callbacks, world, map, atlas, mapObject));
@@ -68,14 +73,18 @@ public class WorldCreator {
         }
     }
 
-    private void buildPhysicalLayer(String layer, BodyDef.BodyType bodyType, short categoryBit) {
+    private void buildPhysicalLayer(String layer, BodyDef.BodyType bodyType, short categoryBit, boolean asSensor) {
+        if (!hasLayer(map, layer)) {
+            return;
+        }
+
         for (MapObject mapObject : map.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle bounds = ((RectangleMapObject) mapObject).getRectangle();
-            createBody(null, world, bounds, bodyType, categoryBit);
+            createBody(null, world, bounds, bodyType, categoryBit, asSensor);
         }
     }
 
-    public static Body createBody(InteractiveTileObject parent, World world, Rectangle bounds, BodyDef.BodyType bodyType, short categoryBit) {
+    public static Body createBody(InteractiveTileObject parent, World world, Rectangle bounds, BodyDef.BodyType bodyType, short categoryBit, boolean asSensor) {
         BodyDef bodyDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fixtureDef = new FixtureDef();
@@ -89,6 +98,7 @@ public class WorldCreator {
                 bounds.getHeight() / 2 / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = categoryBit;
+        fixtureDef.isSensor = asSensor;
         Fixture fixture = body.createFixture(fixtureDef);
         if (parent != null) {
             fixture.setUserData(parent);
@@ -110,27 +120,68 @@ public class WorldCreator {
 
     public Array<Enemy> createEnemies() {
         Array<Enemy> enemies = new Array<Enemy>();
-        for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            enemies.add(new Goomba(callbacks, world, atlas,
-                    rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+        if (hasLayer(map, GOOMBAS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                enemies.add(new Goomba(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+            }
         }
 
-        for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            enemies.add(new Koopa(callbacks, world, atlas,
-                    rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+        if (hasLayer(map, KOOPAS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                enemies.add(new Koopa(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+            }
         }
         return enemies;
     }
 
+    public Array<Platform> createPlatforms() {
+        Array<PlatformBouncer> bouncerRegions = getPlatformBouncerRegions();
+        Array<Platform> platforms = new Array<Platform>();
+
+        if (hasLayer(map, PLATFORMS_KEY)) {
+            for (RectangleMapObject mapObject : map.getLayers().get(PLATFORMS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = mapObject.getRectangle();
+                Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
+                Platform platform = new Platform(callbacks, world, atlas,
+                        (rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM,
+                        startAngle != null ? startAngle : 0, bouncerRegions);
+                platforms.add(platform);
+            }
+        }
+        return platforms;
+    }
+
     public Array<Rectangle> getWaterRegions() {
         Array<Rectangle> waterRegions = new Array<Rectangle>();
-        for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-            waterRegions.add(rect); // TODO do PPM caluclation here?
+        if (hasLayer(map, WATER_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                waterRegions.add(new Rectangle(rect.x / Cfg.PPM, rect.y / Cfg.PPM,
+                        rect.width / Cfg.PPM, rect.height / Cfg.PPM));
+            }
         }
         return waterRegions;
+    }
+
+    private Array<PlatformBouncer> getPlatformBouncerRegions() {
+        Array<PlatformBouncer> bouncerRegions = new Array<PlatformBouncer>();
+        if (hasLayer(map, BOUNCERS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(BOUNCERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                Integer angle = (Integer) mapObject.getProperties().get("bounce_angle");
+                PlatformBouncer platformBouncer = new PlatformBouncer(
+                        new Rectangle(rect.x / Cfg.PPM, rect.y / Cfg.PPM,
+                                rect.width / Cfg.PPM, rect.height / Cfg.PPM),
+                        angle != null ? angle : 0
+                );
+                bouncerRegions.add(platformBouncer);
+            }
+        }
+        return bouncerRegions;
     }
 
     public static Array<InteractiveTileObject> getTileObjects() {
@@ -145,5 +196,9 @@ public class WorldCreator {
                 .first()
                 .getRectangle();
         return new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
+    }
+
+    private boolean hasLayer(Map map, String layer) {
+        return map.getLayers().get(layer) != null;
     }
 }

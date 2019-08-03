@@ -53,6 +53,7 @@ public class Mario extends Sprite implements BinarySerializable {
     private World world;
     private Body body;
 
+    private Platform platformContact;
     private int groundContactCounter;
     private float jumpFixTimer;
 
@@ -263,8 +264,10 @@ public class Mario extends Sprite implements BinarySerializable {
             return;
         }
 
+        Vector2 relativeBodyVelocity = getRelativeBodyVelocity();
+
         state.unfreeze();
-        isTurning = right && body.getLinearVelocity().x < 0 || left && body.getLinearVelocity().x > 0;
+        isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
 
         if (up && touchesGround() && !state.is(State.JUMPING)) {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
@@ -274,14 +277,17 @@ public class Mario extends Sprite implements BinarySerializable {
             return;
         }
         if (right && body.getLinearVelocity().x <= 2 && !down) {
-            body.applyLinearImpulse(new Vector2(0.1f, 0), body.getWorldCenter(), true);
+            body.applyForce(new Vector2(8.0f, 0), body.getWorldCenter(), true);
         }
         if (left && body.getLinearVelocity().x >= -2 && !down) {
-            body.applyLinearImpulse(new Vector2(-0.1f, 0), body.getWorldCenter(), true);
+            body.applyForce(new Vector2(-8.0f, 0), body.getWorldCenter(), true);
         }
-        if ((!left && ! right) || down) {
+        if ((!left && ! right && state.is(State.JUMPING))) {
             // horizontally decelerate fast, but don't stop immediately
-            body.setLinearVelocity(body.getLinearVelocity().x * 0.75f, body.getLinearVelocity().y);
+            body.applyForce(new Vector2(-5 * relativeBodyVelocity.x, 0), body.getWorldCenter(), true);
+        }
+        if (down) {
+            body.applyForce(new Vector2(0f, -2f), body.getWorldCenter(), true);
         }
 
         if (!touchesGround()) {
@@ -295,7 +301,7 @@ public class Mario extends Sprite implements BinarySerializable {
         } else if (jumpFixTimer < 0) {
             if (down && isBig) {
                 state.set(State.CROUCHING);
-            } else if (body.getLinearVelocity().x != 0) {
+            } else if (Math.abs(relativeBodyVelocity.x) > 1e-4) {
                 state.set(State.WALKING);
             } else {
                 state.set(State.STANDING);
@@ -381,8 +387,10 @@ public class Mario extends Sprite implements BinarySerializable {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.8f;
         final float[] SMALL_POLYGON_VERTICES = {
                 -3f / Cfg.PPM, 6f / Cfg.PPM,
                 3f / Cfg.PPM, 6f / Cfg.PPM,
@@ -404,9 +412,11 @@ public class Mario extends Sprite implements BinarySerializable {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.8f;
         final float[] BIG_POLYGON_VERTICES = {
                 -2.5f / Cfg.PPM, 21f / Cfg.PPM,
                 2.5f / Cfg.PPM, 21f / Cfg.PPM,
@@ -476,6 +486,14 @@ public class Mario extends Sprite implements BinarySerializable {
 
     public Body getBody() {
         return body;
+    }
+
+    private Vector2 getRelativeBodyVelocity() {
+        Vector2 relativeBodyVelocity = body.getLinearVelocity();
+        if (platformContact != null) {
+            relativeBodyVelocity.sub(platformContact.getCurrentVelocity());
+        }
+        return relativeBodyVelocity;
     }
 
     public boolean isBig() {
@@ -550,12 +568,19 @@ public class Mario extends Sprite implements BinarySerializable {
         return timeToLive;
     }
 
-    public void touchGround() {
+    public void touchGround(Object ground) {
         groundContactCounter++;
+
+        if (ground instanceof Platform) {
+            platformContact = (Platform) ground;
+        }
     }
 
-    public void leftGround() {
+    public void leftGround(Object ground) {
         groundContactCounter--;
+        if (ground == platformContact) {
+            platformContact = null;
+        }
     }
 
     public boolean touchesGround() {

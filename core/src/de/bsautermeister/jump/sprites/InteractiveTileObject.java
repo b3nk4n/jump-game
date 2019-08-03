@@ -90,7 +90,7 @@ public abstract class InteractiveTileObject implements BinarySerializable {
     }
 
     private Body defineBody(short categoryBit) {
-        return WorldCreator.createBody(this, world, mapObject.getRectangle(), BodyDef.BodyType.StaticBody, categoryBit);
+        return WorldCreator.createBody(this, world, mapObject.getRectangle(), BodyDef.BodyType.StaticBody, categoryBit, false);
     }
 
     public abstract void onHeadHit(Mario mario);

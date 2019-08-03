@@ -11,6 +11,7 @@ import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Mario;
+import de.bsautermeister.jump.sprites.Platform;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -23,6 +24,7 @@ public class WorldContactListener implements ContactListener {
         Item item;
         Mario mario;
         Enemy enemy;
+        Platform platform;
         InteractiveTileObject tileObject;
         switch (collisionDef) {
             case JumpGame.MARIO_HEAD_BIT | JumpGame.BRICK_BIT:
@@ -68,7 +70,8 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
-                mario.touchGround();
+                Object other = resolveUserData(fixtureA, fixtureB, ~JumpGame.MARIO_FEET_BIT);
+                mario.touchGround(other);
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
@@ -100,7 +103,8 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
-                mario.leftGround();
+                Object other = resolveUserData(fixtureA, fixtureB, ~JumpGame.MARIO_FEET_BIT);
+                mario.leftGround(other);
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
