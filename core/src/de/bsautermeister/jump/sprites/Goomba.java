@@ -65,7 +65,7 @@ public class Goomba extends Enemy {
             getBody().setLinearVelocity(getVelocity());
         }
 
-        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
         setRegion(getFrame());
 
         if (state.is(State.STOMPED) && state.timer() > 1f) {
@@ -108,7 +108,7 @@ public class Goomba extends Enemy {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 / Cfg.PPM);
+        shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -126,8 +126,8 @@ public class Goomba extends Enemy {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5, 8).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(5, 8).scl(1 / Cfg.PPM);
+        vertices[0] = new Vector2(-4, 9).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(4, 9).scl(1 / Cfg.PPM);
         vertices[2] = new Vector2(-3, 3).scl(1 / Cfg.PPM);
         vertices[3] = new Vector2(3, 3).scl(1 / Cfg.PPM);
         headShape.set(vertices);
@@ -154,6 +154,10 @@ public class Goomba extends Enemy {
 
     @Override
     public void onHeadHit(Mario mario) {
+        if (mario.isDead() || mario.isInvincible()) {
+            return;
+        }
+
         stomp();
     }
 

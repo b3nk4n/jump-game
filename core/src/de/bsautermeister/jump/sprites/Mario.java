@@ -402,7 +402,6 @@ public class Mario extends Sprite implements BinarySerializable {
                 -5f / Cfg.PPM, -2f / Cfg.PPM
         };
         createBodyFixture(fixtureDef, SMALL_POLYGON_VERTICES, normalFilterMask);
-
         createFeetFixture(fixtureDef, 9.33f, -6.5f);
         createHeadSensorFixture(fixtureDef, 4f, 6.1f);
         createGroundSensorFixture(fixtureDef, 9f, -7f);
@@ -449,7 +448,7 @@ public class Mario extends Sprite implements BinarySerializable {
      * Feet as edge shape to circumvent edge-to-edge collision.
      */
     private void createFeetFixture(FixtureDef fixtureDef, float width, float bottomY) {
-        Fixture fixture;EdgeShape feetShape = new EdgeShape();
+        EdgeShape feetShape = new EdgeShape();
         feetShape.set(-width / 2 / Cfg.PPM, bottomY  / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
@@ -457,7 +456,7 @@ public class Mario extends Sprite implements BinarySerializable {
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.OBJECT_BIT;
-        fixture = body.createFixture(fixtureDef);
+        Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
     }
 
@@ -468,7 +467,8 @@ public class Mario extends Sprite implements BinarySerializable {
         fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
-        body.createFixture(fixtureDef).setUserData(this);
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
     }
 
     /**
@@ -519,9 +519,10 @@ public class Mario extends Sprite implements BinarySerializable {
     private void shrinkOrKill(Enemy enemy) {
         if (isBig()) {
             changeSizeTimer.restart();
+            callbacks.hit(this, enemy);
             isBig = false;
             markRedefineBody = true;
-            callbacks.hit(this, enemy);
+
         } else {
             kill();
         }

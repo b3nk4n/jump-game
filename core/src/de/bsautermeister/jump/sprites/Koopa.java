@@ -95,7 +95,7 @@ public class Koopa extends Enemy {
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
-                getBody().getPosition().y - 8 / Cfg.PPM);
+                getBody().getPosition().y - 7 / Cfg.PPM);
         setRegion(getFrame());
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
@@ -140,7 +140,7 @@ public class Koopa extends Enemy {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 / Cfg.PPM);
+        shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.COIN_BIT |
@@ -158,8 +158,8 @@ public class Koopa extends Enemy {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5, 8).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(5, 8).scl(1 / Cfg.PPM);
+        vertices[0] = new Vector2(-4, 9).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(4, 9).scl(1 / Cfg.PPM);
         vertices[2] = new Vector2(-3, 3).scl(1 / Cfg.PPM);
         vertices[3] = new Vector2(3, 3).scl(1 / Cfg.PPM);
         headShape.set(vertices);
@@ -187,6 +187,10 @@ public class Koopa extends Enemy {
 
     @Override
     public void onHeadHit(Mario mario) {
+        if (mario.isDead() || mario.isInvincible()) {
+            return;
+        }
+
         if (!state.is(State.STANDING_SHELL)) {
             stomp();
         } else {
