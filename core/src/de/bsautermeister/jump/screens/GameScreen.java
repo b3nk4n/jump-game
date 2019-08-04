@@ -41,6 +41,7 @@ import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
+import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
@@ -188,7 +189,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
-        public void touchedWater(Mario mario) {
+        public void touchedWater() {
             splashSound.play();
         }
 
@@ -225,6 +226,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Array<Rectangle> waterRegions;
     private final ShaderProgram waterShader;
     private TextureRegion waterTexture;
+
+    private WaterInteractionManager waterInteractionManager;
 
     private FileHandle gameToLoad;
     private Integer level;
@@ -294,6 +297,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
         this.waterRegions = worldCreator.getWaterRegions();
+        this.waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterRegions, mario);
+
         this.goal = worldCreator.getGoal();
 
         this.hudViewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
@@ -382,6 +387,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         updateEnemies(delta);
         updateItems(delta);
         updatePlatforms(delta);
+
+        waterInteractionManager.update(delta);
 
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.update(delta);
@@ -609,6 +616,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             enemy.draw(batch);
         }
         mario.draw(batch);
+
+        waterInteractionManager.draw(batch);
 
         ShaderProgram prevShader = batch.getShader();
         for (Rectangle waterRegion : waterRegions) {

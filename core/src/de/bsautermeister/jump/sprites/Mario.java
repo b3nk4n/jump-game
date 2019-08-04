@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -28,10 +29,11 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
-public class Mario extends Sprite implements BinarySerializable {
+public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     public static final float INITAL_TTL = 200;
 
@@ -80,7 +82,6 @@ public class Mario extends Sprite implements BinarySerializable {
     private TextureRegion bigMarioDrown;
 
     ParticleEffect slideEffect = new ParticleEffect();
-    ParticleEffect splashEffect = new ParticleEffect();
 
     private boolean isTurning;
 
@@ -116,9 +117,6 @@ public class Mario extends Sprite implements BinarySerializable {
 
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
         slideEffect.scaleEffect(0.1f / Cfg.PPM);
-
-        splashEffect.load(Gdx.files.internal(AssetPaths.Pfx.SPLASH), atlas);
-        splashEffect.scaleEffect(0.1f / Cfg.PPM);
 
         changeSizeTimer = new GameTimer(2f);
         changeSizeTimer.setCallbacks(new GameTimer.TimerCallbacks() {
@@ -191,17 +189,6 @@ public class Mario extends Sprite implements BinarySerializable {
             changeSizeTimer.update(delta);
         }
 
-        if (!isDead() && isBelowWaterLevel()) {
-            if (!state.is(State.DROWNING)) {
-                splashEffect.setPosition(getX() + getWidth() / 2, getY());
-                splashEffect.start();
-                callbacks.touchedWater(this);
-            }
-
-            body.setLinearVelocity(Vector2.Zero);
-            state.set(State.DROWNING);
-        }
-
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
 
@@ -259,8 +246,15 @@ public class Mario extends Sprite implements BinarySerializable {
         }
     }
 
+    @Override
+    public void drown() {
+        state.set(State.DROWNING);
+        body.setLinearVelocity(body.getLinearVelocity().x / 8, body.getLinearVelocity().y / 12);
+        body.setGravityScale(0.05f);
+    }
+
     public void control(boolean up, boolean down, boolean left, boolean right) {
-        if (state.is(State.DEAD) || state.is(State.DROWNING)) {
+        if (isDead() || isDrowning()) {
             return;
         }
 
@@ -376,7 +370,6 @@ public class Mario extends Sprite implements BinarySerializable {
         super.draw(batch);
 
         slideEffect.draw(batch, Gdx.graphics.getDeltaTime());
-        splashEffect.draw(batch, Gdx.graphics.getDeltaTime());
     }
 
     public State getState() {
@@ -500,8 +493,22 @@ public class Mario extends Sprite implements BinarySerializable {
         return isBig;
     }
 
+    @Override
     public boolean isDead() {
         return state.is(State.DEAD);
+    }
+
+    private final Vector2 outCenter = new Vector2();
+    @Override
+    public Vector2 getWorldCenter() {
+        Rectangle rect = getBoundingRectangle();
+        outCenter.set(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        return outCenter;
+    }
+
+    @Override
+    public boolean isDrowning() {
+        return state.is(State.DROWNING);
     }
 
     public float getStateTimer() {
@@ -594,10 +601,6 @@ public class Mario extends Sprite implements BinarySerializable {
 
     public boolean isInvincible() {
         return isChangingSize();
-    }
-
-    private boolean isBelowWaterLevel() {
-        return getY() < Cfg.BLOCK_SIZE / Cfg.PPM * 0.66;
     }
 
     private boolean isOutOfGame() {
