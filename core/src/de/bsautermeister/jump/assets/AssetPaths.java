@@ -7,6 +7,13 @@ public interface AssetPaths {
         String UI = "ui/ui.atlas";
     }
 
+    interface Fonts {
+        String MARIO12 = "ui/fonts/new-super-mario-font-12.fnt";
+        String MARIO18 = "ui/fonts/new-super-mario-font-18.fnt";
+        String MARIO24 = "ui/fonts/new-super-mario-font-24.fnt";
+        String MARIO32 = "ui/fonts/new-super-mario-font-32.fnt";
+    }
+
     interface Skins {
         String UI = "ui/ui.skin";
     }

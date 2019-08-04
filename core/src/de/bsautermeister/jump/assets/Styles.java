@@ -15,7 +15,7 @@ public interface Styles {
     }
 
     interface Fonts {
-        String BIG = "big-font";
-        String SMALL = "small-font";
+        String FONT32 = "font32";
+        String FONT24 = "font24";
     }
 }

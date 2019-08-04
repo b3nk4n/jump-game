@@ -1,10 +1,10 @@
 {
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-    "small-font": {
-      "file": "ui/fonts/cartoon-24.fnt"
+    "font24": {
+      "file": "ui/fonts/new-super-mario-font-24.fnt"
     },
-    "big-font": {
-      "file": "ui/fonts/cartoon-48.fnt"
+    "font32": {
+      "file": "ui/fonts/new-super-mario-font-32.fnt"
     }
   },
   "com.badlogic.gdx.graphics.Color": {
@@ -54,11 +54,11 @@
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
     "default": {
-      "font": "big-font",
+      "font": "font32",
       "fontColor": "white"
     },
     "small": {
-      "font": "small-font",
+      "font": "font24",
       "fontColor": "white"
     }
   }

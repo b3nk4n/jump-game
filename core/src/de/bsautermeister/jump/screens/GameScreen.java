@@ -6,6 +6,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -55,6 +58,7 @@ import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.SpinningCoin;
+import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase implements BinarySerializable {
@@ -66,6 +70,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private OrthographicCamera camera;
     private Viewport viewport;
+    private Viewport hudViewport;
     private Hud hud;
 
     private TiledMap map;
@@ -111,12 +116,19 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         @Override
         public void stomp(Enemy enemy) {
             stompSound.play();
-            mario.addScore(50);
+
+            if (!(enemy instanceof Koopa)) {
+                mario.addScore(50);
+                showScoreText("50", enemy.getBoundingRectangle());
+            }
         }
 
         @Override
         public void use(Mario mario, Item item) {
             powerupSound.play();
+
+            mario.addScore(100);
+            showScoreText("100", item.getBoundingRectangle());
         }
 
         @Override
@@ -144,11 +156,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             } else if (coin.hasMushroom()) {
                 spawnItem(new ItemDef(position, Mushroom.class));
                 powerupSpawnSound.play();
-                mario.addScore(500);
             } else {
                 coinSound.play();
-                spinningCoins.add(new SpinningCoin(atlas, coin.getBody().getWorldCenter()));
-                mario.addScore(100);
+                SpinningCoin spinningCoin = new SpinningCoin(atlas, coin.getBody().getWorldCenter());
+                spinningCoins.add(spinningCoin);
+                mario.addScore(Cfg.COIN_SCORE);
+                // score is shown later when the coin disappears
             }
         }
 
@@ -201,6 +214,13 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
     };
 
+    private void showScoreText(String text, Rectangle rect) {
+        float x = rect.getX() + rect.getWidth() / 2;
+        float y = rect.getY() + rect.getHeight() / 2;
+        float cameraLeftX = (camera.position.x - viewport.getWorldWidth() / 2);
+        textMessages.add(new TextMessage(text, x - cameraLeftX, y));
+    }
+
     private float gameTime;
     private Array<Rectangle> waterRegions;
     private final ShaderProgram waterShader;
@@ -208,6 +228,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private FileHandle gameToLoad;
     private Integer level;
+
+    private BitmapFont font;
+    private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
 
     public GameScreen(GameApp game, int level) {
         super(game);
@@ -273,7 +296,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.waterRegions = worldCreator.getWaterRegions();
         this.goal = worldCreator.getGoal();
 
-        this.hud = new Hud(getGame().getBatch());
+        this.hudViewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
+        this.hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
@@ -309,6 +333,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         jumpSound = getAssetManager().get(AssetDescriptors.Sounds.JUMP);
         kickedSound = getAssetManager().get(AssetDescriptors.Sounds.KICKED);
         splashSound = getAssetManager().get(AssetDescriptors.Sounds.SPLASH);
+
+        font = getAssetManager().get(AssetDescriptors.Fonts.MARIO12);
 
         if (JumpGame.hasSavedData()) {
             //load(gameToLoad); // TODO duplicated?
@@ -363,6 +389,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         for(SpinningCoin spinningCoin : spinningCoins) {
             if (spinningCoin.isFinished()) {
+                showScoreText(Cfg.COIN_SCORE_STRING, spinningCoin.getBoundingRectangle());
                 spinningCoins.removeValue(spinningCoin, true);
             } else {
                 spinningCoin.update(delta);
@@ -392,6 +419,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 setScreen(new GameScreen(getGame(), level + 1));
             }
         }
+
+        for (TextMessage textMessage : textMessages) {
+            textMessage.update(delta);
+        }
     }
 
     private void postUpdate() {
@@ -415,6 +446,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         if (mario.getBody().getPosition().dst2(goal) < 0.0075f) {
             completeLevel();
+        }
+
+        if (!textMessages.isEmpty() && !textMessages.peek().isAlive()) {
+            textMessages.poll();
         }
     }
 
@@ -544,7 +579,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
-        renderHud();
+        renderHud(batch);
 
         if (isGameOver()) {
             getGame().setScreen(new GameOverScreen(getGame()));
@@ -593,8 +628,20 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
     }
 
-    private void renderHud() {
+    private final GlyphLayout layout = new GlyphLayout();
+    private void renderHud(SpriteBatch batch) {
         hud.getStage().draw();
+
+        if (textMessages.isEmpty()) {
+            return;
+        }
+
+        batch.begin();
+        for (TextMessage textMessage : textMessages) {
+            layout.setText(font, textMessage.getMessage());
+            font.draw(batch, textMessage.getMessage(), textMessage.getX() * Cfg.PPM - layout.width / 2, textMessage.getY() * Cfg.PPM - layout.height / 2);
+        }
+        batch.end();
     }
 
     @Override

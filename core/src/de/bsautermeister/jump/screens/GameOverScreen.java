@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -25,13 +26,14 @@ public class GameOverScreen extends ScreenBase {
     }
 
     private void initialize() {
-        Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+        BitmapFont font = getAssetManager().get(AssetDescriptors.Fonts.MARIO32);
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
         Table table = new Table();
         table.center();
         table.setFillParent(true);
 
-        Label gameOverLabel = new Label("GAME OVER", font);
+        Label gameOverLabel = new Label("GAME OVER", labelStyle);
         table.add(gameOverLabel).expandX();
 
         stage.addActor(table);

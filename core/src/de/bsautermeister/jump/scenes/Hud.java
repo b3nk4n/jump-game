@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.scenes;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,15 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.sprites.Mario;
+import de.bsautermeister.jump.assets.AssetDescriptors;
 
 public class Hud implements Disposable {
     private final Stage stage;
-    private final Viewport viewport;
 
     private int currentTTL;
     private int currentScore;
@@ -29,11 +28,13 @@ public class Hud implements Disposable {
     private Label worldLabel;
     private Label marioLabel;
 
-    private Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+    private Label.LabelStyle labelStyle;
 
-    public Hud(SpriteBatch batch) {
-        this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
-        this.stage = new Stage(viewport, batch);
+    public Hud(SpriteBatch batch, Viewport hudViewport, AssetManager assetManager) {
+        this.stage = new Stage(hudViewport, batch);
+        BitmapFont font = assetManager.get(AssetDescriptors.Fonts.MARIO18);
+        labelStyle = new Label.LabelStyle(font, Color.WHITE);
+
         this.stage.addActor(buildUi());
     }
 

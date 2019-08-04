@@ -6,8 +6,8 @@ public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
     boolean DEBUG_MODE = true;
 
-    float HUD_WIDTH = 1280; // still world units!
-    float HUD_HEIGHT = 720; // still world units!
+    float HUD_WIDTH = 1280; // still world units! (only loading screen)
+    float HUD_HEIGHT = 720; // still world units! (only loading screen)
 
     int WORLD_WIDTH = 400;
     int WORLD_HEIGHT = 208;
@@ -22,4 +22,7 @@ public interface Cfg {
     int LEVELS_PER_STAGE = LEVEL_COLUMNS * LEVEL_ROWS;
 
     float GOAL_REACHED_FINISH_DELAY = 2f;
+
+    int COIN_SCORE = 100;
+    String COIN_SCORE_STRING = String.valueOf(COIN_SCORE);
 }

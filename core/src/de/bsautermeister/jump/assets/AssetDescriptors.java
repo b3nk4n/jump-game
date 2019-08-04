@@ -2,13 +2,21 @@ package de.bsautermeister.jump.assets;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public interface AssetDescriptors {
 
     interface Fonts {
-
+        AssetDescriptor<BitmapFont> MARIO12 =
+                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO12, BitmapFont.class);
+        AssetDescriptor<BitmapFont> MARIO18 =
+                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO18, BitmapFont.class);
+        AssetDescriptor<BitmapFont> MARIO24 =
+                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO24, BitmapFont.class);
+        AssetDescriptor<BitmapFont> MARIO32 =
+                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO32, BitmapFont.class);
     }
 
     interface Atlas {
@@ -51,6 +59,7 @@ public interface AssetDescriptors {
     }
 
     AssetDescriptor[] ALL = {
+            Fonts.MARIO12, Fonts.MARIO18,Fonts.MARIO24, Fonts.MARIO32,
             Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.POWERUP_SPAWN, Sounds.POWERUP,
             Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE, Sounds.JUMP, Sounds.KICKED,
