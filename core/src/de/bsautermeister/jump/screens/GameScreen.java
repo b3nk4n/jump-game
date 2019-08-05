@@ -171,6 +171,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             Enemy enemy = enemies.get(enemyId);
             if (enemy != null) {
                 enemy.kill(true);
+                mario.addScore(50);
+                showScoreText("50", enemy.getBoundingRectangle());
             }
         }
 
@@ -197,6 +199,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         public void killed(Enemy enemy) {
             kickedSound.play();
             mario.addScore(50);
+            showScoreText("50", enemy.getBoundingRectangle());
         }
 
         @Override
