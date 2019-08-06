@@ -83,6 +83,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private Mario mario;
 
+    private int score;
+
     private Vector2 goal;
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
@@ -119,7 +121,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             stompSound.play();
 
             if (!(enemy instanceof Koopa)) {
-                mario.addScore(50);
+                score += 50;
                 showScoreText("50", enemy.getBoundingRectangle());
             }
         }
@@ -128,7 +130,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         public void use(Mario mario, Item item) {
             powerupSound.play();
 
-            mario.addScore(100);
+            score += 100;
             showScoreText("100", item.getBoundingRectangle());
         }
 
@@ -161,7 +163,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 coinSound.play();
                 SpinningCoin spinningCoin = new SpinningCoin(atlas, coin.getBody().getWorldCenter());
                 spinningCoins.add(spinningCoin);
-                mario.addScore(Cfg.COIN_SCORE);
+                score += Cfg.COIN_SCORE;
                 // score is shown later when the coin disappears
             }
         }
@@ -171,7 +173,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             Enemy enemy = enemies.get(enemyId);
             if (enemy != null) {
                 enemy.kill(true);
-                mario.addScore(50);
+                score += 50;
                 showScoreText("50", enemy.getBoundingRectangle());
             }
         }
@@ -198,7 +200,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         @Override
         public void killed(Enemy enemy) {
             kickedSound.play();
-            mario.addScore(50);
+            score += 50;
             showScoreText("50", enemy.getBoundingRectangle());
         }
 
@@ -272,6 +274,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.camera = new OrthographicCamera();
         this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
         this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+
+        this.score = 0;
 
         if (level == -1) {
             level = gameStats.getLastStartedLevel();
@@ -406,7 +410,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
-        hud.update(level, mario.getScore(), mario.getTimeToLive());
+        hud.update(level, score, mario.getTimeToLive());
 
         upateCameraPosition();
         camera.update();
@@ -598,6 +602,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private void renderBackground(SpriteBatch batch) {
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
 
         for (SpinningCoin spinningCoin : spinningCoins) {
             spinningCoin.draw(batch);
@@ -605,14 +610,14 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     private void renderForeground(SpriteBatch batch) {
+        for (Item item : items.values()) {
+            item.draw(batch);
+        }
+
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
 
         for (Platform platform : platforms) {
             platform.draw(batch);
-        }
-
-        for (Item item : items.values()) {
-            item.draw(batch);
         }
 
         for (Enemy enemy : enemies.values()) {
@@ -698,6 +703,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeInt(level);
+        out.writeInt(score);
         out.writeBoolean(levelCompleted);
         out.writeFloat(levelCompletedTimer);
         out.writeFloat(gameTime);
@@ -727,6 +733,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     @Override
     public void read(DataInputStream in) throws IOException {
         level = in.readInt();
+        score = in.readInt();
         levelCompleted = in.readBoolean();
         levelCompletedTimer = in.readFloat();
         gameTime = in.readFloat();

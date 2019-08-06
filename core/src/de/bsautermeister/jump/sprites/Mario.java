@@ -93,7 +93,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private boolean deadAnimationStarted = false;
 
     private float timeToLive;
-    private int score;
 
     private boolean levelCompleted;
 
@@ -113,7 +112,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         setRegion(marioStand);
 
         timeToLive = INITAL_TTL;
-        score = 0;
 
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
         slideEffect.scaleEffect(0.1f / Cfg.PPM);
@@ -564,14 +562,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         }
     }
 
-    public void addScore(int value) {
-        score += value;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
     public float getTimeToLive() {
         return timeToLive;
     }
@@ -635,7 +625,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
-        out.writeInt(score);
         out.writeBoolean(levelCompleted);
     }
 
@@ -652,7 +641,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();
-        score = in.readInt();
         levelCompleted = in.readBoolean();
 
         // this is just a lazy workaround, that is needed because we generally create a small mario by default

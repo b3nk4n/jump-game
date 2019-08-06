@@ -21,9 +21,9 @@ public class Mushroom extends Item {
     }
 
     @Override
-    public Body defineBody() {
+    public Body defineBody(float x, float y) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY());
+        bodyDef.position.set(x, y);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = getWorld().createBody(bodyDef);
 
@@ -54,8 +54,12 @@ public class Mushroom extends Item {
     @Override
     public void update(float delta) {
         super.update(delta);
-        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
-        velocity.y = getBody().getLinearVelocity().y;
-        getBody().setLinearVelocity(velocity);
+
+        if (state.is(State.SPAWNED)) {
+            setPosition(getBody().getPosition().x - getWidth() / 2,
+                    getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
+            velocity.y = getBody().getLinearVelocity().y;
+            getBody().setLinearVelocity(velocity);
+        }
     }
 }

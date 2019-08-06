@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,31 +17,65 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Item extends Sprite implements BinarySerializable, Disposable {
+
+    /**
+     * Add a tiny y-offset to the spawn postition, because the block-item is moving and would
+     * otherwise expose the bottom of the item as a small visual glitch.
+     */
+    private static final float SPAWN_ITEM_OFFSET_Y = 0.15f * Cfg.BLOCK_SIZE / Cfg.PPM;
+
+    private static final float SPAWN_TIME = 0.75f;
+
+    protected enum State {
+        SPAWNING,
+        SPAWNED
+    }
+
     private String id;
+    private final float spawnY;
+    private final float targetY;
+    private final Interpolation spawnInterpolation = Interpolation.linear;
+
     private GameCallbacks callbacks;
     private World world;
     protected Vector2 velocity;
-    private Body body;
+    private final Body body;
 
     private MarkedAction destroyBody;
 
-    public Item(GameCallbacks callbacks, World world, float x, float y) {
+    protected final GameObjectState<State> state = new GameObjectState<State>(State.SPAWNING);
+
+    public Item(GameCallbacks callbacks, World world, float centerX, float centerY) {
         this.id = UUID.randomUUID().toString();
+        this.spawnY = centerY - Cfg.BLOCK_SIZE / Cfg.PPM / 2 + SPAWN_ITEM_OFFSET_Y;
+        this.targetY = spawnY + Cfg.BLOCK_SIZE / Cfg.PPM;
         this.callbacks = callbacks;
         this.world = world;
-        setPosition(x, y);
-        setBounds(getX(), getY(), 16 / Cfg.PPM, 16 / Cfg.PPM);
-        body = defineBody();
+        this.setSize(Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
+        setPosition(centerX - Cfg.BLOCK_SIZE / Cfg.PPM / 2, spawnY);
         destroyBody = new MarkedAction();
+        body = defineBody(centerX, centerY + Cfg.BLOCK_SIZE / Cfg.PPM);
+        body.setActive(false);
     }
 
-    public abstract Body defineBody();
+    public abstract Body defineBody(float x, float y);
     public abstract void usedBy(Mario mario);
 
     public void update(float delta) {
-        boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE / Cfg.PPM;
-        if (outOfBounds) {
-            destroyBody.mark();
+        state.upate(delta);
+        if (state.is(State.SPAWNING)) {
+            float progress = state.timer() / SPAWN_TIME;
+            setY(spawnInterpolation.apply(spawnY, targetY, progress));
+
+            if (state.timer() > SPAWN_TIME) {
+                body.setActive(true);
+                state.set(State.SPAWNED);
+            }
+        } else {
+            boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE / Cfg.PPM;
+            if (outOfBounds) {
+                destroyBody.mark();
+            }
         }
     }
 
@@ -50,6 +85,8 @@ public abstract class Item extends Sprite implements BinarySerializable, Disposa
             destroyBody.done();
         }
     }
+
+
 
     @Override
     public void dispose() {

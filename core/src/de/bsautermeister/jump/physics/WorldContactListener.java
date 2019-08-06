@@ -14,6 +14,7 @@ import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Platform;
 
 public class WorldContactListener implements ContactListener {
+
     @Override
     public void beginContact(Contact contact) {
         Fixture fixtureA = contact.getFixtureA();
@@ -126,7 +127,7 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-
+        // TODO player does not collide with platform when he is moving upwards?
     }
 
     @Override

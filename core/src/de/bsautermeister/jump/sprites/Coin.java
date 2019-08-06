@@ -35,7 +35,7 @@ public class Coin extends InteractiveTileObject {
         getCallbacks().hit(
                 mario,
                 this,
-                new Vector2(getBody().getPosition().x, getBody().getPosition().y + Cfg.BLOCK_SIZE / Cfg.PPM),
+                new Vector2(getBody().getPosition().x, getBody().getPosition().y),
                 closeEnough);
 
         if(closeEnough && !isBlank()) {

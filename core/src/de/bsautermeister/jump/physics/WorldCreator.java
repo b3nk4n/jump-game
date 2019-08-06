@@ -31,6 +31,7 @@ import de.bsautermeister.jump.sprites.Platform;
 public class WorldCreator {
 
     public static final String BACKGROUND_KEY = "backgroundColor";
+    public static final String BACKGROUND_GRAPHICS_KEY = "backgroundGraphics";
     public static final String GRAPHICS_KEY = "graphics";
 
     public static final String GROUND_KEY = "ground";
