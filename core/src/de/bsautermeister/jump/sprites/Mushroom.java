@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -12,8 +13,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.managers.Drownable;
 
-public class Mushroom extends Item {
+public class Mushroom extends Item implements Drownable {
+
+    private boolean drowning = false;
+
     public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
         super(callbacks, world, x, y);
         setRegion(atlas.findRegion("mushroom"), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
@@ -58,8 +63,36 @@ public class Mushroom extends Item {
         if (state.is(State.SPAWNED)) {
             setPosition(getBody().getPosition().x - getWidth() / 2,
                     getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
-            velocity.y = getBody().getLinearVelocity().y;
-            getBody().setLinearVelocity(velocity);
+
+            if (!drowning) {
+                velocity.y = getBody().getLinearVelocity().y;
+                getBody().setLinearVelocity(velocity);
+            }
         }
+    }
+
+    @Override
+    public boolean isDead() {
+        return false;
+    }
+
+    @Override
+    public void drown() {
+        drowning = true;
+        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 8, getBody().getLinearVelocity().y / 12);
+        getBody().setGravityScale(0.05f);
+    }
+
+    @Override
+    public boolean isDrowning() {
+        return drowning;
+    }
+
+    private final Vector2 outCenter = new Vector2();
+    @Override
+    public Vector2 getWorldCenter() {
+        Rectangle rect = getBoundingRectangle();
+        outCenter.set(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        return outCenter;
     }
 }

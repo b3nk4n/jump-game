@@ -3,6 +3,7 @@ package de.bsautermeister.jump.sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -21,28 +22,25 @@ import java.io.IOException;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.serializer.BinarySerializable;
+import de.bsautermeister.jump.managers.Drownable;
 
-public class Goomba extends Enemy {
+public class Goomba extends Enemy implements Drownable {
     public enum State {
         WALKING, STOMPED
     }
 
     private GameObjectState<State> state;
+    private boolean drowning;
 
     private Animation<TextureRegion> walkAnimation;
     private TextureRegion stompedTexture;
-    private TextureAtlas atlas;
 
     public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
         super(callbacks, world, posX, posY);
-
-        this.state = new GameObjectState<State>(State.WALKING);
-
-        this.atlas = atlas;
         initTextures(atlas);
 
+        this.state = new GameObjectState<State>(State.WALKING);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
@@ -60,7 +58,7 @@ public class Goomba extends Enemy {
     public void update(float delta) {
         super.update(delta);
 
-        if (!isDead()) {
+        if (!isDead() && !isDrowning()) {
             state.upate(delta);
             getBody().setLinearVelocity(getVelocity());
         }
@@ -178,6 +176,26 @@ public class Goomba extends Enemy {
 
         state.set(State.STOMPED);
         markDestroyBody();
+    }
+
+    @Override
+    public void drown() {
+        drowning = true;
+        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 8, getBody().getLinearVelocity().y / 12);
+        getBody().setGravityScale(0.05f);
+    }
+
+    @Override
+    public boolean isDrowning() {
+        return drowning;
+    }
+
+    private final Vector2 outCenter = new Vector2();
+    @Override
+    public Vector2 getWorldCenter() {
+        Rectangle rect = getBoundingRectangle();
+        outCenter.set(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        return outCenter;
     }
 
     @Override

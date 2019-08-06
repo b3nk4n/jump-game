@@ -17,23 +17,32 @@ public class WaterInteractionManager {
 
     private final GameCallbacks callbacks;
     private final Array<Rectangle> waterRegions;
-    private final Drownable drownable;
+    private final Array<Drownable> drownables = new Array<Drownable>();
 
-    public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks, Array<Rectangle> waterRegions, Drownable drownable) {
+    public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks, Array<Rectangle> waterRegions) {
         splashEffect.load(Gdx.files.internal(AssetPaths.Pfx.SPLASH), atlas);
         splashEffect.scaleEffect(0.1f / Cfg.PPM);
 
         this.callbacks = callbacks;
         this.waterRegions = waterRegions;
-        this.drownable = drownable;
     }
 
     public void update(float delta) {
         for (Rectangle waterRegion : waterRegions) {
-            if (waterRegion.contains(drownable.getWorldCenter())) {
-                doDrown(drownable);
+            for (Drownable drownable : drownables) {
+                if (waterRegion.contains(drownable.getWorldCenter())) {
+                    doDrown(drownable);
+                }
             }
         }
+    }
+
+    public void add(Drownable drownable) {
+        drownables.add(drownable);
+    }
+
+    public void remove(Drownable drownable) {
+        drownables.removeValue(drownable, true);
     }
 
     private void doDrown(Drownable drownable) {

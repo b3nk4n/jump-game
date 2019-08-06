@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="97">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="100">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="backgroundColor" width="240" height="13">
   <data encoding="csv">
@@ -105,12 +105,15 @@
   <object id="51" x="3232" y="160" width="16" height="16"/>
   <object id="52" x="3056" y="80" width="16" height="16"/>
   <object id="53" x="3312" y="160" width="16" height="16"/>
+  <object id="97" x="1936" y="144" width="16" height="16"/>
+  <object id="98" x="1888" y="176" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="8" name="koopas">
   <object id="56" x="976" y="128" width="16" height="16"/>
   <object id="61" x="3408" y="160" width="16" height="16"/>
   <object id="66" x="2224" y="176" width="16" height="16"/>
   <object id="69" x="1168" y="176" width="16" height="16"/>
+  <object id="99" x="1824" y="176" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="9" name="collider">
   <object id="57" x="896" y="128" width="16" height="16"/>

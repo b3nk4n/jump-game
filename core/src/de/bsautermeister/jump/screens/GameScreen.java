@@ -41,6 +41,7 @@ import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
+import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
@@ -271,11 +272,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     private void reset() {
-        this.camera = new OrthographicCamera();
-        this.viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
-        this.camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        camera = new OrthographicCamera();
+        viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
+        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        this.score = 0;
+        score = 0;
 
         if (level == -1) {
             level = gameStats.getLastStartedLevel();
@@ -291,25 +292,33 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         if (gameToLoad != null) {
             worldCreator.buildFromMap();
             for (Platform platform : worldCreator.createPlatforms()) {
-                this.platforms.add(platform);
+                platforms.add(platform);
             }
             load(gameToLoad);
         } else {
             worldCreator.buildFromMap();
             for (Platform platform : worldCreator.createPlatforms()) {
-                this.platforms.add(platform);
+                platforms.add(platform);
             }
             for (Enemy enemy : worldCreator.createEnemies()) {
-                this.enemies.put(enemy.getId(), enemy);
+                enemies.put(enemy.getId(), enemy);
             }
         }
-        this.waterRegions = worldCreator.getWaterRegions();
-        this.waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterRegions, mario);
+        waterRegions = worldCreator.getWaterRegions();
 
-        this.goal = worldCreator.getGoal();
+        waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterRegions);
+        waterInteractionManager.add(mario);
+        for (Enemy enemy : enemies.values()) {
+            if (enemy instanceof Drownable) {
+                Drownable drownableEnemy = (Drownable) enemy;
+                waterInteractionManager.add(drownableEnemy);
+            }
+        }
 
-        this.hudViewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
-        this.hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
+        goal = worldCreator.getGoal();
+
+        hudViewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
+        hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
@@ -376,6 +385,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         if (itemDef.getType() == Mushroom.class) {
             Mushroom mushroom = new Mushroom(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
             items.put(mushroom.getId(), mushroom);
+            waterInteractionManager.add(mushroom);
         }
     }
 
@@ -455,6 +465,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             if (item.isRemovable()) {
                 item.dispose();
                 items.remove(item.getId());
+
+                if (item instanceof Drownable) {
+                    waterInteractionManager.remove((Drownable) item);
+                }
             }
         }
 
