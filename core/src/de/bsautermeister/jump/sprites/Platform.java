@@ -94,7 +94,7 @@ public class Platform extends Sprite implements BinarySerializable {
         shape.setAsBox(bounds.getWidth() / 2,
                 bounds.getHeight() / 2);
         fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = JumpGame.GROUND_BIT;
+        fixtureDef.filter.categoryBits = JumpGame.PLATFORM_BIT;
         fixtureDef.filter.maskBits = JumpGame.MARIO_BIT |
                 JumpGame.MARIO_FEET_BIT |
                 JumpGame.ENEMY_BIT |

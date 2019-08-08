@@ -45,6 +45,7 @@ public class WorldContactListener implements ContactListener {
                 enemy.reverseVelocity(true, false);
                 break;
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
+            case JumpGame.ENEMY_SIDE_BIT | JumpGame.PLATFORM_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
                 enemy.reverseVelocity(true, false);
                 break;
@@ -67,6 +68,7 @@ public class WorldContactListener implements ContactListener {
                 item.usedBy(mario);
                 break;
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
@@ -96,10 +98,12 @@ public class WorldContactListener implements ContactListener {
 
         Item item;
         Mario mario;
+        Platform platform;
         Enemy enemy;
         InteractiveTileObject tileObject;
         switch (collisionDef) {
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
@@ -117,6 +121,14 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
                 tileObject.itemSteppedOff(item.getId());
                 break;
+            case JumpGame.MARIO_BIT | JumpGame.PLATFORM_BIT:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
+                platform = (Platform) resolveUserData(fixtureA, fixtureB, JumpGame.PLATFORM_BIT);
+                if (!mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
+                    // TODO why is this overlap check required? Because endContact should not be called when they are still in contact
+                    mario.setLastJumpThroughPlatformId(null);
+                }
+                break;
         }
     }
 
@@ -128,6 +140,33 @@ public class WorldContactListener implements ContactListener {
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
         // TODO player does not collide with platform when he is moving upwards?
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+
+        int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
+
+        Mario mario;
+        Platform platform;
+        switch (collisionDef) {
+            case JumpGame.MARIO_BIT | JumpGame.PLATFORM_BIT:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
+                platform = (Platform) resolveUserData(fixtureA, fixtureB, JumpGame.PLATFORM_BIT);
+                if (mario.getBody().getLinearVelocity().y > 1e-4) {
+                    mario.setLastJumpThroughPlatformId(platform.getId());
+                    System.out.println("SET ID");
+                    contact.setEnabled(false);
+                } else if (mario.hasLastJumpThroughPlatformId()) {
+                    if (platform.getId().equals(mario.getLastJumpThroughPlatformId())) {
+                        contact.setEnabled(false);
+                        System.out.println("KEEP ID");
+                    } else {
+                        System.out.println("WRONG ID");
+                    }
+                } else {
+                    System.out.println("NO ID");
+                }
+                break;
+        }
     }
 
     @Override

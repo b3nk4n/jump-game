@@ -38,14 +38,16 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     public static final float INITAL_TTL = 200;
 
     private static final short NORMAL_FILTER_BITS = JumpGame.GROUND_BIT |
-    JumpGame.COIN_BIT |
-    JumpGame.BRICK_BIT |
-    JumpGame.ENEMY_BIT |
-    JumpGame.ENEMY_HEAD_BIT |
-    JumpGame.OBJECT_BIT |
-    JumpGame.ITEM_BIT;
+            JumpGame.PLATFORM_BIT |
+            JumpGame.COIN_BIT |
+            JumpGame.BRICK_BIT |
+            JumpGame.ENEMY_BIT |
+            JumpGame.ENEMY_HEAD_BIT |
+            JumpGame.OBJECT_BIT |
+            JumpGame.ITEM_BIT;
 
     private static final short NO_ENEMY_FILTER_BITS = JumpGame.GROUND_BIT |
+            JumpGame.PLATFORM_BIT |
             JumpGame.COIN_BIT |
             JumpGame.BRICK_BIT |
             JumpGame.OBJECT_BIT |
@@ -95,6 +97,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private float timeToLive;
 
     private boolean levelCompleted;
+
+    private String lastJumpThroughPlatformId;
 
     public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         this.callbacks = callbacks;
@@ -444,6 +448,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
+                JumpGame.PLATFORM_BIT |
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.OBJECT_BIT;
@@ -607,6 +612,18 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
         }*/
+    }
+
+    public String getLastJumpThroughPlatformId() {
+        return lastJumpThroughPlatformId;
+    }
+
+    public boolean hasLastJumpThroughPlatformId() {
+        return lastJumpThroughPlatformId != null;
+    }
+
+    public void setLastJumpThroughPlatformId(String lastJumpThroughPlatformId) {
+        this.lastJumpThroughPlatformId = lastJumpThroughPlatformId;
     }
 
     @Override

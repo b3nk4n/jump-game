@@ -27,6 +27,7 @@ public class JumpGame extends GameApp {
     public static final short ENEMY_SIDE_BIT = 2048;
     public static final short BLOCK_TOP_BIT = 4096;
     public static final short COLLIDER_BIT = 8192;
+    public static final short PLATFORM_BIT = 16384;
 
     private final static String SAVE_DAT_FILENAME = "save_game.dat";
 

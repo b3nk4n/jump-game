@@ -37,6 +37,7 @@ public class Mushroom extends Item implements Drownable {
         shape.setRadius(6 / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ITEM_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
+                JumpGame.PLATFORM_BIT |
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |

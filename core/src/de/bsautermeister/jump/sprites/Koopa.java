@@ -143,6 +143,7 @@ public class Koopa extends Enemy implements Drownable {
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
+                JumpGame.PLATFORM_BIT |
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
