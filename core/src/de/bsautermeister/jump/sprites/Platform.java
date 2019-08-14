@@ -32,7 +32,6 @@ public class Platform extends Sprite implements BinarySerializable {
     private GameCallbacks callbacks;
     private World world;
     private Body body;
-    private Vector2 currentVelocity;
     private Vector2 targetVelocity;
 
     private Array<PlatformBouncer> bouncerRegions;
@@ -60,7 +59,6 @@ public class Platform extends Sprite implements BinarySerializable {
         }
 
         this.body = defineBody();
-        this.currentVelocity = new Vector2();
         this.targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(SPEED);
         this.bouncerRegions = bouncerRegions;
         setActive(true); // sleep and activate as soon as player gets close
@@ -113,18 +111,24 @@ public class Platform extends Sprite implements BinarySerializable {
             }
         }
 
+        Vector2 currentVelocity = body.getLinearVelocity();
+
         if (!currentVelocity.equals(targetVelocity)) {
             currentVelocity.x += (targetVelocity.x - currentVelocity.x) * delta;
             currentVelocity.y += (targetVelocity.y - currentVelocity.y) * delta;
         }
 
-        body.setLinearVelocity(getCurrentVelocity());
+        body.setLinearVelocity(currentVelocity);
 
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
     }
 
     public void bounce(int angle) {
         targetVelocity = getDirectionOfSimpleAngle(angle).scl(SPEED);
+    }
+
+    public Vector2 getRelativeVelocityOf(Body otherBody) {
+        return otherBody.getLinearVelocity().sub(body.getLinearVelocity());
     }
 
     public String getId() {
@@ -143,10 +147,6 @@ public class Platform extends Sprite implements BinarySerializable {
         return body;
     }
 
-    public Vector2 getCurrentVelocity() {
-        return currentVelocity;
-    }
-
     public GameCallbacks getCallbacks() {
         return callbacks;
     }
@@ -158,8 +158,6 @@ public class Platform extends Sprite implements BinarySerializable {
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
-        out.writeFloat(currentVelocity.x);
-        out.writeFloat(currentVelocity.y);
         out.writeFloat(targetVelocity.x);
         out.writeFloat(targetVelocity.y);
     }
@@ -169,7 +167,6 @@ public class Platform extends Sprite implements BinarySerializable {
         id = in.readUTF();
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
-        currentVelocity.set(in.readFloat(), in.readFloat());
         targetVelocity.set(in.readFloat(), in.readFloat());
     }
 }

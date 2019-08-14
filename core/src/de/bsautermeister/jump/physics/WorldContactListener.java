@@ -139,7 +139,6 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        // TODO player does not collide with platform when he is moving upwards?
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
@@ -151,19 +150,15 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.MARIO_BIT | JumpGame.PLATFORM_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
                 platform = (Platform) resolveUserData(fixtureA, fixtureB, JumpGame.PLATFORM_BIT);
-                if (mario.getBody().getLinearVelocity().y > 1e-4) {
-                    mario.setLastJumpThroughPlatformId(platform.getId());
-                    System.out.println("SET ID");
-                    contact.setEnabled(false);
-                } else if (mario.hasLastJumpThroughPlatformId()) {
+
+                if (mario.hasLastJumpThroughPlatformId()) {
                     if (platform.getId().equals(mario.getLastJumpThroughPlatformId())) {
                         contact.setEnabled(false);
-                        System.out.println("KEEP ID");
-                    } else {
-                        System.out.println("WRONG ID");
                     }
-                } else {
-                    System.out.println("NO ID");
+                }
+                else if (mario.getVelocityRelativeToGround().y > 0.5) {
+                    mario.setLastJumpThroughPlatformId(platform.getId());
+                    contact.setEnabled(false);
                 }
                 break;
         }

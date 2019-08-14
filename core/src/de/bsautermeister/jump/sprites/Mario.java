@@ -260,7 +260,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             return;
         }
 
-        Vector2 relativeBodyVelocity = getRelativeBodyVelocity();
+        Vector2 relativeBodyVelocity = getVelocityRelativeToGround();
 
         state.unfreeze();
         isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
@@ -309,6 +309,16 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         } else if (!right && left) {
             runningRight = false;
         }
+    }
+
+    public Vector2 getVelocityRelativeToGround() {
+        Vector2 relativeBodyVelocity;
+        if (platformContact != null) {
+            relativeBodyVelocity = platformContact.getRelativeVelocityOf(body);
+        } else {
+            relativeBodyVelocity = body.getLinearVelocity();
+        }
+        return relativeBodyVelocity;
     }
 
     private TextureRegion getFrame() {
@@ -482,14 +492,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     public Body getBody() {
         return body;
-    }
-
-    private Vector2 getRelativeBodyVelocity() {
-        Vector2 relativeBodyVelocity = body.getLinearVelocity();
-        if (platformContact != null) {
-            relativeBodyVelocity.sub(platformContact.getCurrentVelocity());
-        }
-        return relativeBodyVelocity;
     }
 
     public boolean isBig() {
