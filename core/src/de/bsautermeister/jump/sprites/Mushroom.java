@@ -68,6 +68,8 @@ public class Mushroom extends Item implements Drownable {
             if (!drowning) {
                 velocity.y = getBody().getLinearVelocity().y;
                 getBody().setLinearVelocity(velocity);
+            } else {
+                getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
             }
         }
     }
@@ -80,8 +82,7 @@ public class Mushroom extends Item implements Drownable {
     @Override
     public void drown() {
         drowning = true;
-        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 8, getBody().getLinearVelocity().y / 12);
-        getBody().setGravityScale(0.05f);
+        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 10, getBody().getLinearVelocity().y / 10);
     }
 
     @Override

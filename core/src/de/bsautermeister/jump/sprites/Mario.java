@@ -187,8 +187,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             blockJumpTimer -= delta;
         }
 
-        System.out.println(blockJumpTimer);
-
         if (timeToLive <= 0) {
             timeToLive = 0;
             kill();
@@ -253,13 +251,16 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
                 angle.setHigh(190f);
             }
         }
+
+        if (isDrowning()) {
+            body.setLinearVelocity(body.getLinearVelocity().x * 0.95f, body.getLinearVelocity().y * 0.33f);
+        }
     }
 
     @Override
     public void drown() {
         state.set(State.DROWNING);
-        body.setLinearVelocity(body.getLinearVelocity().x / 8, body.getLinearVelocity().y / 12);
-        body.setGravityScale(0.05f);
+        body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
     }
 
     public void control(boolean up, boolean down, boolean left, boolean right) {
@@ -298,7 +299,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
                 // keep jumping state
                 return;
             } else {
-                System.out.println("walking");
                 state.set(State.WALKING);
                 state.freeze();
             }
@@ -306,7 +306,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             if (down && isBig) {
                 state.set(State.CROUCHING);
             } else if (Math.abs(relativeBodyVelocity.x) > 1e-4) {
-                System.out.println("walking 2"); // TODO <-- start walking when touching horizontal platform from bottom because of this
                 state.set(State.WALKING);
             } else {
                 state.set(State.STANDING);

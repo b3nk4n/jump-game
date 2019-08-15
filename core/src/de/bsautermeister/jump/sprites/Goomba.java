@@ -69,6 +69,10 @@ public class Goomba extends Enemy implements Drownable {
         if (state.is(State.STOMPED) && state.timer() > 1f) {
             markRemovable();
         }
+
+        if (isDrowning()) {
+            getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
+        }
     }
 
     private TextureRegion getFrame() {
@@ -182,8 +186,7 @@ public class Goomba extends Enemy implements Drownable {
     @Override
     public void drown() {
         drowning = true;
-        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 8, getBody().getLinearVelocity().y / 12);
-        getBody().setGravityScale(0.05f);
+        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 10, getBody().getLinearVelocity().y / 10);
     }
 
     @Override
