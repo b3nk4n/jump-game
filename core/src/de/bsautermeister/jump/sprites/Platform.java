@@ -89,8 +89,17 @@ public class Platform extends Sprite implements BinarySerializable {
         bodyDef.position.set((bounds.getX() + bounds.getWidth() / 2),
                 (bounds.getY() + bounds.getHeight() / 2));
         body = world.createBody(bodyDef);
-        shape.setAsBox(bounds.getWidth() / 2,
-                bounds.getHeight() / 2);
+        float cornerWidth = 3 / Cfg.PPM;
+        shape.set(new float[] {
+                -bounds.getWidth() / 2, bounds.getHeight() / 2 - cornerWidth,
+                -bounds.getWidth() / 2 + cornerWidth, bounds.getHeight() / 2,
+                bounds.getWidth() / 2 - cornerWidth, bounds.getHeight() / 2,
+                bounds.getWidth() / 2, bounds.getHeight() / 2 - cornerWidth,
+                bounds.getWidth() / 2, -bounds.getHeight() / 2 + cornerWidth,
+                bounds.getWidth() / 2 - cornerWidth, -bounds.getHeight() / 2,
+                -bounds.getWidth() / 2 + cornerWidth, -bounds.getHeight() / 2,
+                -bounds.getWidth() / 2, -bounds.getHeight() / 2 + cornerWidth,
+        });
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = JumpGame.PLATFORM_BIT;
         fixtureDef.filter.maskBits = JumpGame.MARIO_BIT |
