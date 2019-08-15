@@ -237,7 +237,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             }
         }
 
-        if (isTurning && touchesGround() && !isDead()) {
+        if (isTurning && touchesGround() && !isDead() && !state.is(State.JUMPING)) {
             slideEffect.setPosition(getX() + getWidth() / 2, getY());
             slideEffect.start();
 
