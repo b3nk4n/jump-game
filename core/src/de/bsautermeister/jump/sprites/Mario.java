@@ -59,7 +59,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private Platform platformContact;
     private int groundContactCounter;
-    private float jumpFixTimer;
+
+    private float blockJumpTimer;
 
     public enum State {
         STANDING, CROUCHING, JUMPING, WALKING, DROWNING, DEAD
@@ -180,7 +181,13 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         if (!levelCompleted) {
             timeToLive -= delta;
         }
-        jumpFixTimer -= delta;
+
+        if (Math.abs(getVelocityRelativeToGround().y) < 0.1) {
+            // unblock jump if standing still for a while
+            blockJumpTimer -= delta;
+        }
+
+        System.out.println(blockJumpTimer);
 
         if (timeToLive <= 0) {
             timeToLive = 0;
@@ -265,10 +272,10 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         state.unfreeze();
         isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
 
-        if (up && touchesGround() && !state.is(State.JUMPING)) {
+        if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0 ) {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
-            jumpFixTimer = 0.25f;
+            blockJumpTimer = 0.05f;
             callbacks.jump();
             return;
         }
@@ -287,17 +294,19 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         }
 
         if (!touchesGround()) {
-            if (jumpFixTimer > 0 || state.is(State.JUMPING)) {
+            if (blockJumpTimer > 0 || state.is(State.JUMPING)) {
                 // keep jumping state
                 return;
             } else {
+                System.out.println("walking");
                 state.set(State.WALKING);
                 state.freeze();
             }
-        } else if (jumpFixTimer < 0) {
+        } else if (blockJumpTimer < 0 /*touchesGround() && Math.abs(getVelocityRelativeToGround().y) < 0.1*/) {
             if (down && isBig) {
                 state.set(State.CROUCHING);
             } else if (Math.abs(relativeBodyVelocity.x) > 1e-4) {
+                System.out.println("walking 2"); // TODO <-- start walking when touching horizontal platform from bottom because of this
                 state.set(State.WALKING);
             } else {
                 state.set(State.STANDING);
@@ -635,7 +644,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
-        out.writeFloat(jumpFixTimer);
+        out.writeFloat(blockJumpTimer);
         state.write(out);
         out.writeBoolean(runningRight);
         out.writeBoolean(isTurning);
@@ -651,7 +660,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     public void read(DataInputStream in) throws IOException {
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
-        jumpFixTimer = in.readFloat();
+        blockJumpTimer = in.readFloat();
         state.read(in);
         runningRight = in.readBoolean();
         isTurning = in.readBoolean();
