@@ -281,17 +281,17 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             return;
         }
         if (right && body.getLinearVelocity().x <= 2 && !down) {
-            body.applyForce(new Vector2(8.0f, 0), body.getWorldCenter(), true);
+            body.applyForceToCenter(new Vector2(8.0f, 0), true);
         }
         if (left && body.getLinearVelocity().x >= -2 && !down) {
-            body.applyForce(new Vector2(-8.0f, 0), body.getWorldCenter(), true);
+            body.applyForceToCenter(new Vector2(-8.0f, 0), true);
         }
         if ((!left && ! right && state.is(State.JUMPING))) {
             // horizontally decelerate fast, but don't stop immediately
-            body.applyForce(new Vector2(-5 * relativeBodyVelocity.x, 0), body.getWorldCenter(), true);
+            body.applyForceToCenter(new Vector2(-5 * relativeBodyVelocity.x, 0), true);
         }
         if (down) {
-            body.applyForce(new Vector2(0f, -2f), body.getWorldCenter(), true);
+            body.applyForceToCenter(new Vector2(0f, -2f), true);
         }
 
         if (!touchesGround()) {

@@ -42,12 +42,12 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.ENEMY_BIT | JumpGame.OBJECT_BIT:
             case JumpGame.ENEMY_BIT | JumpGame.COLLIDER_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
-                enemy.reverseVelocity(true, false);
+                enemy.reverseDirection();
                 break;
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.PLATFORM_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
-                enemy.reverseVelocity(true, false);
+                enemy.reverseDirection();
                 break;
             case JumpGame.ENEMY_BIT: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());

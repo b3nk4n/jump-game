@@ -9,10 +9,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -60,7 +58,7 @@ public class Spiky extends Enemy implements Drownable {
 
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
-            getBody().setLinearVelocity(getVelocity());
+            getBody().setLinearVelocity(getVelocityX(), getBody().getLinearVelocity().y);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
@@ -82,9 +80,9 @@ public class Spiky extends Enemy implements Drownable {
                 break;
         }
 
-        if (getVelocity().x > 0 && !textureRegion.isFlipX()) {
+        if (getVelocityX() > 0 && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (getVelocity().x < 0 && textureRegion.isFlipX()) {
+        } else if (getVelocityX() < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -147,10 +145,10 @@ public class Spiky extends Enemy implements Drownable {
             if (otherKoopa.getState() == Koopa.State.MOVING_SHELL) {
                 kill(true);
             } else {
-                reverseVelocity(true, false);
+                reverseDirection();
             }
         } else {
-            reverseVelocity(true, false);
+            reverseDirection();
         }
     }
 

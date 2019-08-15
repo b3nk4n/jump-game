@@ -39,9 +39,11 @@ public class Koopa extends Enemy implements Drownable {
     private Animation<TextureRegion> walkAnimation;
     private Animation<TextureRegion> shellAnimation;
 
+    private static final float SPEED = 0.6f;
+
     public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
-        super(callbacks, world, posX, posY, 0.6f);
+        super(callbacks, world, posX, posY, SPEED);
         initTextures(atlas);
 
         state = new GameObjectState<State>(State.WALKING);
@@ -92,7 +94,7 @@ public class Koopa extends Enemy implements Drownable {
 
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
-            getBody().setLinearVelocity(getVelocity());
+            getBody().setLinearVelocity(getVelocityX(), getBody().getLinearVelocity().y);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
@@ -101,7 +103,7 @@ public class Koopa extends Enemy implements Drownable {
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
             state.set(State.WALKING);
-            getVelocity().x = 1;
+            setVelocityX(SPEED); // TODO direction incorrect?
         }
 
         if (isDrowning()) {
@@ -123,9 +125,9 @@ public class Koopa extends Enemy implements Drownable {
                 break;
         }
 
-        if (getVelocity().x > 0 && !textureRegion.isFlipX()) {
+        if (getVelocityX() > 0 && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (getVelocity().x < 0 && textureRegion.isFlipX()) {
+        } else if (getVelocityX() < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -206,7 +208,7 @@ public class Koopa extends Enemy implements Drownable {
 
     private void stomp() {
         state.set(State.STANDING_SHELL);
-        getVelocity().x = 0;
+        setVelocityX(0);
         getCallbacks().stomp(this);
     }
 
@@ -219,16 +221,16 @@ public class Koopa extends Enemy implements Drownable {
             } else if(state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.WALKING) {
                 return;
             } else {
-                reverseVelocity(true, false);
+                reverseDirection();
             }
         } else if (!state.is(State.MOVING_SHELL)) {
-            reverseVelocity(true, false);
+            reverseDirection();
         }
     }
 
     public void kick(boolean directionRight) {
         state.set(State.MOVING_SHELL);
-        getVelocity().x = directionRight ? KICK_SPEED : -KICK_SPEED;
+        setVelocityX(directionRight ? KICK_SPEED : -KICK_SPEED);
         getCallbacks().kicked(this);
     }
 

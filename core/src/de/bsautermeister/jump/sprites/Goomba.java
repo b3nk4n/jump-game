@@ -61,7 +61,7 @@ public class Goomba extends Enemy implements Drownable {
 
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
-            getBody().setLinearVelocity(getVelocity());
+            getBody().setLinearVelocity(getVelocityX(), getBody().getLinearVelocity().y);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
@@ -89,9 +89,9 @@ public class Goomba extends Enemy implements Drownable {
                 break;
         }
 
-        if (getVelocity().x > 0 && !textureRegion.isFlipX()) {
+        if (getVelocityX() > 0 && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (getVelocity().x < 0 && textureRegion.isFlipX()) {
+        } else if (getVelocityX() < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -110,6 +110,7 @@ public class Goomba extends Enemy implements Drownable {
         Body body = getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.friction = 0.8f;
         CircleShape shape = new CircleShape();
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
@@ -174,7 +175,7 @@ public class Goomba extends Enemy implements Drownable {
                 return;
             }
         }
-        reverseVelocity(true, false);
+        reverseDirection();
     }
 
     private void stomp() {

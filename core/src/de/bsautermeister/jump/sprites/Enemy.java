@@ -23,7 +23,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     private GameCallbacks callbacks;
     private World world;
     private Body body;
-    private Vector2 velocity;
+    private float velocityX;
 
     private boolean dead;
     private boolean removable;
@@ -36,7 +36,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         this.world = world;
         setPosition(posX, posY);
         this.body = defineBody();
-        this.velocity = new Vector2(-speed, -1);
+        this.velocityX = -speed;
         destroyBody = new MarkedAction();
         setActive(false); // sleep and activate as soon as player gets close
     }
@@ -92,13 +92,8 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
 
     public abstract void onEnemyHit(Enemy enemy);
 
-    public void reverseVelocity(boolean reverseX, boolean reverseY) {
-        if (reverseX) {
-            velocity.x = -velocity.x;
-        }
-        if (reverseY) {
-            velocity.y = -velocity.y;
-        }
+    public void reverseDirection() {
+        velocityX = -velocityX;
         callbacks.hitWall(this);
     }
 
@@ -118,8 +113,12 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         return body;
     }
 
-    public Vector2 getVelocity() {
-        return velocity;
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float value) {
+        velocityX = value;
     }
 
     public GameCallbacks getCallbacks() {
@@ -145,8 +144,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
-        out.writeFloat(velocity.x);
-        out.writeFloat(velocity.y);
+        out.writeFloat(velocityX);
         out.writeBoolean(dead);
         out.writeBoolean(removable);
         destroyBody.write(out);
@@ -157,7 +155,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         id = in.readUTF();
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
-        velocity.set(in.readFloat(), in.readFloat());
+        velocityX = in.readFloat();
         dead = in.readBoolean();
         removable = in.readBoolean();
         destroyBody.read(in);
