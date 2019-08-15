@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 
 public class Mushroom extends Item implements Drownable {
@@ -21,7 +22,7 @@ public class Mushroom extends Item implements Drownable {
 
     public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
         super(callbacks, world, x, y);
-        setRegion(atlas.findRegion("mushroom"), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
+        setRegion(atlas.findRegion(RegionNames.MUSHROOM), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
         velocity = new Vector2(0.6f, 0);
     }
 

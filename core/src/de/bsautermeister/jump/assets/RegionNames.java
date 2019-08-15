@@ -5,7 +5,10 @@ public interface RegionNames {
     String LITTLE_MARIO = "little_mario";
     String FIREBALL = "fireball";
     String GOOMBA = "goomba";
-    String TURTLE = "turle";
+    String KOOPA = "koopa";
+    String FLOWER = "flower";
+    String FISH = "fish";
+    String SPIKY = "spiky";
     String MUSHROOM = "mushroom";
     String SPINNING_COIN = "spin_coin";
     String BRICK_FRAGMENT = "brick_fragment";

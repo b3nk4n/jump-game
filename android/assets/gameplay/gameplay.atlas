@@ -13,7 +13,7 @@ big_mario
   index: -1
 brick_fragment
   rotate: false
-  xy: 40, 40
+  xy: 76, 40
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -23,6 +23,20 @@ fireball
   xy: 4, 24
   size: 32, 8
   orig: 32, 8
+  offset: 0, 0
+  index: -1
+fish
+  rotate: false
+  xy: 40, 24
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+flower
+  rotate: false
+  xy: 40, 44
+  size: 32, 24
+  orig: 32, 24
   offset: 0, 0
   index: -1
 goomba
@@ -48,7 +62,7 @@ little_mario
   index: -1
 mushroom
   rotate: false
-  xy: 40, 52
+  xy: 76, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -79,6 +93,13 @@ platform4
   xy: 4, 4
   size: 64, 16
   orig: 64, 16
+  offset: 0, 0
+  index: -1
+spiky
+  rotate: false
+  xy: 176, 4
+  size: 32, 16
+  orig: 32, 16
   offset: 0, 0
   index: -1
 spin_coin

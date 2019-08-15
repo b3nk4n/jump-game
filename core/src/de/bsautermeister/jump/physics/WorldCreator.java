@@ -27,6 +27,7 @@ import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.Spiky;
 
 public class WorldCreator {
 
@@ -40,6 +41,7 @@ public class WorldCreator {
     public static final String BRICKS_KEY = "bricks";
     public static final String GOOMBAS_KEY = "goombas";
     public static final String KOOPAS_KEY = "koopas";
+    public static final String SPIKIES_KEY = "spikies";
     public static final String COLLIDER_KEY = "collider";
     public static final String WATER_KEY = "water";
     public static final String GOAL_KEY = "goal";
@@ -133,6 +135,14 @@ public class WorldCreator {
             for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 enemies.add(new Koopa(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+            }
+        }
+
+        if (hasLayer(map, SPIKIES_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(SPIKIES_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                enemies.add(new Spiky(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
             }
         }

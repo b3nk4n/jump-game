@@ -23,6 +23,7 @@ import java.io.IOException;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 
 public class Koopa extends Enemy implements Drownable {
@@ -40,7 +41,7 @@ public class Koopa extends Enemy implements Drownable {
 
     public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
-        super(callbacks, world, posX, posY);
+        super(callbacks, world, posX, posY, 0.6f);
         initTextures(atlas);
 
         state = new GameObjectState<State>(State.WALKING);
@@ -74,13 +75,13 @@ public class Koopa extends Enemy implements Drownable {
     private void initTextures(TextureAtlas atlas) {
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
+            frames.add(new TextureRegion(atlas.findRegion(RegionNames.KOOPA), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
         }
         walkAnimation = new Animation(0.2f, frames);
 
         frames.clear();
         for (int i = 4; i < 6; i++) {
-            frames.add(new TextureRegion(atlas.findRegion("koopa"), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
+            frames.add(new TextureRegion(atlas.findRegion(RegionNames.KOOPA), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
         }
         shellAnimation = new Animation(0.4f, frames);
     }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -25,34 +26,32 @@ import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 
-public class Goomba extends Enemy implements Drownable {
+public class Spiky extends Enemy implements Drownable {
     public enum State {
-        WALKING, STOMPED
+        WALKING
     }
 
     private GameObjectState<State> state;
     private boolean drowning;
 
     private Animation<TextureRegion> walkAnimation;
-    private TextureRegion stompedTexture;
 
-    public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
-                  float posX, float posY) {
-        super(callbacks, world, posX, posY, 0.8f);
+    public Spiky(GameCallbacks callbacks, World world, TextureAtlas atlas,
+                 float posX, float posY) {
+        super(callbacks, world, posX, posY, 0.4f);
         initTextures(atlas);
 
-        this.state = new GameObjectState<State>(State.WALKING);
+        state = new GameObjectState<State>(State.WALKING);
+
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
     private void initTextures(TextureAtlas atlas) {
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion(RegionNames.GOOMBA), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
+            frames.add(new TextureRegion(atlas.findRegion(RegionNames.SPIKY), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
         }
-        walkAnimation = new Animation(0.4f, frames);
-
-        stompedTexture = new TextureRegion(atlas.findRegion(RegionNames.GOOMBA), 2 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
+        walkAnimation = new Animation(0.2f, frames);
     }
 
     @Override
@@ -64,12 +63,9 @@ public class Goomba extends Enemy implements Drownable {
             getBody().setLinearVelocity(getVelocity());
         }
 
-        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
+        setPosition(getBody().getPosition().x - getWidth() / 2,
+                getBody().getPosition().y - 7 / Cfg.PPM);
         setRegion(getFrame());
-
-        if (state.is(State.STOMPED) && state.timer() > 1f) {
-            markRemovable();
-        }
 
         if (isDrowning()) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
@@ -80,9 +76,6 @@ public class Goomba extends Enemy implements Drownable {
         TextureRegion textureRegion;
 
         switch (state.current()) {
-            case STOMPED:
-                textureRegion = stompedTexture;
-                break;
             case WALKING:
             default:
                 textureRegion = walkAnimation.getKeyFrame(state.timer(), true);
@@ -127,21 +120,6 @@ public class Goomba extends Enemy implements Drownable {
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 
-        // head
-        PolygonShape headShape = new PolygonShape();
-        Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-4, 9).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(4, 9).scl(1 / Cfg.PPM);
-        vertices[2] = new Vector2(-3, 3).scl(1 / Cfg.PPM);
-        vertices[3] = new Vector2(3, 3).scl(1 / Cfg.PPM);
-        headShape.set(vertices);
-
-        fixtureDef.shape = headShape;
-        fixtureDef.restitution = 1.0f;
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_HEAD_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
-        body.createFixture(fixtureDef).setUserData(this);
-
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
@@ -153,35 +131,31 @@ public class Goomba extends Enemy implements Drownable {
         sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(this);
+
         return body;
     }
 
     @Override
     public void onHeadHit(Mario mario) {
-        if (mario.isDead() || mario.isInvincible()) {
-            return;
-        }
-
-        stomp();
+        // NOOP
     }
 
     @Override
     public void onEnemyHit(Enemy enemy) {
         if (enemy instanceof Koopa) {
-            Koopa koopa = (Koopa) enemy;
-            if (koopa.getState() == Koopa.State.MOVING_SHELL) {
+            Koopa otherKoopa = (Koopa) enemy;
+            if (otherKoopa.getState() == Koopa.State.MOVING_SHELL) {
                 kill(true);
-                return;
+            } else {
+                reverseVelocity(true, false);
             }
+        } else {
+            reverseVelocity(true, false);
         }
-        reverseVelocity(true, false);
     }
 
-    private void stomp() {
-        getCallbacks().stomp(this);
-
-        state.set(State.STOMPED);
-        markDestroyBody();
+    public State getState() {
+        return state.current();
     }
 
     @Override
