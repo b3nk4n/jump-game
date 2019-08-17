@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Mario;
@@ -86,6 +87,12 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
                 tileObject.itemSteppedOn(item.getId());
                 break;
+            case JumpGame.MARIO_BIT | JumpGame.ENEMY_SIDE_BIT:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
+                if (enemy instanceof Flower) {
+                    Flower flower = (Flower) enemy;
+                    flower.setBlocked(true);
+                }
         }
     }
 
@@ -129,6 +136,12 @@ public class WorldContactListener implements ContactListener {
                     mario.setLastJumpThroughPlatformId(null);
                 }
                 break;
+            case JumpGame.MARIO_BIT | JumpGame.ENEMY_SIDE_BIT:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
+                if (enemy instanceof Flower) {
+                    Flower flower = (Flower) enemy;
+                    flower.setBlocked(false);
+                }
         }
     }
 

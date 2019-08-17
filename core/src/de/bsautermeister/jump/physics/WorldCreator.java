@@ -23,6 +23,7 @@ import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Koopa;
@@ -42,6 +43,7 @@ public class WorldCreator {
     public static final String GOOMBAS_KEY = "goombas";
     public static final String KOOPAS_KEY = "koopas";
     public static final String SPIKIES_KEY = "spikies";
+    public static final String FLOWERS_KEY = "flowers";
     public static final String COLLIDER_KEY = "collider";
     public static final String WATER_KEY = "water";
     public static final String GOAL_KEY = "goal";
@@ -130,7 +132,6 @@ public class WorldCreator {
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
             }
         }
-
         if (hasLayer(map, KOOPAS_KEY)) {
             for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
@@ -138,11 +139,17 @@ public class WorldCreator {
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
             }
         }
-
         if (hasLayer(map, SPIKIES_KEY)) {
             for (MapObject mapObject : map.getLayers().get(SPIKIES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 enemies.add(new Spiky(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+            }
+        }
+        if (hasLayer(map, FLOWERS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(FLOWERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                enemies.add(new Flower(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
             }
         }

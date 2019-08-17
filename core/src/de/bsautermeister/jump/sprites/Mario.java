@@ -43,6 +43,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             JumpGame.BRICK_BIT |
             JumpGame.ENEMY_BIT |
             JumpGame.ENEMY_HEAD_BIT |
+            JumpGame.ENEMY_SIDE_BIT |
             JumpGame.OBJECT_BIT |
             JumpGame.ITEM_BIT;
 
@@ -50,6 +51,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             JumpGame.PLATFORM_BIT |
             JumpGame.COIN_BIT |
             JumpGame.BRICK_BIT |
+            JumpGame.ENEMY_SIDE_BIT | // to still block the Flower
             JumpGame.OBJECT_BIT |
             JumpGame.ITEM_BIT;
 

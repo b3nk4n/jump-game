@@ -105,6 +105,10 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         body.setActive(active);
     }
 
+    public boolean isActive() {
+        return body.isActive();
+    }
+
     public World getWorld() {
         return world;
     }

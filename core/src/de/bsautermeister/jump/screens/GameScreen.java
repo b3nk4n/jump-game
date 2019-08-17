@@ -51,6 +51,7 @@ import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
@@ -628,6 +629,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             item.draw(batch);
         }
 
+        for (Enemy enemy : enemies.values()) {
+            if (enemy instanceof Flower) {
+                enemy.draw(batch);
+            }
+        }
+
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
 
         for (Platform platform : platforms) {
@@ -635,7 +642,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         for (Enemy enemy : enemies.values()) {
-            enemy.draw(batch);
+            if (!(enemy instanceof Flower)) {
+                enemy.draw(batch);
+            }
         }
         mario.draw(batch);
 
