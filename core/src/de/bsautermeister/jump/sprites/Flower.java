@@ -24,8 +24,8 @@ import de.bsautermeister.jump.assets.RegionNames;
 
 public class Flower extends Enemy {
     private static final float MOVE_SPEED = 0.25f;
-    private static final float HIDDEN_TIME = 3f;
-    private static final float WAIT_TIME = 2f;
+    private static final float HIDDEN_TIME = 2f;
+    private static final float WAIT_TIME = 1.5f;
 
     public enum State {
         HIDDEN, MOVE_UP, WAITING, MOVE_DOWN
@@ -132,12 +132,20 @@ public class Flower extends Enemy {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeFloat(hiddenTargetY);
+        out.writeFloat(waitingTargetY);
+        out.writeBoolean(blocked);
+        out.writeFloat(gameTime);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        hiddenTargetY = in.readFloat();
+        waitingTargetY = in.readFloat();
+        blocked = in.readBoolean();
+        gameTime = in.readFloat();
     }
 
     public boolean isBlocked() {
