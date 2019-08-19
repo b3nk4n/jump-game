@@ -640,7 +640,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     @Override
     public void write(DataOutputStream out) throws IOException {
-
         out.writeFloat(body.getPosition().x);
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
@@ -655,6 +654,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
         out.writeBoolean(levelCompleted);
+        out.writeUTF(lastJumpThroughPlatformId);
     }
 
     @Override
@@ -671,6 +671,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();
         levelCompleted = in.readBoolean();
+        lastJumpThroughPlatformId = in.readUTF();
 
         // this is just a lazy workaround, that is needed because we generally create a small mario by default
         if (isBig) {

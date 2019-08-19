@@ -179,11 +179,13 @@ public class Spiky extends Enemy implements Drownable {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeBoolean(drowning);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        drowning = in.readBoolean();
     }
 }

@@ -36,7 +36,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         this.world = world;
         setPosition(posX, posY);
         this.body = defineBody();
-        this.velocityX = -speed;
+        this.velocityX = -speed; // TODO move to subclass, because not used by all classes
         destroyBody = new MarkedAction();
         setActive(false); // sleep and activate as soon as player gets close
     }

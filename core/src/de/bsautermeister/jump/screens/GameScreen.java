@@ -60,6 +60,7 @@ import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.Spiky;
 import de.bsautermeister.jump.sprites.SpinningCoin;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
@@ -769,6 +770,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 enemy = new Goomba(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Koopa.class.getName())) {
                 enemy = new Koopa(callbacks, world, atlas, 0, 0);
+            } else if (enemyType.equals(Spiky.class.getName())) {
+                enemy = new Spiky(callbacks, world, atlas, 0, 0);
+            } else if (enemyType.equals(Flower.class.getName())) {
+                enemy = new Flower(callbacks, world, atlas, 0, 0);
             } else {
                 throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
             }
