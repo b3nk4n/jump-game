@@ -109,4 +109,12 @@ public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
         frozen = in.readBoolean();
     }
 
+    @Override
+    public String toString() {
+        return "GameObjectState{" +
+                "current=" + current +
+                ", stateTimer=" + stateTimer +
+                ", frozen=" + frozen +
+                '}';
+    }
 }

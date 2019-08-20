@@ -44,8 +44,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     protected abstract Body defineBody();
 
     public void update(float delta) {
-        boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE / Cfg.PPM;
-        if (outOfBounds) {
+        if (isOutOfBounds()) {
             markRemovable();
         }
 
@@ -82,6 +81,10 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
             getBody().setLinearVelocity(getBody().getLinearVelocity().x / 2, 0);
             getBody().applyLinearImpulse(new Vector2(0, 3f), getBody().getWorldCenter(), true);
         }
+    }
+
+    protected boolean isOutOfBounds() {
+        return getBody().getPosition().y < - 2 * Cfg.BLOCK_SIZE / Cfg.PPM;
     }
 
     public void markDestroyBody() {

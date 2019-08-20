@@ -46,7 +46,7 @@ public class WaterInteractionManager {
     }
 
     private void doDrown(Drownable drownable) {
-        if (!drownable.isDead() && !drownable.isDrowning()) {
+        if (!drownable.isDead() && !drownable.isDrowning() && drownable.getLinearVelocity().y < -0.5f) {
             Vector2 center = drownable.getWorldCenter();
             splashEffect.setPosition(center.x, center.y);
             splashEffect.start();

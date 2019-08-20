@@ -51,6 +51,7 @@ import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
@@ -456,6 +457,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             enemy.postUpdate();
 
             if (enemy.isRemovable()) {
+                LOG.debug("Remove: " + enemy);
                 enemy.dispose();
                 enemies.remove(enemy.getId());
             }
@@ -774,6 +776,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 enemy = new Spiky(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Flower.class.getName())) {
                 enemy = new Flower(callbacks, world, atlas, 0, 0);
+            } else if (enemyType.equals(Fish.class.getName())) {
+                enemy = new Fish(callbacks, world, atlas, 0, 0);
             } else {
                 throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
             }

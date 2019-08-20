@@ -98,4 +98,9 @@ public class Mushroom extends Item implements Drownable {
         outCenter.set(rect.x + rect.width / 2, rect.y + rect.height / 2);
         return outCenter;
     }
+
+    @Override
+    public Vector2 getLinearVelocity() {
+        return getBody().getLinearVelocity();
+    }
 }

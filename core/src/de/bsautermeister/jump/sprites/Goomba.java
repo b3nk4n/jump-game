@@ -205,6 +205,11 @@ public class Goomba extends Enemy implements Drownable {
     }
 
     @Override
+    public Vector2 getLinearVelocity() {
+        return getBody().getLinearVelocity();
+    }
+
+    @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);

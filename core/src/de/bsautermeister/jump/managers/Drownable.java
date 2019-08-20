@@ -12,4 +12,6 @@ public interface Drownable {
     boolean isDead();
 
     Vector2 getWorldCenter();
+
+    Vector2 getLinearVelocity();
 }

@@ -522,6 +522,11 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     @Override
+    public Vector2 getLinearVelocity() {
+        return body.getLinearVelocity();
+    }
+
+    @Override
     public boolean isDrowning() {
         return state.is(State.DROWNING);
     }
@@ -654,7 +659,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
         out.writeBoolean(levelCompleted);
-        out.writeUTF(lastJumpThroughPlatformId);
+        out.writeUTF(lastJumpThroughPlatformId != null ? lastJumpThroughPlatformId : "null");
     }
 
     @Override
@@ -672,6 +677,9 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         timeToLive = in.readFloat();
         levelCompleted = in.readBoolean();
         lastJumpThroughPlatformId = in.readUTF();
+        if (lastJumpThroughPlatformId.equals("null")) {
+            lastJumpThroughPlatformId = null;
+        }
 
         // this is just a lazy workaround, that is needed because we generally create a small mario by default
         if (isBig) {

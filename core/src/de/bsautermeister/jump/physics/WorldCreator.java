@@ -23,6 +23,7 @@ import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
@@ -44,6 +45,7 @@ public class WorldCreator {
     public static final String KOOPAS_KEY = "koopas";
     public static final String SPIKIES_KEY = "spikies";
     public static final String FLOWERS_KEY = "flowers";
+    public static final String FISHES_KEY = "fishes";
     public static final String COLLIDER_KEY = "collider";
     public static final String WATER_KEY = "water";
     public static final String GOAL_KEY = "goal";
@@ -150,6 +152,13 @@ public class WorldCreator {
             for (MapObject mapObject : map.getLayers().get(FLOWERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 enemies.add(new Flower(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+            }
+        }
+        if (hasLayer(map, FISHES_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(FISHES_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                enemies.add(new Fish(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
             }
         }
