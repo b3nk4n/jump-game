@@ -158,8 +158,15 @@ public class WorldCreator {
         if (hasLayer(map, FISHES_KEY)) {
             for (MapObject mapObject : map.getLayers().get(FISHES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                enemies.add(new Fish(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+                Float startDelay = (Float) mapObject.getProperties().get("start_delay");
+                Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
+                Float velocityFactor = (Float) mapObject.getProperties().get("velocity_factor");
+                String group = (String) mapObject.getProperties().get("group"); // TODO set group to wake up all fishes of the same group at the same time. Or even generally for all enemies?
+                Fish fish = new Fish(callbacks, world, atlas, rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                fish.setStartDelay(startDelay != null ? startDelay : 0f);
+                fish.setStartAngle(startAngle != null ? startAngle : 90);
+                fish.setVelocityFactor(velocityFactor != null ? velocityFactor : 1f);
+                enemies.add(fish);
             }
         }
         return enemies;

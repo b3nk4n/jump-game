@@ -24,7 +24,8 @@ import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 
 public class Fish extends Enemy implements Drownable {
-    public static final float WAIT_TIME = 3f;
+    private static final float WAIT_TIME = 3f;
+    private static final float JUMP_POWER = 3f;
 
     public enum State {
         WAITING, JUMPING, DROWNING
@@ -36,6 +37,8 @@ public class Fish extends Enemy implements Drownable {
 
     private float startCenterX;
     private float startCenterY;
+    private float startDelay;
+    private Vector2 startVector = new Vector2(0, JUMP_POWER);
 
     public Fish(GameCallbacks callbacks, World world, TextureAtlas atlas,
                 float posX, float posY) {
@@ -70,14 +73,29 @@ public class Fish extends Enemy implements Drownable {
         setPosition(getBody().getPosition().x - getWidth() / 2,
                 getBody().getPosition().y - getHeight() / 2);
         setRegion(animation.getKeyFrame(state.timer()));
-        setRotation((getBody().getLinearVelocity().angle() - 180f) / 4f);
-        System.out.println(state);
+        float angle = getBody().getLinearVelocity().angle();
+        if (startVector.x < 0) {
+            setRotation((angle - 180f) / 4f);
+        } else  {
+            setFlip(true, false);
+            if (angle >= 180) {
+                angle -= 360;
+            }
+            setRotation(angle / 4f);
+        }
+
+        startDelay -= delta;
+        if (startDelay > 0) {
+            getBody().setTransform(startCenterX, startCenterY, 0);
+            return;
+        }
+
         if (state.is(State.WAITING)) {
             getBody().setTransform(startCenterX, startCenterY, 0);
 
             if (state.timer() > WAIT_TIME) {
                 state.set(State.JUMPING);
-                getBody().setLinearVelocity(new Vector2(-0.1f, 1f).setLength(3f));
+                getBody().setLinearVelocity(startVector);
             }
         } else if (state.is(State.JUMPING) || state.is(State.DROWNING)) {
             if (isAlmostOutOfBounds()) {
@@ -121,6 +139,18 @@ public class Fish extends Enemy implements Drownable {
         // NOOP
     }
 
+    public void setStartDelay(float delay) {
+        startDelay = delay;
+    }
+
+    public void setStartAngle(int degrees) {
+        startVector.setAngle(degrees);
+    }
+
+    public void setVelocityFactor(float velocityFactor) {
+        startVector.setLength(velocityFactor * JUMP_POWER);
+    }
+
     @Override
     public void drown() {
         getBody().setLinearVelocity(getBody().getLinearVelocity().x / 10, getBody().getLinearVelocity().y / 10);
@@ -148,11 +178,20 @@ public class Fish extends Enemy implements Drownable {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeFloat(startCenterX);
+        out.writeFloat(startCenterY);
+        out.writeFloat(startVector.x);
+        out.writeFloat(startVector.y);
+        out.writeFloat(startDelay);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        startCenterX = in.readFloat();
+        startCenterY = in.readFloat();
+        startVector.set(in.readFloat(), in.readFloat());
+        startDelay = in.readFloat();
     }
 }
