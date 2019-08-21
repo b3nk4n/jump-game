@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,15 +31,17 @@ public class Spiky extends Enemy implements Drownable {
     private GameObjectState<State> state;
     private boolean drowning;
 
+    private float speed;
+
     private final Animation<TextureRegion> walkAnimation;
 
     public Spiky(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
-        super(callbacks, world, posX, posY, 0.4f);
+        super(callbacks, world, posX, posY);
         walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.SPIKY), Animation.PlayMode.LOOP);
 
         state = new GameObjectState<State>(State.WALKING);
-
+        speed = -0.4f;
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
@@ -50,7 +51,7 @@ public class Spiky extends Enemy implements Drownable {
 
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
-            getBody().setLinearVelocity(getVelocityX(), getBody().getLinearVelocity().y);
+            getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
@@ -72,9 +73,9 @@ public class Spiky extends Enemy implements Drownable {
                 break;
         }
 
-        if (getVelocityX() > 0 && !textureRegion.isFlipX()) {
+        if (speed > 0 && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (getVelocityX() < 0 && textureRegion.isFlipX()) {
+        } else if (speed < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -144,6 +145,11 @@ public class Spiky extends Enemy implements Drownable {
         }
     }
 
+    public void reverseDirection() {
+        speed = -speed;
+        getCallbacks().hitWall(this);
+    }
+
     public State getState() {
         return state.current();
     }
@@ -176,6 +182,7 @@ public class Spiky extends Enemy implements Drownable {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeFloat(speed);
         out.writeBoolean(drowning);
     }
 
@@ -183,6 +190,7 @@ public class Spiky extends Enemy implements Drownable {
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        speed = in.readFloat();
         drowning = in.readBoolean();
     }
 }

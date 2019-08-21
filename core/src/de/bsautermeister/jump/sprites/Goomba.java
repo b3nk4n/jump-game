@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -32,17 +31,19 @@ public class Goomba extends Enemy implements Drownable {
 
     private GameObjectState<State> state;
     private boolean drowning;
+    private float speed;
 
     private final Animation<TextureRegion> walkAnimation;
     private final TextureRegion stompedTexture;
 
     public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
-        super(callbacks, world, posX, posY, 0.8f);
+        super(callbacks, world, posX, posY);
         walkAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.GOOMBA), Animation.PlayMode.LOOP);
         stompedTexture = atlas.findRegion(RegionNames.GOOMBA_STOMP);
 
-        this.state = new GameObjectState<State>(State.WALKING);
+        state = new GameObjectState<State>(State.WALKING);
+        speed = -0.8f;
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
@@ -52,7 +53,7 @@ public class Goomba extends Enemy implements Drownable {
 
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
-            getBody().setLinearVelocity(getVelocityX(), getBody().getLinearVelocity().y);
+            getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
@@ -80,9 +81,9 @@ public class Goomba extends Enemy implements Drownable {
                 break;
         }
 
-        if (getVelocityX() > 0 && !textureRegion.isFlipX()) {
+        if (speed > 0 && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (getVelocityX() < 0 && textureRegion.isFlipX()) {
+        } else if (speed < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -169,6 +170,11 @@ public class Goomba extends Enemy implements Drownable {
         reverseDirection();
     }
 
+    public void reverseDirection() {
+        speed = -speed;
+        getCallbacks().hitWall(this);
+    }
+
     private void stomp() {
         getCallbacks().stomp(this);
 
@@ -204,11 +210,13 @@ public class Goomba extends Enemy implements Drownable {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeFloat(speed);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        speed = in.readFloat();
     }
 }

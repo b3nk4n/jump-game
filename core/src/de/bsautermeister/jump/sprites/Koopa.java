@@ -14,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -35,17 +34,18 @@ public class Koopa extends Enemy implements Drownable {
 
     private GameObjectState<State> state;
     private boolean drowning;
+    private float speed;
 
     private final Animation<TextureRegion> walkAnimation;
     private final Animation<TextureRegion> shellAnimation;
 
-    private static final float SPEED = 0.6f;
+    private static final float SPEED_VALUE = 0.6f;
 
     private boolean previousDirectionLeft;
 
     public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
-        super(callbacks, world, posX, posY, SPEED);
+        super(callbacks, world, posX, posY);
         walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.KOOPA), Animation.PlayMode.LOOP);
         shellAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.KOOPA_MOVING), Animation.PlayMode.LOOP);
 
@@ -73,6 +73,7 @@ public class Koopa extends Enemy implements Drownable {
                 getBody().getFixtureList().get(0).setFilterData(filter);
             }
         });
+        speed = -SPEED_VALUE;
 
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
     }
@@ -83,7 +84,7 @@ public class Koopa extends Enemy implements Drownable {
 
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
-            getBody().setLinearVelocity(getVelocityX(), getBody().getLinearVelocity().y);
+            getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
@@ -92,7 +93,7 @@ public class Koopa extends Enemy implements Drownable {
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
             state.set(State.WALKING);
-            setVelocityX(previousDirectionLeft ? -SPEED : SPEED);
+            speed = previousDirectionLeft ? -SPEED_VALUE : SPEED_VALUE;
         }
 
         if (isDrowning()) {
@@ -114,9 +115,9 @@ public class Koopa extends Enemy implements Drownable {
                 break;
         }
 
-        if (getVelocityX() > 0 && !textureRegion.isFlipX()) {
+        if (speed > 0 && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (getVelocityX() < 0 && textureRegion.isFlipX()) {
+        } else if (speed < 0 && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -197,8 +198,8 @@ public class Koopa extends Enemy implements Drownable {
 
     private void stomp() {
         state.set(State.STANDING_SHELL);
-        previousDirectionLeft = getVelocityX() <= 0;
-        setVelocityX(0);
+        previousDirectionLeft = speed <= 0;
+        speed = 0;
         getCallbacks().stomp(this);
     }
 
@@ -218,9 +219,14 @@ public class Koopa extends Enemy implements Drownable {
         }
     }
 
+    public void reverseDirection() {
+        speed = -speed;
+        getCallbacks().hitWall(this);
+    }
+
     public void kick(boolean directionRight) {
         state.set(State.MOVING_SHELL);
-        setVelocityX(directionRight ? KICK_SPEED : -KICK_SPEED);
+        speed = directionRight ? KICK_SPEED : -KICK_SPEED;
         getCallbacks().kicked(this);
     }
 
@@ -256,6 +262,7 @@ public class Koopa extends Enemy implements Drownable {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeFloat(speed);
         out.writeBoolean(previousDirectionLeft);
     }
 
@@ -263,6 +270,7 @@ public class Koopa extends Enemy implements Drownable {
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        speed = in.readFloat();
         previousDirectionLeft = in.readBoolean();
     }
 }

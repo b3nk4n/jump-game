@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -42,7 +41,7 @@ public class Fish extends Enemy implements Drownable {
 
     public Fish(GameCallbacks callbacks, World world, TextureAtlas atlas,
                 float posX, float posY) {
-        super(callbacks, world, posX, 0f, 0f);
+        super(callbacks, world, posX, 0f);
         animation = new Animation(0.25f, atlas.findRegions(RegionNames.FISH), Animation.PlayMode.LOOP);
         state = new GameObjectState<State>(State.WAITING);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);

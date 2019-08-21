@@ -28,20 +28,18 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     private GameCallbacks callbacks;
     private World world;
     private Body body;
-    private float velocityX;
 
     private boolean dead;
     private boolean removable;
 
     private MarkedAction destroyBody;
 
-    public Enemy(GameCallbacks callbacks, World world, float posX, float posY, float speed) {
+    public Enemy(GameCallbacks callbacks, World world, float posX, float posY) {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
         setPosition(posX, posY);
         this.body = defineBody();
-        this.velocityX = -speed; // TODO move to subclass, because not used by all classes
         destroyBody = new MarkedAction();
         setActive(false); // sleep and activate as soon as player gets close
     }
@@ -100,11 +98,6 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
 
     public abstract void onEnemyHit(Enemy enemy);
 
-    public void reverseDirection() {
-        velocityX = -velocityX;
-        callbacks.hitWall(this);
-    }
-
     public String getId() {
         return id;
     }
@@ -123,14 +116,6 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
 
     public Body getBody() {
         return body;
-    }
-
-    public float getVelocityX() {
-        return velocityX;
-    }
-
-    public void setVelocityX(float value) {
-        velocityX = value;
     }
 
     public GameCallbacks getCallbacks() {
@@ -169,7 +154,6 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
-        out.writeFloat(velocityX);
         out.writeBoolean(dead);
         out.writeBoolean(removable);
         destroyBody.write(out);
@@ -184,7 +168,6 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         }
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
-        velocityX = in.readFloat();
         dead = in.readBoolean();
         removable = in.readBoolean();
         destroyBody.read(in);

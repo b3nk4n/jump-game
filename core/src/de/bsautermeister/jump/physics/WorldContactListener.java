@@ -9,10 +9,13 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Flower;
+import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
+import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.Spiky;
 
 public class WorldContactListener implements ContactListener {
 
@@ -43,12 +46,26 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.ENEMY_BIT | JumpGame.OBJECT_BIT:
             case JumpGame.ENEMY_BIT | JumpGame.COLLIDER_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
-                enemy.reverseDirection();
+                if (enemy instanceof Goomba) {
+                    ((Goomba) enemy).reverseDirection();
+                } else if (enemy instanceof Koopa) {
+                    ((Koopa) enemy).reverseDirection();
+                } else if (enemy instanceof Spiky) {
+                    ((Spiky) enemy).reverseDirection();
+                }
+                // TODO remove this and use ENEMY_SIDE_BIT bor OBJECT and COLLIDER as well?
+
                 break;
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.PLATFORM_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
-                enemy.reverseDirection();
+                if (enemy instanceof Goomba) {
+                    ((Goomba) enemy).reverseDirection();
+                } else if (enemy instanceof Koopa) {
+                    ((Koopa) enemy).reverseDirection();
+                } else if (enemy instanceof Spiky) {
+                    ((Spiky) enemy).reverseDirection();
+                }
                 break;
             case JumpGame.ENEMY_BIT: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());

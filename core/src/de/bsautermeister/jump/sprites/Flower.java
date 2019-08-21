@@ -42,7 +42,7 @@ public class Flower extends Enemy {
 
     public Flower(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
-        super(callbacks, world, posX, posY, 0f);
+        super(callbacks, world, posX, posY);
         animation = new Animation(0.33f, atlas.findRegions(RegionNames.FLOWER), Animation.PlayMode.LOOP);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         state = new GameObjectState<State>(State.HIDDEN);
