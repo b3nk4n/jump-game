@@ -32,24 +32,16 @@ public class Spiky extends Enemy implements Drownable {
     private GameObjectState<State> state;
     private boolean drowning;
 
-    private Animation<TextureRegion> walkAnimation;
+    private final Animation<TextureRegion> walkAnimation;
 
     public Spiky(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
         super(callbacks, world, posX, posY, 0.4f);
-        initTextures(atlas);
+        walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.SPIKY), Animation.PlayMode.LOOP);
 
         state = new GameObjectState<State>(State.WALKING);
 
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-    }
-
-    private void initTextures(TextureAtlas atlas) {
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion(RegionNames.SPIKY), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
-        }
-        walkAnimation = new Animation(0.2f, frames);
     }
 
     @Override

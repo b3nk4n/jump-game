@@ -33,7 +33,7 @@ public class Fish extends Enemy implements Drownable {
 
     private GameObjectState<State> state;
 
-    private Animation<TextureRegion> animation;
+    private final Animation<TextureRegion> animation;
 
     private float startCenterX;
     private float startCenterY;
@@ -43,21 +43,13 @@ public class Fish extends Enemy implements Drownable {
     public Fish(GameCallbacks callbacks, World world, TextureAtlas atlas,
                 float posX, float posY) {
         super(callbacks, world, posX, 0f, 0f);
-        initTextures(atlas);
+        animation = new Animation(0.25f, atlas.findRegions(RegionNames.FISH), Animation.PlayMode.LOOP);
         state = new GameObjectState<State>(State.WAITING);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         setRegion(animation.getKeyFrame(state.timer()));
         setOriginCenter();
         startCenterX = getX() + getWidth() / 2;
         startCenterY = getY() - getHeight() / 2;
-    }
-
-    private void initTextures(TextureAtlas atlas) {
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion(RegionNames.FISH), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
-        }
-        animation = new Animation(0.25f, frames, Animation.PlayMode.LOOP);
     }
 
     @Override

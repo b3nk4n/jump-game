@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -33,7 +32,7 @@ public class Flower extends Enemy {
 
     private GameObjectState<State> state;
 
-    private Animation<TextureRegion> animation;
+    private final Animation<TextureRegion> animation;
 
     private float hiddenTargetY;
     private float waitingTargetY;
@@ -44,20 +43,12 @@ public class Flower extends Enemy {
     public Flower(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
         super(callbacks, world, posX, posY, 0f);
-        initTextures(atlas);
+        animation = new Animation(0.33f, atlas.findRegions(RegionNames.FLOWER), Animation.PlayMode.LOOP);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         state = new GameObjectState<State>(State.HIDDEN);
         hiddenTargetY = getBody().getPosition().y;
         waitingTargetY = hiddenTargetY + getHeight();
         setRegion(animation.getKeyFrame(state.timer()));
-    }
-
-    private void initTextures(TextureAtlas atlas) {
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion(RegionNames.FLOWER), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, (int)(1.5f * Cfg.BLOCK_SIZE)));
-        }
-        animation = new Animation(0.3f, frames, Animation.PlayMode.LOOP);
     }
 
     @Override

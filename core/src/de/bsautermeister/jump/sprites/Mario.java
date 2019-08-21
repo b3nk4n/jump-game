@@ -18,7 +18,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -76,7 +75,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private TextureRegion marioDead;
     private TextureRegion marioTurn;
     private Animation<TextureRegion> marioWalk;
-    private Animation<TextureRegion> marioJump; // is actually just 1 frame
+    private TextureRegion marioJump;
     private TextureRegion marioDrown;
 
     private TextureRegion bigMarioStand;
@@ -106,10 +105,10 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         this.callbacks = callbacks;
         this.world = world;
+        initTextures(atlas);
+
         state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
-
-        initTextures(atlas);
 
         Vector2 startPosition = new Vector2(2 * Cfg.BLOCK_SIZE / Cfg.PPM, 2 * Cfg.BLOCK_SIZE / Cfg.PPM);
         defineSmallBody(startPosition, true);
@@ -141,40 +140,18 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     private void initTextures(TextureAtlas atlas) {
-        TextureRegion littleMarioTexture = atlas.findRegion(RegionNames.LITTLE_MARIO);
-        TextureRegion bigMarioTexture = atlas.findRegion(RegionNames.BIG_MARIO);
-
-        marioStand = new TextureRegion(littleMarioTexture, 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
-        bigMarioStand = new TextureRegion(bigMarioTexture, 0, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
-
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 1; i < 4; i++) {
-            frames.add(new TextureRegion(littleMarioTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
-        }
-        marioWalk = new Animation<TextureRegion>(0.1f, frames);
-
-        frames.clear();
-        for (int i = 1; i < 4; i++) {
-            frames.add(new TextureRegion(bigMarioTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE));
-        }
-        bigMarioWalk = new Animation<TextureRegion>(0.1f, frames);
-
-        frames.clear();
-        for (int i = 5; i < 6; i++) {
-            frames.add(new TextureRegion(littleMarioTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
-        }
-        marioJump = new Animation<TextureRegion>(0.1f, frames);
-        bigMarioJump = new TextureRegion(bigMarioTexture, 5 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
-
-        marioDead = new TextureRegion(littleMarioTexture, 6 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
-
-        marioTurn = new TextureRegion(littleMarioTexture, 4 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
-        bigMarioTurn = new TextureRegion(bigMarioTexture, 4 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
-
-        bigMarioCrouch = new TextureRegion(bigMarioTexture, 6 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
-
-        marioDrown = new TextureRegion(littleMarioTexture, 7 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
-        bigMarioDrown = new TextureRegion(bigMarioTexture, 7 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, 2 * Cfg.BLOCK_SIZE);
+        marioStand = atlas.findRegion(RegionNames.LITTLE_MARIO_STAND);
+        marioWalk = new Animation<TextureRegion>(0.1f, atlas.findRegions(RegionNames.LITTLE_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
+        marioTurn = atlas.findRegion(RegionNames.LITTLE_MARIO_TURN);
+        marioJump = atlas.findRegion(RegionNames.LITTLE_MARIO_JUMP);
+        marioDrown = atlas.findRegion(RegionNames.LITTLE_MARIO_DROWN);
+        marioDead = atlas.findRegion(RegionNames.LITTLE_MARIO_DEAD);
+        bigMarioStand = atlas.findRegion(RegionNames.BIG_MARIO_STAND);
+        bigMarioWalk = new Animation<TextureRegion>(0.1f, atlas.findRegions(RegionNames.BIG_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
+        bigMarioTurn = atlas.findRegion(RegionNames.BIG_MARIO_TURN);
+        bigMarioJump = atlas.findRegion(RegionNames.BIG_MARIO_JUMP);
+        bigMarioCrouch = atlas.findRegion(RegionNames.BIG_MARIO_CROUCH);
+        bigMarioDrown = atlas.findRegion(RegionNames.BIG_MARIO_DROWN);
     }
 
     public void update(float delta) {
@@ -350,7 +327,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
                 if (useBigTexture) {
                     textureRegion = bigMarioJump;
                 } else {
-                    textureRegion = marioJump.getKeyFrame(state.timer());
+                    textureRegion = marioJump;
                 }
                 break;
             case WALKING:

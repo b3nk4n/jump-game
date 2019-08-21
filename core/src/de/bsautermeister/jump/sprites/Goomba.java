@@ -33,26 +33,17 @@ public class Goomba extends Enemy implements Drownable {
     private GameObjectState<State> state;
     private boolean drowning;
 
-    private Animation<TextureRegion> walkAnimation;
-    private TextureRegion stompedTexture;
+    private final Animation<TextureRegion> walkAnimation;
+    private final TextureRegion stompedTexture;
 
     public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
         super(callbacks, world, posX, posY, 0.8f);
-        initTextures(atlas);
+        walkAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.GOOMBA), Animation.PlayMode.LOOP);
+        stompedTexture = atlas.findRegion(RegionNames.GOOMBA);
 
         this.state = new GameObjectState<State>(State.WALKING);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-    }
-
-    private void initTextures(TextureAtlas atlas) {
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i < 2; i++) {
-            frames.add(new TextureRegion(atlas.findRegion(RegionNames.GOOMBA), i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
-        }
-        walkAnimation = new Animation(0.4f, frames);
-
-        stompedTexture = new TextureRegion(atlas.findRegion(RegionNames.GOOMBA), 2 * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
     }
 
     @Override
