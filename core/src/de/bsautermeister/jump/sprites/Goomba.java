@@ -40,7 +40,7 @@ public class Goomba extends Enemy implements Drownable {
                   float posX, float posY) {
         super(callbacks, world, posX, posY, 0.8f);
         walkAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.GOOMBA), Animation.PlayMode.LOOP);
-        stompedTexture = atlas.findRegion(RegionNames.GOOMBA);
+        stompedTexture = atlas.findRegion(RegionNames.GOOMBA_STOMP);
 
         this.state = new GameObjectState<State>(State.WALKING);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);

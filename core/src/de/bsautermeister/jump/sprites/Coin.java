@@ -39,22 +39,13 @@ public class Coin extends InteractiveTileObject {
                 closeEnough);
 
         if(closeEnough && !isBlank()) {
-            // kill enemies on top
-            for (String enemyOnTop : getEnemiesOnTop()) {
-                getCallbacks().indirectEnemyHit(this, enemyOnTop);
+            // apply effect to objects on top
+            for (String objectOnTop : getObjectsOnTop()) {
+                getCallbacks().indirectObjectHit(this, objectOnTop);
 
-                // ensure that enemy is un-registered from enemies on top, because Box2D does not seem
+                // ensure that object is un-registered from objects on top, because Box2D does not seem
                 // to call endContact anymore
-                enemySteppedOff(enemyOnTop);
-            }
-
-            // reverse items on top
-            for (String itemOnTop : getItemsOnTop()) {
-                getCallbacks().indirectItemHit(this, itemOnTop);
-
-                // ensure that item is un-registered from items on top, because Box2D does not seem
-                // to call endContact anymore
-                itemSteppedOff(itemOnTop);
+                steppedOff(objectOnTop);
             }
 
             setBlank();

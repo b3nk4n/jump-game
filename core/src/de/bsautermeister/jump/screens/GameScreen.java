@@ -174,18 +174,16 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
-        public void indirectEnemyHit(InteractiveTileObject tileObject, String enemyId) {
-            Enemy enemy = enemies.get(enemyId);
+        public void indirectObjectHit(InteractiveTileObject tileObject, String objectId) {
+            Enemy enemy = enemies.get(objectId);
             if (enemy != null) {
                 enemy.kill(true);
                 score += 50;
                 showScoreText("50", enemy.getBoundingRectangle());
+                return;
             }
-        }
 
-        @Override
-        public void indirectItemHit(InteractiveTileObject tileObject, String itemId) {
-            Item item = items.get(itemId);
+            Item item = items.get(objectId);
             if (item != null) {
                 item.reverseVelocity(true, false);
                 item.bounceUp();

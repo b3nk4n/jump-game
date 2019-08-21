@@ -18,8 +18,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
@@ -31,8 +31,7 @@ public abstract class InteractiveTileObject implements BinarySerializable {
     private final Rectangle bounds;
     private final Body body;
 
-    private final ObjectSet<String> enemiesOnTop; // TODO are these two sets combinable? Yes!
-    private final ObjectSet<String> itemsOnTop;
+    private final ObjectSet<String> objectOnTop;
 
     private float bumpUpAnimationTimer;
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
@@ -48,8 +47,7 @@ public abstract class InteractiveTileObject implements BinarySerializable {
                 screenBounds.y / Cfg.PPM,
                 screenBounds.width / Cfg.PPM,
                 screenBounds.height / Cfg.PPM);
-        this.enemiesOnTop = new ObjectSet<String>();
-        this.itemsOnTop = new ObjectSet<String>();
+        this.objectOnTop = new ObjectSet<String>();
         this.body = defineBody(categoryBit);
         this.bumpUpAnimationTimer = BUMP_UP_ANIMATION_TIME;
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("graphics");
@@ -125,36 +123,20 @@ public abstract class InteractiveTileObject implements BinarySerializable {
         return callbacks;
     }
 
-    public void enemySteppedOn(String enemyId) {
-        if (!enemiesOnTop.contains(enemyId)) {
-            enemiesOnTop.add(enemyId);
+    public void steppedOn(String enemyId) {
+        if (!objectOnTop.contains(enemyId)) {
+            objectOnTop.add(enemyId);
         }
     }
 
-    public void enemySteppedOff(String enemyId) {
-        if (enemiesOnTop.contains(enemyId)) {
-            enemiesOnTop.remove(enemyId);
+    public void steppedOff(String enemyId) {
+        if (objectOnTop.contains(enemyId)) {
+            objectOnTop.remove(enemyId);
         }
     }
 
-    public ObjectSet<String> getEnemiesOnTop() {
-        return enemiesOnTop;
-    }
-
-    public void itemSteppedOn(String itemId) {
-        if (!itemsOnTop.contains(itemId)) {
-            itemsOnTop.add(itemId);
-        }
-    }
-
-    public void itemSteppedOff(String itemId) {
-        if (itemsOnTop.contains(itemId)) {
-            itemsOnTop.remove(itemId);
-        }
-    }
-
-    public ObjectSet<String> getItemsOnTop() {
-        return itemsOnTop;
+    public ObjectSet<String> getObjectsOnTop() {
+        return objectOnTop;
     }
 
     public Rectangle getBounds() {
@@ -165,12 +147,8 @@ public abstract class InteractiveTileObject implements BinarySerializable {
     public void write(DataOutputStream out) throws IOException {
         out.writeUTF(id);
         out.writeFloat(bumpUpAnimationTimer);
-        out.writeInt(enemiesOnTop.size);
-        for (String id : enemiesOnTop) {
-            out.writeUTF(id);
-        }
-        out.writeInt(itemsOnTop.size);
-        for (String id : itemsOnTop) {
+        out.writeInt(objectOnTop.size);
+        for (String id : objectOnTop) {
             out.writeUTF(id);
         }
     }
@@ -179,13 +157,9 @@ public abstract class InteractiveTileObject implements BinarySerializable {
     public void read(DataInputStream in) throws IOException {
         id = in.readUTF();
         bumpUpAnimationTimer = in.readFloat();
-        int numEnemies = in.readInt();
-        for (int i = 0; i < numEnemies; ++i) {
-            enemiesOnTop.add(in.readUTF());
-        }
-        int numItems = in.readInt();
-        for (int i = 0; i < numItems; ++i) {
-            itemsOnTop.add(in.readUTF());
+        int numObjects = in.readInt();
+        for (int i = 0; i < numObjects; ++i) {
+            objectOnTop.add(in.readUTF());
         }
     }
 }

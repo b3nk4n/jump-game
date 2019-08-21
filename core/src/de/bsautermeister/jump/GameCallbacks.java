@@ -18,8 +18,7 @@ public interface GameCallbacks {
     void hit(Mario mario, Enemy enemy);
     void hit(Mario mario, Brick brick, boolean closeEnough);
     void hit(Mario mario, Coin coin, Vector2 position, boolean closeEnough);
-    void indirectEnemyHit(InteractiveTileObject tileObject, String enemyId);
-    void indirectItemHit(InteractiveTileObject tileObject, String itemId);
+    void indirectObjectHit(InteractiveTileObject tileObject, String objectId);
     void hitWall(Enemy enemy);
     void killed(Enemy enemy);
     void kicked(Enemy enemy);

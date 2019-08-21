@@ -80,12 +80,12 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.enemySteppedOn(enemy.getId());
+                tileObject.steppedOn(enemy.getId());
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
                 item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.itemSteppedOn(item.getId());
+                tileObject.steppedOn(item.getId());
                 break;
             case JumpGame.MARIO_BIT | JumpGame.ENEMY_SIDE_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
@@ -121,12 +121,12 @@ public class WorldContactListener implements ContactListener {
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.enemySteppedOff(enemy.getId());
+                tileObject.steppedOff(enemy.getId());
                 break;
             case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
                 item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
-                tileObject.itemSteppedOff(item.getId());
+                tileObject.steppedOff(item.getId());
                 break;
             case JumpGame.MARIO_BIT | JumpGame.PLATFORM_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
