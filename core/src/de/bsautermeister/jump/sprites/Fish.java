@@ -74,13 +74,14 @@ public class Fish extends Enemy implements Drownable {
                 getBody().getPosition().y - getHeight() / 2);
         setRegion(animation.getKeyFrame(state.timer()));
         float angle = getBody().getLinearVelocity().angle();
+        if (angle >= 180) {
+            angle -= 360;
+        }
+
         if (startVector.x < 0) {
             setRotation((angle - 180f) / 4f);
         } else  {
             setFlip(true, false);
-            if (angle >= 180) {
-                angle -= 360;
-            }
             setRotation(angle / 4f);
         }
 
@@ -153,6 +154,7 @@ public class Fish extends Enemy implements Drownable {
 
     @Override
     public void drown() {
+        state.set(State.DROWNING);
         getBody().setLinearVelocity(getBody().getLinearVelocity().x / 10, getBody().getLinearVelocity().y / 10);
     }
 

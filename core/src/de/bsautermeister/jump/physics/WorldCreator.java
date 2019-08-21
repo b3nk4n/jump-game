@@ -167,6 +167,7 @@ public class WorldCreator {
                 fish.setStartAngle(startAngle != null ? startAngle : 90);
                 fish.setVelocityFactor(velocityFactor != null ? velocityFactor : 1f);
                 enemies.add(fish);
+                break;
             }
         }
         return enemies;
