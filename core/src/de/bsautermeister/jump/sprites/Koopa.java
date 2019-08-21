@@ -57,20 +57,21 @@ public class Koopa extends Enemy implements Drownable {
                     return;
                 }
 
-                Filter oldFilter = getBody().getFixtureList().get(0).getFilterData();
-                short upatedMaskBits = oldFilter.maskBits;
+                Fixture leftSideSensor = getBody().getFixtureList().get(2);
+                updateColliderBit(leftSideSensor, previousState, newState);
 
+                Fixture rightSideSensor = getBody().getFixtureList().get(3);
+                updateColliderBit(rightSideSensor, previousState, newState);
+            }
+
+            private void updateColliderBit(Fixture fixture, State previousState, State newState) {
+                Filter filter = fixture.getFilterData();
                 if (previousState == State.MOVING_SHELL) {
-                    upatedMaskBits |= ~JumpGame.COLLIDER_BIT;
+                    filter.maskBits |= ~JumpGame.COLLIDER_BIT;
                 } else if (newState == State.MOVING_SHELL) {
-                    upatedMaskBits &= ~JumpGame.COLLIDER_BIT;
+                    filter.maskBits &= ~JumpGame.COLLIDER_BIT;
                 }
-
-                Filter filter = new Filter();
-                filter.categoryBits = oldFilter.categoryBits;
-                filter.maskBits = upatedMaskBits;
-
-                getBody().getFixtureList().get(0).setFilterData(filter);
+                fixture.setFilterData(filter);
             }
         });
         speed = -SPEED_VALUE;
@@ -144,10 +145,8 @@ public class Koopa extends Enemy implements Drownable {
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
-                JumpGame.OBJECT_BIT |
                 JumpGame.ENEMY_BIT |
-                JumpGame.BLOCK_TOP_BIT |
-                JumpGame.COLLIDER_BIT;
+                JumpGame.BLOCK_TOP_BIT;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -171,7 +170,9 @@ public class Koopa extends Enemy implements Drownable {
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT;
+        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT
+                | JumpGame.COLLIDER_BIT
+                | JumpGame.OBJECT_BIT;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));

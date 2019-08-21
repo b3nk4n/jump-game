@@ -111,10 +111,8 @@ public class Goomba extends Enemy implements Drownable {
                 JumpGame.COIN_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
-                JumpGame.OBJECT_BIT |
                 JumpGame.ENEMY_BIT |
-                JumpGame.BLOCK_TOP_BIT |
-                JumpGame.COLLIDER_BIT;
+                JumpGame.BLOCK_TOP_BIT;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -138,7 +136,9 @@ public class Goomba extends Enemy implements Drownable {
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT;
+        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT
+                | JumpGame.COLLIDER_BIT
+                | JumpGame.OBJECT_BIT;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));

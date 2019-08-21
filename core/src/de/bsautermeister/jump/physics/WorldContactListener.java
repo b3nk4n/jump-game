@@ -43,19 +43,8 @@ public class WorldContactListener implements ContactListener {
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_HEAD_BIT);
                 enemy.onHeadHit(mario);
                 break;
-            case JumpGame.ENEMY_BIT | JumpGame.OBJECT_BIT:
-            case JumpGame.ENEMY_BIT | JumpGame.COLLIDER_BIT:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
-                if (enemy instanceof Goomba) {
-                    ((Goomba) enemy).reverseDirection();
-                } else if (enemy instanceof Koopa) {
-                    ((Koopa) enemy).reverseDirection();
-                } else if (enemy instanceof Spiky) {
-                    ((Spiky) enemy).reverseDirection();
-                }
-                // TODO remove this and use ENEMY_SIDE_BIT bor OBJECT and COLLIDER as well?
-
-                break;
+            case JumpGame.ENEMY_SIDE_BIT | JumpGame.OBJECT_BIT:
+            case JumpGame.ENEMY_SIDE_BIT | JumpGame.COLLIDER_BIT:
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
             case JumpGame.ENEMY_SIDE_BIT | JumpGame.PLATFORM_BIT:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
