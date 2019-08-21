@@ -68,7 +68,7 @@ import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase implements BinarySerializable {
 
-    private static final Logger LOG = new Logger(GameScreen.class.getName(), Cfg.LOG_LEVEL);
+    private static final Logger LOG = new Logger(GameScreen.class.getSimpleName(), Cfg.LOG_LEVEL);
 
     private GameStats gameStats;
     private TextureAtlas atlas;
@@ -495,7 +495,26 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
 
-            if (enemy.getX() < mario.getX() + 256 / Cfg.PPM) {
+            if (enemy.getX() < mario.getX() + Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM) {
+                if (!enemy.isActive()) {
+                    enemy.setActive(true);
+
+                    if (enemy.hasGroup()) {
+                        wakeUp(enemy.getGroup());
+                    }
+                }
+            }
+        }
+    }
+
+    private void wakeUp(String enemyGroup) {
+        if (enemyGroup == null) {
+            return;
+        }
+
+        for (String enemyId : enemies.keys()) {
+            Enemy enemy = enemies.get(enemyId);
+            if (enemyGroup.equals(enemy.getGroup()) && !enemy.isActive()) {
                 enemy.setActive(true);
             }
         }
@@ -505,7 +524,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (Platform platform : platforms) {
             platform.update(delta);
 
-            if (platform.getX() < mario.getX() + 256 / Cfg.PPM) {
+            if (platform.getX() < mario.getX() + Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM) {
                 platform.setActive(true);
             }
         }

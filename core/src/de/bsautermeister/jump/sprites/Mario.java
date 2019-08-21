@@ -275,7 +275,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         state.unfreeze();
         isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
 
-        if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0 ) {
+        if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
             body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.05f;
@@ -288,7 +288,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         if (left && body.getLinearVelocity().x >= -2 && !down) {
             body.applyForceToCenter(new Vector2(-8.0f, 0), true);
         }
-        if ((!left && ! right && state.is(State.JUMPING))) {
+        if ((!left && !right && state.is(State.JUMPING))) {
             // horizontally decelerate fast, but don't stop immediately
             body.applyForceToCenter(new Vector2(-5 * relativeBodyVelocity.x, 0), true);
         }
@@ -336,7 +336,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
         boolean useBigTexture = isBig;
         if (isChangingSize()) {
-            useBigTexture = (int)(((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
+            useBigTexture = (int) (((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
         }
 
         switch (state.current()) {
@@ -464,7 +464,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
      */
     private void createFeetFixture(FixtureDef fixtureDef, float width, float bottomY) {
         EdgeShape feetShape = new EdgeShape();
-        feetShape.set(-width / 2 / Cfg.PPM, bottomY  / Cfg.PPM,
+        feetShape.set(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
@@ -514,6 +514,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     private final Vector2 outCenter = new Vector2();
+
     @Override
     public Vector2 getWorldCenter() {
         Rectangle rect = getBoundingRectangle();
@@ -549,7 +550,6 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             callbacks.hit(this, enemy);
             isBig = false;
             markRedefineBody = true;
-
         } else {
             kill();
         }
@@ -557,7 +557,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     public void hit(Enemy enemy) {
         if (enemy instanceof Koopa) {
-            Koopa koopa = (Koopa)enemy;
+            Koopa koopa = (Koopa) enemy;
             if (koopa.getState() == Koopa.State.STANDING_SHELL) {
                 koopa.kick(getX() <= enemy.getX());
                 return;

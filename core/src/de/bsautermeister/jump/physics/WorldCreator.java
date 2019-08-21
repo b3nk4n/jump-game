@@ -130,29 +130,41 @@ public class WorldCreator {
         if (hasLayer(map, GOOMBAS_KEY)) {
             for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                enemies.add(new Goomba(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+                String group = (String) mapObject.getProperties().get("group");
+                Goomba goomba = new Goomba(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                goomba.setGroup(group);
+                enemies.add(goomba);
             }
         }
         if (hasLayer(map, KOOPAS_KEY)) {
             for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                enemies.add(new Koopa(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+                String group = (String) mapObject.getProperties().get("group");
+                Koopa koopa = new Koopa(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                koopa.setGroup(group);
+                enemies.add(koopa);
             }
         }
         if (hasLayer(map, SPIKIES_KEY)) {
             for (MapObject mapObject : map.getLayers().get(SPIKIES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                enemies.add(new Spiky(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+                String group = (String) mapObject.getProperties().get("group");
+                Spiky spiky = new Spiky(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                spiky.setGroup(group);
+                enemies.add(spiky);
             }
         }
         if (hasLayer(map, FLOWERS_KEY)) {
             for (MapObject mapObject : map.getLayers().get(FLOWERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                enemies.add(new Flower(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+                String group = (String) mapObject.getProperties().get("group");
+                Flower flower = new Flower(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                flower.setGroup(group);
+                enemies.add(flower);
             }
         }
         if (hasLayer(map, FISHES_KEY)) {
@@ -161,13 +173,14 @@ public class WorldCreator {
                 Float startDelay = (Float) mapObject.getProperties().get("start_delay");
                 Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
                 Float velocityFactor = (Float) mapObject.getProperties().get("velocity_factor");
-                String group = (String) mapObject.getProperties().get("group"); // TODO set group to wake up all fishes of the same group at the same time. Or even generally for all enemies?
-                Fish fish = new Fish(callbacks, world, atlas, rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                String group = (String) mapObject.getProperties().get("group");
+                Fish fish = new Fish(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
                 fish.setStartDelay(startDelay != null ? startDelay : 0f);
                 fish.setStartAngle(startAngle != null ? startAngle : 90);
                 fish.setVelocityFactor(velocityFactor != null ? velocityFactor : 1f);
+                fish.setGroup(group);
                 enemies.add(fish);
-                break;
             }
         }
         return enemies;

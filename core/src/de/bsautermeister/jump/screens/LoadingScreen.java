@@ -20,7 +20,7 @@ import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class LoadingScreen extends ScreenBase {
-    private static final Logger LOGGER = new Logger(LoadingScreen.class.getName(), Cfg.LOG_LEVEL);
+    private static final Logger LOGGER = new Logger(LoadingScreen.class.getSimpleName(), Cfg.LOG_LEVEL);
 
     private Viewport viewport;
     private Stage stage;

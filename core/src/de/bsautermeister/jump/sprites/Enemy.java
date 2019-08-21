@@ -20,6 +20,11 @@ import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Enemy extends Sprite implements BinarySerializable, Disposable {
     private String id;
+
+    /**
+     * An optional group, which is used so that all enemies of the same group are woken up together.
+     */
+    private String group;
     private GameCallbacks callbacks;
     private World world;
     private Body body;
@@ -144,9 +149,22 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         return removable;
     }
 
+    public boolean hasGroup() {
+        return group != null;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeUTF(id);
+        out.writeUTF(group != null ? group : "null");
         out.writeFloat(body.getPosition().x);
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
@@ -160,6 +178,10 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     @Override
     public void read(DataInputStream in) throws IOException {
         id = in.readUTF();
+        group = in.readUTF();
+        if (group.equals("null")) {
+            group = null;
+        }
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         velocityX = in.readFloat();
