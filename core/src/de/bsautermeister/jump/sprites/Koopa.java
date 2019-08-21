@@ -41,6 +41,8 @@ public class Koopa extends Enemy implements Drownable {
 
     private static final float SPEED = 0.6f;
 
+    private boolean previousDirectionLeft;
+
     public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY) {
         super(callbacks, world, posX, posY, SPEED);
@@ -90,7 +92,7 @@ public class Koopa extends Enemy implements Drownable {
 
         if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
             state.set(State.WALKING);
-            setVelocityX(SPEED); // TODO direction incorrect?
+            setVelocityX(previousDirectionLeft ? -SPEED : SPEED);
         }
 
         if (isDrowning()) {
@@ -195,6 +197,7 @@ public class Koopa extends Enemy implements Drownable {
 
     private void stomp() {
         state.set(State.STANDING_SHELL);
+        previousDirectionLeft = getVelocityX() <= 0;
         setVelocityX(0);
         getCallbacks().stomp(this);
     }
@@ -253,11 +256,13 @@ public class Koopa extends Enemy implements Drownable {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
+        out.writeBoolean(previousDirectionLeft);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         state.read(in);
+        previousDirectionLeft = in.readBoolean();
     }
 }
