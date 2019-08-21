@@ -2,6 +2,7 @@ package de.bsautermeister.jump;
 
 import com.badlogic.gdx.math.Vector2;
 
+import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
@@ -22,6 +23,6 @@ public interface GameCallbacks {
     void hitWall(Enemy enemy);
     void killed(Enemy enemy);
     void kicked(Enemy enemy);
-    void touchedWater();
+    void touchedWater(Drownable drownable);
     void gameOver();
 }

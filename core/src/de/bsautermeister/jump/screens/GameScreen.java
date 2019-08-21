@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -197,13 +198,19 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
-        public void touchedWater() {
-            splashSound.play();
+        public void touchedWater(Drownable drownable) {
+            float volume = getVolumeBasedOnDistanceToCameraCenter(drownable.getWorldCenter().x);
+            if (volume > 0) {
+                splashSound.play(volume);
+            }
         }
 
         @Override
         public void killed(Enemy enemy) {
-            kickedSound.play();
+            float volume = getVolumeBasedOnDistanceToCameraCenter(enemy.getBody().getWorldCenter().x);
+            if (volume > 0) {
+                kickedSound.play(volume);
+            }
             score += 50;
             showScoreText("50", enemy.getBoundingRectangle());
         }
@@ -213,7 +220,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             if (enemy instanceof Koopa) {
                 Koopa koopa = (Koopa) enemy;
                 if (koopa.getState() == Koopa.State.MOVING_SHELL) {
-                    bumpSound.play();
+                    float volume = getVolumeBasedOnDistanceToCameraCenter(enemy.getBody().getWorldCenter().x);
+                    if (volume > 0) {
+                        bumpSound.play(volume);
+                    }
                 }
             }
         }
@@ -221,6 +231,22 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         @Override
         public void gameOver() {
             marioDieSound.play();
+        }
+
+        private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2 / Cfg.PPM;
+        private float getVolumeBasedOnDistanceToCameraCenter(float otherWorldCenterX) {
+            float cameraWorldCenterX = camera.position.x;
+            float distanceX = Math.abs(cameraWorldCenterX - otherWorldCenterX);
+            if (distanceX <= HALF_SCREEN_WIDTH) {
+                return 1f;
+            }
+            if (distanceX < 2 * HALF_SCREEN_WIDTH) {
+                return MathUtils.clamp(-1f / HALF_SCREEN_WIDTH * distanceX + 2.1f, 0f, 1f);
+            }
+            if (distanceX < 3 * HALF_SCREEN_WIDTH) {
+                return 0.1f;
+            }
+            return 0;
         }
     };
 

@@ -50,7 +50,7 @@ public class WaterInteractionManager {
             Vector2 center = drownable.getWorldCenter();
             splashEffect.setPosition(center.x, center.y);
             splashEffect.start();
-            callbacks.touchedWater();
+            callbacks.touchedWater(drownable);
 
             drownable.drown();
         }
