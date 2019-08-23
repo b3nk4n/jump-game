@@ -52,7 +52,7 @@ public class Mushroom extends Item implements Drownable {
     }
 
     @Override
-    public void usedBy(Mario mario) {
+    public void collectBy(Mario mario) {
         getCallbacks().use(mario, this);
         markDestroyBody();
         mario.grow();

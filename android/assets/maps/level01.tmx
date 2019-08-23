@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="107">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="133">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="backgroundColor" width="240" height="13">
   <data encoding="csv">
@@ -66,7 +66,7 @@
   <object id="19" x="1072" y="160" width="32" height="32"/>
   <object id="20" x="576" y="128" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="5" name="coins">
+ <objectgroup id="5" name="boxes">
   <object id="21" x="3024" y="48" width="16" height="16">
    <properties>
     <property name="mushroom" type="bool" value="true"/>
@@ -79,6 +79,28 @@
     <property name="mushroom" type="bool" value="true"/>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup id="18" name="coins">
+  <object id="107" x="2864" y="112" width="16" height="16"/>
+  <object id="108" x="2896" y="112" width="16" height="16"/>
+  <object id="109" x="2928" y="112" width="16" height="16"/>
+  <object id="110" x="2880" y="96" width="16" height="16"/>
+  <object id="111" x="2912" y="96" width="16" height="16"/>
+  <object id="112" x="2864" y="80" width="16" height="16"/>
+  <object id="113" x="2896" y="80" width="16" height="16"/>
+  <object id="114" x="2928" y="80" width="16" height="16"/>
+  <object id="119" x="3136" y="32" width="16" height="16"/>
+  <object id="120" x="3152" y="48" width="16" height="16"/>
+  <object id="121" x="3168" y="64" width="16" height="16"/>
+  <object id="122" x="3184" y="80" width="16" height="16"/>
+  <object id="123" x="1744" y="112" width="16" height="16"/>
+  <object id="124" x="1712" y="112" width="16" height="16"/>
+  <object id="127" x="1664" y="112" width="16" height="16"/>
+  <object id="128" x="1632" y="112" width="16" height="16"/>
+  <object id="129" x="1680" y="80" width="16" height="16"/>
+  <object id="130" x="1696" y="80" width="16" height="16"/>
+  <object id="131" x="1680" y="64" width="16" height="16"/>
+  <object id="132" x="1696" y="64" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="6" name="bricks">
   <object id="32" x="2848" y="144" width="16" height="16"/>

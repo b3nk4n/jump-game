@@ -16,8 +16,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public abstract class Item extends Sprite implements BinarySerializable, Disposable {
-
+public abstract class Item extends Sprite implements CollectableItem, BinarySerializable, Disposable {
     /**
      * Add a tiny y-offset to the spawn postition, because the block-item is moving and would
      * otherwise expose the bottom of the item as a small visual glitch.
@@ -59,7 +58,6 @@ public abstract class Item extends Sprite implements BinarySerializable, Disposa
     }
 
     public abstract Body defineBody(float x, float y);
-    public abstract void usedBy(Mario mario);
 
     public void update(float delta) {
         state.upate(delta);

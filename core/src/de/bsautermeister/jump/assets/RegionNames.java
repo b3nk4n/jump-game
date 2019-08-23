@@ -22,7 +22,7 @@ public interface RegionNames {
     String FISH = "fish";
     String SPIKY = "spiky";
     String MUSHROOM = "mushroom";
-    String SPINNING_COIN = "spin_coin";
+    String COIN = "coin";
     String BRICK_FRAGMENT = "brick_fragment";
     String WATER = "water";
     String PLATFORM2 = "platform2";

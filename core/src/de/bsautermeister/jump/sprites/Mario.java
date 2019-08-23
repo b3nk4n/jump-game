@@ -141,13 +141,15 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private void initTextures(TextureAtlas atlas) {
         marioStand = atlas.findRegion(RegionNames.LITTLE_MARIO_STAND);
-        marioWalk = new Animation<TextureRegion>(0.1f, atlas.findRegions(RegionNames.LITTLE_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
+        marioWalk = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.LITTLE_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
         marioTurn = atlas.findRegion(RegionNames.LITTLE_MARIO_TURN);
         marioJump = atlas.findRegion(RegionNames.LITTLE_MARIO_JUMP);
         marioDrown = atlas.findRegion(RegionNames.LITTLE_MARIO_DROWN);
         marioDead = atlas.findRegion(RegionNames.LITTLE_MARIO_DEAD);
         bigMarioStand = atlas.findRegion(RegionNames.BIG_MARIO_STAND);
-        bigMarioWalk = new Animation<TextureRegion>(0.1f, atlas.findRegions(RegionNames.BIG_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
+        bigMarioWalk = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.BIG_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
         bigMarioTurn = atlas.findRegion(RegionNames.BIG_MARIO_TURN);
         bigMarioJump = atlas.findRegion(RegionNames.BIG_MARIO_JUMP);
         bigMarioCrouch = atlas.findRegion(RegionNames.BIG_MARIO_CROUCH);

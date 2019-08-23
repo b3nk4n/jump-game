@@ -67,7 +67,7 @@
   <object id="19" x="1072" y="160" width="32" height="32"/>
   <object id="20" x="576" y="128" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="5" name="coins">
+ <objectgroup id="5" name="boxes">
   <object id="21" x="3024" y="48" width="16" height="16">
    <properties>
     <property name="mushroom" type="bool" value="true"/>

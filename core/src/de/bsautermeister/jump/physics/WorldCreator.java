@@ -21,6 +21,7 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
+import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
@@ -39,7 +40,7 @@ public class WorldCreator {
 
     public static final String GROUND_KEY = "ground";
     public static final String PIPES_KEY = "pipes";
-    public static final String COINS_KEY = "coins";
+    public static final String BOXES_KEY = "boxes";
     public static final String BRICKS_KEY = "bricks";
     public static final String GOOMBAS_KEY = "goombas";
     public static final String KOOPAS_KEY = "koopas";
@@ -51,6 +52,7 @@ public class WorldCreator {
     public static final String GOAL_KEY = "goal";
     public static final String BOUNCERS_KEY = "bouncers";
     public static final String PLATFORMS_KEY = "platforms";
+    public static final String COINS_KEY = "coins";
 
     private final World world;
     private final TiledMap map;
@@ -75,7 +77,7 @@ public class WorldCreator {
             tileObjects.add(new Brick(callbacks, world, map, atlas, mapObject));
         }
 
-        for (MapObject mapObject : map.getLayers().get(COINS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject mapObject : map.getLayers().get(BOXES_KEY).getObjects().getByType(RectangleMapObject.class)) {
             tileObjects.add(new ItemBox(callbacks, world, map, mapObject));
         }
     }
@@ -200,6 +202,18 @@ public class WorldCreator {
             }
         }
         return platforms;
+    }
+
+    public Array<Coin> createCoins() {
+        Array<Coin> coins = new Array<Coin>();
+        if (hasLayer(map, COINS_KEY)) {
+            for (RectangleMapObject mapObject : map.getLayers().get(COINS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = mapObject.getRectangle();
+                coins.add(new Coin(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM));
+            }
+        }
+        return coins;
     }
 
     public Array<Rectangle> getWaterRegions() {

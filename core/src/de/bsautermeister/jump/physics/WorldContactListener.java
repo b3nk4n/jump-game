@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
@@ -29,7 +30,7 @@ public class WorldContactListener implements ContactListener {
         Item item;
         Mario mario;
         Enemy enemy;
-        Platform platform;
+        CollectableItem collectableItem;
         InteractiveTileObject tileObject;
         switch (collisionDef) {
             case JumpGame.MARIO_HEAD_BIT | JumpGame.BRICK_BIT:
@@ -70,9 +71,9 @@ public class WorldContactListener implements ContactListener {
                 item.reverseVelocity(true, false);
                 break;
             case JumpGame.ITEM_BIT | JumpGame.MARIO_BIT:
-                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
+                collectableItem = (CollectableItem) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
-                item.usedBy(mario);
+                collectableItem.collectBy(mario);
                 break;
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:

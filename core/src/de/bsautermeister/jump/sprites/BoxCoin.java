@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,22 +24,13 @@ public class BoxCoin extends Sprite implements BinarySerializable {
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
 
     public BoxCoin(TextureAtlas atlas, Vector2 position) {
+        spinningAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions(RegionNames.COIN), Animation.PlayMode.LOOP);
         spawnPosition = new Vector2(position.x - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM),
                 position.y - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM));
         setBounds(0, 0, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         setPosition(spawnPosition.x, spawnPosition.y);
-        initTextures(atlas);
         stateTime = 0;
         setRegion(spinningAnimation.getKeyFrame(stateTime));
-    }
-
-    private void initTextures(TextureAtlas atlas) {
-        TextureRegion spinningCoinTexture = atlas.findRegion(RegionNames.SPINNING_COIN);
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i < 4; i++) {
-            frames.add(new TextureRegion(spinningCoinTexture, i * Cfg.BLOCK_SIZE, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE));
-        }
-        spinningAnimation = new Animation<TextureRegion>(0.1f, frames);
     }
 
     public void update(float delta) {

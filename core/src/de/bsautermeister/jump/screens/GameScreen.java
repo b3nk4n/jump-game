@@ -49,21 +49,22 @@ import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
+import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
-import de.bsautermeister.jump.sprites.ItemBox;
+import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
+import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
-import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -95,6 +96,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
     private Array<Platform> platforms;
+    private Array<Coin> coins;
 
     private boolean levelCompleted;
     private float levelCompletedTimer;
@@ -204,6 +206,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
+        public void collectCoin() {
+            coinSound.play();
+            score += 100;
+        }
+
+        @Override
         public void killed(Enemy enemy) {
             float volume = getVolumeBasedOnDistanceToCameraCenter(enemy.getBody().getWorldCenter().x);
             if (volume > 0) {
@@ -281,6 +289,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         enemies = new ObjectMap<String, Enemy>();
         platforms = new Array<Platform>();
+        coins = new Array<Coin>();
 
         items = new ObjectMap();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
@@ -316,20 +325,15 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         initMap(level);
 
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
+        worldCreator.buildFromMap();
+        platforms.addAll(worldCreator.createPlatforms());
         if (gameToLoad != null) {
-            worldCreator.buildFromMap();
-            for (Platform platform : worldCreator.createPlatforms()) {
-                platforms.add(platform);
-            }
             load(gameToLoad);
         } else {
-            worldCreator.buildFromMap();
-            for (Platform platform : worldCreator.createPlatforms()) {
-                platforms.add(platform);
-            }
             for (Enemy enemy : worldCreator.createEnemies()) {
                 enemies.put(enemy.getId(), enemy);
             }
+            coins.addAll(worldCreator.createCoins());
         }
         waterRegions = worldCreator.getWaterRegions();
 
@@ -500,6 +504,15 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
+        for (Coin coin : coins) {
+            coin.postUpdate();
+
+            if (coin.isRemovable()) {
+                coin.dispose();
+                coins.removeValue(coin, true);
+            }
+        }
+
         if (mario.getBody().getPosition().dst2(goal) < 0.0075f) {
             completeLevel();
         }
@@ -512,6 +525,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private void updateItems(float delta) {
         for (Item item : items.values()) {
             item.update(delta);
+        }
+        for (Coin coin : coins) {
+            coin.update(delta);
         }
     }
 
@@ -671,6 +687,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     private void renderForeground(SpriteBatch batch) {
+        for (Coin coin : coins) {
+            coin.draw(batch);
+        }
+
         for (Item item : items.values()) {
             item.draw(batch);
         }
@@ -791,6 +811,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (BoxCoin boxCoin : activeBoxCoins) {
             boxCoin.write(out);
         }
+        out.writeInt(coins.size);
+        for (Coin coin : coins) {
+            coin.write(out);
+        }
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.write(out);
         }
@@ -839,11 +863,17 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             item.read(in);
             items.put(item.getId(), item);
         }
-        int numSpinningCoins = in.readInt();
-        for (int i = 0; i < numSpinningCoins; ++i) {
+        int numBoxCoins = in.readInt();
+        for (int i = 0; i < numBoxCoins; ++i) {
             BoxCoin boxCoin = new BoxCoin(atlas, Vector2.Zero);
             boxCoin.read(in);
             activeBoxCoins.add(boxCoin);
+        }
+        int numCoins = in.readInt();
+        for (int i = 0; i < numCoins; ++i) {
+            Coin coin = new Coin(callbacks, world, atlas, 0, 0);
+            coin.read(in);
+            coins.add(coin);
         }
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.read(in);

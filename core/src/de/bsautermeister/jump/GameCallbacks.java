@@ -22,5 +22,6 @@ public interface GameCallbacks {
     void killed(Enemy enemy);
     void kicked(Enemy enemy);
     void touchedWater(Drownable drownable);
+    void collectCoin();
     void gameOver();
 }
