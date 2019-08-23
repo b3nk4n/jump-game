@@ -16,7 +16,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public class SpinningCoin extends Sprite implements BinarySerializable {
+public class BoxCoin extends Sprite implements BinarySerializable {
     private final Vector2 spawnPosition;
     private Animation<TextureRegion> spinningAnimation;
     private float stateTime;
@@ -24,7 +24,7 @@ public class SpinningCoin extends Sprite implements BinarySerializable {
     private static final float ANIMATION_OFFSET_Y = 4 * Cfg.BLOCK_SIZE / Cfg.PPM;
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
 
-    public SpinningCoin(TextureAtlas atlas, Vector2 position) {
+    public BoxCoin(TextureAtlas atlas, Vector2 position) {
         spawnPosition = new Vector2(position.x - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM),
                 position.y - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM));
         setBounds(0, 0, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);

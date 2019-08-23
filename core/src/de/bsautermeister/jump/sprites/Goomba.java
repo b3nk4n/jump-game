@@ -108,7 +108,7 @@ public class Goomba extends Enemy implements Drownable {
         fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.PLATFORM_BIT |
-                JumpGame.COIN_BIT |
+                JumpGame.ITEM_BOX_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.MARIO_BIT |
                 JumpGame.ENEMY_BIT |

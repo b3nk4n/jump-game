@@ -14,7 +14,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
 
-public class Coin extends InteractiveTileObject {
+public class ItemBox extends InteractiveTileObject {
 
     private final static int BLANK_COIN_IDX = 28;
 
@@ -22,8 +22,8 @@ public class Coin extends InteractiveTileObject {
 
     private static TiledMapTileSet tileSet;
 
-    public Coin(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
-        super(callbacks, JumpGame.COIN_BIT, world, map, mapObject);
+    public ItemBox(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
+        super(callbacks, JumpGame.ITEM_BOX_BIT, world, map, mapObject);
 
         tileSet = map.getTileSets().getTileSet("tileset");
     }

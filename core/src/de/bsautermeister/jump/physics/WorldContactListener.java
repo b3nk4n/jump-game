@@ -33,9 +33,9 @@ public class WorldContactListener implements ContactListener {
         InteractiveTileObject tileObject;
         switch (collisionDef) {
             case JumpGame.MARIO_HEAD_BIT | JumpGame.BRICK_BIT:
-            case JumpGame.MARIO_HEAD_BIT | JumpGame.COIN_BIT:
+            case JumpGame.MARIO_HEAD_BIT | JumpGame.ITEM_BOX_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_HEAD_BIT);
-                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.COIN_BIT | JumpGame.BRICK_BIT);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BOX_BIT | JumpGame.BRICK_BIT);
                 tileObject.onHeadHit(mario);
                 break;
             case JumpGame.ENEMY_HEAD_BIT | JumpGame.MARIO_BIT: // TODO: check, if mario is landing very fast, he could also touch the body instead of thus the head, and die
@@ -76,7 +76,7 @@ public class WorldContactListener implements ContactListener {
                 break;
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.ITEM_BOX_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
@@ -117,7 +117,7 @@ public class WorldContactListener implements ContactListener {
         switch (collisionDef) {
             case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.COIN_BIT:
+            case JumpGame.MARIO_FEET_BIT | JumpGame.ITEM_BOX_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
             case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);

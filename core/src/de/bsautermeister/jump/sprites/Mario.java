@@ -38,7 +38,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private static final short NORMAL_FILTER_BITS = JumpGame.GROUND_BIT |
             JumpGame.PLATFORM_BIT |
-            JumpGame.COIN_BIT |
+            JumpGame.ITEM_BOX_BIT |
             JumpGame.BRICK_BIT |
             JumpGame.ENEMY_BIT |
             JumpGame.ENEMY_HEAD_BIT |
@@ -48,7 +48,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private static final short NO_ENEMY_FILTER_BITS = JumpGame.GROUND_BIT |
             JumpGame.PLATFORM_BIT |
-            JumpGame.COIN_BIT |
+            JumpGame.ITEM_BOX_BIT |
             JumpGame.BRICK_BIT |
             JumpGame.ENEMY_SIDE_BIT | // to still block the Flower
             JumpGame.OBJECT_BIT |
@@ -446,7 +446,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fixtureDef.shape = feetShape;
         fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
                 JumpGame.PLATFORM_BIT |
-                JumpGame.COIN_BIT |
+                JumpGame.ITEM_BOX_BIT |
                 JumpGame.BRICK_BIT |
                 JumpGame.OBJECT_BIT;
         Fixture fixture = body.createFixture(fixtureDef);

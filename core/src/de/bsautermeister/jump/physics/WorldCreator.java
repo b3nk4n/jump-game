@@ -21,7 +21,7 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
-import de.bsautermeister.jump.sprites.Coin;
+import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
@@ -76,7 +76,7 @@ public class WorldCreator {
         }
 
         for (MapObject mapObject : map.getLayers().get(COINS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            tileObjects.add(new Coin(callbacks, world, map, mapObject));
+            tileObjects.add(new ItemBox(callbacks, world, map, mapObject));
         }
     }
 
@@ -111,7 +111,7 @@ public class WorldCreator {
             fixture.setUserData(parent);
         }
 
-        if (categoryBit == JumpGame.BRICK_BIT | categoryBit == JumpGame.COIN_BIT) {
+        if (categoryBit == JumpGame.BRICK_BIT | categoryBit == JumpGame.ITEM_BOX_BIT) {
             EdgeShape topCornerShape = new EdgeShape();
             fixtureDef.shape = topCornerShape;
             fixtureDef.filter.categoryBits = JumpGame.BLOCK_TOP_BIT;

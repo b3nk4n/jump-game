@@ -50,7 +50,7 @@ import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Brick;
-import de.bsautermeister.jump.sprites.Coin;
+import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
@@ -63,7 +63,7 @@ import de.bsautermeister.jump.sprites.Mario;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
-import de.bsautermeister.jump.sprites.SpinningCoin;
+import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -99,7 +99,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private boolean levelCompleted;
     private float levelCompletedTimer;
 
-    private Array<SpinningCoin> spinningCoins;
+    private Array<BoxCoin> activeBoxCoins;
 
     private Sound bumpSound;
     private Sound powerupSpawnSound;
@@ -158,18 +158,18 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
-        public void hit(Mario mario, Coin coin, Vector2 position, boolean closeEnough) {
-            if (coin.isBlank() || !closeEnough) {
+        public void hit(Mario mario, ItemBox itemBox, Vector2 position, boolean closeEnough) {
+            if (itemBox.isBlank() || !closeEnough) {
                 bumpSound.play();
-            } else if (coin.hasMushroom()) {
+            } else if (itemBox.hasMushroom()) {
                 spawnItem(new ItemDef(position, Mushroom.class));
                 powerupSpawnSound.play();
             } else {
                 coinSound.play();
-                SpinningCoin spinningCoin = new SpinningCoin(atlas, coin.getBody().getWorldCenter());
-                spinningCoins.add(spinningCoin);
+                BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
+                activeBoxCoins.add(boxCoin);
                 score += Cfg.COIN_SCORE;
-                // score is shown later when the coin disappears
+                // score is shown later when the itemBox disappears
             }
         }
 
@@ -285,7 +285,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         items = new ObjectMap();
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
-        spinningCoins = new Array<SpinningCoin>();
+        activeBoxCoins = new Array<BoxCoin>();
 
         mario = new Mario(callbacks, world, atlas);
 
@@ -438,12 +438,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             tileObject.update(delta);
         }
 
-        for(SpinningCoin spinningCoin : spinningCoins) {
-            if (spinningCoin.isFinished()) {
-                showScoreText(Cfg.COIN_SCORE_STRING, spinningCoin.getBoundingRectangle());
-                spinningCoins.removeValue(spinningCoin, true);
+        for(BoxCoin boxCoin : activeBoxCoins) {
+            if (boxCoin.isFinished()) {
+                showScoreText(Cfg.COIN_SCORE_STRING, boxCoin.getBoundingRectangle());
+                activeBoxCoins.removeValue(boxCoin, true);
             } else {
-                spinningCoin.update(delta);
+                boxCoin.update(delta);
             }
         }
 
@@ -665,8 +665,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_KEY));
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
 
-        for (SpinningCoin spinningCoin : spinningCoins) {
-            spinningCoin.draw(batch);
+        for (BoxCoin boxCoin : activeBoxCoins) {
+            boxCoin.draw(batch);
         }
     }
 
@@ -787,9 +787,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             out.writeUTF(item.getClass().getName());
             item.write(out);
         }
-        out.writeInt(spinningCoins.size);
-        for (SpinningCoin spinningCoin : spinningCoins) {
-            spinningCoin.write(out);
+        out.writeInt(activeBoxCoins.size);
+        for (BoxCoin boxCoin : activeBoxCoins) {
+            boxCoin.write(out);
         }
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.write(out);
@@ -841,9 +841,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
         int numSpinningCoins = in.readInt();
         for (int i = 0; i < numSpinningCoins; ++i) {
-            SpinningCoin spinningCoin = new SpinningCoin(atlas, Vector2.Zero);
-            spinningCoin.read(in);
-            spinningCoins.add(spinningCoin);
+            BoxCoin boxCoin = new BoxCoin(atlas, Vector2.Zero);
+            boxCoin.read(in);
+            activeBoxCoins.add(boxCoin);
         }
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             tileObject.read(in);
