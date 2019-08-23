@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.io.DataInputStream;
@@ -38,11 +39,24 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
                 float posX, float posY) {
         this.callbacks = callbacks;
         this.world = world;
-        animation = new Animation<TextureRegion>(0.2f,
-                atlas.findRegions(RegionNames.COIN), Animation.PlayMode.LOOP);
+        initAnimation(atlas);
         setBounds(posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         destroyBody = new MarkedAction();
         body = defineBody(posX + getWidth() / 2, posY + getHeight() / 2);
+
+        // start with an offset, so that not all coins have the same animation frame cycle
+        gameTime = 1000f - 0.75f * posX + 0.75f * posY;
+    }
+
+    private void initAnimation(TextureAtlas atlas) {
+        Array<TextureRegion> frames = new Array<TextureRegion>();
+        for (int i = 0; i < 10; ++i) {
+            frames.add(atlas.findRegion(RegionNames.COIN, 0));
+        }
+        for (int i = 0; i < 4; ++i) {
+            frames.add(atlas.findRegion(RegionNames.COIN, i));
+        }
+        animation = new Animation<TextureRegion>(0.1f, frames, Animation.PlayMode.LOOP);
     }
 
     private Body defineBody(float centerX, float centerY) {
