@@ -72,7 +72,11 @@
     <property name="mushroom" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="22" x="2864" y="144" width="16" height="16"/>
+  <object id="22" x="2864" y="144" width="16" height="16">
+   <properties>
+    <property name="multi_coin" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="23" x="2928" y="144" width="16" height="16"/>
   <object id="27" x="944" y="96" width="16" height="16">
    <properties>

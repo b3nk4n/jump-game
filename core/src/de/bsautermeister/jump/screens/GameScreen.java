@@ -163,7 +163,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         public void hit(Mario mario, ItemBox itemBox, Vector2 position, boolean closeEnough) {
             if (itemBox.isBlank() || !closeEnough) {
                 bumpSound.play();
-            } else if (itemBox.hasMushroom()) {
+            } else if (itemBox.isMushroomBox()) {
                 spawnItem(new ItemDef(position, Mushroom.class));
                 powerupSpawnSound.play();
             } else {

@@ -16,16 +16,33 @@ import de.bsautermeister.jump.physics.Bits;
 
 public class ItemBox extends InteractiveTileObject {
 
+    public enum Type {
+        COIN,
+        MUSHROOM
+    }
+
     private final static int BLANK_COIN_IDX = 28;
 
-    private boolean blank;
+    private Type type;
+    private int remainingItems;
 
     private static TiledMapTileSet tileSet;
 
     public ItemBox(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
         super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
-
         tileSet = map.getTileSets().getTileSet("tileset");
+        Boolean multiCoin = (Boolean) mapObject.getProperties().get("multi_coin");
+        Boolean mushroom = (Boolean) mapObject.getProperties().get("mushroom");
+        if (multiCoin != null && multiCoin) {
+            type = Type.COIN;
+            remainingItems = 5;
+        } else if (mushroom != null && mushroom) {
+            type = Type.MUSHROOM;
+            remainingItems = 1;
+        } else {
+            type = Type.COIN;
+            remainingItems = 1;
+        }
     }
 
     @Override
@@ -48,39 +65,41 @@ public class ItemBox extends InteractiveTileObject {
                 steppedOff(objectOnTop);
             }
 
-            setBlank();
+            remainingItems--;
+            updateCellBlankState();
             bumpUp();
         }
     }
 
-    public boolean hasMushroom() {
-        return getMapObject().getProperties().containsKey("mushroom");
+    public boolean isMushroomBox() {
+        return type == Type.MUSHROOM;
     }
 
     public boolean isBlank() {
-        return blank;
+        return remainingItems <= 0;
     }
 
-    private void setBlank() {
-        blank = true;
-        getCell().setTile(
-                new DynamicTiledMapTile(
-                        tileSet.getTile(BLANK_COIN_IDX)));
+    private void updateCellBlankState() {
+        if (isBlank()) {
+            getCell().setTile(
+                    new DynamicTiledMapTile(
+                            tileSet.getTile(BLANK_COIN_IDX)));
+        }
     }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
-        out.writeBoolean(blank);
+        out.writeInt(remainingItems);
+        out.writeUTF(type.name());
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
-        blank = in.readBoolean();
+        remainingItems = in.readInt();
+        type = Enum.valueOf(Type.class, in.readUTF());
 
-        if (blank) {
-            setBlank();
-        }
+        updateCellBlankState();
     }
 }
