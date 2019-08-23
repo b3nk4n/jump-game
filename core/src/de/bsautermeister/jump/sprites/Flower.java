@@ -20,6 +20,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Flower extends Enemy {
     private static final float MOVE_SPEED = 0.25f;
@@ -104,7 +105,8 @@ public class Flower extends Enemy {
         fixtureDef.isSensor = true;
         topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM),
                 new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM));
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Enemy>(this, TAG_TOP));
 
         return body;
     }

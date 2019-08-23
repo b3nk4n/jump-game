@@ -23,8 +23,11 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Goomba extends Enemy implements Drownable {
+    private static final float SPEED = 0.8f;
+
     public enum State {
         WALKING, STOMPED
     }
@@ -43,7 +46,7 @@ public class Goomba extends Enemy implements Drownable {
         stompedTexture = atlas.findRegion(RegionNames.GOOMBA_STOMP);
 
         state = new GameObjectState<State>(State.WALKING);
-        speed = -0.8f;
+        speed = -SPEED;
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
@@ -142,10 +145,12 @@ public class Goomba extends Enemy implements Drownable {
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Enemy>(this, TAG_LEFT));
         sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Enemy>(this, TAG_RIGHT));
         return body;
     }
 
@@ -170,8 +175,19 @@ public class Goomba extends Enemy implements Drownable {
         reverseDirection();
     }
 
-    public void reverseDirection() {
+    public void reverseDirection() { // TODO remove this one somehow, because side-sensor is more precise
         speed = -speed;
+        getCallbacks().hitWall(this);
+    }
+
+    public void changeDirectionBySideSensorTag(String sideSensorTag) {
+        float absoluteSpeed = Math.abs(speed);
+        if (sideSensorTag.equals(TAG_LEFT)) {
+            speed = absoluteSpeed;
+        } else {
+            speed = -absoluteSpeed;
+        }
+
         getCallbacks().hitWall(this);
     }
 

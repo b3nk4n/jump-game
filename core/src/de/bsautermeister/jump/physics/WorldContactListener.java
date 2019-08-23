@@ -31,6 +31,7 @@ public class WorldContactListener implements ContactListener {
         Enemy enemy;
         CollectableItem collectableItem;
         InteractiveTileObject tileObject;
+        TaggedUserData<Enemy> taggedUserData;
         switch (collisionDef) {
             case Bits.MARIO_HEAD | Bits.BRICK:
             case Bits.MARIO_HEAD | Bits.ITEM_BOX:
@@ -47,13 +48,13 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
             case Bits.ENEMY_SIDE | Bits.GROUND:
             case Bits.ENEMY_SIDE | Bits.PLATFORM:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (enemy instanceof Goomba) {
-                    ((Goomba) enemy).reverseDirection();
-                } else if (enemy instanceof Koopa) {
-                    ((Koopa) enemy).reverseDirection();
-                } else if (enemy instanceof Spiky) {
-                    ((Spiky) enemy).reverseDirection();
+                taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedUserData.getUserData() instanceof Goomba) {
+                    ((Goomba) taggedUserData.getUserData()).changeDirectionBySideSensorTag(taggedUserData.getTag());
+                } else if (taggedUserData.getUserData() instanceof Koopa) {
+                    ((Koopa) taggedUserData.getUserData()).changeDirectionBySideSensorTag(taggedUserData.getTag());
+                } else if (taggedUserData.getUserData() instanceof Spiky) {
+                    ((Spiky) taggedUserData.getUserData()).changeDirectionBySideSensorTag(taggedUserData.getTag());
                 }
                 break;
             case Bits.ENEMY: // enemy with enemy
@@ -94,9 +95,9 @@ public class WorldContactListener implements ContactListener {
                 tileObject.steppedOn(item.getId());
                 break;
             case Bits.MARIO | Bits.ENEMY_SIDE:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (enemy instanceof Flower) {
-                    Flower flower = (Flower) enemy;
+                taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedUserData.getUserData() instanceof Flower) {
+                    Flower flower = (Flower) taggedUserData.getUserData();
                     flower.setBlocked(true);
                 }
         }
@@ -114,6 +115,7 @@ public class WorldContactListener implements ContactListener {
         Platform platform;
         Enemy enemy;
         InteractiveTileObject tileObject;
+        TaggedUserData<Enemy> taggedUserData;
         switch (collisionDef) {
             case Bits.MARIO_FEET | Bits.GROUND:
             case Bits.MARIO_FEET | Bits.PLATFORM:
@@ -143,9 +145,9 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Bits.MARIO | Bits.ENEMY_SIDE:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (enemy instanceof Flower) {
-                    Flower flower = (Flower) enemy;
+                taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedUserData.getUserData() instanceof Flower) {
+                    Flower flower = (Flower) taggedUserData.getUserData();
                     flower.setBlocked(false);
                 }
         }

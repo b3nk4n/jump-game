@@ -19,6 +19,10 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Enemy extends Sprite implements BinarySerializable, Disposable {
+    protected static final String TAG_LEFT = "left";
+    protected static final String TAG_RIGHT = "right";
+    protected static final String TAG_TOP = "TOP";
+
     private String id;
 
     /**

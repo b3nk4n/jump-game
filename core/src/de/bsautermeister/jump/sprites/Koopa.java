@@ -24,6 +24,7 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Koopa extends Enemy implements Drownable {
     public static final float KICK_SPEED = 2f;
@@ -176,10 +177,12 @@ public class Koopa extends Enemy implements Drownable {
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Enemy>(this, TAG_LEFT));
         sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
-        body.createFixture(fixtureDef).setUserData(this);
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Enemy>(this, TAG_RIGHT));
 
         return body;
     }
@@ -222,6 +225,17 @@ public class Koopa extends Enemy implements Drownable {
 
     public void reverseDirection() {
         speed = -speed;
+        getCallbacks().hitWall(this);
+    }
+
+    public void changeDirectionBySideSensorTag(String sideSensorTag) {
+        float absoluteSpeed = Math.abs(speed);
+        if (sideSensorTag.equals(TAG_LEFT)) {
+            speed = absoluteSpeed;
+        } else {
+            speed = -absoluteSpeed;
+        }
+
         getCallbacks().hitWall(this);
     }
 
