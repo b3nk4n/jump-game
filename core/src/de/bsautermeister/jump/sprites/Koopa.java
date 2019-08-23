@@ -21,9 +21,9 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
+import de.bsautermeister.jump.physics.Bits;
 
 public class Koopa extends Enemy implements Drownable {
     public static final float KICK_SPEED = 2f;
@@ -67,9 +67,9 @@ public class Koopa extends Enemy implements Drownable {
             private void updateColliderBit(Fixture fixture, State previousState, State newState) {
                 Filter filter = fixture.getFilterData();
                 if (previousState == State.MOVING_SHELL) {
-                    filter.maskBits |= ~JumpGame.COLLIDER_BIT;
+                    filter.maskBits |= ~Bits.COLLIDER;
                 } else if (newState == State.MOVING_SHELL) {
-                    filter.maskBits &= ~JumpGame.COLLIDER_BIT;
+                    filter.maskBits &= ~Bits.COLLIDER;
                 }
                 fixture.setFilterData(filter);
             }
@@ -139,14 +139,14 @@ public class Koopa extends Enemy implements Drownable {
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6f / Cfg.PPM);
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.PLATFORM_BIT |
-                JumpGame.ITEM_BOX_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.MARIO_BIT |
-                JumpGame.ENEMY_BIT |
-                JumpGame.BLOCK_TOP_BIT;
+        fixtureDef.filter.categoryBits = Bits.ENEMY;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.PLATFORM |
+                Bits.ITEM_BOX |
+                Bits.BRICK |
+                Bits.MARIO |
+                Bits.ENEMY |
+                Bits.BLOCK_TOP;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
@@ -163,16 +163,16 @@ public class Koopa extends Enemy implements Drownable {
 
         fixtureDef.shape = headShape;
         fixtureDef.restitution = 1f;
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_HEAD_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
+        fixtureDef.filter.maskBits = Bits.MARIO;
         body.createFixture(fixtureDef).setUserData(this);
 
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT
-                | JumpGame.COLLIDER_BIT
-                | JumpGame.OBJECT_BIT;
+        fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
+        fixtureDef.filter.maskBits = Bits.GROUND
+                | Bits.COLLIDER
+                | Bits.OBJECT;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));

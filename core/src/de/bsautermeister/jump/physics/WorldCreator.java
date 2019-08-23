@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
@@ -38,21 +37,21 @@ public class WorldCreator {
     public static final String BACKGROUND_GRAPHICS_KEY = "backgroundGraphics";
     public static final String GRAPHICS_KEY = "graphics";
 
-    public static final String GROUND_KEY = "ground";
-    public static final String PIPES_KEY = "pipes";
-    public static final String BOXES_KEY = "boxes";
-    public static final String BRICKS_KEY = "bricks";
-    public static final String GOOMBAS_KEY = "goombas";
-    public static final String KOOPAS_KEY = "koopas";
-    public static final String SPIKIES_KEY = "spikies";
-    public static final String FLOWERS_KEY = "flowers";
-    public static final String FISHES_KEY = "fishes";
-    public static final String COLLIDER_KEY = "collider";
-    public static final String WATER_KEY = "water";
-    public static final String GOAL_KEY = "goal";
-    public static final String BOUNCERS_KEY = "bouncers";
-    public static final String PLATFORMS_KEY = "platforms";
-    public static final String COINS_KEY = "coins";
+    private static final String GROUND_KEY = "ground";
+    private static final String PIPES_KEY = "pipes";
+    private static final String BOXES_KEY = "boxes";
+    private static final String BRICKS_KEY = "bricks";
+    private static final String GOOMBAS_KEY = "goombas";
+    private static final String KOOPAS_KEY = "koopas";
+    private static final String SPIKIES_KEY = "spikies";
+    private static final String FLOWERS_KEY = "flowers";
+    private static final String FISHES_KEY = "fishes";
+    private static final String COLLIDER_KEY = "collider";
+    private static final String WATER_KEY = "water";
+    private static final String GOAL_KEY = "goal";
+    private static final String BOUNCERS_KEY = "bouncers";
+    private static final String PLATFORMS_KEY = "platforms";
+    private static final String COINS_KEY = "coins";
 
     private final World world;
     private final TiledMap map;
@@ -69,9 +68,9 @@ public class WorldCreator {
     }
 
     public void buildFromMap() {
-        buildPhysicalLayer(GROUND_KEY, BodyDef.BodyType.StaticBody, JumpGame.GROUND_BIT, false);
-        buildPhysicalLayer(PIPES_KEY, BodyDef.BodyType.StaticBody, JumpGame.OBJECT_BIT, false);
-        buildPhysicalLayer(COLLIDER_KEY, BodyDef.BodyType.StaticBody, JumpGame.COLLIDER_BIT, true);
+        buildStaticLayer(GROUND_KEY, Bits.GROUND, false);
+        buildStaticLayer(PIPES_KEY, Bits.OBJECT, false);
+        buildStaticLayer(COLLIDER_KEY, Bits.COLLIDER, true);
 
         for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
             tileObjects.add(new Brick(callbacks, world, map, atlas, mapObject));
@@ -82,14 +81,14 @@ public class WorldCreator {
         }
     }
 
-    private void buildPhysicalLayer(String layer, BodyDef.BodyType bodyType, short categoryBit, boolean asSensor) {
+    private void buildStaticLayer(String layer, short categoryBit, boolean asSensor) {
         if (!hasLayer(map, layer)) {
             return;
         }
 
         for (MapObject mapObject : map.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle bounds = ((RectangleMapObject) mapObject).getRectangle();
-            createBody(null, world, bounds, bodyType, categoryBit, asSensor);
+            createBody(null, world, bounds, BodyDef.BodyType.StaticBody, categoryBit, asSensor);
         }
     }
 
@@ -113,11 +112,11 @@ public class WorldCreator {
             fixture.setUserData(parent);
         }
 
-        if (categoryBit == JumpGame.BRICK_BIT | categoryBit == JumpGame.ITEM_BOX_BIT) {
+        if (categoryBit == Bits.BRICK | categoryBit == Bits.ITEM_BOX) {
             EdgeShape topCornerShape = new EdgeShape();
             fixtureDef.shape = topCornerShape;
-            fixtureDef.filter.categoryBits = JumpGame.BLOCK_TOP_BIT;
-            fixtureDef.filter.maskBits = JumpGame.ENEMY_BIT | JumpGame.ITEM_BIT;
+            fixtureDef.filter.categoryBits = Bits.BLOCK_TOP;
+            fixtureDef.filter.maskBits = Bits.ENEMY | Bits.ITEM;
             fixtureDef.isSensor = true;
             topCornerShape.set(new Vector2(-6 / Cfg.PPM, 8.5f / Cfg.PPM),
                     new Vector2(6 / Cfg.PPM, 8.5f / Cfg.PPM));

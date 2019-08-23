@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.physics.Bits;
 
 public class Brick extends InteractiveTileObject {
 
@@ -28,7 +28,7 @@ public class Brick extends InteractiveTileObject {
     static Pool<BrickFragment> brickFragmentPool = Pools.get(BrickFragment.class);
 
     public Brick(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
-        super(callbacks, JumpGame.BRICK_BIT, world, map, mapObject);
+        super(callbacks, Bits.BRICK, world, map, mapObject);
         this.atlas = atlas;
     }
 
@@ -84,7 +84,7 @@ public class Brick extends InteractiveTileObject {
     }
 
     private void destroy() {
-        updateCategoryFilter(JumpGame.DESTROYED_BIT);
+        updateCategoryFilter(Bits.DESTROYED);
         getCell().setTile(null);
         destroyed = true;
     }

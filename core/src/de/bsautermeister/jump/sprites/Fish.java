@@ -18,9 +18,9 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
+import de.bsautermeister.jump.physics.Bits;
 
 public class Fish extends Enemy implements Drownable {
     private static final float WAIT_TIME = 3f;
@@ -112,8 +112,8 @@ public class Fish extends Enemy implements Drownable {
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.categoryBits = Bits.ENEMY;
+        fixtureDef.filter.maskBits = Bits.MARIO;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 

@@ -18,8 +18,8 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Coin extends Sprite implements CollectableItem, BinarySerializable, Disposable {
@@ -55,8 +55,8 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / Cfg.PPM);
         fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = JumpGame.ITEM_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.categoryBits = Bits.ITEM;
+        fixtureDef.filter.maskBits = Bits.MARIO;
         fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);

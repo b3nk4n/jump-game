@@ -6,7 +6,6 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Flower;
@@ -33,22 +32,22 @@ public class WorldContactListener implements ContactListener {
         CollectableItem collectableItem;
         InteractiveTileObject tileObject;
         switch (collisionDef) {
-            case JumpGame.MARIO_HEAD_BIT | JumpGame.BRICK_BIT:
-            case JumpGame.MARIO_HEAD_BIT | JumpGame.ITEM_BOX_BIT:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_HEAD_BIT);
-                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BOX_BIT | JumpGame.BRICK_BIT);
+            case Bits.MARIO_HEAD | Bits.BRICK:
+            case Bits.MARIO_HEAD | Bits.ITEM_BOX:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO_HEAD);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.ITEM_BOX | Bits.BRICK);
                 tileObject.onHeadHit(mario);
                 break;
-            case JumpGame.ENEMY_HEAD_BIT | JumpGame.MARIO_BIT: // TODO: check, if mario is landing very fast, he could also touch the body instead of thus the head, and die
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_HEAD_BIT);
+            case Bits.ENEMY_HEAD | Bits.MARIO: // TODO: check, if mario is landing very fast, he could also touch the body instead of thus the head, and die
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
                 enemy.onHeadHit(mario);
                 break;
-            case JumpGame.ENEMY_SIDE_BIT | JumpGame.OBJECT_BIT:
-            case JumpGame.ENEMY_SIDE_BIT | JumpGame.COLLIDER_BIT:
-            case JumpGame.ENEMY_SIDE_BIT | JumpGame.GROUND_BIT:
-            case JumpGame.ENEMY_SIDE_BIT | JumpGame.PLATFORM_BIT:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
+            case Bits.ENEMY_SIDE | Bits.OBJECT:
+            case Bits.ENEMY_SIDE | Bits.COLLIDER:
+            case Bits.ENEMY_SIDE | Bits.GROUND:
+            case Bits.ENEMY_SIDE | Bits.PLATFORM:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (enemy instanceof Goomba) {
                     ((Goomba) enemy).reverseDirection();
                 } else if (enemy instanceof Koopa) {
@@ -57,45 +56,45 @@ public class WorldContactListener implements ContactListener {
                     ((Spiky) enemy).reverseDirection();
                 }
                 break;
-            case JumpGame.ENEMY_BIT: // enemy with enemy
+            case Bits.ENEMY: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
                 ((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
                 break;
-            case JumpGame.MARIO_BIT | JumpGame.ENEMY_BIT:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
+            case Bits.MARIO | Bits.ENEMY:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
                 mario.hit(enemy);
                 break;
-            case JumpGame.ITEM_BIT | JumpGame.OBJECT_BIT:
-                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
+            case Bits.ITEM | Bits.OBJECT:
+                item = (Item) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
                 item.reverseVelocity(true, false);
                 break;
-            case JumpGame.ITEM_BIT | JumpGame.MARIO_BIT:
-                collectableItem = (CollectableItem) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
+            case Bits.ITEM | Bits.MARIO:
+                collectableItem = (CollectableItem) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
                 collectableItem.collectBy(mario);
                 break;
-            case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.ITEM_BOX_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
-                Object other = resolveUserData(fixtureA, fixtureB, ~JumpGame.MARIO_FEET_BIT);
+            case Bits.MARIO_FEET | Bits.GROUND:
+            case Bits.MARIO_FEET | Bits.PLATFORM:
+            case Bits.MARIO_FEET | Bits.ITEM_BOX:
+            case Bits.MARIO_FEET | Bits.BRICK:
+            case Bits.MARIO_FEET | Bits.OBJECT:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO_FEET);
+                Object other = resolveUserData(fixtureA, fixtureB, ~Bits.MARIO_FEET);
                 mario.touchGround(other);
                 break;
-            case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
-                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+            case Bits.BLOCK_TOP | Bits.ENEMY:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.BLOCK_TOP);
                 tileObject.steppedOn(enemy.getId());
                 break;
-            case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
-                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
-                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+            case Bits.BLOCK_TOP | Bits.ITEM:
+                item = (Item) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.BLOCK_TOP);
                 tileObject.steppedOn(item.getId());
                 break;
-            case JumpGame.MARIO_BIT | JumpGame.ENEMY_SIDE_BIT:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
+            case Bits.MARIO | Bits.ENEMY_SIDE:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (enemy instanceof Flower) {
                     Flower flower = (Flower) enemy;
                     flower.setBlocked(true);
@@ -116,35 +115,35 @@ public class WorldContactListener implements ContactListener {
         Enemy enemy;
         InteractiveTileObject tileObject;
         switch (collisionDef) {
-            case JumpGame.MARIO_FEET_BIT | JumpGame.GROUND_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.PLATFORM_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.ITEM_BOX_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.BRICK_BIT:
-            case JumpGame.MARIO_FEET_BIT | JumpGame.OBJECT_BIT:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_FEET_BIT);
-                Object other = resolveUserData(fixtureA, fixtureB, ~JumpGame.MARIO_FEET_BIT);
+            case Bits.MARIO_FEET | Bits.GROUND:
+            case Bits.MARIO_FEET | Bits.PLATFORM:
+            case Bits.MARIO_FEET | Bits.ITEM_BOX:
+            case Bits.MARIO_FEET | Bits.BRICK:
+            case Bits.MARIO_FEET | Bits.OBJECT:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO_FEET);
+                Object other = resolveUserData(fixtureA, fixtureB, ~Bits.MARIO_FEET);
                 mario.leftGround(other);
                 break;
-            case JumpGame.BLOCK_TOP_BIT | JumpGame.ENEMY_BIT:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_BIT);
-                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+            case Bits.BLOCK_TOP | Bits.ENEMY:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.BLOCK_TOP);
                 tileObject.steppedOff(enemy.getId());
                 break;
-            case JumpGame.BLOCK_TOP_BIT | JumpGame.ITEM_BIT:
-                item = (Item) resolveUserData(fixtureA, fixtureB, JumpGame.ITEM_BIT);
-                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, JumpGame.BLOCK_TOP_BIT);
+            case Bits.BLOCK_TOP | Bits.ITEM:
+                item = (Item) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.BLOCK_TOP);
                 tileObject.steppedOff(item.getId());
                 break;
-            case JumpGame.MARIO_BIT | JumpGame.PLATFORM_BIT:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
-                platform = (Platform) resolveUserData(fixtureA, fixtureB, JumpGame.PLATFORM_BIT);
+            case Bits.MARIO | Bits.PLATFORM:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
+                platform = (Platform) resolveUserData(fixtureA, fixtureB, Bits.PLATFORM);
                 if (!mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
                     // TODO why is this overlap check required? Because endContact should not be called when they are still in contact
                     mario.setLastJumpThroughPlatformId(null);
                 }
                 break;
-            case JumpGame.MARIO_BIT | JumpGame.ENEMY_SIDE_BIT:
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, JumpGame.ENEMY_SIDE_BIT);
+            case Bits.MARIO | Bits.ENEMY_SIDE:
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (enemy instanceof Flower) {
                     Flower flower = (Flower) enemy;
                     flower.setBlocked(false);
@@ -167,9 +166,9 @@ public class WorldContactListener implements ContactListener {
         Mario mario;
         Platform platform;
         switch (collisionDef) {
-            case JumpGame.MARIO_BIT | JumpGame.PLATFORM_BIT:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, JumpGame.MARIO_BIT);
-                platform = (Platform) resolveUserData(fixtureA, fixtureB, JumpGame.PLATFORM_BIT);
+            case Bits.MARIO | Bits.PLATFORM:
+                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
+                platform = (Platform) resolveUserData(fixtureA, fixtureB, Bits.PLATFORM);
 
                 if (mario.hasLastJumpThroughPlatformId()) {
                     if (platform.getId().equals(mario.getLastJumpThroughPlatformId())) {

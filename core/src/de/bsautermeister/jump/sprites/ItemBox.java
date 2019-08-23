@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.physics.Bits;
 
 public class ItemBox extends InteractiveTileObject {
 
@@ -23,7 +23,7 @@ public class ItemBox extends InteractiveTileObject {
     private static TiledMapTileSet tileSet;
 
     public ItemBox(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
-        super(callbacks, JumpGame.ITEM_BOX_BIT, world, map, mapObject);
+        super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
 
         tileSet = map.getTileSets().getTileSet("tileset");
     }

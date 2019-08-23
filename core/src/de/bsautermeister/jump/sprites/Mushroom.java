@@ -12,9 +12,9 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
+import de.bsautermeister.jump.physics.Bits;
 
 public class Mushroom extends Item implements Drownable {
 
@@ -36,14 +36,14 @@ public class Mushroom extends Item implements Drownable {
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / Cfg.PPM);
-        fixtureDef.filter.categoryBits = JumpGame.ITEM_BIT;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.PLATFORM_BIT |
-                JumpGame.ITEM_BOX_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.MARIO_BIT |
-                JumpGame.OBJECT_BIT |
-                JumpGame.BLOCK_TOP_BIT;
+        fixtureDef.filter.categoryBits = Bits.ITEM;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.PLATFORM |
+                Bits.ITEM_BOX |
+                Bits.BRICK |
+                Bits.MARIO |
+                Bits.OBJECT |
+                Bits.BLOCK_TOP;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);

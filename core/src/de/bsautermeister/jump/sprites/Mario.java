@@ -25,10 +25,10 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
+import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
@@ -36,23 +36,23 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     public static final float INITAL_TTL = 200;
 
-    private static final short NORMAL_FILTER_BITS = JumpGame.GROUND_BIT |
-            JumpGame.PLATFORM_BIT |
-            JumpGame.ITEM_BOX_BIT |
-            JumpGame.BRICK_BIT |
-            JumpGame.ENEMY_BIT |
-            JumpGame.ENEMY_HEAD_BIT |
-            JumpGame.ENEMY_SIDE_BIT |
-            JumpGame.OBJECT_BIT |
-            JumpGame.ITEM_BIT;
+    private static final short NORMAL_FILTER_BITS = Bits.GROUND |
+            Bits.PLATFORM |
+            Bits.ITEM_BOX |
+            Bits.BRICK |
+            Bits.ENEMY |
+            Bits.ENEMY_HEAD |
+            Bits.ENEMY_SIDE |
+            Bits.OBJECT |
+            Bits.ITEM;
 
-    private static final short NO_ENEMY_FILTER_BITS = JumpGame.GROUND_BIT |
-            JumpGame.PLATFORM_BIT |
-            JumpGame.ITEM_BOX_BIT |
-            JumpGame.BRICK_BIT |
-            JumpGame.ENEMY_SIDE_BIT | // to still block the Flower
-            JumpGame.OBJECT_BIT |
-            JumpGame.ITEM_BIT;
+    private static final short NO_ENEMY_FILTER_BITS = Bits.GROUND |
+            Bits.PLATFORM |
+            Bits.ITEM_BOX |
+            Bits.BRICK |
+            Bits.ENEMY_SIDE | // to still block the Flower
+            Bits.OBJECT |
+            Bits.ITEM;
 
     private GameCallbacks callbacks;
     private World world;
@@ -132,7 +132,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             @Override
             public void onFinish() {
                 Filter filter = new Filter();
-                filter.categoryBits = JumpGame.MARIO_BIT;
+                filter.categoryBits = Bits.MARIO;
                 filter.maskBits = NORMAL_FILTER_BITS;
                 getBody().getFixtureList().get(0).setFilterData(filter);
             }
@@ -429,7 +429,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private void createBodyFixture(FixtureDef fixtureDef, float[] smallPolygonVertices, boolean normalFilterMask) {
         PolygonShape shape = new PolygonShape();
         shape.set(smallPolygonVertices);
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.categoryBits = Bits.MARIO;
         fixtureDef.filter.maskBits = normalFilterMask ?
                 NORMAL_FILTER_BITS : NO_ENEMY_FILTER_BITS;
 
@@ -446,11 +446,11 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         feetShape.set(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
-        fixtureDef.filter.maskBits = JumpGame.GROUND_BIT |
-                JumpGame.PLATFORM_BIT |
-                JumpGame.ITEM_BOX_BIT |
-                JumpGame.BRICK_BIT |
-                JumpGame.OBJECT_BIT;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.PLATFORM |
+                Bits.ITEM_BOX |
+                Bits.BRICK |
+                Bits.OBJECT;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
     }
@@ -459,7 +459,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         EdgeShape headShape = new EdgeShape();
         headShape.set(new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_HEAD_BIT;
+        fixtureDef.filter.categoryBits = Bits.MARIO_HEAD;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         Fixture fixture = body.createFixture(fixtureDef);
@@ -473,7 +473,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         EdgeShape groundSensorShape = new EdgeShape();
         groundSensorShape.set(new Vector2(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, bottomY / Cfg.PPM));
-        fixtureDef.filter.categoryBits = JumpGame.MARIO_FEET_BIT;
+        fixtureDef.filter.categoryBits = Bits.MARIO_FEET;
         fixtureDef.shape = groundSensorShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
@@ -557,7 +557,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         state.set(State.DEAD);
 
         Filter filter = new Filter();
-        filter.maskBits = JumpGame.NOTHING_BIT;
+        filter.maskBits = Bits.NOTHING;
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
         }

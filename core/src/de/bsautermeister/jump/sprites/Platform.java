@@ -20,9 +20,9 @@ import java.util.UUID;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.models.PlatformBouncer;
+import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Platform extends Sprite implements BinarySerializable {
@@ -101,11 +101,11 @@ public class Platform extends Sprite implements BinarySerializable {
                 -bounds.getWidth() / 2, -bounds.getHeight() / 2 + cornerWidth,
         });
         fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = JumpGame.PLATFORM_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT |
-                JumpGame.MARIO_FEET_BIT |
-                JumpGame.ENEMY_BIT |
-                JumpGame.ITEM_BIT;
+        fixtureDef.filter.categoryBits = Bits.PLATFORM;
+        fixtureDef.filter.maskBits = Bits.MARIO |
+                Bits.MARIO_FEET |
+                Bits.ENEMY |
+                Bits.ITEM;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         return body;

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Enemy extends Sprite implements BinarySerializable, Disposable {
@@ -73,7 +73,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     public void kill(boolean applyPush) {
         dead = true;
         Filter filter = new Filter();
-        filter.maskBits = JumpGame.NOTHING_BIT;
+        filter.maskBits = Bits.NOTHING;
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
         }

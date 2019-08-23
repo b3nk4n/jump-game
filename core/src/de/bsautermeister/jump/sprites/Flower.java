@@ -18,8 +18,8 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
-import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.physics.Bits;
 
 public class Flower extends Enemy {
     private static final float MOVE_SPEED = 0.25f;
@@ -91,16 +91,16 @@ public class Flower extends Enemy {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(7f / Cfg.PPM, 12f / Cfg.PPM);
         fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.categoryBits = Bits.ENEMY;
+        fixtureDef.filter.maskBits = Bits.MARIO;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 
         // top sensor
         EdgeShape topSensor = new EdgeShape();
         fixtureDef.shape = topSensor;
-        fixtureDef.filter.categoryBits = JumpGame.ENEMY_SIDE_BIT;
-        fixtureDef.filter.maskBits = JumpGame.MARIO_BIT;
+        fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
+        fixtureDef.filter.maskBits = Bits.MARIO;
         fixtureDef.isSensor = true;
         topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM),
                 new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM));
