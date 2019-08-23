@@ -26,7 +26,13 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Platform extends Sprite implements BinarySerializable {
-    public static final float SPEED = 0.5f;
+    private static final float SPEED = 0.5f;
+    private static final float SHAKE_TIME = 1f;
+    private static final Vector2 FALLING_VELOCITY = new Vector2(0, -9.81f);
+
+    private enum State {
+        MOVING, BREAKING, FALLING
+    }
 
     private String id;
     private GameCallbacks callbacks;
@@ -34,34 +40,44 @@ public class Platform extends Sprite implements BinarySerializable {
     private Body body;
     private Vector2 targetVelocity;
 
+    private GameObjectState<State> state; // TODO: due to the state, restore/removable logic in GameScreen has to be changed, because Platforms can now disappear
+    private boolean breakable;
+
     private Array<PlatformBouncer> bouncerRegions;
 
     public Platform(GameCallbacks callbacks, World world, TextureAtlas atlas, Rectangle bounds,
-                    int startAngle, Array<PlatformBouncer> bouncerRegions) {
+                    int startAngle, boolean breakable, Array<PlatformBouncer> bouncerRegions) {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
+        state = new GameObjectState<State>(State.MOVING);
         setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 
+        setRegion(getTextureRegion(atlas, bounds, breakable));
+
+        body = defineBody();
+        targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(SPEED);
+        this.breakable = breakable;
+        this.bouncerRegions = bouncerRegions;
+        setActive(true); // sleep and activate as soon as player gets close
+    }
+
+    private TextureAtlas.AtlasRegion getTextureRegion(TextureAtlas atlas, Rectangle bounds,
+                                                      boolean breakable) {
         int width = Math.round(bounds.width / (Cfg.BLOCK_SIZE / Cfg.PPM));
         switch (width) {
             case 2:
-                setRegion(atlas.findRegion(RegionNames.PLATFORM2));
-                break;
+                return atlas.findRegion(breakable ?
+                        RegionNames.BREAK_PLATFORM2 : RegionNames.PLATFORM2);
             case 3:
-                setRegion(atlas.findRegion(RegionNames.PLATFORM3));
-                break;
+                return atlas.findRegion(breakable ?
+                        RegionNames.BREAK_PLATFORM3 : RegionNames.PLATFORM3);
             case 4:
-                setRegion(atlas.findRegion(RegionNames.PLATFORM4));
-                break;
+                return atlas.findRegion(breakable ?
+                        RegionNames.BREAK_PLATFORM4 : RegionNames.PLATFORM4);
             default:
                 throw new IllegalArgumentException("Unsupported block_width for platform: " + width);
         }
-
-        this.body = defineBody();
-        this.targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(SPEED);
-        this.bouncerRegions = bouncerRegions;
-        setActive(true); // sleep and activate as soon as player gets close
     }
 
     private Vector2 getDirectionOfSimpleAngle(int angle) {
@@ -112,11 +128,15 @@ public class Platform extends Sprite implements BinarySerializable {
     }
 
     public void update(float delta) {
-        for (PlatformBouncer bouncer : bouncerRegions) {
-            Rectangle rect = getBoundingRectangle();
-            if (Intersector.overlaps(bouncer.getRegion(), rect)) {
-                bounce(bouncer.getAngle());
-                break;
+        state.upate(delta);
+
+        if (!state.is(State.FALLING)) {
+            for (PlatformBouncer bouncer : bouncerRegions) {
+                Rectangle rect = getBoundingRectangle();
+                if (Intersector.overlaps(bouncer.getRegion(), rect)) {
+                    bounce(bouncer.getAngle());
+                    break;
+                }
             }
         }
 
@@ -127,13 +147,26 @@ public class Platform extends Sprite implements BinarySerializable {
             currentVelocity.y += (targetVelocity.y - currentVelocity.y) * delta;
         }
 
-        body.setLinearVelocity(currentVelocity);
+        if (state.is(State.BREAKING)) {
 
+            if (state.timer() > SHAKE_TIME) {
+                state.set(State.FALLING);
+                targetVelocity = FALLING_VELOCITY;
+            }
+        }
+
+        body.setLinearVelocity(currentVelocity);
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
     }
 
     public void bounce(int angle) {
         targetVelocity = getDirectionOfSimpleAngle(angle).scl(SPEED);
+    }
+
+    public void touch() {
+        if (breakable && state.is(State.MOVING)) {
+            state.set(State.BREAKING);
+        }
     }
 
     public Vector2 getRelativeVelocityOf(Body otherBody) {
@@ -169,6 +202,7 @@ public class Platform extends Sprite implements BinarySerializable {
         out.writeFloat(body.getLinearVelocity().y);
         out.writeFloat(targetVelocity.x);
         out.writeFloat(targetVelocity.y);
+        out.writeBoolean(breakable);
     }
 
     @Override
@@ -177,5 +211,6 @@ public class Platform extends Sprite implements BinarySerializable {
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         targetVelocity.set(in.readFloat(), in.readFloat());
+        breakable = in.readBoolean();
     }
 }

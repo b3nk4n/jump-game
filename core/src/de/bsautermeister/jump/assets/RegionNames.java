@@ -28,6 +28,9 @@ public interface RegionNames {
     String PLATFORM2 = "platform2";
     String PLATFORM3 = "platform3";
     String PLATFORM4 = "platform4";
+    String BREAK_PLATFORM2 = "break_platform2";
+    String BREAK_PLATFORM3 = "break_platform3";
+    String BREAK_PLATFORM4 = "break_platform4";
 
     String LOADING_LOGO = "title";
     String LOADING_ANIMATION = "loading";

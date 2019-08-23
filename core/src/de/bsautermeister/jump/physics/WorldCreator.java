@@ -196,8 +196,12 @@ public class WorldCreator {
             for (RectangleMapObject mapObject : map.getLayers().get(PLATFORMS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = mapObject.getRectangle();
                 Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
+                Boolean breakable = (Boolean) mapObject.getProperties().get("breakable");
                 Platform platform = new Platform(callbacks, world, atlas,
-                        toPPM(rect), startAngle != null ? startAngle : 0, bouncerRegions);
+                        toPPM(rect),
+                        startAngle != null ? startAngle : 0,
+                        breakable != null ? breakable : false,
+                        bouncerRegions);
                 platforms.add(platform);
             }
         }

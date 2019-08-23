@@ -83,6 +83,10 @@ public class WorldContactListener implements ContactListener {
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO_FEET);
                 Object other = resolveUserData(fixtureA, fixtureB, ~Bits.MARIO_FEET);
                 mario.touchGround(other);
+                if (other instanceof Platform) {
+                    if (Math.abs(mario.getVelocityRelativeToGround().y) < 0.1)
+                    ((Platform) other).touch(); // TODO: make sure we are standing still on the platform
+                }
                 break;
             case Bits.BLOCK_TOP | Bits.ENEMY:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);

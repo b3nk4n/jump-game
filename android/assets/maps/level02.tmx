@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="103">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="17" nextobjectid="107">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="backgroundColor" width="240" height="13">
   <data encoding="csv">
@@ -191,6 +191,16 @@
     <property name="bounce_angle" type="int" value="90"/>
    </properties>
   </object>
+  <object id="104" x="48" y="32" width="16" height="16">
+   <properties>
+    <property name="bounce_angle" type="int" value="270"/>
+   </properties>
+  </object>
+  <object id="105" x="48" y="112" width="16" height="16">
+   <properties>
+    <property name="bounce_angle" type="int" value="90"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="13" name="platforms">
   <properties>
@@ -213,12 +223,19 @@
   </object>
   <object id="91" x="288" y="96" width="48" height="16">
    <properties>
+    <property name="breakable" type="bool" value="true"/>
     <property name="start_angle" type="int" value="180"/>
    </properties>
   </object>
   <object id="96" x="112" y="112" width="48" height="16">
    <properties>
     <property name="start_angle" type="int" value="270"/>
+   </properties>
+  </object>
+  <object id="106" x="48" y="80" width="32" height="16">
+   <properties>
+    <property name="breakable" type="bool" value="true"/>
+    <property name="start_angle" type="int" value="90"/>
    </properties>
   </object>
  </objectgroup>
