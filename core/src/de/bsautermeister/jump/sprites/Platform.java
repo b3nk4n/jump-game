@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
@@ -28,7 +29,7 @@ import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Platform extends Sprite implements BinarySerializable {
     private static final float SPEED = 0.5f;
-    private static final float SHAKE_TIME = 1f;
+    private static final float SHAKE_TIME = 0.5f;
     private static final Vector2 FALLING_VELOCITY = new Vector2(0, -9.81f);
 
     private enum State {
@@ -148,7 +149,13 @@ public class Platform extends Sprite implements BinarySerializable {
             currentVelocity.y += (targetVelocity.y - currentVelocity.y) * delta;
         }
 
+        float xOffset = 0f;
+        float yOffset = 0f;
+
         if (state.is(State.BREAKING)) {
+
+            xOffset = (float)Math.sin(state.timer() * 31f) * 1f / Cfg.PPM;
+            yOffset = (float)Math.sin(state.timer() * 51f) * 1f / Cfg.PPM;
 
             if (state.timer() > SHAKE_TIME) {
                 state.set(State.FALLING);
@@ -159,7 +166,8 @@ public class Platform extends Sprite implements BinarySerializable {
         }
 
         body.setLinearVelocity(currentVelocity);
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+        setPosition(body.getPosition().x + xOffset - getWidth() / 2,
+                body.getPosition().y + yOffset - getHeight() / 2);
     }
 
     public void bounce(int angle) {
@@ -169,6 +177,7 @@ public class Platform extends Sprite implements BinarySerializable {
     public void touch() {
         if (breakable && state.is(State.MOVING)) {
             state.set(State.BREAKING);
+            Gdx.input.vibrate(500);
         }
     }
 
