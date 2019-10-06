@@ -53,6 +53,7 @@ import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.FireFlower;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
@@ -164,7 +165,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             if (itemBox.isBlank() || !closeEnough) {
                 bumpSound.play();
             } else if (itemBox.isMushroomBox()) {
-                spawnItem(new ItemDef(position, Mushroom.class));
+                if (mario.isBig()) {
+                    spawnItem(new ItemDef(position, FireFlower.class));
+                } else {
+                    spawnItem(new ItemDef(position, Mushroom.class));
+                }
                 powerupSpawnSound.play();
             } else {
                 coinSound.play();
@@ -417,6 +422,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             Mushroom mushroom = new Mushroom(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
             items.put(mushroom.getId(), mushroom);
             waterInteractionManager.add(mushroom);
+        } else if (itemDef.getType() == FireFlower.class) {
+            FireFlower fireFlower = new FireFlower(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+            items.put(fireFlower.getId(), fireFlower);
         }
     }
 

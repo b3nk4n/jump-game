@@ -11,51 +11,107 @@ big_mario_crouch
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_drown
+big_mario_crouch_on_fire
   rotate: false
   xy: 92, 16
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_jump
+big_mario_drown
   rotate: false
   xy: 108, 52
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_stand
+big_mario_drown_on_fire
   rotate: false
   xy: 128, 52
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_turn
+big_mario_jump
   rotate: false
   xy: 112, 16
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_walk
+big_mario_jump_on_fire
   rotate: false
   xy: 132, 16
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+big_mario_stand
+  rotate: false
+  xy: 148, 52
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+big_mario_stand_on_fire
+  rotate: false
+  xy: 152, 16
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+big_mario_turn
+  rotate: false
+  xy: 168, 52
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+big_mario_turn_on_fire
+  rotate: false
+  xy: 172, 16
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+big_mario_walk
+  rotate: false
+  xy: 188, 52
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 0
 big_mario_walk
   rotate: false
-  xy: 148, 52
+  xy: 192, 16
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 1
 big_mario_walk
   rotate: false
-  xy: 152, 16
+  xy: 208, 52
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: 2
+big_mario_walk_on_fire
+  rotate: false
+  xy: 212, 16
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: 0
+big_mario_walk_on_fire
+  rotate: false
+  xy: 228, 92
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: 1
+big_mario_walk_on_fire
+  rotate: false
+  xy: 248, 92
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
@@ -97,21 +153,21 @@ coin
   index: 0
 coin
   rotate: false
-  xy: 228, 108
+  xy: 180, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 coin
   rotate: false
-  xy: 180, 88
+  xy: 200, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 coin
   rotate: false
-  xy: 248, 108
+  xy: 388, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -123,142 +179,149 @@ fireball
   orig: 32, 8
   offset: 0, 0
   index: -1
+fireflower
+  rotate: false
+  xy: 408, 108
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 fish
   rotate: false
-  xy: 200, 88
+  xy: 428, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 fish
   rotate: false
-  xy: 268, 108
+  xy: 448, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 flower
   rotate: false
-  xy: 168, 60
+  xy: 268, 100
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 0
 flower
   rotate: false
-  xy: 188, 60
+  xy: 288, 100
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 1
 goomba
   rotate: false
-  xy: 220, 88
+  xy: 468, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 goomba
   rotate: false
-  xy: 288, 108
+  xy: 488, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 goomba_stomp
   rotate: false
-  xy: 240, 88
+  xy: 228, 72
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 koopa
   rotate: false
-  xy: 208, 60
+  xy: 308, 100
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 0
 koopa
   rotate: false
-  xy: 228, 60
+  xy: 328, 100
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 1
 koopa_moving
   rotate: false
-  xy: 172, 32
+  xy: 348, 100
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 0
 koopa_moving
   rotate: false
-  xy: 172, 4
+  xy: 368, 100
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 1
 little_mario_dead
   rotate: false
-  xy: 308, 108
+  xy: 228, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_drown
   rotate: false
-  xy: 260, 88
+  xy: 248, 72
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_jump
   rotate: false
-  xy: 248, 68
+  xy: 268, 80
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_stand
   rotate: false
-  xy: 192, 40
+  xy: 248, 52
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_turn
   rotate: false
-  xy: 328, 108
+  xy: 232, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_walk
   rotate: false
-  xy: 280, 88
+  xy: 268, 60
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 little_mario_walk
   rotate: false
-  xy: 268, 68
+  xy: 288, 80
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 little_mario_walk
   rotate: false
-  xy: 192, 20
+  xy: 288, 60
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 mushroom
   rotate: false
-  xy: 212, 40
+  xy: 308, 80
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -293,14 +356,14 @@ platform4
   index: -1
 spiky
   rotate: false
-  xy: 348, 108
+  xy: 308, 60
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spiky
   rotate: false
-  xy: 300, 88
+  xy: 328, 80
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
