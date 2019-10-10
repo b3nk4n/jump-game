@@ -10,6 +10,11 @@ public class MarkedAction implements BinarySerializable {
     private boolean marked;
     private boolean done;
 
+    public void reset() {
+        marked = false;
+        done = false;
+    }
+
     public void mark() {
         marked = true;
     }

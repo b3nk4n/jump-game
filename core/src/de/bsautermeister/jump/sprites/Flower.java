@@ -101,7 +101,7 @@ public class Flower extends Enemy {
         EdgeShape topSensor = new EdgeShape();
         fixtureDef.shape = topSensor;
         fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
-        fixtureDef.filter.maskBits = Bits.MARIO;
+        fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
         fixtureDef.isSensor = true;
         topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM),
                 new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM));

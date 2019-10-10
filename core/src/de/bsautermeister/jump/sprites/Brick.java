@@ -84,7 +84,7 @@ public class Brick extends InteractiveTileObject {
     }
 
     private void destroy() {
-        updateCategoryFilter(Bits.DESTROYED);
+        updateCategoryFilter(Bits.NOTHING);
         getCell().setTile(null);
         destroyed = true;
     }

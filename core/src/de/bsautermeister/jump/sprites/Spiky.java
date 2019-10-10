@@ -104,7 +104,8 @@ public class Spiky extends Enemy implements Drownable {
                 Bits.BRICK |
                 Bits.MARIO |
                 Bits.ENEMY |
-                Bits.BLOCK_TOP;
+                Bits.BLOCK_TOP |
+                Bits.FIREBALL;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -54,6 +56,7 @@ import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.FireFlower;
+import de.bsautermeister.jump.sprites.Fireball;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
@@ -115,6 +118,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Sound jumpSound;
     private Sound kickedSound;
     private Sound splashSound;
+    private Sound fireSound;
 
     private MusicPlayer musicPlayer;
 
@@ -240,6 +244,16 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
+        public void hit(Fireball fireball, Enemy enemy) {
+
+        }
+
+        @Override
+        public void fire() {
+            fireSound.play();
+        }
+
+        @Override
         public void gameOver() {
             marioDieSound.play();
         }
@@ -362,7 +376,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         levelCompletedTimer = 0;
 
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
-        musicPlayer.setVolume(1.0f, true);
+        musicPlayer.setVolume(0.5f, true);
 
         musicPlayer.play();
     }
@@ -390,6 +404,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         jumpSound = getAssetManager().get(AssetDescriptors.Sounds.JUMP);
         kickedSound = getAssetManager().get(AssetDescriptors.Sounds.KICKED);
         splashSound = getAssetManager().get(AssetDescriptors.Sounds.SPLASH);
+        fireSound = getAssetManager().get(AssetDescriptors.Sounds.FIRE);
 
         font = getAssetManager().get(AssetDescriptors.Fonts.MARIO12);
 
@@ -439,6 +454,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         mario.update(delta);
         checkPlayerInBounds();
+
+        mario.getFireball().update(delta);
 
         updateEnemies(delta);
         updateItems(delta);
@@ -528,6 +545,21 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         if (!textMessages.isEmpty() && !textMessages.peek().isAlive()) {
             textMessages.poll();
         }
+
+        Fireball fireball = mario.getFireball();
+        if (fireball.isActive() && !isVisible(fireball)) {
+            fireball.reset();
+        } else {
+            fireball.postUpdate();
+        }
+    }
+
+    private boolean isVisible(Sprite sprite) {
+        Frustum camFrustum = camera.frustum;
+        return camFrustum.pointInFrustum(sprite.getX(), sprite.getY(), 0)
+                || camFrustum.pointInFrustum(sprite.getX() + sprite.getWidth(), sprite.getY(), 0)
+                || camFrustum.pointInFrustum(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight(), 0)
+                || camFrustum.pointInFrustum(sprite.getX(), sprite.getY() + sprite.getHeight(), 0);
     }
 
     private void updateItems(float delta) {
@@ -628,6 +660,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         boolean downPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         boolean leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean firePressed = Gdx.input.isKeyPressed(Input.Keys.SPACE);
 
         int pointer = 0;
         while (Gdx.input.isTouched(pointer)) {
@@ -652,7 +685,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             pointer++;
         }
 
-        mario.control(upPressed, downPressed, leftPressed, rightPressed);
+        mario.control(upPressed, downPressed, leftPressed, rightPressed, firePressed);
     }
 
     @Override
@@ -721,6 +754,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
         mario.draw(batch);
+        mario.getFireball().draw(batch);
 
         waterInteractionManager.draw(batch);
 

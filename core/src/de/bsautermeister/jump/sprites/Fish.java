@@ -113,7 +113,7 @@ public class Fish extends Enemy implements Drownable {
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
-        fixtureDef.filter.maskBits = Bits.MARIO;
+        fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 

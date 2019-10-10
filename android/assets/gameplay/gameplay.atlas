@@ -13,14 +13,14 @@ big_mario_crouch
   index: -1
 big_mario_crouch_on_fire
   rotate: false
-  xy: 92, 16
+  xy: 108, 52
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_drown
   rotate: false
-  xy: 108, 52
+  xy: 92, 16
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
@@ -139,7 +139,7 @@ break_platform4
   index: -1
 brick_fragment
   rotate: false
-  xy: 108, 4
+  xy: 72, 4
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -174,9 +174,9 @@ coin
   index: 3
 fireball
   rotate: false
-  xy: 72, 4
-  size: 32, 8
-  orig: 32, 8
+  xy: 84, 4
+  size: 8, 8
+  orig: 8, 8
   offset: 0, 0
   index: -1
 fireflower

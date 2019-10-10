@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Fireball;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
@@ -29,6 +30,7 @@ public class WorldContactListener implements ContactListener {
         Item item;
         Mario mario;
         Enemy enemy;
+        Fireball fireball;
         CollectableItem collectableItem;
         InteractiveTileObject tileObject;
         TaggedUserData<Enemy> taggedUserData;
@@ -104,6 +106,13 @@ public class WorldContactListener implements ContactListener {
                     Flower flower = (Flower) taggedUserData.getUserData();
                     flower.setBlocked(true);
                 }
+                break;
+            case Bits.ENEMY | Bits.FIREBALL:
+                fireball = (Fireball) resolveUserData(fixtureA, fixtureB, Bits.FIREBALL);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
+                fireball.resetLater();
+                enemy.kill(true);
+                break;
         }
     }
 

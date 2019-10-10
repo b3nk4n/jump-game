@@ -56,6 +56,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private GameCallbacks callbacks;
     private World world;
+    private TextureAtlas atlas;
     private Body body;
 
     private Platform platformContact;
@@ -98,9 +99,11 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private final GameTimer changeSizeTimer;
 
-    private boolean onFire;
+    private boolean onFire = true;
+    private boolean doFire = false;
+    private Fireball fireball;
 
-    private boolean isBig;
+    private boolean isBig = true;
     private boolean markRedefineBody;
 
     private boolean deadAnimationStarted = false;
@@ -114,13 +117,14 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         this.callbacks = callbacks;
         this.world = world;
+        this.atlas = atlas;
         initTextures(atlas);
 
         state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
 
         Vector2 startPosition = new Vector2(2 * Cfg.BLOCK_SIZE / Cfg.PPM, 2 * Cfg.BLOCK_SIZE / Cfg.PPM);
-        defineSmallBody(startPosition, true);
+        defineBigBody(startPosition, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
@@ -146,6 +150,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
                 getBody().getFixtureList().get(0).setFilterData(filter);
             }
         });
+
+        fireball = new Fireball(callbacks, world, atlas);
     }
 
     private void initTextures(TextureAtlas atlas) {
@@ -262,9 +268,13 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
     }
 
-    public void control(boolean up, boolean down, boolean left, boolean right) {
+    public void control(boolean up, boolean down, boolean left, boolean right, boolean fire) {
         if (isDead() || isDrowning()) {
             return;
+        }
+
+        if (fire) {
+            tryFire();
         }
 
         Vector2 relativeBodyVelocity = getVelocityRelativeToGround();
@@ -280,10 +290,10 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             return;
         }
         if (right && body.getLinearVelocity().x <= 2 && !down) {
-            body.applyForceToCenter(new Vector2(8.0f, 0), true);
+            body.applyForceToCenter(new Vector2(7.5f, 0), true);
         }
         if (left && body.getLinearVelocity().x >= -2 && !down) {
-            body.applyForceToCenter(new Vector2(-8.0f, 0), true);
+            body.applyForceToCenter(new Vector2(-7.5f, 0), true);
         }
         if ((!left && !right && state.is(State.JUMPING))) {
             // horizontally decelerate fast, but don't stop immediately
@@ -318,6 +328,18 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         }
     }
 
+    public void tryFire() {
+        if (!isOnFire()) {
+            return;
+        }
+
+        if (!fireball.isActive()) {
+            float offsetX = runningRight ? getWidth() : 0f;
+            fireball.fire(getX() + offsetX, getY() + getHeight() / 2, runningRight);
+            callbacks.fire();
+        }
+    }
+
     public Vector2 getVelocityRelativeToGround() {
         Vector2 relativeBodyVelocity;
         if (platformContact != null) {
@@ -341,7 +363,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
                 if (useBigTexture) {
                     textureRegion = onFire ? bigMarioOnFireDrown : bigMarioDrown;
                 } else {
-                    textureRegion = marioDead;
+                    textureRegion = marioDrown;
                 }
                 break;
             case DEAD:
@@ -661,6 +683,10 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         this.lastJumpThroughPlatformId = lastJumpThroughPlatformId;
     }
 
+    public Fireball getFireball() {
+        return fireball;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeFloat(body.getPosition().x);
@@ -672,6 +698,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(runningRight);
         out.writeBoolean(isTurning);
         changeSizeTimer.write(out);
+        out.writeBoolean(onFire);
         out.writeBoolean(isBig);
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
@@ -689,6 +716,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         runningRight = in.readBoolean();
         isTurning = in.readBoolean();
         changeSizeTimer.read(in);
+        onFire = in.readBoolean();
         isBig = in.readBoolean();
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
