@@ -123,7 +123,8 @@ public class Platform extends Sprite implements BinarySerializable {
         fixtureDef.filter.maskBits = Bits.MARIO |
                 Bits.MARIO_FEET |
                 Bits.ENEMY |
-                Bits.ITEM;
+                Bits.ITEM |
+                Bits.FIREBALL;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         return body;

@@ -30,7 +30,6 @@ public class WorldContactListener implements ContactListener {
         Item item;
         Mario mario;
         Enemy enemy;
-        Fireball fireball;
         CollectableItem collectableItem;
         InteractiveTileObject tileObject;
         TaggedUserData<Enemy> taggedUserData;
@@ -107,12 +106,6 @@ public class WorldContactListener implements ContactListener {
                     flower.setBlocked(true);
                 }
                 break;
-            case Bits.ENEMY | Bits.FIREBALL:
-                fireball = (Fireball) resolveUserData(fixtureA, fixtureB, Bits.FIREBALL);
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
-                fireball.resetLater();
-                enemy.kill(true);
-                break;
         }
     }
 
@@ -179,6 +172,8 @@ public class WorldContactListener implements ContactListener {
         int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
         Mario mario;
+        Enemy enemy;
+        Fireball fireball;
         Platform platform;
         switch (collisionDef) {
             case Bits.MARIO | Bits.PLATFORM:
@@ -194,6 +189,15 @@ public class WorldContactListener implements ContactListener {
                     mario.setLastJumpThroughPlatformId(platform.getId());
                     contact.setEnabled(false);
                 }
+                break;
+
+            case Bits.ENEMY | Bits.FIREBALL:
+                // done in pre-solve to don't have an impulse from the fireball to the other object
+                fireball = (Fireball) resolveUserData(fixtureA, fixtureB, Bits.FIREBALL);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
+                fireball.resetLater();
+                enemy.kill(true);
+                contact.setEnabled(false);
                 break;
         }
     }

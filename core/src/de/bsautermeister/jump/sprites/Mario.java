@@ -99,11 +99,12 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private final GameTimer changeSizeTimer;
 
-    private boolean onFire = true;
+    private boolean onFire;
     private boolean doFire = false;
+    private GameTimer fireTimer;
     private Fireball fireball;
 
-    private boolean isBig = true;
+    private boolean isBig;
     private boolean markRedefineBody;
 
     private boolean deadAnimationStarted = false;
@@ -124,7 +125,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         runningRight = true;
 
         Vector2 startPosition = new Vector2(2 * Cfg.BLOCK_SIZE / Cfg.PPM, 2 * Cfg.BLOCK_SIZE / Cfg.PPM);
-        defineBigBody(startPosition, true);
+        defineSmallBody(startPosition, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
@@ -152,6 +153,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         });
 
         fireball = new Fireball(callbacks, world, atlas);
+        fireTimer = new GameTimer(1.0f, true);
     }
 
     private void initTextures(TextureAtlas atlas) {
@@ -200,6 +202,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         if (isChangingSize()) {
             changeSizeTimer.update(delta);
         }
+
+        fireTimer.update(delta);
 
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
@@ -333,10 +337,11 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             return;
         }
 
-        if (!fireball.isActive()) {
+        if (!fireball.isActive() && fireTimer.isFinished()) {
             float offsetX = runningRight ? getWidth() : 0f;
             fireball.fire(getX() + offsetX, getY() + getHeight() / 2, runningRight);
             callbacks.fire();
+            fireTimer.restart();
         }
     }
 
@@ -699,6 +704,9 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(isTurning);
         changeSizeTimer.write(out);
         out.writeBoolean(onFire);
+        out.writeBoolean(doFire);
+        fireTimer.write(out);
+        fireball.write(out);
         out.writeBoolean(isBig);
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
@@ -717,6 +725,9 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         isTurning = in.readBoolean();
         changeSizeTimer.read(in);
         onFire = in.readBoolean();
+        doFire = in.readBoolean();
+        fireTimer.read(in);
+        fireball.read(in);
         isBig = in.readBoolean();
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();

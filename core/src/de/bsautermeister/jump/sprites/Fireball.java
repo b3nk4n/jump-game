@@ -11,12 +11,17 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public class Fireball extends Sprite {
+public class Fireball extends Sprite implements BinarySerializable {
 
     private static final float VELOCITY_X = 2.25f;
 
@@ -71,6 +76,7 @@ public class Fireball extends Sprite {
         Body body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 1f;
         CircleShape shape = new CircleShape(); // TODO square, so that it bounces always in the same direction?
@@ -102,7 +108,7 @@ public class Fireball extends Sprite {
 
         if (previousVelocityY < 0 && body.getLinearVelocity().y > 0) {
             // started to jump up
-            body.setLinearVelocity(body.getLinearVelocity().x, 2.25f);
+            body.setLinearVelocity(body.getLinearVelocity().x, 1.75f);
         }
 
         body.setLinearVelocity(rightDirection ? VELOCITY_X : -VELOCITY_X, body.getLinearVelocity().y);
@@ -138,5 +144,27 @@ public class Fireball extends Sprite {
     public void explode() {
         // todo explode when hitting other object
         reset();
+    }
+
+    @Override
+    public void write(DataOutputStream out) throws IOException {
+        out.writeFloat(body.getPosition().x);
+        out.writeFloat(body.getPosition().y);
+        out.writeFloat(body.getLinearVelocity().x);
+        out.writeFloat(body.getLinearVelocity().y);
+        out.writeFloat(rotation);
+        out.writeBoolean(rightDirection);
+        out.writeFloat(previousVelocityY);
+        reset.write(out);
+    }
+
+    @Override
+    public void read(DataInputStream in) throws IOException {
+        body.setTransform(in.readFloat(), in.readFloat(), 0);
+        body.setLinearVelocity(in.readFloat(), in.readFloat());
+        rotation = in.readFloat();
+        rightDirection = in.readBoolean();
+        previousVelocityY = in.readFloat();
+        reset.read(in);
     }
 }
