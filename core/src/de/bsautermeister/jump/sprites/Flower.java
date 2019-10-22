@@ -28,7 +28,7 @@ public class Flower extends Enemy {
     private static final float WAIT_TIME = 1.5f;
 
     public enum State {
-        HIDDEN, MOVE_UP, WAITING, MOVE_DOWN
+        HIDDEN, MOVE_UP, WAITING, MOVE_DOWN, KILLED
     }
 
     private GameObjectState<State> state;
@@ -66,7 +66,13 @@ public class Flower extends Enemy {
                 getBody().getPosition().y - Cfg.BLOCK_SIZE * 0.75f / Cfg.PPM);
         setRegion(animation.getKeyFrame(gameTime));
 
-        if (state.is(State.HIDDEN) && state.timer() > HIDDEN_TIME && !isBlocked()) {
+        if (state.is(State.KILLED)) {
+            if (getBody().getPosition().y > hiddenTargetY) {
+                getBody().setLinearVelocity(0, 3 * -MOVE_SPEED);
+            } else {
+                getBody().setLinearVelocity(Vector2.Zero);
+            }
+        } else if (state.is(State.HIDDEN) && state.timer() > HIDDEN_TIME && !isBlocked()) {
             getBody().setLinearVelocity(0, MOVE_SPEED);
             state.set(State.MOVE_UP);
         } else if (state.is(State.MOVE_UP) && getBody().getPosition().y >= waitingTargetY) {
@@ -93,7 +99,7 @@ public class Flower extends Enemy {
         shape.setAsBox(7f / Cfg.PPM, 12f / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
-        fixtureDef.filter.maskBits = Bits.MARIO;
+        fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 
@@ -119,6 +125,12 @@ public class Flower extends Enemy {
     @Override
     public void onEnemyHit(Enemy enemy) {
         // NOOP
+    }
+
+    @Override
+    public void kill(boolean applyPush) {
+        super.kill(applyPush);
+        state.set(State.KILLED);
     }
 
     @Override
