@@ -18,7 +18,8 @@ public class ItemBox extends InteractiveTileObject {
 
     public enum Type {
         COIN,
-        MUSHROOM
+        MUSHROOM,
+        BEER
     }
 
     private final static int BLANK_COIN_IDX = 28;
@@ -33,11 +34,15 @@ public class ItemBox extends InteractiveTileObject {
         tileSet = map.getTileSets().getTileSet("tileset");
         Boolean multiCoin = (Boolean) mapObject.getProperties().get("multi_coin");
         Boolean mushroom = (Boolean) mapObject.getProperties().get("mushroom");
+        Boolean beer = (Boolean) mapObject.getProperties().get("beer");
         if (multiCoin != null && multiCoin) {
             type = Type.COIN;
             remainingItems = 5;
-        } else if (mushroom != null && mushroom) {
+        } else if (Boolean.TRUE.equals(mushroom)) {
             type = Type.MUSHROOM;
+            remainingItems = 1;
+        } else if (Boolean.TRUE.equals(beer)) {
+            type = Type.BEER;
             remainingItems = 1;
         } else {
             type = Type.COIN;
@@ -73,6 +78,10 @@ public class ItemBox extends InteractiveTileObject {
 
     public boolean isMushroomBox() {
         return type == Type.MUSHROOM;
+    }
+
+    public boolean isBeerBox() {
+        return type == Type.BEER;
     }
 
     public boolean isBlank() {

@@ -115,6 +115,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private String lastJumpThroughPlatformId;
 
+    private GameTimer drunkTimer;
+
     public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         this.callbacks = callbacks;
         this.world = world;
@@ -154,6 +156,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
         fireball = new Fireball(callbacks, world, atlas);
         fireTimer = new GameTimer(1.0f, true);
+
+        drunkTimer = new GameTimer(10f);
     }
 
     private void initTextures(TextureAtlas atlas) {
@@ -204,6 +208,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         }
 
         fireTimer.update(delta);
+        drunkTimer.update(delta);
 
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
@@ -600,6 +605,18 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         return onFire;
     }
 
+    public void drunk() {
+        drunkTimer.restart();
+    }
+
+    public boolean isDrunk() {
+        return drunkTimer.isRunning();
+    }
+
+    public float getDrunkRatio() {
+        return drunkTimer.getProgress();
+    }
+
     public void hit(Enemy enemy) {
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa) enemy;
@@ -708,6 +725,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fireTimer.write(out);
         fireball.write(out);
         out.writeBoolean(isBig);
+        drunkTimer.write(out);
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
@@ -729,6 +747,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fireTimer.read(in);
         fireball.read(in);
         isBig = in.readBoolean();
+        drunkTimer.read(in);
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();

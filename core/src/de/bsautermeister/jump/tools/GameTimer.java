@@ -1,5 +1,7 @@
 package de.bsautermeister.jump.tools;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -47,12 +49,16 @@ public class GameTimer implements BinarySerializable {
         return value;
     }
 
+    public float getProgress() {
+        return MathUtils.clamp(1f - value / resetValue, 0f, 1f);
+    }
+
     public boolean isFinished() {
         return value <= 0;
     }
 
     public boolean isRunning() {
-        return isStarted;
+        return isStarted && !isFinished();
     }
 
     public void setCallbacks(TimerCallbacks callbacks) {

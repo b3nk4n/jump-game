@@ -51,6 +51,7 @@ import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
+import de.bsautermeister.jump.sprites.Beer;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
@@ -122,6 +123,20 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private MusicPlayer musicPlayer;
 
+    private float gameTime;
+    private Array<Rectangle> waterRegions;
+    private final ShaderProgram waterShader;
+    private TextureRegion waterTexture;
+    private final ShaderProgram drunkShader;
+
+    private WaterInteractionManager waterInteractionManager;
+
+    private FileHandle gameToLoad;
+    private Integer level;
+
+    private BitmapFont font;
+    private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
+
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
         public void jump() {
@@ -175,6 +190,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                     spawnItem(new ItemDef(position, Mushroom.class));
                 }
                 powerupSpawnSound.play();
+            } else if (itemBox.isBeerBox()) {
+                spawnItem(new ItemDef(position, Beer.class));
             } else {
                 coinSound.play();
                 BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
@@ -282,19 +299,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         textMessages.add(new TextMessage(text, x - cameraLeftX, y));
     }
 
-    private float gameTime;
-    private Array<Rectangle> waterRegions;
-    private final ShaderProgram waterShader;
-    private TextureRegion waterTexture;
-
-    private WaterInteractionManager waterInteractionManager;
-
-    private FileHandle gameToLoad;
-    private Integer level;
-
-    private BitmapFont font;
-    private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
-
     public GameScreen(GameApp game, int level) {
         super(game);
         this.level = level;
@@ -318,6 +322,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         mario = new Mario(callbacks, world, atlas);
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
+        drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
     }
 
     public GameScreen(GameApp game, FileHandle fileHandle) {
@@ -424,6 +429,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     private void spawnItem(ItemDef itemDef) {
+        LOG.debug("Spawning: " + itemDef.getType().getSimpleName());
         itemsToSpawn.add(itemDef);
     }
 
@@ -440,6 +446,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         } else if (itemDef.getType() == FireFlower.class) {
             FireFlower fireFlower = new FireFlower(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
             items.put(fireFlower.getId(), fireFlower);
+        } else if (itemDef.getType() == Beer.class) {
+            Beer beer = new Beer(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+            items.put(beer.getId(), beer);
         }
     }
 
@@ -702,9 +711,15 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
+        if (mario.isDrunk()) {
+            batch.setShader(drunkShader);
+            drunkShader.setUniformf("u_effectRatio", Math.min(mario.getDrunkRatio() * 33f, 1f));
+
+        }
         renderBackground(batch);
         renderForeground(batch);
         batch.end();
+        batch.setShader(null);
 
         if (Cfg.DEBUG_MODE) {
             box2DDebugRenderer.render(world, camera.combined);
@@ -804,6 +819,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         world.dispose();
         box2DDebugRenderer.dispose();
         hud.dispose();
+        waterShader.dispose();
+        drunkShader.dispose();
     }
 
     private boolean isGameOver() {
@@ -899,6 +916,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             Item item;
             if (itemType.equals(Mushroom.class.getName())) {
                 item = new Mushroom(callbacks, world, atlas, 0, 0);
+            } else if (itemType.equals(FireFlower.class.getName())) {
+                item = new FireFlower(callbacks, world, atlas, 0, 0);
+            } else if (itemType.equals(Beer.class.getName())) {
+                item = new Beer(callbacks, world, atlas, 0, 0);
             } else {
                 throw new IllegalArgumentException("Unknown item type: " + itemType);
             }
