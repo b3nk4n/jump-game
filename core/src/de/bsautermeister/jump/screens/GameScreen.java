@@ -7,7 +7,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -737,14 +736,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         batch.end();
         frameBuffer.end();
 
-        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
-        TextureRegion bufferTexture = new TextureRegion(frameBuffer.getColorBufferTexture());
-        bufferTexture.setRegionX((int)screenPixelPerTile);
-        bufferTexture.setRegionY((int)screenPixelPerTile);
-        bufferTexture.setRegionWidth(Gdx.graphics.getWidth());
-        bufferTexture.setRegionHeight(Gdx.graphics.getHeight());
-        bufferTexture.flip(false, true);
-
         batch.begin();
         if (mario.isDrunk()) {
             batch.setShader(drunkShader);
@@ -756,7 +747,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             drunkShader.setUniformf("u_waveLength", 111f, 311f);
             drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
-        batch.draw(bufferTexture, camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight);
+        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        batch.draw(frameBuffer.getColorBufferTexture(),
+                camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
+                (int)screenPixelPerTile, (int)screenPixelPerTile, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
         batch.setShader(null);
         batch.end();
@@ -862,6 +856,19 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         waterShader.dispose();
         drunkShader.dispose();
         frameBuffer.dispose();
+        bumpSound.dispose();
+        powerupSpawnSound.dispose();
+        powerupSound.dispose();
+        coinSound.dispose();
+        breakBlockSound.dispose();
+        stompSound.dispose();
+        powerDownSound.dispose();
+        marioDieSound.dispose();
+        jumpSound.dispose();
+        kickedSound.dispose();
+        splashSound.dispose();
+        fireSound.dispose();
+        drinkingSound.dispose();
     }
 
     private boolean isGameOver() {
