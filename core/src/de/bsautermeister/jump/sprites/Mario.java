@@ -614,7 +614,13 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     public float getDrunkRatio() {
-        return drunkTimer.getProgress();
+        if (drunkTimer.getProgress() < 0.1) {
+            return drunkTimer.getProgress() * 10f;
+        }
+        if (drunkTimer.getProgress() >= 0.9) {
+            return (1f - drunkTimer.getProgress()) * 10f;
+        }
+        return 1f;
     }
 
     public void hit(Enemy enemy) {

@@ -4,15 +4,17 @@ import com.badlogic.gdx.utils.Logger;
 
 public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
-    boolean DEBUG_MODE = true;
+    boolean DEBUG_MODE = false;
 
     float HUD_WIDTH = 1280; // still world units! (only loading screen)
     float HUD_HEIGHT = 720; // still world units! (only loading screen)
 
-    int WORLD_WIDTH = 400;
-    int WORLD_HEIGHT = 208;
-
     int BLOCK_SIZE = 16;
+    int BLOCKS_X = 25;
+    int BLOCKS_Y = 13;
+
+    int WORLD_WIDTH = BLOCKS_X * BLOCK_SIZE;
+    int WORLD_HEIGHT = BLOCKS_Y * BLOCK_SIZE;
 
     float PPM = 100f;
 

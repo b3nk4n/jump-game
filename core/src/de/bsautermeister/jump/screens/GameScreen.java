@@ -6,12 +6,15 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -85,6 +88,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Viewport hudViewport;
     private Hud hud;
 
+    private FrameBuffer frameBuffer;
+
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private float mapPixelWidth;
@@ -120,6 +125,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Sound kickedSound;
     private Sound splashSound;
     private Sound fireSound;
+    private Sound drinkingSound;
 
     private MusicPlayer musicPlayer;
 
@@ -155,7 +161,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         @Override
         public void use(Mario mario, Item item) {
-            powerupSound.play();
+            if (item instanceof Beer) {
+                drinkingSound.play();
+            } else {
+                powerupSound.play();
+            }
 
             score += 100;
             showScoreText("100", item.getBoundingRectangle());
@@ -192,6 +202,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 powerupSpawnSound.play();
             } else if (itemBox.isBeerBox()) {
                 spawnItem(new ItemDef(position, Beer.class));
+                powerupSpawnSound.play();
             } else {
                 coinSound.play();
                 BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
@@ -322,7 +333,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         mario = new Mario(callbacks, world, atlas);
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
-        drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
+        drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
     }
 
     public GameScreen(GameApp game, FileHandle fileHandle) {
@@ -333,8 +344,16 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private void reset() {
         camera = new OrthographicCamera();
-        viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
+        viewport = new StretchViewport((Cfg.WORLD_WIDTH + 2 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 2 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+
+        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+
+        frameBuffer = new FrameBuffer(
+                Pixmap.Format.RGB888,
+                (int)(screenPixelPerTile * (Cfg.BLOCKS_X + 2)), // 2 extra block for left and right
+                (int)(screenPixelPerTile * (Cfg.BLOCKS_Y + 2)), // 2 extra block for top and bottom
+                false);
 
         score = 0;
 
@@ -381,7 +400,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         levelCompletedTimer = 0;
 
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
-        musicPlayer.setVolume(0.5f, true);
+        musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
 
         musicPlayer.play();
     }
@@ -410,6 +429,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         kickedSound = getAssetManager().get(AssetDescriptors.Sounds.KICKED);
         splashSound = getAssetManager().get(AssetDescriptors.Sounds.SPLASH);
         fireSound = getAssetManager().get(AssetDescriptors.Sounds.FIRE);
+        drinkingSound = getAssetManager().get(AssetDescriptors.Sounds.DRINKING);
 
         font = getAssetManager().get(AssetDescriptors.Fonts.MARIO12);
 
@@ -705,21 +725,41 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         postUpdate();
 
         GdxUtils.clearScreen(Color.BLACK);
-
         viewport.apply();
         SpriteBatch batch = getBatch();
+
+        frameBuffer.begin();
         batch.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+        renderBackground(batch);
+        renderForeground(batch);
+        batch.end();
+        frameBuffer.end();
+
+        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        TextureRegion bufferTexture = new TextureRegion(frameBuffer.getColorBufferTexture());
+        bufferTexture.setRegionX((int)screenPixelPerTile);
+        bufferTexture.setRegionY((int)screenPixelPerTile);
+        bufferTexture.setRegionWidth(Gdx.graphics.getWidth());
+        bufferTexture.setRegionHeight(Gdx.graphics.getHeight());
+        bufferTexture.flip(false, true);
 
         batch.begin();
         if (mario.isDrunk()) {
             batch.setShader(drunkShader);
-            drunkShader.setUniformf("u_effectRatio", Math.min(mario.getDrunkRatio() * 33f, 1f));
+            //drunkShader.setUniformf("u_effectRatio", Math.min(mario.getDrunkRatio() * 33f, 1f));
 
+            drunkShader.setUniformf("u_time", gameTime);
+            drunkShader.setUniformf("u_imageSize", Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
+            drunkShader.setUniformf("u_amplitude", 7.1f * mario.getDrunkRatio(), 9.1f * mario.getDrunkRatio());
+            drunkShader.setUniformf("u_waveLength", 111f, 311f);
+            drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
-        renderBackground(batch);
-        renderForeground(batch);
-        batch.end();
+        batch.draw(bufferTexture, camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight);
+
         batch.setShader(null);
+        batch.end();
 
         if (Cfg.DEBUG_MODE) {
             box2DDebugRenderer.render(world, camera.combined);
@@ -821,6 +861,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         hud.dispose();
         waterShader.dispose();
         drunkShader.dispose();
+        frameBuffer.dispose();
     }
 
     private boolean isGameOver() {

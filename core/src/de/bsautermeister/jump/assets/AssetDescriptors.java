@@ -58,6 +58,8 @@ public interface AssetDescriptors {
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.SPLASH, Sound.class);
         AssetDescriptor<Sound> FIRE =
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.FIRE, Sound.class);
+        AssetDescriptor<Sound> DRINKING =
+                new AssetDescriptor<Sound>(AssetPaths.Sounds.DRINKING, Sound.class);
     }
 
     AssetDescriptor[] ALL = {
@@ -65,7 +67,7 @@ public interface AssetDescriptors {
             Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.POWERUP_SPAWN, Sounds.POWERUP,
             Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE, Sounds.JUMP, Sounds.KICKED,
-            Sounds.SPLASH, Sounds.FIRE
+            Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING
     };
 
 }
