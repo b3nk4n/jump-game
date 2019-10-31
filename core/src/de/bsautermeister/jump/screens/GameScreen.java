@@ -754,24 +754,24 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             drunkShader.setUniformf("u_waveLength", 111f, 311f);
             drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
-        float screenPixelPerTile = 2 * Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         batch.draw(frameBuffer.getColorBufferTexture(),
                 camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
-                (int)screenPixelPerTile, (int)screenPixelPerTile, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                (int)screenPixelPerTile * 2, (int)screenPixelPerTile * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
         if (mario.isStoned()) {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, 0.5f);
-            float offset1 =  16f * (float)Math.sin(-gameTime) * mario.getStonedRatio();
-            float offset2 =  16f * (float)Math.cos(gameTime * 0.8f) * mario.getStonedRatio();
-            float offset3 =  16f * (float)Math.sin(gameTime * 0.9f) * mario.getStonedRatio();
-            float offset4 =  16f * (float)Math.cos(gameTime * 0.7f) * mario.getStonedRatio();
+            float offset1 =  screenPixelPerTile * 0.66f * (float)Math.sin(-gameTime) * mario.getStonedRatio();
+            float offset2 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.8f) * mario.getStonedRatio();
+            float offset3 =  screenPixelPerTile * 0.66f * (float)Math.sin(gameTime * 0.9f) * mario.getStonedRatio();
+            float offset4 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.7f) * mario.getStonedRatio();
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTile + offset1), (int)(screenPixelPerTile - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                    (int)(screenPixelPerTile * 2 + offset1), (int)(screenPixelPerTile * 2 - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTile - offset3), (int)(screenPixelPerTile + offset4), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                    (int)(screenPixelPerTile * 2 - offset3), (int)(screenPixelPerTile * 2 + offset4), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
             batch.setColor(c);
         }
 
