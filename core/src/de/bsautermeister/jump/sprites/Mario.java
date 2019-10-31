@@ -116,6 +116,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private String lastJumpThroughPlatformId;
 
     private GameTimer drunkTimer;
+    private GameTimer stonedTimer;
 
     public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         this.callbacks = callbacks;
@@ -126,7 +127,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         state = new GameObjectState<State>(State.STANDING);
         runningRight = true;
 
-        Vector2 startPosition = new Vector2(2 * Cfg.BLOCK_SIZE / Cfg.PPM, 2 * Cfg.BLOCK_SIZE / Cfg.PPM);
+        Vector2 startPosition = new Vector2(4 * Cfg.BLOCK_SIZE / Cfg.PPM, 3 * Cfg.BLOCK_SIZE / Cfg.PPM);
         defineSmallBody(startPosition, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
@@ -158,6 +159,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fireTimer = new GameTimer(1.0f, true);
 
         drunkTimer = new GameTimer(10f);
+        stonedTimer = new GameTimer(10f);
     }
 
     private void initTextures(TextureAtlas atlas) {
@@ -209,6 +211,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
         fireTimer.update(delta);
         drunkTimer.update(delta);
+        stonedTimer.update(delta);
 
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
@@ -623,6 +626,24 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         return 1f;
     }
 
+    public void stoned() {
+        stonedTimer.restart();
+    }
+
+    public boolean isStoned() {
+        return stonedTimer.isRunning();
+    }
+
+    public float getStonedRatio() {
+        if (stonedTimer.getProgress() < 0.05) {
+            return stonedTimer.getProgress() * 20f;
+        }
+        if (stonedTimer.getProgress() >= 0.95) {
+            return (1f - stonedTimer.getProgress()) * 20f;
+        }
+        return 1f;
+    }
+
     public void hit(Enemy enemy) {
         if (enemy instanceof Koopa) {
             Koopa koopa = (Koopa) enemy;
@@ -732,6 +753,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fireball.write(out);
         out.writeBoolean(isBig);
         drunkTimer.write(out);
+        stonedTimer.write(out);
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
@@ -754,6 +776,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fireball.read(in);
         isBig = in.readBoolean();
         drunkTimer.read(in);
+        stonedTimer.read(in);
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();

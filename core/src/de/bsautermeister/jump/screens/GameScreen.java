@@ -133,6 +133,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private final ShaderProgram waterShader;
     private TextureRegion waterTexture;
     private final ShaderProgram drunkShader;
+    private final ShaderProgram stonedShader;
 
     private WaterInteractionManager waterInteractionManager;
 
@@ -333,6 +334,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
+        stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
     }
 
     public GameScreen(GameApp game, FileHandle fileHandle) {
@@ -343,15 +345,15 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private void reset() {
         camera = new OrthographicCamera();
-        viewport = new StretchViewport((Cfg.WORLD_WIDTH + 2 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 2 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
+        viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
 
         frameBuffer = new FrameBuffer(
-                Pixmap.Format.RGB888,
-                (int)(screenPixelPerTile * (Cfg.BLOCKS_X + 2)), // 2 extra block for left and right
-                (int)(screenPixelPerTile * (Cfg.BLOCKS_Y + 2)), // 2 extra block for top and bottom
+                Pixmap.Format.RGBA8888,
+                (int)(screenPixelPerTile * (Cfg.BLOCKS_X + 4)), // 2 extra block for each left and right
+                (int)(screenPixelPerTile * (Cfg.BLOCKS_Y + 4)), // 2 extra block for each top and bottom
                 false);
 
         score = 0;
@@ -731,8 +733,13 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
+        if (mario.isStoned()) {
+            batch.setShader(stonedShader);
+            stonedShader.setUniformf("u_effectRatio", mario.getStonedRatio());
+        }
         renderBackground(batch);
         renderForeground(batch);
+        batch.setShader(null);
         batch.end();
         frameBuffer.end();
 
@@ -747,10 +754,26 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             drunkShader.setUniformf("u_waveLength", 111f, 311f);
             drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
-        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTile = 2 * Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         batch.draw(frameBuffer.getColorBufferTexture(),
                 camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
                 (int)screenPixelPerTile, (int)screenPixelPerTile, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+
+        if (mario.isStoned()) {
+            Color c = batch.getColor();
+            batch.setColor(c.r, c.g, c.b, 0.5f);
+            float offset1 =  16f * (float)Math.sin(-gameTime) * mario.getStonedRatio();
+            float offset2 =  16f * (float)Math.cos(gameTime * 0.8f) * mario.getStonedRatio();
+            float offset3 =  16f * (float)Math.sin(gameTime * 0.9f) * mario.getStonedRatio();
+            float offset4 =  16f * (float)Math.cos(gameTime * 0.7f) * mario.getStonedRatio();
+            batch.draw(frameBuffer.getColorBufferTexture(),
+                    camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
+                    (int)(screenPixelPerTile + offset1), (int)(screenPixelPerTile - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+            batch.draw(frameBuffer.getColorBufferTexture(),
+                    camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
+                    (int)(screenPixelPerTile - offset3), (int)(screenPixelPerTile + offset4), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+            batch.setColor(c);
+        }
 
         batch.setShader(null);
         batch.end();

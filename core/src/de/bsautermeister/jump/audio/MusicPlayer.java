@@ -70,6 +70,7 @@ public class MusicPlayer implements Disposable {
             return;
         }
 
+        music.pause();
         music.play();
     }
 

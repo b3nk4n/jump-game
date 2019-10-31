@@ -56,6 +56,7 @@ public class Mushroom extends Item implements Drownable {
         getCallbacks().use(mario, this);
         markDestroyBody();
         mario.grow();
+        mario.stoned();
     }
 
     @Override
