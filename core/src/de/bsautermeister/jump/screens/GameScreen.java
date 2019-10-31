@@ -878,8 +878,14 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         hud.dispose();
         waterShader.dispose();
         drunkShader.dispose();
+        stonedShader.dispose();
         frameBuffer.dispose();
-        bumpSound.dispose();
+        font.dispose();
+
+        // disposing sound effects has weird side effects:
+        // - Effect stop playing the next time
+        // - GdxRuntimeException: Unable to allocate audio buffers.
+        /*bumpSound.dispose();
         powerupSpawnSound.dispose();
         powerupSound.dispose();
         coinSound.dispose();
@@ -891,7 +897,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         kickedSound.dispose();
         splashSound.dispose();
         fireSound.dispose();
-        drinkingSound.dispose();
+        drinkingSound.dispose();*/
     }
 
     private boolean isGameOver() {
