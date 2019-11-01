@@ -43,7 +43,10 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_HEAD | Bits.MARIO: // TODO: check, if mario is landing very fast, he could also touch the body instead of thus the head, and die
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
-                enemy.onHeadHit(mario);
+                if (mario.getBody().getLinearVelocity().y < 0) {
+                    enemy.onHeadHit(mario);
+                    mario.pumpUp();
+                }
                 break;
             case Bits.ENEMY_SIDE | Bits.OBJECT:
             case Bits.ENEMY_SIDE | Bits.COLLIDER:

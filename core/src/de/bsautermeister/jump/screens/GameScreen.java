@@ -321,7 +321,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         this.world = new World(new Vector2(0,-9.81f), true);
         this.world.setContactListener(new WorldContactListener());
-        this.box2DDebugRenderer = new Box2DDebugRenderer();
+        this.box2DDebugRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
 
         enemies = new ObjectMap<String, Enemy>();
         platforms = new Array<Platform>();
@@ -477,6 +477,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     public void update(float delta) {
+        if (mario.isDead()) {
+            return;
+        }
+
         world.step(1 / 60f, 8, 3);
 
         if (!levelCompleted) {

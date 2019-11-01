@@ -730,6 +730,10 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         return fireball;
     }
 
+    public void pumpUp() {
+        body.setLinearVelocity(getLinearVelocity().x, 3f);
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeFloat(body.getPosition().x);

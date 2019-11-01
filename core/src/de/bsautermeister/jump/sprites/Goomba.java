@@ -125,14 +125,13 @@ public class Goomba extends Enemy implements Drownable {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-4, 9).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(4, 9).scl(1 / Cfg.PPM);
-        vertices[2] = new Vector2(-3, 3).scl(1 / Cfg.PPM);
-        vertices[3] = new Vector2(3, 3).scl(1 / Cfg.PPM);
+        vertices[0] = new Vector2(-3.5f, 12).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(3.5f, 12).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-2.5f, 6).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(2.5f, 6).scl(1 / Cfg.PPM);
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;
-        fixtureDef.restitution = 1.0f;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
         fixtureDef.filter.maskBits = Bits.MARIO;
         body.createFixture(fixtureDef).setUserData(this);
