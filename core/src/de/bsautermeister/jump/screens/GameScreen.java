@@ -477,10 +477,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     public void update(float delta) {
-        if (mario.isDead()) {
-            return;
-        }
-
         world.step(1 / 60f, 8, 3);
 
         if (!levelCompleted) {
@@ -816,7 +812,17 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         batch.end();
 
         if (Cfg.DEBUG_MODE) {
+            float zoomX = Cfg.BLOCKS_X / (4f + Cfg.BLOCKS_X);
+            float zoomY = Cfg.BLOCKS_Y / (4f + Cfg.BLOCKS_Y);
+            camera.viewportWidth = camera.viewportWidth * zoomX;
+            camera.viewportHeight = camera.viewportHeight * zoomY;
+            camera.update();
+
             box2DDebugRenderer.render(world, camera.combined);
+
+            camera.viewportWidth = camera.viewportWidth / zoomX;
+            camera.viewportHeight = camera.viewportHeight / zoomY;
+            camera.update();
         }
 
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
