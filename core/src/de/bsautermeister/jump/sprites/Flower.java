@@ -37,6 +37,7 @@ public class Flower extends Enemy {
 
     private float hiddenTargetY;
     private float waitingTargetY;
+    private final static float hiddenOffsetY = Cfg.BLOCK_SIZE / 4 / Cfg.PPM;
 
     private boolean blocked;
     private float gameTime;
@@ -47,8 +48,8 @@ public class Flower extends Enemy {
         animation = new Animation(0.33f, atlas.findRegions(RegionNames.FLOWER), Animation.PlayMode.LOOP);
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         state = new GameObjectState<State>(State.HIDDEN);
-        hiddenTargetY = getBody().getPosition().y;
-        waitingTargetY = hiddenTargetY + getHeight();
+        hiddenTargetY = getBody().getPosition().y - hiddenOffsetY;
+        waitingTargetY = getBody().getPosition().y + getHeight();
         setRegion(animation.getKeyFrame(state.timer()));
     }
 
@@ -109,8 +110,8 @@ public class Flower extends Enemy {
         fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
         fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
         fixtureDef.isSensor = true;
-        topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM),
-                new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM));
+        topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM + hiddenOffsetY),
+                new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM + hiddenOffsetY));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_TOP));
 

@@ -52,6 +52,7 @@ public class MusicPlayer implements Disposable {
 
         music.setVolume(currentVolume);
 
+
         if (fadeOutAndDisposeQueue.size > 0) {
             for (Music fadeOutMusic : fadeOutAndDisposeQueue) {
                 float newVolume = fadeOutMusic.getVolume() - delta;

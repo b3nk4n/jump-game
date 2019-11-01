@@ -28,7 +28,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -125,6 +124,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Sound splashSound;
     private Sound fireSound;
     private Sound drinkingSound;
+    private Sound ohYeahSound;
 
     private MusicPlayer musicPlayer;
 
@@ -163,6 +163,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         public void use(Mario mario, Item item) {
             if (item instanceof Beer) {
                 drinkingSound.play();
+            } else if (item instanceof Mushroom) {
+                ohYeahSound.play();
             } else {
                 powerupSound.play();
             }
@@ -392,7 +394,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         goal = worldCreator.getGoal();
 
-        hudViewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
+        hudViewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE), (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE));
         hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
@@ -431,6 +433,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         splashSound = getAssetManager().get(AssetDescriptors.Sounds.SPLASH);
         fireSound = getAssetManager().get(AssetDescriptors.Sounds.FIRE);
         drinkingSound = getAssetManager().get(AssetDescriptors.Sounds.DRINKING);
+        ohYeahSound = getAssetManager().get(AssetDescriptors.Sounds.OH_YEAH);
 
         font = getAssetManager().get(AssetDescriptors.Fonts.MARIO12);
 
@@ -650,13 +653,15 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     }
 
     private void checkPlayerInBounds() {
+        float blockSizePpm = Cfg.BLOCK_SIZE / Cfg.PPM;
+        float padding = 2 * blockSizePpm;
         float x = mario.getBody().getPosition().x;
-        if (x - mario.getBody().getFixtureList().get(0).getShape().getRadius() < 0) {
-            mario.getBody().setTransform(mario.getBody().getFixtureList().get(0).getShape().getRadius(),
+        if (x - blockSizePpm / 2  < padding) {
+            mario.getBody().setTransform(padding + blockSizePpm / 2,
                     mario.getBody().getPosition().y, 0);
 
-        } else if (x + mario.getBody().getFixtureList().get(0).getShape().getRadius() > mapPixelWidth) {
-            mario.getBody().setTransform(mapPixelWidth - mario.getBody().getFixtureList().get(0).getShape().getRadius(),
+        } else if (x + blockSizePpm / 2 > mapPixelWidth - padding) {
+            mario.getBody().setTransform(mapPixelWidth - padding - blockSizePpm / 2,
                     mario.getBody().getPosition().y, 0);
         }
     }
@@ -746,8 +751,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         batch.begin();
         if (mario.isDrunk()) {
             batch.setShader(drunkShader);
-            //drunkShader.setUniformf("u_effectRatio", Math.min(mario.getDrunkRatio() * 33f, 1f));
-
             drunkShader.setUniformf("u_time", gameTime);
             drunkShader.setUniformf("u_imageSize", Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
             drunkShader.setUniformf("u_amplitude", 7.1f * mario.getDrunkRatio(), 9.1f * mario.getDrunkRatio());

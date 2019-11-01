@@ -32,6 +32,7 @@ public interface AssetPaths {
         String SPLASH = "audio/sounds/splash.wav";
         String FIRE = "audio/sounds/fire.wav";
         String DRINKING = "audio/sounds/drinking.wav";
+        String OH_YEAH = "audio/sounds/oh_yeah.wav";
     }
 
     interface Music {
