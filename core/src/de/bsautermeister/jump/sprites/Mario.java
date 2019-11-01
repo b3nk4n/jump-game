@@ -697,6 +697,14 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         return groundContactCounter > 0;
     }
 
+    public boolean hasPlatformContact() {
+        return platformContact != null;
+    }
+
+    public Platform getPlatformContact() {
+        return platformContact;
+    }
+
     public boolean isChangingSize() {
         return changeSizeTimer.isRunning();
     }

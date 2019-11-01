@@ -87,10 +87,6 @@ public class WorldContactListener implements ContactListener {
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO_FEET);
                 Object other = resolveUserData(fixtureA, fixtureB, ~Bits.MARIO_FEET);
                 mario.touchGround(other);
-                if (other instanceof Platform) {
-                    if (Math.abs(mario.getVelocityRelativeToGround().y) < 0.1)
-                    ((Platform) other).touch(); // TODO: make sure we are standing still on the platform
-                }
                 break;
             case Bits.BLOCK_TOP | Bits.ENEMY:
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
@@ -148,10 +144,12 @@ public class WorldContactListener implements ContactListener {
             case Bits.MARIO | Bits.PLATFORM:
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
                 platform = (Platform) resolveUserData(fixtureA, fixtureB, Bits.PLATFORM);
-                if (!mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
-                    // TODO why is this overlap check required? Because endContact should not be called when they are still in contact
-                    mario.setLastJumpThroughPlatformId(null);
-                }
+                //if (!mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
+                    // why is this overlap check required? Because endContact should not be called when they are still in contact?
+                    // end-contact is simply not called every time, which caused the platformID being stuck sometimes
+                    // therefore checking for collision between player and all platforms continuously in GameScreen
+                    //mario.setLastJumpThroughPlatformId(null);
+                //}
                 break;
             case Bits.MARIO | Bits.ENEMY_SIDE:
                 taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
@@ -187,8 +185,7 @@ public class WorldContactListener implements ContactListener {
                     if (platform.getId().equals(mario.getLastJumpThroughPlatformId())) {
                         contact.setEnabled(false);
                     }
-                }
-                else if (mario.getVelocityRelativeToGround().y > 0.5) {
+                } else if (mario.getVelocityRelativeToGround().y > 0.5) {
                     mario.setLastJumpThroughPlatformId(platform.getId());
                     contact.setEnabled(false);
                 }

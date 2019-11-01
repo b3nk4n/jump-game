@@ -43,6 +43,7 @@ public class Platform extends Sprite implements BinarySerializable {
     private Vector2 targetVelocity;
 
     private GameObjectState<State> state; // TODO: due to the state, restore/removable logic in GameScreen has to be changed, because Platforms can now disappear
+    private float touchTTL = 1f;
     private boolean breakable;
 
     private Array<PlatformBouncer> bouncerRegions;
@@ -175,8 +176,9 @@ public class Platform extends Sprite implements BinarySerializable {
         targetVelocity = getDirectionOfSimpleAngle(angle).scl(SPEED);
     }
 
-    public void touch() {
-        if (breakable && state.is(State.MOVING)) {
+    public void touch(float delta) {
+        touchTTL -= delta;
+        if (touchTTL < 0 && breakable && state.is(State.MOVING)) {
             state.set(State.BREAKING);
             Gdx.input.vibrate(500);
         }

@@ -321,7 +321,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         this.world = new World(new Vector2(0,-9.81f), true);
         this.world.setContactListener(new WorldContactListener());
-        this.box2DDebugRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
+        this.box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
 
         enemies = new ObjectMap<String, Enemy>();
         platforms = new Array<Platform>();
@@ -536,6 +536,14 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (TextMessage textMessage : textMessages) {
             textMessage.update(delta);
         }
+
+        // touch for platform contacts
+        if (mario.hasPlatformContact()) {
+            Gdx.app.log("", mario.getVelocityRelativeToGround().y + "");
+            if (Math.abs(mario.getVelocityRelativeToGround().y) < 0.01) {
+                mario.getPlatformContact().touch(delta);
+            }
+        }
     }
 
     private void postUpdate() {
@@ -584,6 +592,16 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             fireball.reset();
         } else {
             fireball.postUpdate();
+        }
+
+        // cleanup jump-through ID of platform for player
+        if (mario.getLastJumpThroughPlatformId() != null) {
+            for (Platform platform : platforms) {
+                if (platform.getId().equals(mario.getLastJumpThroughPlatformId()) &&
+                        !mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
+                    mario.setLastJumpThroughPlatformId(null);
+                }
+            }
         }
     }
 
