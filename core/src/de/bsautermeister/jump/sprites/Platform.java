@@ -164,6 +164,9 @@ public class Platform extends Sprite implements BinarySerializable {
                 targetVelocity = FALLING_VELOCITY;
                 Filter filter = body.getFixtureList().get(0).getFilterData();
                 filter.maskBits = Bits.NOTHING;
+                for (Fixture fixture : getBody().getFixtureList()) {
+                    fixture.setFilterData(filter);
+                }
             }
         }
 

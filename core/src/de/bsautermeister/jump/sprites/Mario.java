@@ -12,11 +12,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.io.DataInputStream;
@@ -447,17 +449,9 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.friction = 0.8f;
-        final float[] SMALL_POLYGON_VERTICES = {
-                -3f / Cfg.PPM, 6f / Cfg.PPM,
-                3f / Cfg.PPM, 6f / Cfg.PPM,
-                5f / Cfg.PPM, -2f / Cfg.PPM,
-                5f / Cfg.PPM, -4f / Cfg.PPM,
-                3f / Cfg.PPM, -4.5f / Cfg.PPM,
-                -3f / Cfg.PPM, -4.5f / Cfg.PPM,
-                -5f / Cfg.PPM, -4f / Cfg.PPM,
-                -5f / Cfg.PPM, -2f / Cfg.PPM
-        };
-        createBodyFixture(fixtureDef, SMALL_POLYGON_VERTICES, normalFilterMask);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(6f / Cfg.PPM);
+        createBodyFixture(fixtureDef, shape, normalFilterMask);
         createFeetFixture(fixtureDef, 9.33f, -6.5f);
         createHeadSensorFixture(fixtureDef, 4f, 6.1f);
         createGroundSensorFixture(fixtureDef, 9f, -7f);
@@ -472,25 +466,17 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.friction = 0.8f;
-        final float[] BIG_POLYGON_VERTICES = {
-                -2.5f / Cfg.PPM, 21f / Cfg.PPM,
-                2.5f / Cfg.PPM, 21f / Cfg.PPM,
-                5.5f / Cfg.PPM, 8f / Cfg.PPM,
-                5.5f / Cfg.PPM, -1f / Cfg.PPM,
-                3f / Cfg.PPM, -4.5f / Cfg.PPM,
-                -3f / Cfg.PPM, -4.5f / Cfg.PPM,
-                -5.5f / Cfg.PPM, -1f / Cfg.PPM,
-                -5.5f / Cfg.PPM, 8f / Cfg.PPM,
-        };
-        createBodyFixture(fixtureDef, BIG_POLYGON_VERTICES, normalFilterMask);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(6f / Cfg.PPM);
+        createBodyFixture(fixtureDef, shape, normalFilterMask);
+        shape.setPosition(new Vector2(0, 12f / Cfg.PPM));
+        createBodyFixture(fixtureDef, shape, normalFilterMask);
         createFeetFixture(fixtureDef, 10f, -6.5f);
         createHeadSensorFixture(fixtureDef, 4f, 21.1f);
         createGroundSensorFixture(fixtureDef, 9.33f, -7f);
     }
 
-    private void createBodyFixture(FixtureDef fixtureDef, float[] smallPolygonVertices, boolean normalFilterMask) {
-        PolygonShape shape = new PolygonShape();
-        shape.set(smallPolygonVertices);
+    private void createBodyFixture(FixtureDef fixtureDef, Shape shape, boolean normalFilterMask) {
         fixtureDef.filter.categoryBits = Bits.MARIO;
         fixtureDef.filter.maskBits = normalFilterMask ?
                 NORMAL_FILTER_BITS : NO_ENEMY_FILTER_BITS;
