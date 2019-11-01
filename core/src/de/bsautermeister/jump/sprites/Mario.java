@@ -31,6 +31,7 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
@@ -120,17 +121,16 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private GameTimer drunkTimer;
     private GameTimer stonedTimer;
 
-    public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas) {
+    public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas, WorldCreator.StartParams start) {
         this.callbacks = callbacks;
         this.world = world;
         this.atlas = atlas;
         initTextures(atlas);
 
         state = new GameObjectState<State>(State.STANDING);
-        runningRight = true;
+        runningRight = !start.leftDirection;
 
-        Vector2 startPosition = new Vector2(4 * Cfg.BLOCK_SIZE / Cfg.PPM, 3 * Cfg.BLOCK_SIZE / Cfg.PPM);
-        defineSmallBody(startPosition, true);
+        defineSmallBody(start.position, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);

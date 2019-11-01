@@ -99,6 +99,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private int score;
 
+    private WorldCreator.StartParams start;
     private Vector2 goal;
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
@@ -332,8 +333,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         activeBoxCoins = new Array<BoxCoin>();
 
-        mario = new Mario(callbacks, world, atlas);
-
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
         stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
@@ -383,6 +382,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
         waterRegions = worldCreator.getWaterRegions();
 
+
+        start = worldCreator.getStart();
+        goal = worldCreator.getGoal();
+
+        mario = new Mario(callbacks, world, atlas, start);
+
         waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterRegions);
         waterInteractionManager.add(mario);
         for (Enemy enemy : enemies.values()) {
@@ -391,8 +396,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 waterInteractionManager.add(drownableEnemy);
             }
         }
-
-        goal = worldCreator.getGoal();
 
         hudViewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE), (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE));
         hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
@@ -539,7 +542,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         // touch for platform contacts
         if (mario.hasPlatformContact()) {
-            Gdx.app.log("", mario.getVelocityRelativeToGround().y + "");
             if (Math.abs(mario.getVelocityRelativeToGround().y) < 0.01) {
                 mario.getPlatformContact().touch(delta);
             }

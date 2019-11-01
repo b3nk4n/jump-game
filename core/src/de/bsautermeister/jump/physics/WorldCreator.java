@@ -50,6 +50,7 @@ public class WorldCreator {
     private static final String COLLIDER_KEY = "collider";
     private static final String WATER_KEY = "water";
     private static final String GOAL_KEY = "goal";
+    private static final String START_KEY = "start";
     private static final String BOUNCERS_KEY = "bouncers";
     private static final String PLATFORMS_KEY = "platforms";
     private static final String COINS_KEY = "coins";
@@ -265,7 +266,27 @@ public class WorldCreator {
         return new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
     }
 
+    public StartParams getStart() {
+        RectangleMapObject rect = map.getLayers()
+                .get(START_KEY)
+                .getObjects()
+                .getByType(RectangleMapObject.class)
+                .first();
+        return new StartParams(rect);
+    }
+
     private boolean hasLayer(Map map, String layer) {
         return map.getLayers().get(layer) != null;
+    }
+
+    public static class StartParams {
+        public final Vector2 position;
+        public final boolean leftDirection;
+
+        public StartParams(RectangleMapObject mapObject) {
+            Rectangle rect = mapObject.getRectangle();
+            position = new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
+            leftDirection = mapObject.getProperties().get("leftDirection", false, Boolean.class);
+        }
     }
 }

@@ -221,6 +221,7 @@ public class Platform extends Sprite implements BinarySerializable {
         out.writeFloat(targetVelocity.x);
         out.writeFloat(targetVelocity.y);
         out.writeBoolean(breakable);
+        out.writeFloat(touchTTL);
     }
 
     @Override
@@ -230,5 +231,6 @@ public class Platform extends Sprite implements BinarySerializable {
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         targetVelocity.set(in.readFloat(), in.readFloat());
         breakable = in.readBoolean();
+        touchTTL = in.readFloat();
     }
 }
