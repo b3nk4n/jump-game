@@ -87,6 +87,7 @@ public class Fireball extends Sprite implements BinarySerializable {
                 Bits.GROUND |
                 Bits.BRICK |
                 Bits.OBJECT |
+                Bits.ITEM_BOX |
                 Bits.PLATFORM;
 
         Fixture fixture = body.createFixture(fixtureDef);

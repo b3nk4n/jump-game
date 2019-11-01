@@ -686,11 +686,15 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
     }
 
+    private Vector2 tmpPosition = new Vector2(0, 0);
+    private Vector2 startSteerPosition = new Vector2(0, 0);
+
     private void handleInput() {
         if (mario.getState() == Mario.State.DEAD) {
             return;
         }
 
+        boolean slow = false;
         boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean downPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
@@ -698,6 +702,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         boolean firePressed = Gdx.input.isKeyPressed(Input.Keys.SPACE);
 
         int pointer = 0;
+        boolean leftSideTouched = false;
         while (Gdx.input.isTouched(pointer)) {
             float x = Gdx.input.getX(pointer);
             float y = Gdx.input.getY(pointer);
@@ -705,22 +710,47 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             x = x / Gdx.graphics.getWidth();
             y = y / Gdx.graphics.getHeight();
 
-            if (x > 0.6) {
-                if (y < 0.9) {
-                    upPressed = true;
+            if (x <= 0.5) {
+                // left region: steering player
+                leftSideTouched = true;
+                if (startSteerPosition.isZero()) {
+                    startSteerPosition.set(x, y);
                 } else {
-                    downPressed = true; // TODO use swipe down and keep pressed for crouch, otherwise jump
+                    tmpPosition.set(x, y);
+                    Vector2 swipeDirection = tmpPosition.sub(startSteerPosition);
+                    float len = swipeDirection.len();
+                    if (len > 0.005f) {
+                        if (len < 0.03f) {
+                            slow = true;
+                        }
+                        float angle = swipeDirection.angle();
+                        if (angle <= 45 || angle >= 315) {
+                            rightPressed = true;
+                        } else if (angle >= 135 && angle <= 225) {
+                            leftPressed = true;
+                        } else if (len > 0.1f &&angle > 45 && angle < 135) {
+                            downPressed = true;
+                        }
+                    }
                 }
-            } else if (x < 0.2) {
-                leftPressed = true;
-            } else if (x < 0.4) {
-                rightPressed = true;
+            } else {
+                // right region: actions
+                if (Gdx.input.justTouched()) {
+                    if (y >= 0.5) {
+                        upPressed = true;
+                    } else {
+                        firePressed = true;
+                    }
+                }
             }
-
             pointer++;
         }
 
-        mario.control(upPressed, downPressed, leftPressed, rightPressed, firePressed);
+        if (!leftSideTouched) {
+            startSteerPosition.set(0, 0);
+        }
+
+        mario.control(upPressed, downPressed, leftPressed, rightPressed, firePressed, slow);
     }
 
     @Override

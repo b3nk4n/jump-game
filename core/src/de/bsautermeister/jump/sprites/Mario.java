@@ -280,7 +280,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
     }
 
-    public void control(boolean up, boolean down, boolean left, boolean right, boolean fire) {
+    public void control(boolean up, boolean down, boolean left, boolean right, boolean fire, boolean slow) {
         if (isDead() || isDrowning()) {
             return;
         }
@@ -302,10 +302,10 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             return;
         }
         if (right && body.getLinearVelocity().x <= 2 && !down) {
-            body.applyForceToCenter(new Vector2(7.5f, 0), true);
+            body.applyForceToCenter(new Vector2(slow ? 4.75f : 7.5f, 0), true);
         }
         if (left && body.getLinearVelocity().x >= -2 && !down) {
-            body.applyForceToCenter(new Vector2(-7.5f, 0), true);
+            body.applyForceToCenter(new Vector2(slow ? -4.75f : -7.5f, 0), true);
         }
         if ((!left && !right && state.is(State.JUMPING))) {
             // horizontally decelerate fast, but don't stop immediately
