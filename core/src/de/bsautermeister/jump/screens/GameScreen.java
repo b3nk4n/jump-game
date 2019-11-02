@@ -348,7 +348,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private void reset() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
-        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
 
@@ -388,6 +387,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         goal = worldCreator.getGoal();
 
         mario = new Mario(callbacks, world, atlas, start);
+
+        camera.position.set(start.position, 0);
 
         waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterRegions);
         waterInteractionManager.add(mario);
