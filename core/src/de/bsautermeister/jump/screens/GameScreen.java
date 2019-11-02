@@ -91,6 +91,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private float mapPixelWidth;
+    private float mapPixelHeight;
 
     private World world;
     private Box2DDebugRenderer box2DDebugRenderer;
@@ -415,8 +416,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, getGame().getBatch());
         float mapWidth = map.getProperties().get("width", Integer.class);
+        float mapHeight = map.getProperties().get("height", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
+        float tilePixelHeight = map.getProperties().get("tileheight", Integer.class);
         this.mapPixelWidth = mapWidth * tilePixelWidth / Cfg.PPM;
+        this.mapPixelHeight = mapHeight * tilePixelHeight / Cfg.PPM;
     }
 
     @Override
@@ -696,13 +700,21 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         // B) no snapping runs smoother
         camera.position.x = mario.getBody().getPosition().x;
-
-        // check camera in bounds
+        // check camera in bounds (X)
         if (camera.position.x - viewport.getWorldWidth() / 2 < 0) {
             camera.position.x = viewport.getWorldWidth() / 2;
         } else if (camera.position.x + viewport.getWorldWidth() / 2 > mapPixelWidth) {
             camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
             camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
+        }
+
+        camera.position.y = mario.getBody().getPosition().y;
+        // check camera in bounds (Y)
+        if (camera.position.y - viewport.getWorldHeight() / 2 < 0) {
+            camera.position.y = viewport.getWorldHeight() / 2;
+        } else if (camera.position.y + viewport.getWorldHeight() / 2 > mapPixelHeight) {
+            camera.position.y = mapPixelHeight - viewport.getWorldHeight() / 2;
+            camera.position.y = mapPixelHeight - viewport.getWorldHeight() / 2;
         }
     }
 
@@ -809,7 +821,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
         float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         batch.draw(frameBuffer.getColorBufferTexture(),
-                camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
+                camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                 (int)screenPixelPerTile * 2, (int)screenPixelPerTile * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
         if (mario.isStoned()) {
@@ -820,10 +832,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             float offset3 =  screenPixelPerTile * 0.66f * (float)Math.sin(gameTime * 0.9f) * mario.getStonedRatio();
             float offset4 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.7f) * mario.getStonedRatio();
             batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
+                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                     (int)(screenPixelPerTile * 2 + offset1), (int)(screenPixelPerTile * 2 - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
             batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, 0, camera.viewportWidth, camera.viewportHeight,
+                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                     (int)(screenPixelPerTile * 2 - offset3), (int)(screenPixelPerTile * 2 + offset4), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
             batch.setColor(c);
         }
