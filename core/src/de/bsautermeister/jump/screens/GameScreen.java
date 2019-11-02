@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -699,7 +700,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         //camera.position.x = (float) Math.round(mario.getBody().getPosition().x * Cfg.PPM) / Cfg.PPM;
 
         // B) no snapping runs smoother
-        camera.position.x = mario.getBody().getPosition().x;
+        //camera.position.x = mario.getBody().getPosition().x;
+
+        // C) interpolation (super smooth)
+        camera.position.x = camera.position.x - (camera.position.x - mario.getBody().getPosition().x) * 0.1f;
+
         // check camera in bounds (X)
         if (camera.position.x - viewport.getWorldWidth() / 2 < 0) {
             camera.position.x = viewport.getWorldWidth() / 2;
@@ -708,7 +713,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
         }
 
-        camera.position.y = mario.getBody().getPosition().y;
+        camera.position.y = camera.position.y - (camera.position.y - mario.getBody().getPosition().y + viewport.getWorldHeight() * 0.133f) * 0.066f;
+
         // check camera in bounds (Y)
         if (camera.position.y - viewport.getWorldHeight() / 2 < 0) {
             camera.position.y = viewport.getWorldHeight() / 2;
