@@ -20,7 +20,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Frustum;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -632,14 +631,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private void updateEnemies(float delta) {
         for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
+            if (!enemy.isActive() && Vector2.len2(
+                    enemy.getX() - mario.getX(), enemy.getY() - mario.getY()) < Cfg.ENEMY_WAKE_UP_DISTANCE2) {
+                enemy.setActive(true);
 
-            if (enemy.getX() < mario.getX() + Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM) {
-                if (!enemy.isActive()) {
-                    enemy.setActive(true);
-
-                    if (enemy.hasGroup()) {
-                        wakeUp(enemy.getGroup());
-                    }
+                if (enemy.hasGroup()) {
+                    wakeUp(enemy.getGroup());
                 }
             }
         }
