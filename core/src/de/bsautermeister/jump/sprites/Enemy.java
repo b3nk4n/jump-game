@@ -58,6 +58,11 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         if (isDead()) {
             setFlip(isFlipX(), true);
         }
+
+        // limit falling speed
+        if (body.getLinearVelocity().y < Cfg.MAX_FALLING_SPEED) {
+            body.setLinearVelocity(body.getLinearVelocity().x, Cfg.MAX_FALLING_SPEED);
+        }
     }
 
     public void postUpdate() {

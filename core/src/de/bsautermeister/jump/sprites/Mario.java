@@ -274,6 +274,11 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         if (isDrowning()) {
             body.setLinearVelocity(body.getLinearVelocity().x * 0.95f, body.getLinearVelocity().y * 0.33f);
         }
+
+        // limit falling speed
+        if (body.getLinearVelocity().y < Cfg.MAX_FALLING_SPEED) {
+            body.setLinearVelocity(body.getLinearVelocity().x, Cfg.MAX_FALLING_SPEED);
+        }
     }
 
     @Override
