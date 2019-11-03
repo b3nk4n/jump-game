@@ -39,6 +39,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     public static final float INITAL_TTL = 200;
 
+    private static final float EFFECT_DURATION = 10f;
+
     private static final short NORMAL_FILTER_BITS = Bits.GROUND |
             Bits.PLATFORM |
             Bits.ITEM_BOX |
@@ -160,8 +162,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         fireball = new Fireball(callbacks, world, atlas);
         fireTimer = new GameTimer(1.0f, true);
 
-        drunkTimer = new GameTimer(10f);
-        stonedTimer = new GameTimer(10f);
+        drunkTimer = new GameTimer(EFFECT_DURATION);
+        stonedTimer = new GameTimer(EFFECT_DURATION);
     }
 
     private void initTextures(TextureAtlas atlas) {
@@ -601,7 +603,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void drunk() {
-        drunkTimer.restart();
+        float skip = isDrunk() ? 0.1f * EFFECT_DURATION : 0f;
+        drunkTimer.restart(skip);
     }
 
     public boolean isDrunk() {
@@ -619,7 +622,8 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void stoned() {
-        stonedTimer.restart();
+        float skip = isStoned() ? 0.05f * EFFECT_DURATION : 0f;
+        stonedTimer.restart(skip);
     }
 
     public boolean isStoned() {

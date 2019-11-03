@@ -246,7 +246,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             float volume = getVolumeBasedOnDistanceToCameraCenter(drownable.getWorldCenter().x);
             if (volume > 0) {
                 splashSound.play(volume);
-                drinkingSound.play(volume, 0.9f, 0f);
+                if (isBeer) {
+                    drinkingSound.play(volume, 0.9f, 0f);
+                }
             }
         }
 

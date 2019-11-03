@@ -24,7 +24,11 @@ public class GameTimer implements BinarySerializable {
     }
 
     public void restart() {
-        this.value = resetValue;
+        restart(0f);
+    }
+
+    public void restart(float skip) {
+        this.value = resetValue - skip;
         this.isStarted = true;
 
         if (callbacks != null) {
