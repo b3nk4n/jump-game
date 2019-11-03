@@ -54,7 +54,7 @@ public class Brick extends InteractiveTileObject {
         if (unlockGoal.needsAction()) {
             timeToUnlockGoal -= delta;
             if (timeToUnlockGoal < 0) {
-                getCallbacks().unlockGoalBrick();
+                getCallbacks().unlockGoalBrick(this);
                 destroy();
                 emitFragments();
                 unlockGoal.done();

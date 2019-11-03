@@ -309,8 +309,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
-        public void unlockGoalBrick() {
-            breakBlockSound.play();
+        public void unlockGoalBrick(Brick brick) {
+            float volume = getVolumeBasedOnDistanceToCameraCenter(brick.getBody().getWorldCenter().x);
+            if (volume > 0) {
+                breakBlockSound.play();
+            }
         }
 
         @Override
