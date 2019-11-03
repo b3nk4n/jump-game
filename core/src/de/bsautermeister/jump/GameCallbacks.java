@@ -26,6 +26,7 @@ public interface GameCallbacks {
     void touchedWater(Drownable drownable, boolean isBeer);
     void collectCoin();
     void fire();
+    void unlockGoalBrick();
     void goalReached();
     void gameOver();
 }

@@ -100,6 +100,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Mario mario;
 
     private int score;
+    private int collectedBeers;
 
     private WorldCreator.StartParams start;
     private Rectangle goal;
@@ -167,7 +168,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         @Override
         public void use(Mario mario, Item item) {
             if (item instanceof Beer) {
+                collectedBeers++;
                 drinkingSound.play();
+                if (collectedBeers == 1) {
+                    unlockGoal();
+                }
             } else if (item instanceof Mushroom) {
                 ohYeahSound.play();
             } else {
@@ -176,6 +181,18 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
             score += 100;
             showScoreText("100", item.getBoundingRectangle());
+        }
+
+        private void unlockGoal() {
+            int i = 0;
+            for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+                if (tileObject instanceof Brick) {
+                    Brick brick = (Brick) tileObject;
+                    if (brick.isGoalProtector()) {
+                        brick.unlockGoal(i++ * 0.25f);
+                    }
+                }
+            }
         }
 
         @Override
@@ -292,6 +309,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
+        public void unlockGoalBrick() {
+            breakBlockSound.play();
+        }
+
+        @Override
         public void goalReached() {
             successSound.play();
         }
@@ -369,6 +391,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                 false);
 
         score = 0;
+        collectedBeers = 0;
 
         if (level == -1) {
             level = gameStats.getLastStartedLevel();
@@ -530,7 +553,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
-        hud.update(level, score, mario.getTimeToLive());
+        hud.update(collectedBeers, score, mario.getTimeToLive());
 
         upateCameraPosition();
         camera.update();
@@ -1025,6 +1048,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     public void write(DataOutputStream out) throws IOException {
         out.writeInt(level);
         out.writeInt(score);
+        out.writeInt(collectedBeers);
         out.writeBoolean(levelCompleted);
         out.writeFloat(levelCompletedTimer);
         out.writeFloat(gameTime);
@@ -1059,6 +1083,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     public void read(DataInputStream in) throws IOException {
         level = in.readInt();
         score = in.readInt();
+        collectedBeers = in.readInt();
         levelCompleted = in.readBoolean();
         levelCompletedTimer = in.readFloat();
         gameTime = in.readFloat();

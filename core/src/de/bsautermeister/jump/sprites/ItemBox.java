@@ -22,8 +22,6 @@ public class ItemBox extends InteractiveTileObject {
         BEER
     }
 
-    private final static int BLANK_COIN_IDX = 28;
-
     private Type type;
     private int remainingItems;
 
@@ -92,7 +90,7 @@ public class ItemBox extends InteractiveTileObject {
         if (isBlank()) {
             getCell().setTile(
                     new DynamicTiledMapTile(
-                            tileSet.getTile(BLANK_COIN_IDX)));
+                            tileSet.getTile(Cfg.BLANK_COIN_IDX)));
         }
     }
 

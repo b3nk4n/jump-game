@@ -22,14 +22,19 @@ public class Brick extends InteractiveTileObject {
 
     private final TextureAtlas atlas;
 
+    private MarkedAction unlockGoal;
+    private float timeToUnlockGoal;
+    private boolean goalProtector;
     private boolean destroyed;
 
-    private Array<BrickFragment> activeBrickFragments = new Array<BrickFragment>(4);
-    static Pool<BrickFragment> brickFragmentPool = Pools.get(BrickFragment.class);
+    private Array<BrickFragment> activeBrickFragments = new Array<BrickFragment>(16);
+    private static Pool<BrickFragment> brickFragmentPool = Pools.get(BrickFragment.class);
 
     public Brick(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
         super(callbacks, Bits.BRICK, world, map, mapObject);
+        this.goalProtector = mapObject.getProperties().get("goal", false, Boolean.class);
         this.atlas = atlas;
+        this.unlockGoal = new MarkedAction();
     }
 
     @Override
@@ -43,6 +48,16 @@ public class Brick extends InteractiveTileObject {
             if (!brickFragment.isAlive()) {
                 activeBrickFragments.removeIndex(i);
                 brickFragmentPool.free(brickFragment);
+            }
+        }
+
+        if (unlockGoal.needsAction()) {
+            timeToUnlockGoal -= delta;
+            if (timeToUnlockGoal < 0) {
+                getCallbacks().unlockGoalBrick();
+                destroy();
+                emitFragments();
+                unlockGoal.done();
             }
         }
     }
@@ -83,6 +98,13 @@ public class Brick extends InteractiveTileObject {
         }
     }
 
+    public void unlockGoal(float unlockDelay) {
+        if (!destroyed && isGoalProtector()) {
+            timeToUnlockGoal = unlockDelay;
+            unlockGoal.mark();
+        }
+    }
+
     private void destroy() {
         updateCategoryFilter(Bits.NOTHING);
         getCell().setTile(null);
@@ -118,10 +140,15 @@ public class Brick extends InteractiveTileObject {
         activeBrickFragments.add(fragment4);
     }
 
+    public boolean isGoalProtector() {
+        return goalProtector;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         out.writeBoolean(destroyed);
+        out.writeBoolean(goalProtector);
         out.writeInt(activeBrickFragments.size);
         for (BrickFragment fragment : activeBrickFragments) {
             fragment.write(out);
@@ -132,6 +159,7 @@ public class Brick extends InteractiveTileObject {
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         destroyed = in.readBoolean();
+        goalProtector = in.readBoolean();
         int numFragments = in.readInt();
         for (int i = 0; i < numFragments; ++i) {
             BrickFragment brickFragment = new BrickFragment();

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 
 public class Hud implements Disposable {
@@ -19,12 +18,12 @@ public class Hud implements Disposable {
 
     private int currentTTL;
     private int currentScore;
-    private int currentLevel;
+    private int currentBeers;
 
     private Label countDownLabel;
     private Label scoreLabel;
     private Label timeLabel;
-    private Label levelLabel;
+    private Label beersLabel;
     private Label worldLabel;
     private Label marioLabel;
 
@@ -47,8 +46,8 @@ public class Hud implements Disposable {
         countDownLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
         scoreLabel = new Label(getFormattedScore(currentScore), labelStyle);
         timeLabel = new Label("TIME", labelStyle);
-        levelLabel = new Label(getFormattedLevel(currentLevel), labelStyle);
-        worldLabel = new Label("WORLD", labelStyle);
+        beersLabel = new Label(getFormattedBeers(currentBeers), labelStyle);
+        worldLabel = new Label("BEERS", labelStyle);
         marioLabel = new Label("MARIO", labelStyle);
 
         table.add(marioLabel)
@@ -63,7 +62,7 @@ public class Hud implements Disposable {
         table.row();
         table.add(scoreLabel)
                 .expandX();
-        table.add(levelLabel)
+        table.add(beersLabel)
                 .expandX();
         table.add(countDownLabel)
                 .expandX();
@@ -71,16 +70,16 @@ public class Hud implements Disposable {
         return table;
     }
 
-    public void update(int level, int score, float ttl) {
-        updateLevel(level);
+    public void update(int beers, int score, float ttl) {
+        updateBeers(beers);
         updateScore(score);
         updateTimeToLive(ttl);
     }
 
-    private void updateLevel(int level) {
-        if (currentLevel != level) {
-            currentLevel = level;
-            levelLabel.setText(getFormattedLevel(currentLevel));
+    private void updateBeers(int level) {
+        if (currentBeers != level) {
+            currentBeers = level;
+            beersLabel.setText(getFormattedBeers(currentBeers));
         }
     }
 
@@ -107,11 +106,8 @@ public class Hud implements Disposable {
         return String.format("%06d", score);
     }
 
-    private static String getFormattedLevel(int level) {
-        int stage = (level - 1) / Cfg.LEVELS_PER_STAGE + 1;
-        int stageLevel = (level - 1) % Cfg.LEVELS_PER_STAGE + 1;
-
-        return String.format("%d-%d", stage, stageLevel);
+    private static String getFormattedBeers(int beers) {
+        return String.format("%d", beers);
     }
 
     public Stage getStage() {
