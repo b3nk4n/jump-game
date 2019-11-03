@@ -43,5 +43,6 @@ public interface AssetPaths {
     interface Pfx {
         String SLIDE_SMOKE = "pfx/slide-smoke.pfx";
         String SPLASH = "pfx/splash.pfx";
+        String BEER_SPLASH = "pfx/beer-splash.pfx";
     }
 }

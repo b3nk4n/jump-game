@@ -219,7 +219,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="water" visible="0">
+ <objectgroup id="10" name="water">
   <object id="62" x="768" y="192" width="32" height="16"/>
   <object id="92" x="1616" y="192" width="160" height="16"/>
  </objectgroup>

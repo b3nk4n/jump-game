@@ -6,133 +6,140 @@ filter: Nearest,Nearest
 repeat: none
 beer
   rotate: false
-  xy: 160, 88
+  xy: 280, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+beer_liquid
+  rotate: false
+  xy: 4, 24
+  size: 64, 100
+  orig: 64, 100
+  offset: 0, 0
+  index: -1
 big_mario_crouch
   rotate: false
-  xy: 72, 16
+  xy: 140, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_crouch_on_fire
   rotate: false
-  xy: 108, 52
+  xy: 176, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_drown
   rotate: false
-  xy: 92, 16
+  xy: 160, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_drown_on_fire
   rotate: false
-  xy: 128, 52
+  xy: 196, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_jump
   rotate: false
-  xy: 112, 16
+  xy: 180, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_jump_on_fire
   rotate: false
-  xy: 132, 16
+  xy: 216, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_stand
   rotate: false
-  xy: 148, 52
+  xy: 200, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_stand_on_fire
   rotate: false
-  xy: 152, 16
+  xy: 236, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_turn
   rotate: false
-  xy: 168, 52
+  xy: 220, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_turn_on_fire
   rotate: false
-  xy: 172, 16
+  xy: 256, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 big_mario_walk
   rotate: false
-  xy: 188, 52
+  xy: 240, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 0
 big_mario_walk
   rotate: false
-  xy: 192, 16
+  xy: 260, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 1
 big_mario_walk
   rotate: false
-  xy: 208, 52
+  xy: 276, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 2
 big_mario_walk_on_fire
   rotate: false
-  xy: 212, 16
+  xy: 280, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 0
 big_mario_walk_on_fire
   rotate: false
-  xy: 228, 92
+  xy: 296, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 1
 big_mario_walk_on_fire
   rotate: false
-  xy: 248, 92
+  xy: 300, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 2
 break_platform2
   rotate: false
-  xy: 124, 88
+  xy: 244, 108
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 break_platform3
   rotate: false
-  xy: 72, 88
+  xy: 140, 108
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
@@ -146,238 +153,238 @@ break_platform4
   index: -1
 brick_fragment
   rotate: false
-  xy: 72, 4
+  xy: 140, 4
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 coin
   rotate: false
-  xy: 180, 88
+  xy: 300, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 coin
   rotate: false
-  xy: 200, 88
+  xy: 176, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 coin
   rotate: false
-  xy: 388, 108
+  xy: 320, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 coin
   rotate: false
-  xy: 408, 108
+  xy: 196, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 fireball
   rotate: false
-  xy: 84, 4
+  xy: 152, 4
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 fireflower
   rotate: false
-  xy: 428, 108
+  xy: 340, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 fish
   rotate: false
-  xy: 448, 108
+  xy: 216, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 fish
   rotate: false
-  xy: 468, 108
+  xy: 360, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 flower
   rotate: false
-  xy: 268, 100
+  xy: 316, 80
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 0
 flower
   rotate: false
-  xy: 288, 100
+  xy: 336, 80
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 1
 goomba
   rotate: false
-  xy: 488, 108
+  xy: 236, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 goomba
   rotate: false
-  xy: 228, 72
+  xy: 380, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 goomba_stomp
   rotate: false
-  xy: 228, 52
+  xy: 256, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 koopa
   rotate: false
-  xy: 308, 100
+  xy: 356, 80
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 0
 koopa
   rotate: false
-  xy: 328, 100
+  xy: 376, 80
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 1
 koopa_moving
   rotate: false
-  xy: 348, 100
+  xy: 320, 52
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 0
 koopa_moving
   rotate: false
-  xy: 368, 100
+  xy: 340, 52
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 1
 little_mario_dead
   rotate: false
-  xy: 248, 72
+  xy: 400, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_drown
   rotate: false
-  xy: 268, 80
+  xy: 396, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_jump
   rotate: false
-  xy: 248, 52
+  xy: 276, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_stand
   rotate: false
-  xy: 232, 32
+  xy: 360, 60
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_turn
   rotate: false
-  xy: 268, 60
+  xy: 420, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 little_mario_walk
   rotate: false
-  xy: 288, 80
+  xy: 416, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 little_mario_walk
   rotate: false
-  xy: 288, 60
+  xy: 296, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 little_mario_walk
   rotate: false
-  xy: 308, 80
+  xy: 440, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 mushroom
   rotate: false
-  xy: 308, 60
+  xy: 436, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 particle
   rotate: false
-  xy: 72, 52
+  xy: 140, 72
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 platform2
   rotate: false
-  xy: 192, 108
+  xy: 140, 16
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 platform3
   rotate: false
-  xy: 140, 108
+  xy: 192, 108
   size: 48, 16
   orig: 48, 16
   offset: 0, 0
   index: -1
 platform4
   rotate: false
-  xy: 72, 108
+  xy: 72, 4
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 spiky
   rotate: false
-  xy: 328, 80
+  xy: 460, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spiky
   rotate: false
-  xy: 328, 60
+  xy: 456, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 water
   rotate: false
-  xy: 4, 24
+  xy: 72, 24
   size: 64, 100
   orig: 64, 100
   offset: 0, 0

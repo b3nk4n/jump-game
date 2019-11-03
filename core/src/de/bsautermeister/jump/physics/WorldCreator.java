@@ -21,14 +21,13 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
-import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
+import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Koopa;
-import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
 
@@ -221,18 +220,17 @@ public class WorldCreator {
         return coins;
     }
 
-    public Array<Rectangle> getWaterRegions() {
-        Array<Rectangle> waterRegions = new Array<Rectangle>();
+    public Array<WaterParams> getWaterRegions() {
+        Array<WaterParams> waterRegions = new Array<WaterParams>();
         if (hasLayer(map, WATER_KEY)) {
             for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
-                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                waterRegions.add(toPPM(rect));
+                waterRegions.add(new WaterParams((RectangleMapObject) mapObject));
             }
         }
         return waterRegions;
     }
 
-    private Rectangle toPPM(Rectangle rect) {
+    private static Rectangle toPPM(Rectangle rect) {
         return new Rectangle(rect.x / Cfg.PPM, rect.y / Cfg.PPM,
                 rect.width / Cfg.PPM, rect.height / Cfg.PPM);
     }
@@ -256,14 +254,14 @@ public class WorldCreator {
         return tileObjects;
     }
 
-    public Vector2 getGoal() {
+    public Rectangle getGoal() {
         Rectangle rect = map.getLayers()
                 .get(GOAL_KEY)
                 .getObjects()
                 .getByType(RectangleMapObject.class)
                 .first()
                 .getRectangle();
-        return new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
+        return toPPM(rect);
     }
 
     public StartParams getStart() {
@@ -287,6 +285,16 @@ public class WorldCreator {
             Rectangle rect = mapObject.getRectangle();
             position = new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
             leftDirection = mapObject.getProperties().get("leftDirection", false, Boolean.class);
+        }
+    }
+
+    public static class WaterParams {
+        public final Rectangle rectangle;
+        public final boolean isBeer;
+
+        public WaterParams(RectangleMapObject mapObject) {
+            rectangle = toPPM(mapObject.getRectangle());
+            isBeer = mapObject.getProperties().get("is_beer", false, Boolean.class);
         }
     }
 }

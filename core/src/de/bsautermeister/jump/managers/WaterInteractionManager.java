@@ -5,37 +5,43 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.physics.WorldCreator;
 
 public class WaterInteractionManager {
-    private ParticleEffectPool splashEffectPool;
+    private ParticleEffectPool waterSplashEffectPool;
+    private ParticleEffectPool beerSplashEffectPool;
     private Array<ParticleEffectPool.PooledEffect> activeSplashEffects = new Array<ParticleEffectPool.PooledEffect>();
 
     private final GameCallbacks callbacks;
-    private final Array<Rectangle> waterRegions;
+    private final Array<WorldCreator.WaterParams> waterRegions;
     private final Array<Drownable> drownables = new Array<Drownable>();
 
-    public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks, Array<Rectangle> waterRegions) {
-        ParticleEffect splashEffect = new ParticleEffect();
-        splashEffect.load(Gdx.files.internal(AssetPaths.Pfx.SPLASH), atlas);
-        splashEffect.scaleEffect(0.1f / Cfg.PPM);
-        splashEffectPool = new ParticleEffectPool(splashEffect, 8, 16);
+    public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks, Array<WorldCreator.WaterParams> waterRegions) {
+        waterSplashEffectPool = createEffectPool(AssetPaths.Pfx.SPLASH, atlas);
+        beerSplashEffectPool = createEffectPool(AssetPaths.Pfx.BEER_SPLASH, atlas);
 
         this.callbacks = callbacks;
         this.waterRegions = waterRegions;
     }
 
+    private ParticleEffectPool createEffectPool(String effectPath , TextureAtlas atlas) {
+        ParticleEffect splashEffect = new ParticleEffect();
+        splashEffect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
+        splashEffect.scaleEffect(0.1f / Cfg.PPM);
+        return new ParticleEffectPool(splashEffect, 8, 16);
+    }
+
     public void update(float delta) {
-        for (Rectangle waterRegion : waterRegions) {
+        for (WorldCreator.WaterParams waterRegion : waterRegions) {
             for (Drownable drownable : drownables) {
-                if (waterRegion.contains(drownable.getWorldCenter())) {
-                    doDrown(drownable);
+                if (waterRegion.rectangle.contains(drownable.getWorldCenter())) {
+                    doDrown(drownable, waterRegion.isBeer);
                 }
             }
         }
@@ -58,10 +64,12 @@ public class WaterInteractionManager {
         drownables.removeValue(drownable, true);
     }
 
-    private void doDrown(Drownable drownable) {
+    private void doDrown(Drownable drownable, boolean isBeer) {
         if (!drownable.isDead() && !drownable.isDrowning() && drownable.getLinearVelocity().y < -0.5f) {
             Vector2 center = drownable.getWorldCenter();
-            ParticleEffectPool.PooledEffect splashEffect = splashEffectPool.obtain();
+            ParticleEffectPool.PooledEffect splashEffect = isBeer ?
+                    beerSplashEffectPool.obtain() : waterSplashEffectPool.obtain();
+            splashEffect.start();
             splashEffect.setPosition(center.x, center.y);
             activeSplashEffects.add(splashEffect);
             callbacks.touchedWater(drownable);

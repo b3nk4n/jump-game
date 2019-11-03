@@ -20,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -101,7 +102,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private int score;
 
     private WorldCreator.StartParams start;
-    private Vector2 goal;
+    private Rectangle goal;
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
@@ -131,9 +132,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private MusicPlayer musicPlayer;
 
     private float gameTime;
-    private Array<Rectangle> waterRegions;
+    private Array<WorldCreator.WaterParams> waterList;
     private final ShaderProgram waterShader;
     private TextureRegion waterTexture;
+    private TextureRegion beerLiquidTexture;
     private final ShaderProgram drunkShader;
     private final ShaderProgram stonedShader;
 
@@ -380,7 +382,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
             coins.addAll(worldCreator.createCoins());
         }
-        waterRegions = worldCreator.getWaterRegions();
+        waterList = worldCreator.getWaterRegions();
 
 
         start = worldCreator.getStart();
@@ -390,7 +392,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         camera.position.set(start.position, 0);
 
-        waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterRegions);
+        waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterList);
         waterInteractionManager.add(mario);
         for (Enemy enemy : enemies.values()) {
             if (enemy instanceof Drownable) {
@@ -403,6 +405,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
+        beerLiquidTexture = atlas.findRegion(RegionNames.BEER_LIQUID);
 
         levelCompleted = false;
         levelCompletedTimer = 0;
@@ -586,7 +589,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
-        if (mario.getBody().getPosition().dst2(goal) < 0.0075f) {
+        if (Intersector.overlaps(goal, mario.getBoundingRectangle())) {
             completeLevel();
         }
 
@@ -668,6 +671,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private void completeLevel() {
         if (!levelCompleted) {
+            LOG.debug("Goal reached");
             levelCompleted = true;
             mario.setLevelCompleted(true);
             gameStats.setHighestFinishedLevel(level);
@@ -910,11 +914,13 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         waterInteractionManager.draw(batch);
 
         ShaderProgram prevShader = batch.getShader();
-        for (Rectangle waterRegion : waterRegions) {
+        for (WorldCreator.WaterParams waterParams : waterList) {
+            Rectangle waterRegion = waterParams.rectangle;
+            TextureRegion texture = waterParams.isBeer ? beerLiquidTexture : waterTexture;
             batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
-            batch.draw(waterTexture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
+            batch.draw(texture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
                     waterRegion.getWidth(), waterRegion.getHeight());
         }
 

@@ -39,6 +39,7 @@ public interface RegionNames {
     String BREAK_PLATFORM3 = "break_platform3";
     String BREAK_PLATFORM4 = "break_platform4";
     String BEER = "beer";
+    String BEER_LIQUID = "beer_liquid";
 
     String LOADING_LOGO = "title";
     String LOADING_ANIMATION = "loading";
