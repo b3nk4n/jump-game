@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -15,9 +16,9 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Mushroom extends Item implements Drownable {
-
     private boolean drowning = false;
 
     public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
@@ -47,7 +48,25 @@ public class Mushroom extends Item implements Drownable {
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
+        fixture.setUserData(new TaggedUserData<Item>(this, TAG_BASE));
+
+        EdgeShape sideShape = new EdgeShape();
+        fixtureDef.shape = sideShape;
+        fixtureDef.filter.categoryBits = Bits.ITEM;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.ITEM_BOX |
+                Bits.BRICK |
+                Bits.OBJECT;
+        fixtureDef.isSensor = true;
+        sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
+                new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Item>(this, TAG_LEFT));
+        sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
+                new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Item>(this, TAG_RIGHT));
+
         return body;
     }
 

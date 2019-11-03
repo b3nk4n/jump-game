@@ -27,12 +27,11 @@ public class WorldContactListener implements ContactListener {
 
         int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
-        Item item;
         Mario mario;
         Enemy enemy;
-        CollectableItem collectableItem;
         InteractiveTileObject tileObject;
-        TaggedUserData<Enemy> taggedUserData;
+        TaggedUserData<Item> taggedItem;
+        TaggedUserData<Enemy> taggedEnemy;
         switch (collisionDef) {
             case Bits.MARIO_HEAD | Bits.BRICK:
             case Bits.MARIO_HEAD | Bits.ITEM_BOX:
@@ -52,13 +51,13 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
             case Bits.ENEMY_SIDE | Bits.GROUND:
             case Bits.ENEMY_SIDE | Bits.PLATFORM:
-                taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (taggedUserData.getUserData() instanceof Goomba) {
-                    ((Goomba) taggedUserData.getUserData()).changeDirectionBySideSensorTag(taggedUserData.getTag());
-                } else if (taggedUserData.getUserData() instanceof Koopa) {
-                    ((Koopa) taggedUserData.getUserData()).changeDirectionBySideSensorTag(taggedUserData.getTag());
-                } else if (taggedUserData.getUserData() instanceof Spiky) {
-                    ((Spiky) taggedUserData.getUserData()).changeDirectionBySideSensorTag(taggedUserData.getTag());
+                taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedEnemy.getUserData() instanceof Goomba) {
+                    ((Goomba) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Koopa) {
+                    ((Koopa) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Spiky) {
+                    ((Spiky) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 }
                 break;
             case Bits.ENEMY: // enemy with enemy
@@ -71,13 +70,18 @@ public class WorldContactListener implements ContactListener {
                 mario.hit(enemy);
                 break;
             case Bits.ITEM | Bits.OBJECT:
-                item = (Item) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
-                item.reverseVelocity(true, false);
+            case Bits.ITEM | Bits.BRICK:
+            case Bits.ITEM | Bits.ITEM_BOX:
+            case Bits.ITEM | Bits.GROUND:
+                taggedItem = (TaggedUserData<Item>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                if (!Item.TAG_BASE.equals(taggedItem.getTag())) {
+                    taggedItem.getUserData().reverseVelocity(true, false);
+                }
                 break;
             case Bits.ITEM | Bits.MARIO:
-                collectableItem = (CollectableItem) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                taggedItem = (TaggedUserData<Item>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
                 mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
-                collectableItem.collectBy(mario);
+                taggedItem.getUserData().collectBy(mario);
                 break;
             case Bits.MARIO_FEET | Bits.GROUND:
             case Bits.MARIO_FEET | Bits.PLATFORM:
@@ -94,14 +98,14 @@ public class WorldContactListener implements ContactListener {
                 tileObject.steppedOn(enemy.getId());
                 break;
             case Bits.BLOCK_TOP | Bits.ITEM:
-                item = (Item) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                taggedItem = (TaggedUserData<Item>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.BLOCK_TOP);
-                tileObject.steppedOn(item.getId());
+                tileObject.steppedOn(taggedItem.getUserData().getId());
                 break;
             case Bits.MARIO | Bits.ENEMY_SIDE:
-                taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (taggedUserData.getUserData() instanceof Flower) {
-                    Flower flower = (Flower) taggedUserData.getUserData();
+                taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedEnemy.getUserData() instanceof Flower) {
+                    Flower flower = (Flower) taggedEnemy.getUserData();
                     flower.setBlocked(true);
                 }
                 break;
@@ -115,12 +119,11 @@ public class WorldContactListener implements ContactListener {
 
         int collisionDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
-        Item item;
         Mario mario;
-        Platform platform;
         Enemy enemy;
         InteractiveTileObject tileObject;
-        TaggedUserData<Enemy> taggedUserData;
+        TaggedUserData<Item> taggedItem;
+        TaggedUserData<Enemy> taggedEnemy;
         switch (collisionDef) {
             case Bits.MARIO_FEET | Bits.GROUND:
             case Bits.MARIO_FEET | Bits.PLATFORM:
@@ -137,24 +140,14 @@ public class WorldContactListener implements ContactListener {
                 tileObject.steppedOff(enemy.getId());
                 break;
             case Bits.BLOCK_TOP | Bits.ITEM:
-                item = (Item) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                taggedItem = (TaggedUserData<Item>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.BLOCK_TOP);
-                tileObject.steppedOff(item.getId());
-                break;
-            case Bits.MARIO | Bits.PLATFORM:
-                mario = (Mario) resolveUserData(fixtureA, fixtureB, Bits.MARIO);
-                platform = (Platform) resolveUserData(fixtureA, fixtureB, Bits.PLATFORM);
-                //if (!mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
-                    // why is this overlap check required? Because endContact should not be called when they are still in contact?
-                    // end-contact is simply not called every time, which caused the platformID being stuck sometimes
-                    // therefore checking for collision between player and all platforms continuously in GameScreen
-                    //mario.setLastJumpThroughPlatformId(null);
-                //}
+                tileObject.steppedOff(taggedItem.getUserData().getId());
                 break;
             case Bits.MARIO | Bits.ENEMY_SIDE:
-                taggedUserData = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (taggedUserData.getUserData() instanceof Flower) {
-                    Flower flower = (Flower) taggedUserData.getUserData();
+                taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedEnemy.getUserData() instanceof Flower) {
+                    Flower flower = (Flower) taggedEnemy.getUserData();
                     flower.setBlocked(false);
                 }
         }

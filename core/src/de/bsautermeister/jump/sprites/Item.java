@@ -17,6 +17,10 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Item extends Sprite implements CollectableItem, BinarySerializable, Disposable {
+    public static final String TAG_LEFT = "left";
+    public static final String TAG_RIGHT = "right";
+    public static final String TAG_BASE = "base";
+
     /**
      * Add a tiny y-offset to the spawn postition, because the block-item is moving and would
      * otherwise expose the bottom of the item as a small visual glitch.

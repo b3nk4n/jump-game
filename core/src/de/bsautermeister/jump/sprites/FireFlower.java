@@ -13,6 +13,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class FireFlower extends Item {
 
@@ -43,7 +44,7 @@ public class FireFlower extends Item {
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
+        fixture.setUserData(new TaggedUserData<Item>(this, TAG_BASE));
         return body;
     }
 
