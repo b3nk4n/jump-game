@@ -36,7 +36,7 @@ public class Fireball extends Sprite implements BinarySerializable {
     private MarkedAction reset;
 
     public Fireball(GameCallbacks callbacks, World world, TextureAtlas atlas) {
-        super(atlas.findRegion(RegionNames.FIREBALL));
+        super(atlas.findRegion(RegionNames.PREZEL_BULLET));
         this.callbacks = callbacks;
         this.world = world;
         setSize(Cfg.BLOCK_SIZE / 2 /Cfg.PPM, Cfg.BLOCK_SIZE / 2 / Cfg.PPM);

@@ -188,7 +188,7 @@ coin
   index: 3
 fireball
   rotate: false
-  xy: 152, 4
+  xy: 500, 116
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -368,16 +368,30 @@ platform4
   orig: 64, 16
   offset: 0, 0
   index: -1
-spiky
+prezel
   rotate: false
   xy: 460, 108
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+prezel_bullet
+  rotate: false
+  xy: 456, 88
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+spiky
+  rotate: false
+  xy: 480, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 spiky
   rotate: false
-  xy: 456, 88
+  xy: 476, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

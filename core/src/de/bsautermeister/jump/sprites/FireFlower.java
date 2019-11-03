@@ -18,7 +18,7 @@ public class FireFlower extends Item {
 
     public FireFlower(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
         super(callbacks, world, x, y);
-        setRegion(atlas.findRegion(RegionNames.FIRE_FLOWER), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
+        setRegion(atlas.findRegion(RegionNames.PREZEL), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
         velocity = Vector2.Zero;
     }
 

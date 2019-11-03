@@ -40,6 +40,8 @@ public interface RegionNames {
     String BREAK_PLATFORM4 = "break_platform4";
     String BEER = "beer";
     String BEER_LIQUID = "beer_liquid";
+    String PREZEL = "prezel";
+    String PREZEL_BULLET = "prezel_bullet";
 
     String LOADING_LOGO = "title";
     String LOADING_ANIMATION = "loading";
