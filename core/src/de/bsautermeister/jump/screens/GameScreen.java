@@ -128,6 +128,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private Sound fireSound;
     private Sound drinkingSound;
     private Sound ohYeahSound;
+    private Sound successSound;
 
     private MusicPlayer musicPlayer;
 
@@ -241,10 +242,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         @Override
-        public void touchedWater(Drownable drownable) {
+        public void touchedWater(Drownable drownable, boolean isBeer) {
             float volume = getVolumeBasedOnDistanceToCameraCenter(drownable.getWorldCenter().x);
             if (volume > 0) {
                 splashSound.play(volume);
+                drinkingSound.play(volume, 0.9f, 0f);
             }
         }
 
@@ -285,6 +287,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         @Override
         public void fire() {
             fireSound.play();
+        }
+
+        @Override
+        public void goalReached() {
+            successSound.play();
         }
 
         @Override
@@ -445,6 +452,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         fireSound = getAssetManager().get(AssetDescriptors.Sounds.FIRE);
         drinkingSound = getAssetManager().get(AssetDescriptors.Sounds.DRINKING);
         ohYeahSound = getAssetManager().get(AssetDescriptors.Sounds.OH_YEAH);
+        successSound = getAssetManager().get(AssetDescriptors.Sounds.SUCCESS);
 
         font = getAssetManager().get(AssetDescriptors.Fonts.MARIO12);
 
@@ -676,6 +684,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             mario.setLevelCompleted(true);
             gameStats.setHighestFinishedLevel(level);
             musicPlayer.setVolume(0f, false);
+            callbacks.goalReached();
         }
     }
 

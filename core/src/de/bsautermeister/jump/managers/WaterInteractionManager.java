@@ -72,7 +72,7 @@ public class WaterInteractionManager {
             splashEffect.start();
             splashEffect.setPosition(center.x, center.y);
             activeSplashEffects.add(splashEffect);
-            callbacks.touchedWater(drownable);
+            callbacks.touchedWater(drownable, isBeer);
 
             drownable.drown();
         }
