@@ -51,6 +51,8 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
             case Bits.ENEMY_SIDE | Bits.GROUND:
             case Bits.ENEMY_SIDE | Bits.PLATFORM:
+            case Bits.ENEMY_SIDE | Bits.BRICK:
+            case Bits.ENEMY_SIDE | Bits.ITEM_BOX:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Goomba) {
                     ((Goomba) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());

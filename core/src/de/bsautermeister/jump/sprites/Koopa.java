@@ -173,6 +173,8 @@ public class Koopa extends Enemy implements Drownable {
         fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
         fixtureDef.filter.maskBits = Bits.GROUND
                 | Bits.COLLIDER
+                | Bits.ITEM_BOX
+                | Bits.BRICK
                 | Bits.OBJECT;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
