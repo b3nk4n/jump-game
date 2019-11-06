@@ -133,8 +133,9 @@ public class WorldCreator {
             for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 String group = (String) mapObject.getProperties().get("group");
+                boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
                 Goomba goomba = new Goomba(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
                 goomba.setGroup(group);
                 enemies.add(goomba);
             }
@@ -143,8 +144,9 @@ public class WorldCreator {
             for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 String group = (String) mapObject.getProperties().get("group");
+                boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
                 Koopa koopa = new Koopa(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
                 koopa.setGroup(group);
                 enemies.add(koopa);
             }
@@ -153,8 +155,9 @@ public class WorldCreator {
             for (MapObject mapObject : map.getLayers().get(SPIKIES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 String group = (String) mapObject.getProperties().get("group");
+                boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
                 Spiky spiky = new Spiky(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
                 spiky.setGroup(group);
                 enemies.add(spiky);
             }

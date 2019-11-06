@@ -1113,11 +1113,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             String enemyType = in.readUTF();
             Enemy enemy;
             if (enemyType.equals(Goomba.class.getName())) {
-                enemy = new Goomba(callbacks, world, atlas, 0, 0);
+                enemy = new Goomba(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Koopa.class.getName())) {
-                enemy = new Koopa(callbacks, world, atlas, 0, 0);
+                enemy = new Koopa(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Spiky.class.getName())) {
-                enemy = new Spiky(callbacks, world, atlas, 0, 0);
+                enemy = new Spiky(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Flower.class.getName())) {
                 enemy = new Flower(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Fish.class.getName())) {

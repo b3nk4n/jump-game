@@ -45,7 +45,7 @@ public class Koopa extends Enemy implements Drownable {
     private boolean previousDirectionLeft;
 
     public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
-                 float posX, float posY) {
+                 float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY);
         walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.KOOPA), Animation.PlayMode.LOOP);
         shellAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.KOOPA_MOVING), Animation.PlayMode.LOOP);
@@ -75,7 +75,7 @@ public class Koopa extends Enemy implements Drownable {
                 fixture.setFilterData(filter);
             }
         });
-        speed = -SPEED_VALUE;
+        speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
 
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
     }

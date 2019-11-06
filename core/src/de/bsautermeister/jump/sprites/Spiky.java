@@ -25,6 +25,8 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Spiky extends Enemy implements Drownable {
+    private static final float SPEED_VALUE = 0.4f;
+
     public enum State {
         WALKING
     }
@@ -37,12 +39,12 @@ public class Spiky extends Enemy implements Drownable {
     private final Animation<TextureRegion> walkAnimation;
 
     public Spiky(GameCallbacks callbacks, World world, TextureAtlas atlas,
-                 float posX, float posY) {
+                 float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY);
         walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.SPIKY), Animation.PlayMode.LOOP);
 
         state = new GameObjectState<State>(State.WALKING);
-        speed = -0.4f;
+        speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
         setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
