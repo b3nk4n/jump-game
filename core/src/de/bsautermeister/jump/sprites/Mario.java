@@ -708,13 +708,14 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     private boolean isOutOfGame() {
+        if (levelCompleted) {
+            return false;
+        }
         return getY() + getHeight() < 0 * Cfg.BLOCK_SIZE / Cfg.PPM;
     }
 
     public void setLevelCompleted(boolean levelCompleted) {
         this.levelCompleted = levelCompleted;
-
-        body.setActive(false);
     }
 
     public String getLastJumpThroughPlatformId() {

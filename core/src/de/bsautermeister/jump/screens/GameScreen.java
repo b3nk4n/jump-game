@@ -176,7 +176,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             if (item instanceof Beer) {
                 collectedBeers++;
                 drinkingSound.play();
-                if (collectedBeers == 1) {
+                if (collectedBeers == 3) {
                     unlockGoal();
                 }
                 msg = "PROST";
