@@ -47,6 +47,7 @@ import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.managers.Drownable;
+import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
@@ -73,6 +74,7 @@ import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
 import de.bsautermeister.jump.text.TextMessage;
+import de.bsautermeister.jump.tools.GameTimer;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase implements BinarySerializable {
@@ -149,6 +151,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private BitmapFont font;
     private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
 
+    private final KillSequelManager killSequelManager;
+
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
         public void jump() {
@@ -160,27 +164,32 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             stompSound.play();
 
             if (!(enemy instanceof Koopa)) {
-                score += 50;
-                showScoreText("50", enemy.getBoundingRectangle());
+                killSequelManager.notifyKill();
+                score += killSequelManager.getKillScore();
+                showScoreText(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
             }
         }
 
         @Override
         public void use(Mario mario, Item item) {
+            String msg;
             if (item instanceof Beer) {
                 collectedBeers++;
                 drinkingSound.play();
                 if (collectedBeers == 1) {
                     unlockGoal();
                 }
+                msg = "PROST";
             } else if (item instanceof Mushroom) {
                 ohYeahSound.play();
-            } else {
+                msg = "SWEET";
+            } else { // prezel
                 powerupSound.play();
+                msg = "YUMMY";
             }
 
             score += 100;
-            showScoreText("100", item.getBoundingRectangle());
+            showScoreText(msg, item.getBoundingRectangle());
         }
 
         private void unlockGoal() {
@@ -241,8 +250,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             Enemy enemy = enemies.get(objectId);
             if (enemy != null) {
                 enemy.kill(true);
-                score += 50;
-                showScoreText("50", enemy.getBoundingRectangle());
+                killSequelManager.notifyKill();
+                score += killSequelManager.getKillScore();
+                showScoreText(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
                 return;
             }
 
@@ -272,7 +282,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         @Override
         public void collectCoin() {
             coinSound.play();
-            score += 100;
+            score += Cfg.COIN_SCORE;
         }
 
         @Override
@@ -281,8 +291,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             if (volume > 0) {
                 kickedSound.play(volume);
             }
-            score += 50;
-            showScoreText("50", enemy.getBoundingRectangle());
+            killSequelManager.notifyKill();
+            score += killSequelManager.getKillScore();
+            showScoreText(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
         }
 
         @Override
@@ -369,6 +380,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
 
         activeBoxCoins = new Array<BoxCoin>();
+
+        killSequelManager = new KillSequelManager();
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
@@ -534,6 +547,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         mario.update(delta);
         checkPlayerInBounds();
+
+        killSequelManager.update(delta);
 
         mario.getFireball().update(delta);
 
@@ -1056,6 +1071,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         out.writeFloat(levelCompletedTimer);
         out.writeFloat(gameTime);
         mario.write(out);
+        killSequelManager.write(out);
         out.writeInt(enemies.size);
         for (Enemy enemy : enemies.values()) {
             out.writeUTF(enemy.getClass().getName());
@@ -1091,6 +1107,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         levelCompletedTimer = in.readFloat();
         gameTime = in.readFloat();
         mario.read(in);
+        killSequelManager.read(in);
         int numEnemies = in.readInt();
         for (int i = 0; i < numEnemies; ++i) {
             String enemyType = in.readUTF();
