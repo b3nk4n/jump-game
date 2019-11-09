@@ -19,6 +19,7 @@ public class Hud implements Disposable {
     private int currentTTL;
     private int currentScore;
     private int currentBeers;
+    private final int totalBeers;
 
     private Label countDownLabel;
     private Label scoreLabel;
@@ -29,11 +30,11 @@ public class Hud implements Disposable {
 
     private Label.LabelStyle labelStyle;
 
-    public Hud(SpriteBatch batch, Viewport hudViewport, AssetManager assetManager) {
+    public Hud(SpriteBatch batch, Viewport hudViewport, AssetManager assetManager, int totalBeers) {
         this.stage = new Stage(hudViewport, batch);
         BitmapFont font = assetManager.get(AssetDescriptors.Fonts.MARIO18);
         labelStyle = new Label.LabelStyle(font, Color.WHITE);
-
+        this.totalBeers = totalBeers;
         this.stage.addActor(buildUi());
     }
 
@@ -46,7 +47,7 @@ public class Hud implements Disposable {
         countDownLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
         scoreLabel = new Label(getFormattedScore(currentScore), labelStyle);
         timeLabel = new Label("TIME", labelStyle);
-        beersLabel = new Label(getFormattedBeers(currentBeers), labelStyle);
+        beersLabel = new Label(getFormattedBeers(currentBeers, totalBeers), labelStyle);
         worldLabel = new Label("BEERS", labelStyle);
         marioLabel = new Label("MARIO", labelStyle);
 
@@ -79,7 +80,7 @@ public class Hud implements Disposable {
     private void updateBeers(int level) {
         if (currentBeers != level) {
             currentBeers = level;
-            beersLabel.setText(getFormattedBeers(currentBeers));
+            beersLabel.setText(getFormattedBeers(currentBeers, totalBeers));
         }
     }
 
@@ -106,8 +107,8 @@ public class Hud implements Disposable {
         return String.format("%06d", score);
     }
 
-    private static String getFormattedBeers(int beers) {
-        return String.format("%d", beers);
+    private static String getFormattedBeers(int beers, int totalBeers) {
+        return String.format("%d / %d", beers, totalBeers);
     }
 
     public Stage getStage() {

@@ -74,7 +74,6 @@ import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
 import de.bsautermeister.jump.text.TextMessage;
-import de.bsautermeister.jump.tools.GameTimer;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase implements BinarySerializable {
@@ -103,6 +102,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private int score;
     private int collectedBeers;
+    private int totalBeers;
 
     private WorldCreator.StartParams start;
     private Rectangle goal;
@@ -176,7 +176,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             if (item instanceof Beer) {
                 collectedBeers++;
                 drinkingSound.play();
-                if (collectedBeers == 3) {
+                if (collectedBeers >= totalBeers) {
                     unlockGoal();
                 }
                 msg = "PROST";
@@ -450,7 +450,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         hudViewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE), (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE));
-        hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager());
+        totalBeers = getTotalBeers();
+        hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager(), totalBeers);
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
         beerLiquidTexture = atlas.findRegion(RegionNames.BEER_LIQUID);
@@ -1039,6 +1040,19 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private boolean isGameOver() {
         return mario.getState() == Mario.State.DEAD && mario.getStateTimer() > 3f;
+    }
+
+    private int getTotalBeers() {
+        int result = 0;
+        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+            if (tileObject instanceof ItemBox) {
+                ItemBox box = (ItemBox) tileObject;
+                if (box.isBeerBox()) {
+                    result++;
+                }
+            }
+        }
+        return result;
     }
 
     private void load(FileHandle handle) {
