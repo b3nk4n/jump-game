@@ -3,7 +3,6 @@ package de.bsautermeister.jump.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -78,10 +77,7 @@ public class WaterInteractionManager {
         }
     }
 
-    public void draw(SpriteBatch batch) {
-        for (int i = activeSplashEffects.size - 1; i >= 0; i--) {
-            ParticleEffectPool.PooledEffect effect = activeSplashEffects.get(i);
-            effect.draw(batch);
-        }
+    public Array<ParticleEffectPool.PooledEffect> getActiveSplashEffects() {
+        return activeSplashEffects;
     }
 }

@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.screens;
+package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.screens.ScreenBase;
+import de.bsautermeister.jump.screens.SelectLevelScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameOverScreen extends ScreenBase {

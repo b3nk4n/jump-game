@@ -13,13 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.logging.FileHandler;
-
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.screens.game.GameScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuScreen extends ScreenBase {

@@ -1,30 +1,20 @@
-package de.bsautermeister.jump.screens;
+package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
@@ -42,7 +32,6 @@ import de.bsautermeister.jump.GameCallbacks;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
-import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
@@ -51,7 +40,7 @@ import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
-import de.bsautermeister.jump.scenes.Hud;
+import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Beer;
@@ -74,29 +63,24 @@ import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
 import de.bsautermeister.jump.text.TextMessage;
-import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private static final Logger LOG = new Logger(GameScreen.class.getSimpleName(), Cfg.LOG_LEVEL);
+
+    private GameRenderer renderer;
 
     private GameStats gameStats;
     private TextureAtlas atlas;
 
     private OrthographicCamera camera;
     private Viewport viewport;
-    private Viewport hudViewport;
-    private Hud hud;
-
-    private FrameBuffer frameBuffer;
 
     private TiledMap map;
-    private OrthogonalTiledMapRenderer mapRenderer;
     private float mapPixelWidth;
     private float mapPixelHeight;
 
     private World world;
-    private Box2DDebugRenderer box2DDebugRenderer;
 
     private Mario mario;
 
@@ -137,18 +121,12 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private float gameTime;
     private Array<WorldCreator.WaterParams> waterList;
-    private final ShaderProgram waterShader;
-    private TextureRegion waterTexture;
-    private TextureRegion beerLiquidTexture;
-    private final ShaderProgram drunkShader;
-    private final ShaderProgram stonedShader;
 
     private WaterInteractionManager waterInteractionManager;
 
     private FileHandle gameToLoad;
     private Integer level;
 
-    private BitmapFont font;
     private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
 
     private final KillSequelManager killSequelManager;
@@ -370,7 +348,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
         this.world = new World(new Vector2(0,-9.81f), true);
         this.world.setContactListener(new WorldContactListener());
-        this.box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
 
         enemies = new ObjectMap<String, Enemy>();
         platforms = new Array<Platform>();
@@ -382,10 +359,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         activeBoxCoins = new Array<BoxCoin>();
 
         killSequelManager = new KillSequelManager();
-
-        waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
-        drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
-        stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
     }
 
     public GameScreen(GameApp game, FileHandle fileHandle) {
@@ -397,14 +370,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     private void reset() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
-
-        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
-
-        frameBuffer = new FrameBuffer(
-                Pixmap.Format.RGBA8888,
-                (int)(screenPixelPerTile * (Cfg.BLOCKS_X + 4)), // 2 extra block for each left and right
-                (int)(screenPixelPerTile * (Cfg.BLOCKS_Y + 4)), // 2 extra block for each top and bottom
-                false);
 
         score = 0;
         collectedBeers = 0;
@@ -449,12 +414,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
-        hudViewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE), (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE));
         totalBeers = getTotalBeers();
-        hud = new Hud(getGame().getBatch(), hudViewport, getAssetManager(), totalBeers);
-
-        waterTexture = atlas.findRegion(RegionNames.WATER);
-        beerLiquidTexture = atlas.findRegion(RegionNames.BEER_LIQUID);
 
         levelCompleted = false;
         levelCompletedTimer = 0;
@@ -467,7 +427,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
 
     private void initMap(int level) {
         this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
-        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, getGame().getBatch());
         float mapWidth = map.getProperties().get("width", Integer.class);
         float mapHeight = map.getProperties().get("height", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
@@ -496,8 +455,6 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         ohYeahSound = getAssetManager().get(AssetDescriptors.Sounds.OH_YEAH);
         successSound = getAssetManager().get(AssetDescriptors.Sounds.SUCCESS);
 
-        font = getAssetManager().get(AssetDescriptors.Fonts.MARIO12);
-
         if (JumpGame.hasSavedData()) {
             //load(gameToLoad); // TODO duplicated?
             // ensure to not load this saved game later anymore
@@ -505,6 +462,9 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         }
 
         reset();
+
+        renderer = new GameRenderer(getBatch(), getAssetManager(), atlas, map, this,
+                camera, viewport, world);
     }
 
     @Override
@@ -572,12 +532,8 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
             }
         }
 
-        hud.update(collectedBeers, score, mario.getTimeToLive());
-
         upateCameraPosition();
         camera.update();
-
-        mapRenderer.setView(camera);
 
         if (mario.getState() == Mario.State.DEAD) {
             musicPlayer.stop();
@@ -664,6 +620,10 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
                     mario.setLastJumpThroughPlatformId(null);
                 }
             }
+        }
+
+        if (isGameOver()) {
+            getGame().setScreen(new GameOverScreen(getGame()));
         }
     }
 
@@ -849,158 +809,11 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     @Override
     public void render(float delta) {
         gameTime += delta;
-
         update(delta);
         postUpdate();
-
-        GdxUtils.clearScreen(Color.BLACK);
-        viewport.apply();
-        SpriteBatch batch = getBatch();
-
-        frameBuffer.begin();
-        batch.setProjectionMatrix(camera.combined);
-
-        batch.begin();
-        if (mario.isStoned()) {
-            batch.setShader(stonedShader);
-            stonedShader.setUniformf("u_effectRatio", mario.getStonedRatio());
-        }
-        renderBackground(batch);
-        renderForeground(batch);
-        batch.setShader(null);
-        batch.end();
-        frameBuffer.end();
-
-        batch.begin();
-        if (mario.isDrunk()) {
-            batch.setShader(drunkShader);
-            drunkShader.setUniformf("u_time", gameTime);
-            drunkShader.setUniformf("u_imageSize", Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
-            drunkShader.setUniformf("u_amplitude", 7.1f * mario.getDrunkRatio(), 9.1f * mario.getDrunkRatio());
-            drunkShader.setUniformf("u_waveLength", 111f, 311f);
-            drunkShader.setUniformf("u_velocity", 71f, 111f);
-        }
-        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
-        batch.draw(frameBuffer.getColorBufferTexture(),
-                camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                (int)screenPixelPerTile * 2, (int)screenPixelPerTile * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-
-        if (mario.isStoned()) {
-            Color c = batch.getColor();
-            batch.setColor(c.r, c.g, c.b, 0.5f);
-            float offset1 =  screenPixelPerTile * 0.66f * (float)Math.sin(-gameTime) * mario.getStonedRatio();
-            float offset2 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.8f) * mario.getStonedRatio();
-            float offset3 =  screenPixelPerTile * 0.66f * (float)Math.sin(gameTime * 0.9f) * mario.getStonedRatio();
-            float offset4 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.7f) * mario.getStonedRatio();
-            batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTile * 2 + offset1), (int)(screenPixelPerTile * 2 - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-            batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTile * 2 - offset3), (int)(screenPixelPerTile * 2 + offset4), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-            batch.setColor(c);
-        }
-
-        batch.setShader(null);
-        batch.end();
-
-        if (Cfg.DEBUG_MODE) {
-            float zoomX = Cfg.BLOCKS_X / (4f + Cfg.BLOCKS_X);
-            float zoomY = Cfg.BLOCKS_Y / (4f + Cfg.BLOCKS_Y);
-            camera.viewportWidth = camera.viewportWidth * zoomX;
-            camera.viewportHeight = camera.viewportHeight * zoomY;
-            camera.update();
-
-            box2DDebugRenderer.render(world, camera.combined);
-
-            camera.viewportWidth = camera.viewportWidth / zoomX;
-            camera.viewportHeight = camera.viewportHeight / zoomY;
-            camera.update();
-        }
-
-        batch.setProjectionMatrix(hud.getStage().getCamera().combined);
-        renderHud(batch);
-
-        if (isGameOver()) {
-            getGame().setScreen(new GameOverScreen(getGame()));
-        }
+        renderer.render(delta);
     }
 
-    private void renderBackground(SpriteBatch batch) {
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_KEY));
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
-
-        for (BoxCoin boxCoin : activeBoxCoins) {
-            boxCoin.draw(batch);
-        }
-    }
-
-    private void renderForeground(SpriteBatch batch) {
-        for (Coin coin : coins) {
-            coin.draw(batch);
-        }
-
-        for (Item item : items.values()) {
-            item.draw(batch);
-        }
-
-        for (Enemy enemy : enemies.values()) {
-            if (enemy instanceof Flower) {
-                enemy.draw(batch);
-            }
-        }
-
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
-
-        for (Platform platform : platforms) {
-            platform.draw(batch);
-        }
-
-        for (Enemy enemy : enemies.values()) {
-            if (!(enemy instanceof Flower)) {
-                enemy.draw(batch);
-            }
-        }
-        mario.draw(batch);
-        mario.getFireball().draw(batch);
-
-        waterInteractionManager.draw(batch);
-
-        ShaderProgram prevShader = batch.getShader();
-        for (WorldCreator.WaterParams waterParams : waterList) {
-            Rectangle waterRegion = waterParams.rectangle;
-            TextureRegion texture = waterParams.isBeer ? beerLiquidTexture : waterTexture;
-            batch.setShader(waterShader);
-            waterShader.setUniformf("u_time", gameTime);
-            waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
-            batch.draw(texture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
-                    waterRegion.getWidth(), waterRegion.getHeight());
-        }
-
-        batch.setShader(prevShader);
-
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
-            // tile-objects itself are drawn in the GRAPHICS layer, while this draw-call renders the
-            // particle fragments in case of a destroyed brick
-            tileObject.draw(batch);
-        }
-    }
-
-    private final GlyphLayout layout = new GlyphLayout();
-    private void renderHud(SpriteBatch batch) {
-        hud.getStage().draw();
-
-        if (textMessages.isEmpty()) {
-            return;
-        }
-
-        batch.begin();
-        for (TextMessage textMessage : textMessages) {
-            layout.setText(font, textMessage.getMessage());
-            font.draw(batch, textMessage.getMessage(), textMessage.getX() * Cfg.PPM - layout.width / 2, textMessage.getY() * Cfg.PPM - layout.height / 2);
-        }
-        batch.end();
-    }
 
     @Override
     public void resize(int width, int height) {
@@ -1010,15 +823,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
     @Override
     public void dispose() {
         map.dispose();
-        mapRenderer.dispose();
         world.dispose();
-        box2DDebugRenderer.dispose();
-        hud.dispose();
-        waterShader.dispose();
-        drunkShader.dispose();
-        stonedShader.dispose();
-        frameBuffer.dispose();
-        font.dispose();
 
         // disposing sound effects has weird side effects:
         // - Effect stop playing the next time
@@ -1042,7 +847,7 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         return mario.getState() == Mario.State.DEAD && mario.getStateTimer() > 3f;
     }
 
-    private int getTotalBeers() {
+    public int getTotalBeers() {
         int result = 0;
         for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
             if (tileObject instanceof ItemBox) {
@@ -1176,5 +981,53 @@ public class GameScreen extends ScreenBase implements BinarySerializable {
         for (Platform platform : platforms) {
             platform.read(in);
         }
+    }
+
+    public float getGameTime() {
+        return gameTime;
+    }
+
+    public Mario getMario() {
+        return mario;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getCollectedBeers() {
+        return collectedBeers;
+    }
+
+    public LinkedBlockingQueue<TextMessage> getTextMessages() {
+        return textMessages;
+    }
+
+    public ObjectMap<String, Item> getItems() {
+        return items;
+    }
+
+    public Array<Coin> getCoins() {
+        return coins;
+    }
+
+    public Array<BoxCoin> getActiveBoxCoins() {
+        return activeBoxCoins;
+    }
+
+    public ObjectMap<String, Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public Array<Platform> getPlatforms() {
+        return platforms;
+    }
+
+    public Array<WorldCreator.WaterParams> getWaterList() {
+        return waterList;
+    }
+
+    public Array<ParticleEffectPool.PooledEffect> getActiveSplashEffects() {
+        return waterInteractionManager.getActiveSplashEffects();
     }
 }

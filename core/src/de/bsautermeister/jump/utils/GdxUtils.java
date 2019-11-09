@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-import de.bsautermeister.jump.screens.GameScreen;
-
 public class GdxUtils {
 
     public static void clearScreen() {
