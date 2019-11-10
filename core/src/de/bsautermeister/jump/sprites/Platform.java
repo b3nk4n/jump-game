@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.physics.Bits;

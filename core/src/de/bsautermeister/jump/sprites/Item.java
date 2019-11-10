@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Item extends Sprite implements CollectableItem, BinarySerializable, Disposable {

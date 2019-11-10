@@ -17,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;

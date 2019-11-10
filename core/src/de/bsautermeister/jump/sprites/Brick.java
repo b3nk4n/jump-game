@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.GameCallbacks;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.physics.Bits;
 
 public class Brick extends InteractiveTileObject {

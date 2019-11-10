@@ -48,7 +48,7 @@ public class GameRenderer implements Disposable {
     private final SpriteBatch batch;
     private final AssetManager assetManager;
     private final TextureAtlas atlas;
-    private final GameScreen controller;
+    private final GameController controller;
     private final World world;
     private final OrthographicCamera camera;
     private final Viewport viewport;
@@ -71,16 +71,15 @@ public class GameRenderer implements Disposable {
     private final Box2DDebugRenderer box2DDebugRenderer;
 
     public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
-                        TiledMap map, GameScreen controller, OrthographicCamera camera,
-                        Viewport viewport, World world) {
+                        GameController controller) {
         this.batch = batch;
         this.assetManager = assetManager;
         this.atlas = atlas;
-        this.map = map;
+        this.map = controller.getMap();
         this.controller = controller;
-        this.camera = camera;
-        this.viewport = viewport;
-        this.world = world;
+        this.camera = controller.getCamera();
+        this.viewport = controller.getViewport();
+        this.world = controller.getWorld();
 
         float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         frameBuffer = new FrameBuffer(
@@ -274,6 +273,10 @@ public class GameRenderer implements Disposable {
             ParticleEffectPool.PooledEffect effect = activeSplashEffects.get(i);
             effect.draw(batch);
         }
+    }
+
+    public void resize(int width, int height) {
+        viewport.update(width, height, false);
     }
 
     @Override

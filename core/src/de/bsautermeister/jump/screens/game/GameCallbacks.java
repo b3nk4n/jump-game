@@ -1,4 +1,4 @@
-package de.bsautermeister.jump;
+package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -26,6 +26,7 @@ public interface GameCallbacks {
     void touchedWater(Drownable drownable, boolean isBeer);
     void collectCoin();
     void fire();
+    void hurry();
     void unlockGoalBrick(Brick brick);
     void goalReached();
     void gameOver();
