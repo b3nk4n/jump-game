@@ -113,7 +113,7 @@ public class Goomba extends Enemy implements Drownable {
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
-                Bits.MARIO |
+                Bits.PLAYER |
                 Bits.ENEMY |
                 Bits.BLOCK_TOP |
                 Bits.FIREBALL;
@@ -133,7 +133,7 @@ public class Goomba extends Enemy implements Drownable {
 
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
-        fixtureDef.filter.maskBits = Bits.MARIO;
+        fixtureDef.filter.maskBits = Bits.PLAYER;
         body.createFixture(fixtureDef).setUserData(this);
 
         EdgeShape sideShape = new EdgeShape();
@@ -157,8 +157,8 @@ public class Goomba extends Enemy implements Drownable {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
-        if (mario.isDead() || mario.isInvincible()) {
+    public void onHeadHit(Player player) {
+        if (player.isDead() || player.isInvincible()) {
             return;
         }
 

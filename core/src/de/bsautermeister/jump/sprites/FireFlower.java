@@ -38,7 +38,7 @@ public class FireFlower extends Item {
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
-                Bits.MARIO |
+                Bits.PLAYER |
                 Bits.OBJECT |
                 Bits.BLOCK_TOP;
 
@@ -49,11 +49,11 @@ public class FireFlower extends Item {
     }
 
     @Override
-    public void collectBy(Mario mario) {
-        getCallbacks().use(mario, this);
+    public void collectBy(Player player) {
+        getCallbacks().use(player, this);
         markDestroyBody();
-        mario.grow();
-        mario.setOnFire();
+        player.grow();
+        player.setOnFire();
     }
 
     @Override

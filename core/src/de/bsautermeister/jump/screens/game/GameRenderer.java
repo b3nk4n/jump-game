@@ -38,7 +38,7 @@ import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
-import de.bsautermeister.jump.sprites.Mario;
+import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
@@ -106,7 +106,7 @@ public class GameRenderer implements Disposable {
 
     public void render(float delta) {
         float gameTime = controller.getGameTime();
-        Mario mario = controller.getMario();
+        Player player = controller.getPlayer();
         int score = controller.getScore();
         int collectedBeers = controller.getCollectedBeers();
 
@@ -119,9 +119,9 @@ public class GameRenderer implements Disposable {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        if (mario.isStoned()) {
+        if (player.isStoned()) {
             batch.setShader(stonedShader);
-            stonedShader.setUniformf("u_effectRatio", mario.getStonedRatio());
+            stonedShader.setUniformf("u_effectRatio", player.getStonedRatio());
         }
         renderBackground(batch);
         renderForeground(batch);
@@ -131,11 +131,11 @@ public class GameRenderer implements Disposable {
         frameBuffer.end();
 
         batch.begin();
-        if (mario.isDrunk()) {
+        if (player.isDrunk()) {
             batch.setShader(drunkShader);
             drunkShader.setUniformf("u_time", gameTime);
             drunkShader.setUniformf("u_imageSize", Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
-            drunkShader.setUniformf("u_amplitude", 7.1f * mario.getDrunkRatio(), 9.1f * mario.getDrunkRatio());
+            drunkShader.setUniformf("u_amplitude", 7.1f * player.getDrunkRatio(), 9.1f * player.getDrunkRatio());
             drunkShader.setUniformf("u_waveLength", 111f, 311f);
             drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
@@ -144,13 +144,13 @@ public class GameRenderer implements Disposable {
                 camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                 (int)screenPixelPerTile * 2, (int)screenPixelPerTile * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
-        if (mario.isStoned()) {
+        if (player.isStoned()) {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, 0.5f);
-            float offset1 =  screenPixelPerTile * 0.66f * (float)Math.sin(-gameTime) * mario.getStonedRatio();
-            float offset2 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.8f) * mario.getStonedRatio();
-            float offset3 =  screenPixelPerTile * 0.66f * (float)Math.sin(gameTime * 0.9f) * mario.getStonedRatio();
-            float offset4 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.7f) * mario.getStonedRatio();
+            float offset1 =  screenPixelPerTile * 0.66f * (float)Math.sin(-gameTime) * player.getStonedRatio();
+            float offset2 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getStonedRatio();
+            float offset3 =  screenPixelPerTile * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getStonedRatio();
+            float offset4 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.7f) * player.getStonedRatio();
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                     (int)(screenPixelPerTile * 2 + offset1), (int)(screenPixelPerTile * 2 - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
@@ -178,7 +178,7 @@ public class GameRenderer implements Disposable {
         }
 
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
-        hud.update(collectedBeers, score, mario.getTimeToLive());
+        hud.update(collectedBeers, score, player.getTimeToLive());
         renderHud(batch);
     }
 
@@ -225,9 +225,9 @@ public class GameRenderer implements Disposable {
             }
         }
 
-        Mario mario = controller.getMario();
-        mario.draw(batch);
-        mario.getFireball().draw(batch);
+        Player player = controller.getPlayer();
+        player.draw(batch);
+        player.getFireball().draw(batch);
 
         ShaderProgram prevShader = batch.getShader();
         Array<WorldCreator.WaterParams> waterList = controller.getWaterList();

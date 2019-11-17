@@ -73,11 +73,11 @@ public class Brick extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
-        float xDistance = Math.abs(mario.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
+    public void onHeadHit(Player player) {
+        float xDistance = Math.abs(player.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
         boolean closeEnough = xDistance < Cfg.BLOCK_SIZE / 2 / Cfg.PPM;
 
-        getCallbacks().hit(mario, this, closeEnough);
+        getCallbacks().hit(player, this, closeEnough);
 
         if (closeEnough) {
             // apply effect to objects on top
@@ -89,7 +89,7 @@ public class Brick extends InteractiveTileObject {
                 steppedOff(objectOnTop);
             }
 
-            if (mario.isBig()) {
+            if (player.isBig()) {
                 destroy();
                 emitFragments();
             } else {

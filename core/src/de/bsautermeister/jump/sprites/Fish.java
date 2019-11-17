@@ -113,7 +113,7 @@ public class Fish extends Enemy implements Drownable {
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
-        fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
+        fixtureDef.filter.maskBits = Bits.PLAYER | Bits.FIREBALL;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 
@@ -121,7 +121,7 @@ public class Fish extends Enemy implements Drownable {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
+    public void onHeadHit(Player player) {
         // NOOP
     }
 

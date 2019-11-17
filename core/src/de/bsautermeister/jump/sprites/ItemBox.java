@@ -49,11 +49,11 @@ public class ItemBox extends InteractiveTileObject {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
-        float xDistance = Math.abs(mario.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
+    public void onHeadHit(Player player) {
+        float xDistance = Math.abs(player.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
         boolean closeEnough = xDistance < Cfg.BLOCK_SIZE / 2 / Cfg.PPM;
         getCallbacks().hit(
-                mario,
+                player,
                 this,
                 new Vector2(getBody().getPosition().x, getBody().getPosition().y),
                 closeEnough);

@@ -104,7 +104,7 @@ public class Spiky extends Enemy implements Drownable {
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
-                Bits.MARIO |
+                Bits.PLAYER |
                 Bits.ENEMY |
                 Bits.BLOCK_TOP |
                 Bits.FIREBALL;
@@ -135,7 +135,7 @@ public class Spiky extends Enemy implements Drownable {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
+    public void onHeadHit(Player player) {
         // NOOP
     }
 

@@ -70,7 +70,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
         shape.setRadius(6 / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Bits.ITEM;
-        fixtureDef.filter.maskBits = Bits.MARIO;
+        fixtureDef.filter.maskBits = Bits.PLAYER;
         fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
@@ -91,7 +91,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
     }
 
     @Override
-    public void collectBy(Mario mario) {
+    public void collectBy(Player player) {
         callbacks.collectCoin();
         destroyBody.mark();
     }

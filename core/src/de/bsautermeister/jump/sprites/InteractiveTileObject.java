@@ -91,7 +91,7 @@ public abstract class InteractiveTileObject implements BinarySerializable {
         return WorldCreator.createBody(this, world, mapObject.getRectangle(), BodyDef.BodyType.StaticBody, categoryBit, false);
     }
 
-    public abstract void onHeadHit(Mario mario);
+    public abstract void onHeadHit(Player player);
 
     public void updateCategoryFilter(short filterBit) {
         Filter filter = new Filter();

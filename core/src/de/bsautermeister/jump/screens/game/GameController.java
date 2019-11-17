@@ -53,7 +53,7 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
-import de.bsautermeister.jump.sprites.Mario;
+import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
@@ -77,7 +77,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private World world;
 
-    private Mario mario;
+    private Player player;
 
     private int score;
     private int collectedBeers;
@@ -127,7 +127,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void use(Mario mario, Item item) {
+        public void use(Player player, Item item) {
             String msg;
             if (item instanceof Beer) {
                 collectedBeers++;
@@ -149,17 +149,17 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void hit(Mario mario, Enemy enemy) {
-            if (mario.isBig()) {
+        public void hit(Player player, Enemy enemy) {
+            if (player.isBig()) {
                 soundEffects.powerDownSound.play();
             }
         }
 
         @Override
-        public void hit(Mario mario, Brick brick, boolean closeEnough) {
+        public void hit(Player player, Brick brick, boolean closeEnough) {
             if (!closeEnough) {
                 soundEffects.bumpSound.play();
-            } else if (mario.isBig()) {
+            } else if (player.isBig()) {
                 soundEffects.breakBlockSound.play();
             } else {
                 soundEffects.bumpSound.play();
@@ -167,11 +167,11 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void hit(Mario mario, ItemBox itemBox, Vector2 position, boolean closeEnough) {
+        public void hit(Player player, ItemBox itemBox, Vector2 position, boolean closeEnough) {
             if (itemBox.isBlank() || !closeEnough) {
                 soundEffects.bumpSound.play();
             } else if (itemBox.isMushroomBox()) {
-                if (mario.isBig()) {
+                if (player.isBig()) {
                     spawnItem(new ItemDef(position, FireFlower.class));
                 } else {
                     spawnItem(new ItemDef(position, Mushroom.class));
@@ -290,7 +290,7 @@ public class GameController  implements BinarySerializable, Disposable {
         @Override
         public void gameOver() {
             musicPlayer.stop();
-            soundEffects.marioDieSound.play();
+            soundEffects.playerDieSound.play();
         }
 
         private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2 / Cfg.PPM;
@@ -349,7 +349,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         start = worldCreator.getStart();
         goal = worldCreator.getGoal();
-        mario = new Mario(callbacks, world, atlas, start);
+        player = new Player(callbacks, world, atlas, start);
 
         platforms.addAll(worldCreator.createPlatforms());
         if (gameToResume != null) {
@@ -361,11 +361,11 @@ public class GameController  implements BinarySerializable, Disposable {
             coins.addAll(worldCreator.createCoins());
         }
 
-        camera.position.set(mario.getBody().getPosition(), 0);
+        camera.position.set(player.getBody().getPosition(), 0);
 
         waterList = worldCreator.getWaterRegions();
         waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterList);
-        waterInteractionManager.add(mario);
+        waterInteractionManager.add(player);
         for (Enemy enemy : enemies.values()) {
             if (enemy instanceof Drownable) {
                 Drownable drownableEnemy = (Drownable) enemy;
@@ -406,12 +406,12 @@ public class GameController  implements BinarySerializable, Disposable {
 
         handleSpawningItems();
 
-        mario.update(delta);
+        player.update(delta);
         checkPlayerInBounds();
 
         killSequelManager.update(delta);
 
-        mario.getFireball().update(delta);
+        player.getFireball().update(delta);
 
         updateEnemies(delta);
         updateItems(delta);
@@ -435,11 +435,7 @@ public class GameController  implements BinarySerializable, Disposable {
         upateCameraPosition();
         camera.update();
 
-        /*if (mario.getState() == Mario.State.DEAD) {
-            musicPlayer.stop();
-        }*/
-
-        if (mario.getTimeToLive() <= 60) {
+        if (player.getTimeToLive() <= 60) {
             callbacks.hurry(); // TODO call only once?
         }
 
@@ -456,9 +452,9 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         // touch for platform contacts
-        if (mario.hasPlatformContact()) {
-            if (Math.abs(mario.getVelocityRelativeToGround().y) < 0.01) {
-                mario.getPlatformContact().touch(delta);
+        if (player.hasPlatformContact()) {
+            if (Math.abs(player.getVelocityRelativeToGround().y) < 0.01) {
+                player.getPlatformContact().touch(delta);
             }
         }
 
@@ -498,7 +494,7 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
-        if (Intersector.overlaps(goal, mario.getBoundingRectangle())) {
+        if (Intersector.overlaps(goal, player.getBoundingRectangle())) {
             completeLevel();
         }
 
@@ -506,7 +502,7 @@ public class GameController  implements BinarySerializable, Disposable {
             textMessages.poll();
         }
 
-        Fireball fireball = mario.getFireball();
+        Fireball fireball = player.getFireball();
         if (fireball.isActive() && !isVisible(fireball)) {
             fireball.reset();
         } else {
@@ -514,11 +510,11 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         // cleanup jump-through ID of platform for player
-        if (mario.getLastJumpThroughPlatformId() != null) {
+        if (player.getLastJumpThroughPlatformId() != null) {
             for (Platform platform : platforms) {
-                if (platform.getId().equals(mario.getLastJumpThroughPlatformId()) &&
-                        !mario.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
-                    mario.setLastJumpThroughPlatformId(null);
+                if (platform.getId().equals(player.getLastJumpThroughPlatformId()) &&
+                        !player.getBoundingRectangle().overlaps(platform.getBoundingRectangle())) {
+                    player.setLastJumpThroughPlatformId(null);
                 }
             }
         }
@@ -575,7 +571,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
             if (!enemy.isActive() && Vector2.len2(
-                    enemy.getX() - mario.getX(), enemy.getY() - mario.getY()) < Cfg.ENEMY_WAKE_UP_DISTANCE2) {
+                    enemy.getX() - player.getX(), enemy.getY() - player.getY()) < Cfg.ENEMY_WAKE_UP_DISTANCE2) {
                 enemy.setActive(true);
 
                 if (enemy.hasGroup()) {
@@ -602,7 +598,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Platform platform : platforms) {
             platform.update(delta);
 
-            if (platform.getX() < mario.getX() + Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM) {
+            if (platform.getX() < player.getX() + Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM) {
                 platform.setActive(true);
             }
         }
@@ -612,7 +608,7 @@ public class GameController  implements BinarySerializable, Disposable {
         if (!levelCompleted) {
             LOG.debug("Goal reached");
             levelCompleted = true;
-            mario.setLevelCompleted(true);
+            player.setLevelCompleted(true);
             callbacks.goalReached();
         }
     }
@@ -637,30 +633,23 @@ public class GameController  implements BinarySerializable, Disposable {
     private void checkPlayerInBounds() {
         float blockSizePpm = Cfg.BLOCK_SIZE / Cfg.PPM;
         float padding = 2 * blockSizePpm;
-        float x = mario.getBody().getPosition().x;
+        float x = player.getBody().getPosition().x;
         if (x - blockSizePpm / 2  < padding) {
-            mario.getBody().setTransform(padding + blockSizePpm / 2,
-                    mario.getBody().getPosition().y, 0);
+            player.getBody().setTransform(padding + blockSizePpm / 2,
+                    player.getBody().getPosition().y, 0);
 
         } else if (x + blockSizePpm / 2 > mapPixelWidth - padding) {
-            mario.getBody().setTransform(mapPixelWidth - padding - blockSizePpm / 2,
-                    mario.getBody().getPosition().y, 0);
+            player.getBody().setTransform(mapPixelWidth - padding - blockSizePpm / 2,
+                    player.getBody().getPosition().y, 0);
         }
     }
 
     private void upateCameraPosition() {
-        if (mario.getState() == Mario.State.DEAD) {
+        if (player.getState() == Player.State.DEAD) {
             return;
         }
 
-        // A) snap camera position to the PPM pixel grid, otherwise there are rendering artifacts
-        //camera.position.x = (float) Math.round(mario.getBody().getPosition().x * Cfg.PPM) / Cfg.PPM;
-
-        // B) no snapping runs smoother
-        //camera.position.x = mario.getBody().getPosition().x;
-
-        // C) interpolation (super smooth)
-        camera.position.x = camera.position.x - (camera.position.x - mario.getBody().getPosition().x) * 0.1f;
+        camera.position.x = camera.position.x - (camera.position.x - player.getBody().getPosition().x) * 0.1f;
 
         // check camera in bounds (X)
         if (camera.position.x - viewport.getWorldWidth() / 2 < 0) {
@@ -670,7 +659,7 @@ public class GameController  implements BinarySerializable, Disposable {
             camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
         }
 
-        camera.position.y = camera.position.y - (camera.position.y - mario.getBody().getPosition().y + viewport.getWorldHeight() * 0.133f) * 0.066f;
+        camera.position.y = camera.position.y - (camera.position.y - player.getBody().getPosition().y + viewport.getWorldHeight() * 0.133f) * 0.066f;
 
         // check camera in bounds (Y)
         if (camera.position.y - viewport.getWorldHeight() / 2 < 0) {
@@ -685,7 +674,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private Vector2 startSteerPosition = new Vector2(0, 0);
 
     private void handleInput() {
-        if (mario.getState() == Mario.State.DEAD) {
+        if (player.getState() == Player.State.DEAD) {
             return;
         }
 
@@ -745,11 +734,11 @@ public class GameController  implements BinarySerializable, Disposable {
             startSteerPosition.set(0, 0);
         }
 
-        mario.control(upPressed, downPressed, leftPressed, rightPressed, firePressed, slow);
+        player.control(upPressed, downPressed, leftPressed, rightPressed, firePressed, slow);
     }
 
     private boolean isGameOver() {
-        return mario.getState() == Mario.State.DEAD && mario.getStateTimer() > 3f;
+        return player.getState() == Player.State.DEAD && player.getStateTimer() > 3f;
     }
 
     public int getTotalBeers() {
@@ -775,7 +764,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public void save() {
         // don't do anything in case player is dead, kind of dead or level is finished
-        if (mario.isDead() || mario.isDrowning() || levelCompleted) {
+        if (player.isDead() || player.isDrowning() || levelCompleted) {
             LOG.error("Did NOT save game state");
             return;
         }
@@ -796,7 +785,7 @@ public class GameController  implements BinarySerializable, Disposable {
         out.writeBoolean(levelCompleted);
         out.writeFloat(levelCompletedTimer);
         out.writeFloat(gameTime);
-        mario.write(out);
+        player.write(out);
         killSequelManager.write(out);
         out.writeInt(enemies.size);
         for (Enemy enemy : enemies.values()) {
@@ -831,7 +820,7 @@ public class GameController  implements BinarySerializable, Disposable {
         levelCompleted = in.readBoolean();
         levelCompletedTimer = in.readFloat();
         gameTime = in.readFloat();
-        mario.read(in);
+        player.read(in);
         killSequelManager.read(in);
         int numEnemies = in.readInt();
         for (int i = 0; i < numEnemies; ++i) {
@@ -899,8 +888,8 @@ public class GameController  implements BinarySerializable, Disposable {
         return gameTime;
     }
 
-    public Mario getMario() {
-        return mario;
+    public Player getPlayer() {
+        return player;
     }
 
     public int getScore() {

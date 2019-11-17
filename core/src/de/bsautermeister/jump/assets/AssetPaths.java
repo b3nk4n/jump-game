@@ -26,7 +26,7 @@ public interface AssetPaths {
         String STOMP = "audio/sounds/stomp.wav";
         String POWERUP = "audio/sounds/powerup.wav";
         String POWERDOWN = "audio/sounds/powerdown.wav";
-        String MARIO_DIE = "audio/sounds/mariodie.wav";
+        String PLAYER_DIE = "audio/sounds/player_die.wav";
         String JUMP = "audio/sounds/jump.wav";
         String KICKED = "audio/sounds/kicked.wav";
         String SPLASH = "audio/sounds/splash.wav";
@@ -37,8 +37,8 @@ public interface AssetPaths {
     }
 
     interface Music {
-        String NORMAL_AUDIO = "audio/music/mario_music.ogg";
-        String HURRY_AUDIO = "audio/music/mario_hurry.mp3";
+        String NORMAL_AUDIO = "audio/music/game_music.ogg";
+        String HURRY_AUDIO = "audio/music/game_hurry_music.mp3";
     }
 
     interface Pfx {

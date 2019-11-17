@@ -26,7 +26,7 @@ public class Hud implements Disposable {
     private Label timeLabel;
     private Label beersLabel;
     private Label worldLabel;
-    private Label marioLabel;
+    private Label playerLabel;
 
     private Label.LabelStyle labelStyle;
 
@@ -49,9 +49,9 @@ public class Hud implements Disposable {
         timeLabel = new Label("TIME", labelStyle);
         beersLabel = new Label(getFormattedBeers(currentBeers, totalBeers), labelStyle);
         worldLabel = new Label("BEERS", labelStyle);
-        marioLabel = new Label("MARIO", labelStyle);
+        playerLabel = new Label("PLAYER", labelStyle);
 
-        table.add(marioLabel)
+        table.add(playerLabel)
                 .expandX()
                 .padTop(10);
         table.add(worldLabel)

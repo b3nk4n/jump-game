@@ -14,7 +14,7 @@ public class GameSoundEffects implements Disposable {
     public Sound breakBlockSound;
     public Sound stompSound;
     public Sound powerDownSound;
-    public Sound marioDieSound;
+    public Sound playerDieSound;
     public Sound jumpSound;
     public Sound kickedSound;
     public Sound splashSound;
@@ -31,7 +31,7 @@ public class GameSoundEffects implements Disposable {
         breakBlockSound = assetManager.get(AssetDescriptors.Sounds.BREAK_BLOCK);
         stompSound = assetManager.get(AssetDescriptors.Sounds.STOMP);
         powerDownSound = assetManager.get(AssetDescriptors.Sounds.POWERDOWN);
-        marioDieSound = assetManager.get(AssetDescriptors.Sounds.MARIO_DIE);
+        playerDieSound = assetManager.get(AssetDescriptors.Sounds.PLAYER_DIE);
         jumpSound = assetManager.get(AssetDescriptors.Sounds.JUMP);
         kickedSound = assetManager.get(AssetDescriptors.Sounds.KICKED);
         splashSound = assetManager.get(AssetDescriptors.Sounds.SPLASH);
@@ -53,7 +53,7 @@ public class GameSoundEffects implements Disposable {
         breakBlockSound.dispose();
         stompSound.dispose();
         powerDownSound.dispose();
-        marioDieSound.dispose();
+        playerDieSound.dispose();
         jumpSound.dispose();
         kickedSound.dispose();
         splashSound.dispose();

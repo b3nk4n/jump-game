@@ -100,7 +100,7 @@ public class Flower extends Enemy {
         shape.setAsBox(7f / Cfg.PPM, 12f / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
-        fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
+        fixtureDef.filter.maskBits = Bits.PLAYER | Bits.FIREBALL;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
 
@@ -108,7 +108,7 @@ public class Flower extends Enemy {
         EdgeShape topSensor = new EdgeShape();
         fixtureDef.shape = topSensor;
         fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
-        fixtureDef.filter.maskBits = Bits.MARIO | Bits.FIREBALL;
+        fixtureDef.filter.maskBits = Bits.PLAYER | Bits.FIREBALL;
         fixtureDef.isSensor = true;
         topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM + hiddenOffsetY),
                 new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM + hiddenOffsetY));
@@ -119,7 +119,7 @@ public class Flower extends Enemy {
     }
 
     @Override
-    public void onHeadHit(Mario mario) {
+    public void onHeadHit(Player player) {
         // NOOP
     }
 

@@ -18,112 +18,112 @@ beer_liquid
   orig: 64, 100
   offset: 0, 0
   index: -1
-big_mario_crouch
+big_player_crouch
   rotate: false
   xy: 140, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_crouch_on_fire
+big_player_crouch_on_fire
   rotate: false
   xy: 176, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_drown
+big_player_drown
   rotate: false
   xy: 160, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_drown_on_fire
+big_player_drown_on_fire
   rotate: false
   xy: 196, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_jump
+big_player_jump
   rotate: false
   xy: 180, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_jump_on_fire
+big_player_jump_on_fire
   rotate: false
   xy: 216, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_stand
+big_player_stand
   rotate: false
   xy: 200, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_stand_on_fire
+big_player_stand_on_fire
   rotate: false
   xy: 236, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_turn
+big_player_turn
   rotate: false
   xy: 220, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_turn_on_fire
+big_player_turn_on_fire
   rotate: false
   xy: 256, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
-big_mario_walk
+big_player_walk
   rotate: false
   xy: 240, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 0
-big_mario_walk
+big_player_walk
   rotate: false
   xy: 260, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 1
-big_mario_walk
+big_player_walk
   rotate: false
   xy: 276, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 2
-big_mario_walk_on_fire
+big_player_walk_on_fire
   rotate: false
   xy: 280, 36
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 0
-big_mario_walk_on_fire
+big_player_walk_on_fire
   rotate: false
   xy: 296, 72
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: 1
-big_mario_walk_on_fire
+big_player_walk_on_fire
   rotate: false
   xy: 300, 36
   size: 16, 32
@@ -277,65 +277,9 @@ koopa_moving
   orig: 16, 24
   offset: 0, 0
   index: 1
-little_mario_dead
-  rotate: false
-  xy: 400, 108
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-little_mario_drown
-  rotate: false
-  xy: 396, 88
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-little_mario_jump
-  rotate: false
-  xy: 276, 16
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-little_mario_stand
-  rotate: false
-  xy: 360, 60
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-little_mario_turn
-  rotate: false
-  xy: 420, 108
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-little_mario_walk
-  rotate: false
-  xy: 416, 88
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 0
-little_mario_walk
-  rotate: false
-  xy: 296, 16
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
-little_mario_walk
-  rotate: false
-  xy: 440, 108
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 2
 mushroom
   rotate: false
-  xy: 436, 88
+  xy: 400, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -370,18 +314,74 @@ platform4
   index: -1
 prezel
   rotate: false
-  xy: 460, 108
+  xy: 396, 88
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 prezel_bullet
   rotate: false
-  xy: 456, 88
+  xy: 276, 16
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+small_player_dead
+  rotate: false
+  xy: 360, 60
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+small_player_drown
+  rotate: false
+  xy: 420, 108
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+small_player_jump
+  rotate: false
+  xy: 416, 88
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+small_player_stand
+  rotate: false
+  xy: 296, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+small_player_turn
+  rotate: false
+  xy: 440, 108
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+small_player_walk
+  rotate: false
+  xy: 436, 88
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+small_player_walk
+  rotate: false
+  xy: 460, 108
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+small_player_walk
+  rotate: false
+  xy: 456, 88
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
 spiky
   rotate: false
   xy: 480, 108

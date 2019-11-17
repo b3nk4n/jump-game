@@ -48,8 +48,8 @@ public interface AssetDescriptors {
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.STOMP, Sound.class);
         AssetDescriptor<Sound> POWERDOWN =
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.POWERDOWN, Sound.class);
-        AssetDescriptor<Sound> MARIO_DIE =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.MARIO_DIE, Sound.class);
+        AssetDescriptor<Sound> PLAYER_DIE =
+                new AssetDescriptor<Sound>(AssetPaths.Sounds.PLAYER_DIE, Sound.class);
         AssetDescriptor<Sound> JUMP =
                 new AssetDescriptor<Sound>(AssetPaths.Sounds.JUMP, Sound.class);
         AssetDescriptor<Sound> KICKED =
@@ -70,7 +70,7 @@ public interface AssetDescriptors {
             Fonts.MARIO12, Fonts.MARIO18,Fonts.MARIO24, Fonts.MARIO32,
             Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.POWERUP_SPAWN, Sounds.POWERUP,
-            Sounds.STOMP, Sounds.POWERDOWN, Sounds.MARIO_DIE, Sounds.JUMP, Sounds.KICKED,
+            Sounds.STOMP, Sounds.POWERDOWN, Sounds.PLAYER_DIE, Sounds.JUMP, Sounds.KICKED,
             Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING, Sounds.OH_YEAH, Sounds.SUCCESS
     };
 

@@ -42,7 +42,7 @@ public class Mushroom extends Item implements Drownable {
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
-                Bits.MARIO |
+                Bits.PLAYER |
                 Bits.OBJECT |
                 Bits.BLOCK_TOP;
 
@@ -71,11 +71,11 @@ public class Mushroom extends Item implements Drownable {
     }
 
     @Override
-    public void collectBy(Mario mario) {
-        getCallbacks().use(mario, this);
+    public void collectBy(Player player) {
+        getCallbacks().use(player, this);
         markDestroyBody();
-        mario.grow();
-        mario.stoned();
+        player.grow();
+        player.stoned();
     }
 
     @Override

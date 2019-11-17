@@ -9,15 +9,15 @@ import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
-import de.bsautermeister.jump.sprites.Mario;
+import de.bsautermeister.jump.sprites.Player;
 
 public interface GameCallbacks {
     void jump();
     void stomp(Enemy enemy);
-    void use(Mario mario, Item item);
-    void hit(Mario mario, Enemy enemy);
-    void hit(Mario mario, Brick brick, boolean closeEnough);
-    void hit(Mario mario, ItemBox itemBox, Vector2 position, boolean closeEnough);
+    void use(Player player, Item item);
+    void hit(Player player, Enemy enemy);
+    void hit(Player player, Brick brick, boolean closeEnough);
+    void hit(Player player, ItemBox itemBox, Vector2 position, boolean closeEnough);
     void hit(Fireball fireball, Enemy enemy);
     void indirectObjectHit(InteractiveTileObject tileObject, String objectId);
     void hitWall(Enemy enemy);

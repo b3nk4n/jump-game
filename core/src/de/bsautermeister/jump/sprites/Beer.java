@@ -54,7 +54,7 @@ public class Beer extends Item {
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
-                Bits.MARIO |
+                Bits.PLAYER |
                 Bits.OBJECT |
                 Bits.BLOCK_TOP;
 
@@ -65,10 +65,10 @@ public class Beer extends Item {
     }
 
     @Override
-    public void collectBy(Mario mario) {
-        getCallbacks().use(mario, this);
+    public void collectBy(Player player) {
+        getCallbacks().use(player, this);
         markDestroyBody();
-        mario.drunk();
+        player.drunk();
     }
 
     @Override

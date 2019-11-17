@@ -103,7 +103,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         destroyBody.mark();
     }
 
-    public abstract void onHeadHit(Mario mario);
+    public abstract void onHeadHit(Player player);
 
     public abstract void onEnemyHit(Enemy enemy);
 

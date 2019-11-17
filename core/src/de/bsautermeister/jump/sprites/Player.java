@@ -34,7 +34,7 @@ import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
-public class Mario extends Sprite implements BinarySerializable, Drownable {
+public class Player extends Sprite implements BinarySerializable, Drownable {
 
     public static final float INITAL_TTL = 200;
 
@@ -76,26 +76,26 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
     private boolean runningRight;
 
-    private TextureRegion marioStand;
-    private TextureRegion marioDead;
-    private TextureRegion marioTurn;
-    private Animation<TextureRegion> marioWalk;
-    private TextureRegion marioJump;
-    private TextureRegion marioDrown;
+    private TextureRegion smallPlayerStand;
+    private TextureRegion smallPlayerDead;
+    private TextureRegion smallPlayerTurn;
+    private Animation<TextureRegion> smallPlayerWalk;
+    private TextureRegion smallPlayerJump;
+    private TextureRegion smallPlayerDrown;
 
-    private TextureRegion bigMarioStand;
-    private TextureRegion bigMarioJump;
-    private TextureRegion bigMarioTurn;
-    private Animation<TextureRegion> bigMarioWalk;
-    private TextureRegion bigMarioCrouch;
-    private TextureRegion bigMarioDrown;
+    private TextureRegion bigPlayerStand;
+    private TextureRegion bigPlayerJump;
+    private TextureRegion bigPlayerTurn;
+    private Animation<TextureRegion> bigPlayerWalk;
+    private TextureRegion bigPlayerCrouch;
+    private TextureRegion bigPlayerDrown;
 
-    private TextureRegion bigMarioOnFireStand;
-    private TextureRegion bigMarioOnFireJump;
-    private TextureRegion bigMarioOnFireTurn;
-    private Animation<TextureRegion> bigMarioOnFireWalk;
-    private TextureRegion bigMarioOnFireCrouch;
-    private TextureRegion bigMarioOnFireDrown;
+    private TextureRegion bigPlayerOnFireStand;
+    private TextureRegion bigPlayerOnFireJump;
+    private TextureRegion bigPlayerOnFireTurn;
+    private Animation<TextureRegion> bigPlayerOnFireWalk;
+    private TextureRegion bigPlayerOnFireCrouch;
+    private TextureRegion bigPlayerOnFireDrown;
 
     ParticleEffect slideEffect = new ParticleEffect();
 
@@ -122,7 +122,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     private GameTimer drunkTimer;
     private GameTimer stonedTimer;
 
-    public Mario(GameCallbacks callbacks, World world, TextureAtlas atlas, WorldCreator.StartParams start) {
+    public Player(GameCallbacks callbacks, World world, TextureAtlas atlas, WorldCreator.StartParams start) {
         this.callbacks = callbacks;
         this.world = world;
         this.atlas = atlas;
@@ -135,7 +135,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-        setRegion(marioStand);
+        setRegion(smallPlayerStand);
 
         timeToLive = INITAL_TTL;
 
@@ -152,7 +152,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             @Override
             public void onFinish() {
                 Filter filter = new Filter();
-                filter.categoryBits = Bits.MARIO;
+                filter.categoryBits = Bits.PLAYER;
                 filter.maskBits = NORMAL_FILTER_BITS;
                 getBody().getFixtureList().get(0).setFilterData(filter);
             }
@@ -166,29 +166,29 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     private void initTextures(TextureAtlas atlas) {
-        marioStand = atlas.findRegion(RegionNames.LITTLE_MARIO_STAND);
-        marioWalk = new Animation<TextureRegion>(0.1f,
-                atlas.findRegions(RegionNames.LITTLE_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
-        marioTurn = atlas.findRegion(RegionNames.LITTLE_MARIO_TURN);
-        marioJump = atlas.findRegion(RegionNames.LITTLE_MARIO_JUMP);
-        marioDrown = atlas.findRegion(RegionNames.LITTLE_MARIO_DROWN);
-        marioDead = atlas.findRegion(RegionNames.LITTLE_MARIO_DEAD);
+        smallPlayerStand = atlas.findRegion(RegionNames.SMALL_PLAYER_STAND);
+        smallPlayerWalk = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.SMALL_PLAYER_WALK), Animation.PlayMode.LOOP_PINGPONG);
+        smallPlayerTurn = atlas.findRegion(RegionNames.SMALL_PLAYER_TURN);
+        smallPlayerJump = atlas.findRegion(RegionNames.SMALL_PLAYER_JUMP);
+        smallPlayerDrown = atlas.findRegion(RegionNames.SMALL_PLAYER_DROWN);
+        smallPlayerDead = atlas.findRegion(RegionNames.SMALL_PLAYER_DEAD);
 
-        bigMarioStand = atlas.findRegion(RegionNames.BIG_MARIO_STAND);
-        bigMarioWalk = new Animation<TextureRegion>(0.1f,
-                atlas.findRegions(RegionNames.BIG_MARIO_WALK), Animation.PlayMode.LOOP_PINGPONG);
-        bigMarioTurn = atlas.findRegion(RegionNames.BIG_MARIO_TURN);
-        bigMarioJump = atlas.findRegion(RegionNames.BIG_MARIO_JUMP);
-        bigMarioCrouch = atlas.findRegion(RegionNames.BIG_MARIO_CROUCH);
-        bigMarioDrown = atlas.findRegion(RegionNames.BIG_MARIO_DROWN);
+        bigPlayerStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND);
+        bigPlayerWalk = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.BIG_PLAYER_WALK), Animation.PlayMode.LOOP_PINGPONG);
+        bigPlayerTurn = atlas.findRegion(RegionNames.BIG_PLAYER_TURN);
+        bigPlayerJump = atlas.findRegion(RegionNames.BIG_PLAYER_JUMP);
+        bigPlayerCrouch = atlas.findRegion(RegionNames.BIG_PLAYER_CROUCH);
+        bigPlayerDrown = atlas.findRegion(RegionNames.BIG_PLAYER_DROWN);
 
-        bigMarioOnFireStand = atlas.findRegion(RegionNames.BIG_MARIO_STAND_ON_FIRE);
-        bigMarioOnFireWalk = new Animation<TextureRegion>(0.1f,
-                atlas.findRegions(RegionNames.BIG_MARIO_WALK_ON_FIRE), Animation.PlayMode.LOOP_PINGPONG);
-        bigMarioOnFireTurn = atlas.findRegion(RegionNames.BIG_MARIO_TURN_ON_FIRE);
-        bigMarioOnFireJump = atlas.findRegion(RegionNames.BIG_MARIO_JUMP_ON_FIRE);
-        bigMarioOnFireCrouch = atlas.findRegion(RegionNames.BIG_MARIO_CROUCH_ON_FIRE);
-        bigMarioOnFireDrown = atlas.findRegion(RegionNames.BIG_MARIO_DROWN_ON_FIRE);
+        bigPlayerOnFireStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND_ON_FIRE);
+        bigPlayerOnFireWalk = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.BIG_PLAYER_WALK_ON_FIRE), Animation.PlayMode.LOOP_PINGPONG);
+        bigPlayerOnFireTurn = atlas.findRegion(RegionNames.BIG_PLAYER_TURN_ON_FIRE);
+        bigPlayerOnFireJump = atlas.findRegion(RegionNames.BIG_PLAYER_JUMP_ON_FIRE);
+        bigPlayerOnFireCrouch = atlas.findRegion(RegionNames.BIG_PLAYER_CROUCH_ON_FIRE);
+        bigPlayerOnFireDrown = atlas.findRegion(RegionNames.BIG_PLAYER_DROWN_ON_FIRE);
     }
 
     public void update(float delta) {
@@ -382,47 +382,47 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         switch (state.current()) {
             case DROWNING:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigMarioOnFireDrown : bigMarioDrown;
+                    textureRegion = onFire ? bigPlayerOnFireDrown : bigPlayerDrown;
                 } else {
-                    textureRegion = marioDrown;
+                    textureRegion = smallPlayerDrown;
                 }
                 break;
             case DEAD:
-                textureRegion = marioDead;
+                textureRegion = smallPlayerDead;
                 break;
             case JUMPING:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigMarioOnFireJump : bigMarioJump;
+                    textureRegion = onFire ? bigPlayerOnFireJump : bigPlayerJump;
                 } else {
-                    textureRegion = marioJump;
+                    textureRegion = smallPlayerJump;
                 }
                 break;
             case WALKING:
                 if (useBigTexture) {
                     if (isTurning) {
-                        textureRegion = onFire ? bigMarioOnFireTurn : bigMarioTurn;
+                        textureRegion = onFire ? bigPlayerOnFireTurn : bigPlayerTurn;
                     } else {
-                        Animation<TextureRegion> walk = onFire ? bigMarioOnFireWalk : bigMarioWalk;
+                        Animation<TextureRegion> walk = onFire ? bigPlayerOnFireWalk : bigPlayerWalk;
                         textureRegion = walk.getKeyFrame(state.timer(), true);
                     }
 
                 } else {
                     if (isTurning) {
-                        textureRegion = marioTurn;
+                        textureRegion = smallPlayerTurn;
                     } else {
-                        textureRegion = marioWalk.getKeyFrame(state.timer(), true);
+                        textureRegion = smallPlayerWalk.getKeyFrame(state.timer(), true);
                     }
                 }
                 break;
             case CROUCHING:
-                textureRegion = onFire ? bigMarioOnFireCrouch : bigMarioCrouch;
+                textureRegion = onFire ? bigPlayerOnFireCrouch : bigPlayerCrouch;
                 break;
             case STANDING:
             default:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigMarioOnFireStand : bigMarioStand;
+                    textureRegion = onFire ? bigPlayerOnFireStand : bigPlayerStand;
                 } else {
-                    textureRegion = marioStand;
+                    textureRegion = smallPlayerStand;
                 }
                 break;
         }
@@ -483,7 +483,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
     }
 
     private void createBodyFixture(FixtureDef fixtureDef, Shape shape, boolean normalFilterMask) {
-        fixtureDef.filter.categoryBits = Bits.MARIO;
+        fixtureDef.filter.categoryBits = Bits.PLAYER;
         fixtureDef.filter.maskBits = normalFilterMask ?
                 NORMAL_FILTER_BITS : NO_ENEMY_FILTER_BITS;
 
@@ -513,7 +513,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         EdgeShape headShape = new EdgeShape();
         headShape.set(new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
-        fixtureDef.filter.categoryBits = Bits.MARIO_HEAD;
+        fixtureDef.filter.categoryBits = Bits.PLAYER_HEAD;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         Fixture fixture = body.createFixture(fixtureDef);
@@ -527,7 +527,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         EdgeShape groundSensorShape = new EdgeShape();
         groundSensorShape.set(new Vector2(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, bottomY / Cfg.PPM));
-        fixtureDef.filter.categoryBits = Bits.MARIO_FEET;
+        fixtureDef.filter.categoryBits = Bits.PLAYER_FEET;
         fixtureDef.shape = groundSensorShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
@@ -788,7 +788,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
             lastJumpThroughPlatformId = null;
         }
 
-        // this is just a lazy workaround, that is needed because we generally create a small mario by default
+        // this is just a lazy workaround, that is needed because we generally create a small player by default
         if (isBig) {
             Vector2 currentPosition = body.getPosition();
             world.destroyBody(getBody());
