@@ -679,7 +679,6 @@ public class GameController  implements BinarySerializable, Disposable {
             return;
         }
 
-        boolean slow = false;
         boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean downPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean rightPressed = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
@@ -705,19 +704,19 @@ public class GameController  implements BinarySerializable, Disposable {
                     Vector2 swipeDirection = tmpPosition.sub(startSteerPosition);
                     float len = swipeDirection.len();
                     if (len > 0.005f) {
-                        if (len < 0.03f) {
-                            slow = true;
-                        }
                         float angle = swipeDirection.angle();
-                        if (angle <= 45 || angle >= 315) {
-                            rightPressed = true;
-                        } else if (angle >= 135 && angle <= 225) {
-                            leftPressed = true;
-                        } else if (len > 0.1f &&angle > 45 && angle < 135) {
+                        if (len > 0.1f &&angle > 45 && angle < 135) {
                             downPressed = true;
                         }
                     }
                 }
+
+                if (x < 0.125) {
+                    leftPressed = true;
+                } else if (x > 0.2 && x < 0.45) {
+                    rightPressed = true;
+                }
+
             } else {
                 // right region: actions
                 if (Gdx.input.justTouched()) {
@@ -735,7 +734,7 @@ public class GameController  implements BinarySerializable, Disposable {
             startSteerPosition.set(0, 0);
         }
 
-        player.control(upPressed, downPressed, leftPressed, rightPressed, firePressed, slow);
+        player.control(upPressed, downPressed, leftPressed, rightPressed, firePressed);
     }
 
     private boolean isGameOver() {

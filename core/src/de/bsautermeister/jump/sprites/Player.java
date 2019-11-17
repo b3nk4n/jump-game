@@ -25,12 +25,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
@@ -288,7 +288,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
     }
 
-    public void control(boolean up, boolean down, boolean left, boolean right, boolean fire, boolean slow) {
+    public void control(boolean up, boolean down, boolean left, boolean right, boolean fire) {
         if (isDead() || isDrowning()) {
             return;
         }
@@ -310,10 +310,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             return;
         }
         if (right && body.getLinearVelocity().x <= 2 && !down) {
-            body.applyForceToCenter(new Vector2(slow ? 4.75f : 7.5f, 0), true);
+            body.applyForceToCenter(new Vector2(7.5f, 0), true);
         }
         if (left && body.getLinearVelocity().x >= -2 && !down) {
-            body.applyForceToCenter(new Vector2(slow ? -4.75f : -7.5f, 0), true);
+            body.applyForceToCenter(new Vector2(-7.5f, 0), true);
         }
         if ((!left && !right && state.is(State.JUMPING))) {
             // horizontally decelerate fast, but don't stop immediately
