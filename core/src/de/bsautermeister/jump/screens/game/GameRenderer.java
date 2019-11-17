@@ -38,8 +38,8 @@ import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
-import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -51,6 +51,7 @@ public class GameRenderer implements Disposable {
     private final GameController controller;
     private final World world;
     private final OrthographicCamera camera;
+    private final OrthographicCamera backgroundParallaxCamera;
     private final Viewport viewport;
 
     private final Viewport hudViewport;
@@ -78,6 +79,7 @@ public class GameRenderer implements Disposable {
         this.map = controller.getMap();
         this.controller = controller;
         this.camera = controller.getCamera();
+        this.backgroundParallaxCamera = new OrthographicCamera();
         this.viewport = controller.getViewport();
         this.world = controller.getWorld();
 
@@ -109,8 +111,6 @@ public class GameRenderer implements Disposable {
         Player player = controller.getPlayer();
         int score = controller.getScore();
         int collectedBeers = controller.getCollectedBeers();
-
-        mapRenderer.setView(camera);
 
         GdxUtils.clearScreen(Color.BLACK);
         viewport.apply();
@@ -183,13 +183,29 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_COLOR_KEY));
+
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BACKGROUND_PARALLAX_DISTANT_GRAPHICS_KEY, 0.5f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BACKGROUND_PARALLAX_CLOSE_GRAPHICS_KEY, 0.75f);
+
+        mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
 
         Array<BoxCoin> activeBoxCoins = controller.getActiveBoxCoins();
         for (BoxCoin boxCoin : activeBoxCoins) {
             boxCoin.draw(batch);
         }
+    }
+
+    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factor) {
+        parallaxCamera.setToOrtho(false, camera.viewportWidth, camera.viewportHeight);
+        parallaxCamera.position.set(
+                camera.position.x * factor + camera.viewportWidth / 8,
+                camera.position.y * factor + camera.viewportHeight / 8,
+                0);
+        parallaxCamera.update();
+        mapRenderer.setView(parallaxCamera);
+        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(layer));
     }
 
     private void renderForeground(SpriteBatch batch) {
@@ -212,6 +228,7 @@ public class GameRenderer implements Disposable {
             }
         }
 
+        mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
 
         Array<Platform> platforms = controller.getPlatforms();
