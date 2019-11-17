@@ -142,7 +142,7 @@ public class Mario extends Sprite implements BinarySerializable, Drownable {
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
         slideEffect.scaleEffect(0.1f / Cfg.PPM);
 
-        changeSizeTimer = new GameTimer(1f);
+        changeSizeTimer = new GameTimer(0.75f);
         changeSizeTimer.setCallbacks(new GameTimer.TimerCallbacks() {
             @Override
             public void onStart() {

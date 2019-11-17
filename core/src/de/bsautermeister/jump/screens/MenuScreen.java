@@ -74,8 +74,7 @@ public class MenuScreen extends ScreenBase {
     }
 
     private void continueGame() {
-        FileHandle fileHandle = JumpGame.getSavedDataHandle();
-        setScreen(new GameScreen(getGame(), fileHandle));
+        setScreen(new GameScreen(getGame()));
     }
 
     @Override

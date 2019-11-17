@@ -31,7 +31,6 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
-import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
@@ -67,7 +66,6 @@ public class GameController  implements BinarySerializable, Disposable {
     private final MusicPlayer musicPlayer;
     private final GameSoundEffects soundEffects;
 
-    private GameStats gameStats;
     private TextureAtlas atlas;
 
     private OrthographicCamera camera;
@@ -103,8 +101,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private WaterInteractionManager waterInteractionManager;
 
-    private FileHandle gameToLoad;
-    private Integer level;
+    private final int level;
+    private final FileHandle gameToResume;
 
     private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
 
@@ -314,11 +312,12 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private final GameScreenCallbacks screenCallbacks;
 
-    public GameController(GameScreenCallbacks screenCallbacks, MusicPlayer musicPlayer, GameSoundEffects soundEffects, int level) {
+    public GameController(GameScreenCallbacks screenCallbacks, MusicPlayer musicPlayer, GameSoundEffects soundEffects,
+                          int level, FileHandle gameToResume) {
+        this.level = level;
+        this.gameToResume = gameToResume;
         this.screenCallbacks = screenCallbacks;
         this.soundEffects = soundEffects;
-        this.level = level;
-        this.gameStats = new GameStats();
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
         this.world = new World(new Vector2(0,-9.81f), true);
@@ -337,47 +336,34 @@ public class GameController  implements BinarySerializable, Disposable {
 
         this.musicPlayer = musicPlayer;
 
-        reset();
-    }
-
-    private void reset() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
 
         score = 0;
         collectedBeers = 0;
 
-        if (level == -1) {
-            level = gameStats.getLastStartedLevel();
-        } else {
-            gameStats.setLastStartedLevel(level);
-        }
-
-        LOG.debug("Init map level: " + level);
-
         initMap(level);
 
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
         worldCreator.buildFromMap();
+
+        start = worldCreator.getStart();
+        goal = worldCreator.getGoal();
+        mario = new Mario(callbacks, world, atlas, start);
+
         platforms.addAll(worldCreator.createPlatforms());
-        if (gameToLoad != null) {
-            load(gameToLoad);
+        if (gameToResume != null) {
+            load(gameToResume);
         } else {
             for (Enemy enemy : worldCreator.createEnemies()) {
                 enemies.put(enemy.getId(), enemy);
             }
             coins.addAll(worldCreator.createCoins());
         }
+
+        camera.position.set(mario.getBody().getPosition(), 0);
+
         waterList = worldCreator.getWaterRegions();
-
-
-        start = worldCreator.getStart();
-        goal = worldCreator.getGoal();
-
-        mario = new Mario(callbacks, world, atlas, start);
-
-        camera.position.set(start.position, 0);
-
         waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterList);
         waterInteractionManager.add(mario);
         for (Enemy enemy : enemies.values()) {
@@ -397,7 +383,10 @@ public class GameController  implements BinarySerializable, Disposable {
         musicPlayer.play();
     }
 
+
     private void initMap(int level) {
+        LOG.debug("Init map level: " + level);
+
         this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
         float mapWidth = map.getProperties().get("width", Integer.class);
         float mapHeight = map.getProperties().get("height", Integer.class);
@@ -408,6 +397,7 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     public void update(float delta) {
+        gameTime += delta;
         world.step(1 / 60f, 8, 3);
 
         if (!levelCompleted) {
@@ -623,7 +613,6 @@ public class GameController  implements BinarySerializable, Disposable {
             LOG.debug("Goal reached");
             levelCompleted = true;
             mario.setLevelCompleted(true);
-            gameStats.setHighestFinishedLevel(level);
             callbacks.goalReached();
         }
     }
@@ -781,13 +770,15 @@ public class GameController  implements BinarySerializable, Disposable {
             if (!BinarySerializer.read(this, handle.read())) {
                 LOG.error("Could not load game state");
             }
-
-            JumpGame.deleteSavedData();
         }
     }
 
     public void save() {
-        // TODO don't do anything in case player is dead or level is finished
+        // don't do anything in case player is dead, kind of dead or level is finished
+        if (mario.isDead() || mario.isDrowning() || levelCompleted) {
+            LOG.error("Did NOT save game state");
+            return;
+        }
 
         // TODO pause the game?
 
@@ -795,11 +786,11 @@ public class GameController  implements BinarySerializable, Disposable {
         if (!BinarySerializer.write(this, fileHandle.write(false))) {
             LOG.error("Could not save game state");
         }
+        LOG.error("Saved game state");
     }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
-        out.writeInt(level);
         out.writeInt(score);
         out.writeInt(collectedBeers);
         out.writeBoolean(levelCompleted);
@@ -835,7 +826,6 @@ public class GameController  implements BinarySerializable, Disposable {
 
     @Override
     public void read(DataInputStream in) throws IOException {
-        level = in.readInt();
         score = in.readInt();
         collectedBeers = in.readInt();
         levelCompleted = in.readBoolean();

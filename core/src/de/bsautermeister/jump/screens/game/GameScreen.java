@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
 
 public class GameScreen extends ScreenBase {
@@ -14,14 +15,16 @@ public class GameScreen extends ScreenBase {
     private GameRenderer renderer;
     private GameSoundEffects soundEffects;
 
-    private TextureAtlas atlas;
+    private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
-    private FileHandle gameToLoad;
+    private GameStats gameStats = new GameStats();
     private int level;
+    private final FileHandle gameToResume;
 
     private final GameScreenCallbacks callbacks = new GameScreenCallbacks() {
         @Override
         public void success(int level) {
+            gameStats.setHighestFinishedLevel(level);
             setScreen(new GameScreen(getGame(), level + 1));
         }
 
@@ -31,31 +34,34 @@ public class GameScreen extends ScreenBase {
         }
     };
 
+    /**
+     * Start new game at given level.
+     */
     public GameScreen(GameApp game, int level) {
         super(game);
         this.level = level;
-        this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
+        this.gameToResume = null;
     }
 
-    public GameScreen(GameApp game, FileHandle fileHandle) {
-        //super(game);
-        this(game, -1); // TODO whatever
-        this.gameToLoad = fileHandle;
+    /**
+     * Resume game of saved level.
+     */
+    public GameScreen(GameApp game) {
+        super(game);
+        this.level = gameStats.getLastStartedLevel();
+        this.gameToResume = JumpGame.getSavedDataHandle();
     }
 
     @Override
     public void show() {
         super.show();
 
-        if (JumpGame.hasSavedData()) {
-            //load(gameToLoad); // TODO duplicated?
-            // ensure to not load this saved game later anymore
-            //JumpGame.deleteSavedData();
-        }
-
         soundEffects = new GameSoundEffects(getAssetManager());
-        controller = new GameController(callbacks, getGame().getMusicPlayer(), soundEffects, level);
+        controller = new GameController(callbacks, getGame().getMusicPlayer(), soundEffects,
+                level, gameToResume);
         renderer = new GameRenderer(getBatch(), getAssetManager(), atlas, controller);
+
+        JumpGame.deleteSavedData();
     }
 
     @Override
@@ -68,7 +74,6 @@ public class GameScreen extends ScreenBase {
         controller.update(delta);
         renderer.render(delta);
     }
-
 
     @Override
     public void resize(int width, int height) {
