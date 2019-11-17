@@ -201,7 +201,7 @@ public class GameRenderer implements Disposable {
         parallaxCamera.setToOrtho(false, camera.viewportWidth, camera.viewportHeight);
         parallaxCamera.position.set(
                 camera.position.x * factor + camera.viewportWidth / 8,
-                camera.position.y * factor + camera.viewportHeight / 8,
+                camera.position.y * factor + camera.viewportHeight / 7,
                 0);
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);
@@ -260,7 +260,7 @@ public class GameRenderer implements Disposable {
 
         batch.setShader(prevShader);
 
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+        for (InteractiveTileObject tileObject : controller.getTileObjects()) {
             // tile-objects itself are drawn in the GRAPHICS layer, while this draw-call renders the
             // particle fragments in case of a destroyed brick
             tileObject.draw(batch);

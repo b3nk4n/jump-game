@@ -53,9 +53,9 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
-import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Spiky;
 import de.bsautermeister.jump.text.TextMessage;
 
@@ -97,8 +97,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private Array<BoxCoin> activeBoxCoins;
 
     private float gameTime;
+    private Array<InteractiveTileObject> tileObjects;
     private Array<WorldCreator.WaterParams> waterList;
-
     private WaterInteractionManager waterInteractionManager;
 
     private final int level;
@@ -363,6 +363,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         camera.position.set(player.getBody().getPosition(), 0);
 
+        tileObjects = worldCreator.getTileObjects();
         waterList = worldCreator.getWaterRegions();
         waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterList);
         waterInteractionManager.add(player);
@@ -419,7 +420,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         waterInteractionManager.update(delta);
 
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+        for (InteractiveTileObject tileObject : tileObjects) {
             tileObject.update(delta);
         }
 
@@ -615,7 +616,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private void unlockGoal() {
         int i = 0;
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+        for (InteractiveTileObject tileObject : tileObjects) {
             if (tileObject instanceof Brick) {
                 Brick brick = (Brick) tileObject;
                 if (brick.isGoalProtector()) {
@@ -743,7 +744,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public int getTotalBeers() {
         int result = 0;
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+        for (InteractiveTileObject tileObject : tileObjects) {
             if (tileObject instanceof ItemBox) {
                 ItemBox box = (ItemBox) tileObject;
                 if (box.isBeerBox()) {
@@ -805,7 +806,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Coin coin : coins) {
             coin.write(out);
         }
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+        for (InteractiveTileObject tileObject : tileObjects) {
             tileObject.write(out);
         }
         for (Platform platform : platforms) {
@@ -870,7 +871,7 @@ public class GameController  implements BinarySerializable, Disposable {
             coin.read(in);
             coins.add(coin);
         }
-        for (InteractiveTileObject tileObject : WorldCreator.getTileObjects()) {
+        for (InteractiveTileObject tileObject : tileObjects) {
             tileObject.read(in);
         }
         for (Platform platform : platforms) {
@@ -926,6 +927,10 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public Array<WorldCreator.WaterParams> getWaterList() {
         return waterList;
+    }
+
+    public Array<InteractiveTileObject> getTileObjects() {
+        return tileObjects;
     }
 
     public Array<ParticleEffectPool.PooledEffect> getActiveSplashEffects() {

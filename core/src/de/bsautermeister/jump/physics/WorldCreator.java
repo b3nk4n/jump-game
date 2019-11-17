@@ -17,8 +17,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.models.PlatformBouncer;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
@@ -61,7 +61,7 @@ public class WorldCreator {
     private TextureAtlas atlas;
     private GameCallbacks callbacks;
 
-    private static Array<InteractiveTileObject> tileObjects = new Array<InteractiveTileObject>();
+    private Array<InteractiveTileObject> tileObjects = new Array<InteractiveTileObject>();
 
     public WorldCreator(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas) {
         this.callbacks = callbacks;
@@ -255,7 +255,7 @@ public class WorldCreator {
         return bouncerRegions;
     }
 
-    public static Array<InteractiveTileObject> getTileObjects() {
+    public Array<InteractiveTileObject> getTileObjects() {
         return tileObjects;
     }
 
