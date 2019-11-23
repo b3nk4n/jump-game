@@ -41,13 +41,12 @@ public class Goomba extends Enemy implements Drownable {
 
     public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY, boolean rightDirection) {
-        super(callbacks, world, posX, posY);
+        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         walkAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.GOOMBA), Animation.PlayMode.LOOP);
         stompedTexture = atlas.findRegion(RegionNames.GOOMBA_STOMP);
 
         state = new GameObjectState<State>(State.WALKING);
         speed = rightDirection ? SPEED : -SPEED;
-        setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
     }
 
     @Override
@@ -100,7 +99,7 @@ public class Goomba extends Enemy implements Drownable {
     @Override
     protected Body defineBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY());
+        bodyDef.position.set(getX() + getWidth() / 2, getY() + getHeight() / 2);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = getWorld().createBody(bodyDef);
 

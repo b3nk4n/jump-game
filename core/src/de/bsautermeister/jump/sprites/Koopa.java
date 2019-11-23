@@ -46,7 +46,7 @@ public class Koopa extends Enemy implements Drownable {
 
     public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
                  float posX, float posY, boolean rightDirection) {
-        super(callbacks, world, posX, posY);
+        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.KOOPA), Animation.PlayMode.LOOP);
         shellAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.KOOPA_MOVING), Animation.PlayMode.LOOP);
 
@@ -76,8 +76,6 @@ public class Koopa extends Enemy implements Drownable {
             }
         });
         speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
-
-        setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
     }
 
     @Override
@@ -133,7 +131,7 @@ public class Koopa extends Enemy implements Drownable {
     @Override
     protected Body defineBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY());
+        bodyDef.position.set(getX() + getWidth() / 2, getY() + getHeight() / 2);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = getWorld().createBody(bodyDef);
 

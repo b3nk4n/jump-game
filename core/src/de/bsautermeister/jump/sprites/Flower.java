@@ -44,9 +44,8 @@ public class Flower extends Enemy {
 
     public Flower(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   float posX, float posY) {
-        super(callbacks, world, posX, posY);
+        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         animation = new Animation(0.33f, atlas.findRegions(RegionNames.FLOWER), Animation.PlayMode.LOOP);
-        setBounds(getX(), getY(), Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         state = new GameObjectState<State>(State.HIDDEN);
         hiddenTargetY = getBody().getPosition().y - hiddenOffsetY;
         waitingTargetY = getBody().getPosition().y + getHeight();
@@ -91,7 +90,7 @@ public class Flower extends Enemy {
     @Override
     protected Body defineBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX() + Cfg.BLOCK_SIZE / 2 / Cfg.PPM, getY() + Cfg.BLOCK_SIZE * 0.75f / Cfg.PPM);
+        bodyDef.position.set(getX() + getWidth() / 2, getY() + getHeight() / 2);
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         Body body = getWorld().createBody(bodyDef);
 

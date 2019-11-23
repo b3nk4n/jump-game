@@ -38,11 +38,11 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
 
     private MarkedAction destroyBody;
 
-    public Enemy(GameCallbacks callbacks, World world, float posX, float posY) {
+    public Enemy(GameCallbacks callbacks, World world, float posX, float posY, float width, float height) {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
-        setPosition(posX, posY);
+        setBounds(posX, posY, width, height);
         this.body = defineBody();
         destroyBody = new MarkedAction();
         setActive(false); // sleep and activate as soon as player gets close
