@@ -5,9 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
-import de.bsautermeister.jump.screens.LoadingScreen;
+import de.bsautermeister.jump.screens.loading.LoadingScreen;
 
 public class JumpGame extends GameApp {
     private SpriteBatch batch;

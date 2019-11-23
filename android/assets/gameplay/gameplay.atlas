@@ -18,6 +18,13 @@ beer_liquid
   orig: 64, 100
   offset: 0, 0
   index: -1
+bg-overlay
+  rotate: false
+  xy: 320, 43
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
 big_player_crouch
   rotate: false
   xy: 140, 36

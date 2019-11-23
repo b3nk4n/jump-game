@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,6 +20,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -32,6 +35,7 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
+import de.bsautermeister.jump.screens.menu.PauseOverlay;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
@@ -71,6 +75,10 @@ public class GameRenderer implements Disposable {
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final Box2DDebugRenderer box2DDebugRenderer;
 
+    private Stage overlayStage;
+    private PauseOverlay pauseOverlay;
+    private final TextureRegion backgroundOverlayRegion;
+
     public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
                         GameController controller) {
         this.batch = batch;
@@ -102,8 +110,18 @@ public class GameRenderer implements Disposable {
 
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
-        this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
-        this.box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
+        mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
+        box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
+
+        backgroundOverlayRegion = atlas.findRegion(RegionNames.BACKGROUND_OVERLAY);
+
+        Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
+        pauseOverlay = new PauseOverlay(skin, controller.getPauseCallback());
+        overlayStage = new Stage(hudViewport, batch);
+        overlayStage.addActor(pauseOverlay);
+        overlayStage.setDebugAll(Cfg.DEBUG_MODE);
+
+        Gdx.input.setInputProcessor(overlayStage);
     }
 
     public void render(float delta) {
@@ -272,16 +290,30 @@ public class GameRenderer implements Disposable {
         hud.getStage().draw();
 
         LinkedBlockingQueue<TextMessage> textMessages = controller.getTextMessages();
-        if (textMessages.isEmpty()) {
-            return;
+        if (!textMessages.isEmpty()) {
+            batch.begin();
+            for (TextMessage textMessage : textMessages) {
+                layout.setText(font, textMessage.getMessage());
+                font.draw(batch, textMessage.getMessage(), textMessage.getX() * Cfg.PPM - layout.width / 2, textMessage.getY() * Cfg.PPM - layout.height / 2);
+            }
+            batch.end();
         }
 
-        batch.begin();
-        for (TextMessage textMessage : textMessages) {
-            layout.setText(font, textMessage.getMessage());
-            font.draw(batch, textMessage.getMessage(), textMessage.getX() * Cfg.PPM - layout.width / 2, textMessage.getY() * Cfg.PPM - layout.height / 2);
+        if (controller.getState().isPaused()) {
+            if (!pauseOverlay.isVisible()) {
+                pauseOverlay.setVisible(true);
+            } else {
+                // workaround: do not act during the first frame, otherwise button event which triggered
+                // this overlay to show are processed in the overlay, which could immediately close it again
+                overlayStage.act();
+            }
+            batch.begin();
+            batch.draw(backgroundOverlayRegion, 0f, 0f, Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
+            batch.end();
+            overlayStage.draw();
+        } else {
+            pauseOverlay.setVisible(false);
         }
-        batch.end();
     }
 
     public void renderEffects(SpriteBatch batch) {
@@ -306,5 +338,9 @@ public class GameRenderer implements Disposable {
         frameBuffer.dispose();
         font.dispose();
         hud.dispose();
+    }
+
+    public InputProcessor getInputProcessor() {
+        return overlayStage;
     }
 }

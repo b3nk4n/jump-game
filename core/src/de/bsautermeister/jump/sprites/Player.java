@@ -194,7 +194,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void update(float delta) {
         state.upate(delta);
 
-        if (!levelCompleted) {
+        if (!levelCompleted && !isDead()) {
             timeToLive -= delta;
         }
 

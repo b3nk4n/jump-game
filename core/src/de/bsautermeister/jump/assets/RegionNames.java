@@ -42,6 +42,7 @@ public interface RegionNames {
     String BEER_LIQUID = "beer_liquid";
     String PREZEL = "prezel";
     String PREZEL_BULLET = "prezel_bullet";
+    String BACKGROUND_OVERLAY = "bg-overlay";
 
     String LOADING_LOGO = "title";
     String LOADING_ANIMATION = "loading";

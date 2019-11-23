@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.screens;
+package de.bsautermeister.jump.screens.loading;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -17,6 +17,8 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.screens.menu.MenuScreen;
+import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class LoadingScreen extends ScreenBase {

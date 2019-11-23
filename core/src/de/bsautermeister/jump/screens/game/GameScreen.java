@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens.game;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -8,6 +9,7 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
+import de.bsautermeister.jump.screens.menu.MenuScreen;
 
 public class GameScreen extends ScreenBase {
 
@@ -31,6 +33,11 @@ public class GameScreen extends ScreenBase {
         @Override
         public void fail() {
             setScreen(new GameOverScreen(getGame()));
+        }
+
+        @Override
+        public void backToMenu() {
+            setScreen(new MenuScreen(getGame()));
         }
     };
 
@@ -84,5 +91,10 @@ public class GameScreen extends ScreenBase {
     public void dispose() {
         renderer.dispose();
         controller.dispose();
+    }
+
+    @Override
+    public InputProcessor getInputProcessor() {
+        return renderer.getInputProcessor();
     }
 }

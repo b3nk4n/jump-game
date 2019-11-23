@@ -13,7 +13,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
-import de.bsautermeister.jump.screens.SelectLevelScreen;
+import de.bsautermeister.jump.screens.menu.SelectLevelScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameOverScreen extends ScreenBase {

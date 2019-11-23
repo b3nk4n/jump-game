@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.screens;
+package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
@@ -18,6 +18,7 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
+import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.game.GameScreen;
 import de.bsautermeister.jump.screens.transition.ScreenTransitions;
 import de.bsautermeister.jump.utils.GdxUtils;

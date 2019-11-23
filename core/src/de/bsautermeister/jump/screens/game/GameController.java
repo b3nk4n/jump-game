@@ -36,6 +36,8 @@ import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.screens.menu.PauseOverlay;
+import de.bsautermeister.jump.screens.menu.PauseOverlay.Callback;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Beer;
@@ -62,6 +64,9 @@ import de.bsautermeister.jump.text.TextMessage;
 public class GameController  implements BinarySerializable, Disposable {
 
     private static final Logger LOG = new Logger(GameController.class.getSimpleName(), Cfg.LOG_LEVEL);
+
+    private GameState stateBeforePause = GameState.UNDEFINED;
+    private GameState state = GameState.PLAYING;
 
     private final MusicPlayer musicPlayer;
     private final GameSoundEffects soundEffects;
@@ -107,6 +112,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
 
     private final KillSequelManager killSequelManager;
+
+    private boolean gameIsCanced;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -310,6 +317,22 @@ public class GameController  implements BinarySerializable, Disposable {
         }
     };
 
+    private final Callback pauseCallback = new PauseOverlay.Callback() {
+        @Override
+        public void quit() {
+            LOG.debug("QUIT pressed");
+            musicPlayer.setVolume(0f, false);
+            gameIsCanced = true;
+            screenCallbacks.backToMenu();
+        }
+
+        @Override
+        public void resume() {
+            LOG.debug("RESUME pressed");
+            state = GameState.PLAYING;
+        }
+    };
+
     private final GameScreenCallbacks screenCallbacks;
 
     public GameController(GameScreenCallbacks screenCallbacks, MusicPlayer musicPlayer, GameSoundEffects soundEffects,
@@ -382,6 +405,9 @@ public class GameController  implements BinarySerializable, Disposable {
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
         musicPlayer.play();
+
+        // enable phones BACK button
+        Gdx.input.setCatchBackKey(true);
     }
 
 
@@ -398,6 +424,10 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     public void update(float delta) {
+        if (state.isPaused()) {
+            return;
+        }
+
         gameTime += delta;
         world.step(1 / 60f, 8, 3);
 
@@ -605,6 +635,15 @@ public class GameController  implements BinarySerializable, Disposable {
         }
     }
 
+    private void pauseGame() {
+        if (state == GameState.PAUSED) {
+            return;
+        }
+
+        stateBeforePause = state;
+        state = GameState.PAUSED;
+    }
+
     private void completeLevel() {
         if (!levelCompleted) {
             LOG.debug("Goal reached");
@@ -675,6 +714,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private Vector2 startSteerPosition = new Vector2(0, 0);
 
     private void handleInput() {
+        checkPauseInput();
+
         if (player.getState() == Player.State.DEAD) {
             return;
         }
@@ -737,6 +778,12 @@ public class GameController  implements BinarySerializable, Disposable {
         player.control(upPressed, downPressed, leftPressed, rightPressed, firePressed);
     }
 
+    private void checkPauseInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            pauseGame();
+        }
+    }
+
     private boolean isGameOver() {
         return player.getState() == Player.State.DEAD && player.getStateTimer() > 3f;
     }
@@ -764,8 +811,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public void save() {
         // don't do anything in case player is dead, kind of dead or level is finished
-        if (player.isDead() || player.isDrowning() || levelCompleted) {
+        if (player.isDead() || player.isDrowning() || levelCompleted || gameIsCanced) {
             LOG.error("Did NOT save game state");
+            JumpGame.deleteSavedData();
             return;
         }
 
@@ -775,11 +823,18 @@ public class GameController  implements BinarySerializable, Disposable {
         if (!BinarySerializer.write(this, fileHandle.write(false))) {
             LOG.error("Could not save game state");
         }
-        LOG.error("Saved game state");
+        LOG.debug("Saved game state");
     }
 
     @Override
     public void write(DataOutputStream out) throws IOException {
+        if (state.isPaused()) {
+            // don't store the paused state, because otherwise the game resumes in the pause menu
+            out.writeUTF(stateBeforePause.name());
+        } else {
+            out.writeUTF(state.name());
+        }
+        out.writeBoolean(gameIsCanced);
         out.writeInt(score);
         out.writeInt(collectedBeers);
         out.writeBoolean(levelCompleted);
@@ -815,6 +870,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     @Override
     public void read(DataInputStream in) throws IOException {
+        state = Enum.valueOf(GameState.class, in.readUTF());
+        gameIsCanced = in.readBoolean();
         score = in.readInt();
         collectedBeers = in.readInt();
         levelCompleted = in.readBoolean();
@@ -954,5 +1011,13 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public TiledMap getMap() {
         return map;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public Callback getPauseCallback() {
+        return pauseCallback;
     }
 }

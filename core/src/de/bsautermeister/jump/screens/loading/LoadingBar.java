@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.screens;
+package de.bsautermeister.jump.screens.loading;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
