@@ -1,5 +1,7 @@
 package de.bsautermeister.jump.screens.menu;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -42,6 +44,9 @@ public class SelectLevelScreen extends ScreenBase {
     @Override
     public void show() {
         initialize();
+
+        // enable phones BACK button
+        Gdx.input.setCatchBackKey(true);
     }
 
     private void initialize() {
@@ -110,8 +115,16 @@ public class SelectLevelScreen extends ScreenBase {
     public void render(float delta) {
         GdxUtils.clearScreen(Color.BLACK);
 
+        handleInput();
+
         stage.act();
         stage.draw();
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            setScreen(new MenuScreen(getGame()));
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -35,6 +36,9 @@ public class MenuScreen extends ScreenBase {
     @Override
     public void show() {
         initialize();
+
+        // use default BACK button handling (exit game)
+        Gdx.input.setCatchBackKey(false);
     }
 
     private void initialize() {

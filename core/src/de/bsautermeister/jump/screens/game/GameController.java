@@ -405,9 +405,6 @@ public class GameController  implements BinarySerializable, Disposable {
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
         musicPlayer.play();
-
-        // enable phones BACK button
-        Gdx.input.setCatchBackKey(true);
     }
 
 
@@ -757,8 +754,7 @@ public class GameController  implements BinarySerializable, Disposable {
                 } else if (x > 0.2 && x < 0.45) {
                     rightPressed = true;
                 }
-
-            } else {
+            } else if (x < 0.995) { // save last 0.5% for Android immersive mode hidden soft buttons
                 // right region: actions
                 if (Gdx.input.justTouched()) {
                     if (y >= 0.5) {
