@@ -100,6 +100,7 @@ public class Spiky extends Enemy implements Drownable {
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.OBJECT |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
@@ -140,21 +141,27 @@ public class Spiky extends Enemy implements Drownable {
 
     @Override
     public void onEnemyHit(Enemy enemy) {
+        boolean updateDirection = false;
         if (enemy instanceof Koopa) {
             Koopa otherKoopa = (Koopa) enemy;
             if (otherKoopa.getState() == Koopa.State.MOVING_SHELL) {
                 kill(true);
             } else {
-                reverseDirection();
+                updateDirection = true;
             }
         } else {
-            reverseDirection();
+            updateDirection = true;
+        }
+
+        if (updateDirection) {
+            runAwayFrom(enemy);
+            getCallbacks().hitWall(this);
         }
     }
 
-    public void reverseDirection() {
-        speed = -speed;
-        getCallbacks().hitWall(this);
+    private void runAwayFrom(Enemy otherEnemy) {
+        speed = (getBody().getPosition().x < otherEnemy.getBody().getPosition().x)
+                ? -SPEED_VALUE : SPEED_VALUE;
     }
 
     public void changeDirectionBySideSensorTag(String sideSensorTag) {

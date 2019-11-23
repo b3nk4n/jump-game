@@ -109,6 +109,7 @@ public class Goomba extends Enemy implements Drownable {
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.OBJECT |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
@@ -173,12 +174,13 @@ public class Goomba extends Enemy implements Drownable {
                 return;
             }
         }
-        reverseDirection();
+        runAwayFrom(enemy);
+        getCallbacks().hitWall(this);
     }
 
-    public void reverseDirection() { // TODO remove this one somehow, because side-sensor is more precise
-        speed = -speed;
-        getCallbacks().hitWall(this);
+    private void runAwayFrom(Enemy otherEnemy) {
+        speed = (getBody().getPosition().x < otherEnemy.getBody().getPosition().x)
+                ? -SPEED : SPEED;
     }
 
     public void changeDirectionBySideSensorTag(String sideSensorTag) {

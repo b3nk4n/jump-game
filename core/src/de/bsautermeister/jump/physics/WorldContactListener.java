@@ -13,8 +13,8 @@ import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Koopa;
-import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Spiky;
 
 public class WorldContactListener implements ContactListener {
@@ -38,7 +38,7 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.ITEM_BOX | Bits.BRICK);
                 tileObject.onHeadHit(player);
                 break;
-            case Bits.ENEMY_HEAD | Bits.PLAYER: // TODO: check, if player is landing very fast, he could also touch the body instead of thus the head, and die
+            case Bits.ENEMY_HEAD | Bits.PLAYER:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
                 if (player.getBody().getLinearVelocity().y < 0) {

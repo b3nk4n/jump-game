@@ -140,6 +140,7 @@ public class Koopa extends Enemy implements Drownable {
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.OBJECT |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
@@ -209,6 +210,7 @@ public class Koopa extends Enemy implements Drownable {
 
     @Override
     public void onEnemyHit(Enemy enemy) {
+        boolean updateDirection = false;
         if (enemy instanceof Koopa) {
             Koopa otherKoopa = (Koopa) enemy;
             if (!state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.MOVING_SHELL) {
@@ -216,16 +218,21 @@ public class Koopa extends Enemy implements Drownable {
             } else if(state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.WALKING) {
                 return;
             } else {
-                reverseDirection();
+                updateDirection = true;
             }
         } else if (!state.is(State.MOVING_SHELL)) {
-            reverseDirection();
+            updateDirection = true;
+        }
+
+        if (updateDirection) {
+            runAwayFrom(enemy);
+            getCallbacks().hitWall(this);
         }
     }
 
-    public void reverseDirection() {
-        speed = -speed;
-        getCallbacks().hitWall(this);
+    private void runAwayFrom(Enemy otherEnemy) {
+        speed = (getBody().getPosition().x < otherEnemy.getBody().getPosition().x)
+                ? -SPEED_VALUE : SPEED_VALUE;
     }
 
     public void changeDirectionBySideSensorTag(String sideSensorTag) {
