@@ -14,14 +14,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -35,6 +34,7 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.scenes.Hud;
+import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Coin;
@@ -53,7 +53,6 @@ public class GameRenderer implements Disposable {
     private final AssetManager assetManager;
     private final TextureAtlas atlas;
     private final GameController controller;
-    private final World world;
     private final OrthographicCamera camera;
     private final OrthographicCamera backgroundParallaxCamera;
     private final Viewport viewport;
@@ -61,7 +60,7 @@ public class GameRenderer implements Disposable {
     private final Viewport hudViewport;
     private final Hud hud;
 
-    private FrameBuffer frameBuffer;
+    private final FrameBuffer frameBuffer;
 
     private final ShaderProgram waterShader;
     private final TextureRegion waterTexture;
@@ -71,12 +70,12 @@ public class GameRenderer implements Disposable {
 
     private final BitmapFont font;
 
-    private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final Box2DDebugRenderer box2DDebugRenderer;
 
-    private Stage overlayStage;
-    private PauseOverlay pauseOverlay;
+    private final Stage overlayStage;
+    private final PauseOverlay pauseOverlay;
+    private final GameOverOverlay gameOverOverlay;
     private final TextureRegion backgroundOverlayRegion;
 
     public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
@@ -84,12 +83,10 @@ public class GameRenderer implements Disposable {
         this.batch = batch;
         this.assetManager = assetManager;
         this.atlas = atlas;
-        this.map = controller.getMap();
         this.controller = controller;
         this.camera = controller.getCamera();
         this.backgroundParallaxCamera = new OrthographicCamera();
         this.viewport = controller.getViewport();
-        this.world = controller.getWorld();
 
         float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         frameBuffer = new FrameBuffer(
@@ -110,16 +107,18 @@ public class GameRenderer implements Disposable {
 
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
-        mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
+        mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
         box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
 
         backgroundOverlayRegion = atlas.findRegion(RegionNames.BACKGROUND_OVERLAY);
 
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
-        pauseOverlay = new PauseOverlay(skin, controller.getPauseCallback());
         overlayStage = new Stage(hudViewport, batch);
-        overlayStage.addActor(pauseOverlay);
         overlayStage.setDebugAll(Cfg.DEBUG_MODE);
+        pauseOverlay = new PauseOverlay(skin, controller.getPauseCallback());
+        overlayStage.addActor(pauseOverlay);
+        gameOverOverlay = new GameOverOverlay(skin, controller.getGameOverCallback());
+        overlayStage.addActor(gameOverOverlay);
 
         Gdx.input.setInputProcessor(overlayStage);
     }
@@ -129,6 +128,8 @@ public class GameRenderer implements Disposable {
         Player player = controller.getPlayer();
         int score = controller.getScore();
         int collectedBeers = controller.getCollectedBeers();
+
+        mapRenderer.setMap(controller.getMap());
 
         GdxUtils.clearScreen(Color.BLACK);
         viewport.apply();
@@ -188,7 +189,7 @@ public class GameRenderer implements Disposable {
             camera.viewportHeight = camera.viewportHeight * zoomY;
             camera.update();
 
-            box2DDebugRenderer.render(world, camera.combined);
+            box2DDebugRenderer.render(controller.getWorld(), camera.combined);
 
             camera.viewportWidth = camera.viewportWidth / zoomX;
             camera.viewportHeight = camera.viewportHeight / zoomY;
@@ -201,13 +202,13 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_COLOR_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BACKGROUND_COLOR_KEY));
 
         renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BACKGROUND_PARALLAX_DISTANT_GRAPHICS_KEY, 0.5f);
         renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BACKGROUND_PARALLAX_CLOSE_GRAPHICS_KEY, 0.75f);
 
         mapRenderer.setView(camera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
 
         Array<BoxCoin> activeBoxCoins = controller.getActiveBoxCoins();
         for (BoxCoin boxCoin : activeBoxCoins) {
@@ -223,7 +224,7 @@ public class GameRenderer implements Disposable {
                 0);
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(layer));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(layer));
     }
 
     private void renderForeground(SpriteBatch batch) {
@@ -247,7 +248,7 @@ public class GameRenderer implements Disposable {
         }
 
         mapRenderer.setView(camera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.GRAPHICS_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.GRAPHICS_KEY));
 
         Array<Platform> platforms = controller.getPlatforms();
         for (Platform platform : platforms) {
@@ -299,9 +300,14 @@ public class GameRenderer implements Disposable {
             batch.end();
         }
 
-        if (controller.getState().isPaused()) {
-            if (!pauseOverlay.isVisible()) {
-                pauseOverlay.setVisible(true);
+        renderHudOverlay(pauseOverlay, controller.getState().isPaused());
+        renderHudOverlay(gameOverOverlay, controller.getState().isGameOver());
+    }
+
+    private void renderHudOverlay(Table overlay, boolean active) {
+        if (active) {
+            if (!overlay.isVisible()) {
+                overlay.setVisible(true);
             } else {
                 // workaround: do not act during the first frame, otherwise button event which triggered
                 // this overlay to show are processed in the overlay, which could immediately close it again
@@ -312,7 +318,7 @@ public class GameRenderer implements Disposable {
             batch.end();
             overlayStage.draw();
         } else {
-            pauseOverlay.setVisible(false);
+            overlay.setVisible(false);
         }
     }
 

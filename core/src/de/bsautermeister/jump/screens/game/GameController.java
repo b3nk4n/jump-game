@@ -36,8 +36,8 @@ import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
-import de.bsautermeister.jump.screens.menu.PauseOverlay.Callback;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.sprites.Beer;
@@ -65,8 +65,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private static final Logger LOG = new Logger(GameController.class.getSimpleName(), Cfg.LOG_LEVEL);
 
-    private GameState stateBeforePause = GameState.UNDEFINED;
-    private GameState state = GameState.PLAYING;
+    private GameState stateBeforePause;
+    private GameState state;
 
     private final MusicPlayer musicPlayer;
     private final GameSoundEffects soundEffects;
@@ -76,6 +76,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private OrthographicCamera camera;
     private Viewport viewport;
 
+    private final TmxMapLoader mapLoader;
     private TiledMap map;
     private float mapPixelWidth;
     private float mapPixelHeight;
@@ -109,7 +110,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private final int level;
     private final FileHandle gameToResume;
 
-    private LinkedBlockingQueue<TextMessage> textMessages = new LinkedBlockingQueue<TextMessage>();
+    private final LinkedBlockingQueue<TextMessage> textMessages;
 
     private final KillSequelManager killSequelManager;
 
@@ -295,7 +296,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void gameOver() {
+        public void playerDied() {
             musicPlayer.stop();
             soundEffects.playerDieSound.play();
         }
@@ -317,19 +318,36 @@ public class GameController  implements BinarySerializable, Disposable {
         }
     };
 
-    private final Callback pauseCallback = new PauseOverlay.Callback() {
+    private boolean markBackToMenu;
+    private boolean markReset;
+
+    private final PauseOverlay.Callback pauseCallback = new PauseOverlay.Callback() {
         @Override
         public void quit() {
             LOG.debug("QUIT pressed");
             musicPlayer.setVolume(0f, false);
             gameIsCanced = true;
-            screenCallbacks.backToMenu();
+            markBackToMenu = true;
         }
 
         @Override
         public void resume() {
             LOG.debug("RESUME pressed");
             state = GameState.PLAYING;
+        }
+    };
+
+    private final GameOverOverlay.Callback gameOverCallback = new GameOverOverlay.Callback() {
+        @Override
+        public void quit() {
+            LOG.debug("QUIT pressed");
+            markBackToMenu = true;
+        }
+
+        @Override
+        public void restart() {
+            LOG.debug("RESTART pressed");
+            markReset = true;
         }
     };
 
@@ -343,9 +361,7 @@ public class GameController  implements BinarySerializable, Disposable {
         this.soundEffects = soundEffects;
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
-        this.world = new World(new Vector2(0,-9.81f), true);
-        this.world.setContactListener(new WorldContactListener());
-
+        mapLoader = new TmxMapLoader();
         enemies = new ObjectMap<String, Enemy>();
         platforms = new Array<Platform>();
         coins = new Array<Coin>();
@@ -355,12 +371,32 @@ public class GameController  implements BinarySerializable, Disposable {
 
         activeBoxCoins = new Array<BoxCoin>();
 
+        textMessages = new LinkedBlockingQueue<TextMessage>();
+
         killSequelManager = new KillSequelManager();
 
         this.musicPlayer = musicPlayer;
 
         camera = new OrthographicCamera();
         viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
+
+        waterInteractionManager = new WaterInteractionManager(atlas, callbacks);
+
+        reset();
+    }
+
+    private void reset() {
+        stateBeforePause = GameState.UNDEFINED;
+        state = GameState.PLAYING;
+
+        if (world != null) {
+            world.dispose();
+        }
+
+        this.world = new World(new Vector2(0,-9.81f), true);
+        this.world.setContactListener(new WorldContactListener());
+
+        killSequelManager.reset();
 
         score = 0;
         collectedBeers = 0;
@@ -369,6 +405,14 @@ public class GameController  implements BinarySerializable, Disposable {
 
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
         worldCreator.buildFromMap();
+
+        enemies.clear();
+        platforms.clear();
+        coins.clear();
+        items.clear();
+        itemsToSpawn.clear();
+        activeBoxCoins.clear();
+        textMessages.clear();
 
         start = worldCreator.getStart();
         goal = worldCreator.getGoal();
@@ -388,7 +432,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
         tileObjects = worldCreator.getTileObjects();
         waterList = worldCreator.getWaterRegions();
-        waterInteractionManager = new WaterInteractionManager(atlas, callbacks, waterList);
+        waterInteractionManager.reset();
+        waterInteractionManager.setWaterRegions(waterList);
+
         waterInteractionManager.add(player);
         for (Enemy enemy : enemies.values()) {
             if (enemy instanceof Drownable) {
@@ -407,11 +453,14 @@ public class GameController  implements BinarySerializable, Disposable {
         musicPlayer.play();
     }
 
-
     private void initMap(int level) {
         LOG.debug("Init map level: " + level);
 
-        this.map = new TmxMapLoader().load(String.format("maps/level%02d.tmx", level));
+        if (map != null) {
+            map.dispose();
+        }
+
+        this.map = mapLoader.load(String.format("maps/level%02d.tmx", level));
         float mapWidth = map.getProperties().get("width", Integer.class);
         float mapHeight = map.getProperties().get("height", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
@@ -421,7 +470,8 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     public void update(float delta) {
-        if (state.isPaused()) {
+        if (state.isPaused() || state.isGameOver()) {
+            postUpdate();
             return;
         }
 
@@ -486,6 +536,10 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
+        if (player.getState() == Player.State.DEAD && player.getStateTimer() > 3f) {
+            state = GameState.GAME_OVER;
+        }
+
         postUpdate();
     }
 
@@ -547,8 +601,14 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
-        if (isGameOver()) {
-            screenCallbacks.fail();
+        if (markReset) {
+            markReset = false;
+            reset();
+        }
+
+        if (markBackToMenu) {
+            markBackToMenu = false;
+            screenCallbacks.backToMenu();
         }
     }
 
@@ -780,10 +840,6 @@ public class GameController  implements BinarySerializable, Disposable {
         }
     }
 
-    private boolean isGameOver() {
-        return player.getState() == Player.State.DEAD && player.getStateTimer() > 3f;
-    }
-
     public int getTotalBeers() {
         int result = 0;
         for (InteractiveTileObject tileObject : tileObjects) {
@@ -1013,7 +1069,11 @@ public class GameController  implements BinarySerializable, Disposable {
         return state;
     }
 
-    public Callback getPauseCallback() {
+    public PauseOverlay.Callback getPauseCallback() {
         return pauseCallback;
+    }
+
+    public GameOverOverlay.Callback getGameOverCallback() {
+        return gameOverCallback;
     }
 }

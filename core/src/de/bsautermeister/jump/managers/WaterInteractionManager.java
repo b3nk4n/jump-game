@@ -18,15 +18,21 @@ public class WaterInteractionManager {
     private Array<ParticleEffectPool.PooledEffect> activeSplashEffects = new Array<ParticleEffectPool.PooledEffect>();
 
     private final GameCallbacks callbacks;
-    private final Array<WorldCreator.WaterParams> waterRegions;
     private final Array<Drownable> drownables = new Array<Drownable>();
+    private final Array<WorldCreator.WaterParams> waterRegions = new Array<WorldCreator.WaterParams>();
 
-    public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks, Array<WorldCreator.WaterParams> waterRegions) {
+    public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks) {
         waterSplashEffectPool = createEffectPool(AssetPaths.Pfx.SPLASH, atlas);
         beerSplashEffectPool = createEffectPool(AssetPaths.Pfx.BEER_SPLASH, atlas);
 
         this.callbacks = callbacks;
-        this.waterRegions = waterRegions;
+
+        reset();
+    }
+
+    public void reset() {
+        drownables.clear();
+        waterRegions.clear();
     }
 
     private ParticleEffectPool createEffectPool(String effectPath , TextureAtlas atlas) {
@@ -53,6 +59,10 @@ public class WaterInteractionManager {
                 effect.free();
             }
         }
+    }
+
+    public void setWaterRegions(Array<WorldCreator.WaterParams> waterRegions) {
+        this.waterRegions.addAll(waterRegions);
     }
 
     public void add(Drownable drownable) {

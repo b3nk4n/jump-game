@@ -32,11 +32,6 @@ public class GameScreen extends ScreenBase {
         }
 
         @Override
-        public void fail() {
-            setScreen(new GameOverScreen(getGame()));
-        }
-
-        @Override
         public void backToMenu() {
             setScreen(new MenuScreen(getGame()));
         }

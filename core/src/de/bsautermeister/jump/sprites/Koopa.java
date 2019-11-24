@@ -76,6 +76,7 @@ public class Koopa extends Enemy implements Drownable {
             }
         });
         speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
+        setRegion(getFrame());
     }
 
     @Override

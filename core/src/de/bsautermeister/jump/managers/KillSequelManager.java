@@ -12,7 +12,7 @@ public class KillSequelManager implements BinarySerializable {
     private final int MAX_KILL_SEQUEL = 5;
     private final String[] scoreStrings = new String[MAX_KILL_SEQUEL];
 
-    private final GameTimer killSequelTimer = new GameTimer(1.25f);
+    private final GameTimer killSequelTimer;
     private int killSequelCount;
 
     public KillSequelManager() {
@@ -20,6 +20,7 @@ public class KillSequelManager implements BinarySerializable {
             scoreStrings[i] = String.valueOf(calScore(i + 1));
         }
 
+        killSequelTimer = new GameTimer(1.25f);
         killSequelTimer.setCallbacks(new GameTimer.TimerCallbacks() {
             @Override
             public void onStart() {
@@ -30,6 +31,11 @@ public class KillSequelManager implements BinarySerializable {
                 killSequelCount = 0;
             }
         });
+    }
+
+    public void reset() {
+        killSequelCount = 0;
+        killSequelTimer.reset();
     }
 
     public void update(float delta) {

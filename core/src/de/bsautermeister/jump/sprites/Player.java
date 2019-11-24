@@ -657,7 +657,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (state.is(State.DEAD))
             return;
 
-        callbacks.gameOver();
+        callbacks.playerDied();
 
         state.set(State.DEAD);
 

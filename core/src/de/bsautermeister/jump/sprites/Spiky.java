@@ -45,6 +45,7 @@ public class Spiky extends Enemy implements Drownable {
 
         state = new GameObjectState<State>(State.WALKING);
         speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
+        setRegion(getFrame());
     }
 
     @Override

@@ -47,6 +47,7 @@ public class Goomba extends Enemy implements Drownable {
 
         state = new GameObjectState<State>(State.WALKING);
         speed = rightDirection ? SPEED : -SPEED;
+        setRegion(getFrame());
     }
 
     @Override

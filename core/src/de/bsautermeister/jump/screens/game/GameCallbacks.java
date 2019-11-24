@@ -29,5 +29,5 @@ public interface GameCallbacks {
     void hurry();
     void unlockGoalBrick(Brick brick);
     void goalReached();
-    void gameOver();
+    void playerDied();
 }

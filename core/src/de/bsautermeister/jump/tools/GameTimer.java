@@ -12,6 +12,7 @@ public class GameTimer implements BinarySerializable {
     private float value;
     private final float resetValue;
     private TimerCallbacks callbacks;
+    private final boolean initialIsStarted;
     private boolean isStarted;
 
     public GameTimer(float resetValue) {
@@ -20,7 +21,13 @@ public class GameTimer implements BinarySerializable {
 
     public GameTimer(float resetValue, boolean autoStart) {
         this.resetValue = resetValue;
+        this.initialIsStarted = autoStart;
         this.isStarted = autoStart;
+    }
+
+    public void reset() {
+        this.value = resetValue;
+        this.isStarted = initialIsStarted;
     }
 
     public void restart() {
