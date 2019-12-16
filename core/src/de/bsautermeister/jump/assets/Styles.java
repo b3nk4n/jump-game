@@ -2,6 +2,13 @@ package de.bsautermeister.jump.assets;
 
 public interface Styles {
 
+    interface TextButton {
+        String LEVEL_STARS0 = "level_stars0";
+        String LEVEL_STARS1 = "level_stars1";
+        String LEVEL_STARS2 = "level_stars2";
+        String LEVEL_STARS3 = "level_stars3";
+    }
+
     interface Button {
         String PLAY = "play";
         String CONTINUE = "continue";

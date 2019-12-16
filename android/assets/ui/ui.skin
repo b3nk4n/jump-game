@@ -52,6 +52,33 @@
       "down": "arrow_right_down"
     }
   },
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+      "level_stars0": {
+        "up": "level",
+        "down": "level_down",
+        "disabled": "play_disabled",
+        "font": "font24",
+        "fontColor": "black"
+      },
+      "level_stars1": {
+        "up": "level_1star",
+        "down": "level_down",
+        "font": "font24",
+        "fontColor": "black"
+      },
+      "level_stars2": {
+        "up": "level_2stars",
+        "down": "level_down",
+        "font": "font24",
+        "fontColor": "black"
+      },
+      "level_stars3": {
+        "up": "level_3stars",
+        "down": "level_down",
+        "font": "font24",
+        "fontColor": "black"
+      }
+    },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
     "default": {
       "font": "font32",

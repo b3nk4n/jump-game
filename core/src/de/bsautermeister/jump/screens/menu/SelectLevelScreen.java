@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -26,15 +28,12 @@ import de.bsautermeister.jump.screens.transition.ScreenTransitions;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class SelectLevelScreen extends ScreenBase {
-    private final GameStats gameStats;
-
     private final Viewport viewport;
     private final Stage stage;
     private final int page;
 
     public SelectLevelScreen(GameApp game, int page) {
         super(game);
-        this.gameStats = new GameStats();
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
         this.stage.setDebugAll(Cfg.DEBUG_MODE);
@@ -92,19 +91,39 @@ public class SelectLevelScreen extends ScreenBase {
     }
 
     private Button createLevelButton(Skin skin, final int stage, final int level) {
-        int highestUnlockedLevel = gameStats.getHighestFinishedLevel() + 1;
+        int highestUnlockedLevel = GameStats.INSTANCE.getHighestFinishedLevel() + 1;
         final int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
-        Button playButton = new Button(skin, Styles.Button.PLAY);
-        playButton.addListener(new ClickListener() {
+        String styleName = getLevelButtonStyleName(stage, level);
+        TextButton levelButton = new TextButton(stage + "-" + level, skin, styleName);
+        levelButton.getLabel().setAlignment(Align.top);
+        levelButton.getLabelCell().pad(6);
+        levelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 playLevel(absoluteLevel);
             }
         });
-        playButton.setDisabled(absoluteLevel > highestUnlockedLevel);
-        playButton.setTouchable(absoluteLevel > highestUnlockedLevel ?
+        levelButton.setDisabled(absoluteLevel > highestUnlockedLevel);
+        levelButton.setTouchable(absoluteLevel > highestUnlockedLevel ?
                 Touchable.disabled : Touchable.enabled);
-        return playButton;
+        return levelButton;
+    }
+
+    private String getLevelButtonStyleName(int stage, int level) {
+        int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
+        int stars = GameStats.INSTANCE.getLevelStars(absoluteLevel);
+        switch (stars) {
+            case 0:
+                return Styles.TextButton.LEVEL_STARS0;
+            case 1:
+                return Styles.TextButton.LEVEL_STARS1;
+            case 2:
+                return Styles.TextButton.LEVEL_STARS2;
+            case 3:
+                return Styles.TextButton.LEVEL_STARS3;
+            default:
+                throw new IllegalArgumentException("Unsupported number of stars: " + stars);
+        }
     }
 
     private void playLevel(int level) {

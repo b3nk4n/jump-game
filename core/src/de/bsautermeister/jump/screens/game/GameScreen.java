@@ -20,14 +20,14 @@ public class GameScreen extends ScreenBase {
 
     private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
-    private GameStats gameStats = new GameStats();
     private int level;
     private final FileHandle gameToResume;
 
     private final GameScreenCallbacks callbacks = new GameScreenCallbacks() {
         @Override
         public void success(int level) {
-            gameStats.setHighestFinishedLevel(level);
+            GameStats.INSTANCE.updateHighestFinishedLevel(level);
+            GameStats.INSTANCE.updateLevelStars(level, 2); // TODO calculate stars
             setScreen(new GameScreen(getGame(), level + 1));
         }
 
@@ -51,7 +51,7 @@ public class GameScreen extends ScreenBase {
      */
     public GameScreen(GameApp game) {
         super(game);
-        this.level = gameStats.getLastStartedLevel();
+        this.level = GameStats.INSTANCE.getLastStartedLevel();
         this.gameToResume = JumpGame.getSavedDataHandle();
     }
 
