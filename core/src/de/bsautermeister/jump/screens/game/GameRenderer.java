@@ -88,11 +88,12 @@ public class GameRenderer implements Disposable {
         this.backgroundParallaxCamera = new OrthographicCamera();
         this.viewport = controller.getViewport();
 
-        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTileY = Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
         frameBuffer = new FrameBuffer(
                 Pixmap.Format.RGBA8888,
-                (int)(screenPixelPerTile * (Cfg.BLOCKS_X + 4)), // 2 extra block for each left and right
-                (int)(screenPixelPerTile * (Cfg.BLOCKS_Y + 4)), // 2 extra block for each top and bottom
+                (int)(screenPixelPerTileX * (Cfg.BLOCKS_X + 4)), // 2 extra block for each left and right
+                (int)(screenPixelPerTileY * (Cfg.BLOCKS_Y + 4)), // 2 extra block for each top and bottom
                 false);
 
         hudViewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE), (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE));
@@ -158,24 +159,26 @@ public class GameRenderer implements Disposable {
             drunkShader.setUniformf("u_waveLength", 111f, 311f);
             drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
-        float screenPixelPerTile = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+
+        float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTileY = Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
         batch.draw(frameBuffer.getColorBufferTexture(),
                 camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                (int)screenPixelPerTile * 2, (int)screenPixelPerTile * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                (int)screenPixelPerTileX * 2, (int)screenPixelPerTileY * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
         if (player.isStoned()) {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, 0.5f);
-            float offset1 =  screenPixelPerTile * 0.66f * (float)Math.sin(-gameTime) * player.getStonedRatio();
-            float offset2 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getStonedRatio();
-            float offset3 =  screenPixelPerTile * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getStonedRatio();
-            float offset4 =  screenPixelPerTile * 0.66f * (float)Math.cos(gameTime * 0.7f) * player.getStonedRatio();
+            float offsetX1 =  screenPixelPerTileX * 0.66f * (float)Math.sin(-gameTime) * player.getStonedRatio();
+            float offsetY1 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getStonedRatio();
+            float offsetX2 =  screenPixelPerTileX * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getStonedRatio();
+            float offsetY2 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.7f) * player.getStonedRatio();
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTile * 2 + offset1), (int)(screenPixelPerTile * 2 - offset2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                    (int)(screenPixelPerTileX * 2 + offsetX1), (int)(screenPixelPerTileY * 2 - offsetY1), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTile * 2 - offset3), (int)(screenPixelPerTile * 2 + offset4), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                    (int)(screenPixelPerTileX * 2 - offsetX2), (int)(screenPixelPerTileY * 2 + offsetY2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
             batch.setColor(c);
         }
 
