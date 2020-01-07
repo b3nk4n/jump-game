@@ -82,6 +82,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private Animation<TextureRegion> smallPlayerWalk;
     private TextureRegion smallPlayerJump;
     private TextureRegion smallPlayerDrown;
+    private TextureRegion smallPlayerVictory;
 
     private TextureRegion bigPlayerStand;
     private TextureRegion bigPlayerJump;
@@ -89,6 +90,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private Animation<TextureRegion> bigPlayerWalk;
     private TextureRegion bigPlayerCrouch;
     private TextureRegion bigPlayerDrown;
+    private TextureRegion bigPlayerVictory;
 
     private TextureRegion bigPlayerOnFireStand;
     private TextureRegion bigPlayerOnFireJump;
@@ -96,6 +98,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private Animation<TextureRegion> bigPlayerOnFireWalk;
     private TextureRegion bigPlayerOnFireCrouch;
     private TextureRegion bigPlayerOnFireDrown;
+    private TextureRegion bigPlayerOnFireVictory;
 
     ParticleEffect slideEffect = new ParticleEffect();
 
@@ -173,6 +176,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         smallPlayerJump = atlas.findRegion(RegionNames.SMALL_PLAYER_JUMP);
         smallPlayerDrown = atlas.findRegion(RegionNames.SMALL_PLAYER_DROWN);
         smallPlayerDead = atlas.findRegion(RegionNames.SMALL_PLAYER_DEAD);
+        smallPlayerVictory = atlas.findRegion(RegionNames.SMALL_PLAYER_TURN);
 
         bigPlayerStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND);
         bigPlayerWalk = new Animation<TextureRegion>(0.1f,
@@ -181,6 +185,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         bigPlayerJump = atlas.findRegion(RegionNames.BIG_PLAYER_JUMP);
         bigPlayerCrouch = atlas.findRegion(RegionNames.BIG_PLAYER_CROUCH);
         bigPlayerDrown = atlas.findRegion(RegionNames.BIG_PLAYER_DROWN);
+        bigPlayerVictory = atlas.findRegion(RegionNames.BIG_PLAYER_TURN);
 
         bigPlayerOnFireStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND_ON_FIRE);
         bigPlayerOnFireWalk = new Animation<TextureRegion>(0.1f,
@@ -189,6 +194,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         bigPlayerOnFireJump = atlas.findRegion(RegionNames.BIG_PLAYER_JUMP_ON_FIRE);
         bigPlayerOnFireCrouch = atlas.findRegion(RegionNames.BIG_PLAYER_CROUCH_ON_FIRE);
         bigPlayerOnFireDrown = atlas.findRegion(RegionNames.BIG_PLAYER_DROWN_ON_FIRE);
+        bigPlayerOnFireVictory = atlas.findRegion(RegionNames.BIG_PLAYER_TURN_ON_FIRE);
     }
 
     public void update(float delta) {
@@ -377,6 +383,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         boolean useBigTexture = isBig;
         if (isChangingSize()) {
             useBigTexture = (int) (((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
+        }
+
+        if (levelCompleted) {
+            if (useBigTexture) {
+                return onFire ? bigPlayerOnFireVictory : bigPlayerVictory;
+            } else {
+                return smallPlayerVictory;
+            }
         }
 
         switch (state.current()) {
@@ -708,9 +722,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     private boolean isOutOfGame() {
-        if (levelCompleted) {
-            return false;
-        }
         return getY() + getHeight() < 0 * Cfg.BLOCK_SIZE / Cfg.PPM;
     }
 
