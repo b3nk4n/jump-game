@@ -573,7 +573,7 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
-        if (Intersector.overlaps(goal, player.getBoundingRectangle())) {
+        if (Intersector.overlaps(goal, player.getBoundingRectangle()) && player.getBody().getLinearVelocity().len2() < 0.001f) {
             completeLevel();
         }
 

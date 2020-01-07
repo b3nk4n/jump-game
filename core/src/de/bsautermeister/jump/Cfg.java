@@ -26,7 +26,7 @@ public interface Cfg {
     int LEVEL_COLUMNS = 3;
     int LEVELS_PER_STAGE = LEVEL_COLUMNS * LEVEL_ROWS;
 
-    float GOAL_REACHED_FINISH_DELAY = 2.33f;
+    float GOAL_REACHED_FINISH_DELAY = 2.5f;
 
     int COIN_SCORE = 100;
     String COIN_SCORE_STRING = String.valueOf(COIN_SCORE);
