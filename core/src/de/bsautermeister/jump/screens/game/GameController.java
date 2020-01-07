@@ -97,9 +97,6 @@ public class GameController  implements BinarySerializable, Disposable {
     private Array<Platform> platforms;
     private Array<Coin> coins;
 
-    private boolean levelCompleted;
-    private float levelCompletedTimer;
-
     private Array<BoxCoin> activeBoxCoins;
 
     private float gameTime;
@@ -442,9 +439,6 @@ public class GameController  implements BinarySerializable, Disposable {
 
         totalBeers = getTotalBeers();
 
-        levelCompleted = false;
-        levelCompletedTimer = 0;
-
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
         musicPlayer.play();
@@ -475,7 +469,7 @@ public class GameController  implements BinarySerializable, Disposable {
         gameTime += delta;
         world.step(1 / 60f, 8, 3);
 
-        if (!levelCompleted) {
+        if (!player.isVictory()) {
             handleInput();
         }
 
@@ -514,12 +508,8 @@ public class GameController  implements BinarySerializable, Disposable {
             callbacks.hurry(); // TODO call only once?
         }
 
-        if (levelCompleted) {
-            levelCompletedTimer += delta;
-
-            if (levelCompletedTimer >= Cfg.GOAL_REACHED_FINISH_DELAY) {
-                screenCallbacks.success(level);
-            }
+        if (player.isVictory() && player.getStateTimer() >= Cfg.GOAL_REACHED_FINISH_DELAY) {
+            screenCallbacks.success(level);
         }
 
         for (TextMessage textMessage : textMessages) {
@@ -533,7 +523,7 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
-        if (player.getState() == Player.State.DEAD && player.getStateTimer() > 3f) {
+        if (player.isDead() && player.getStateTimer() > 3f) {
             state = GameState.GAME_OVER;
         }
 
@@ -699,10 +689,9 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void completeLevel() {
-        if (!levelCompleted) {
+        if (!player.isVictory()) {
             LOG.debug("Goal reached");
-            levelCompleted = true;
-            player.setLevelCompleted(true);
+            player.victory();
             callbacks.goalReached();
         }
     }
@@ -739,7 +728,7 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void upateCameraPosition() {
-        if (player.getState() == Player.State.DEAD) {
+        if (player.isDead()) {
             return;
         }
 
@@ -770,7 +759,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private void handleInput() {
         checkPauseInput();
 
-        if (player.getState() == Player.State.DEAD) {
+        if (player.isDead()) {
             return;
         }
 
@@ -860,7 +849,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public void save() {
         // don't do anything in case player is dead, kind of dead or level is finished
-        if (player.isDead() || player.isDrowning() || levelCompleted || gameIsCanced) {
+        if (player.isDead() || player.isDrowning() || player.isVictory() || gameIsCanced) {
             LOG.error("Did NOT save game state");
             JumpGame.deleteSavedData();
             return;
@@ -886,8 +875,6 @@ public class GameController  implements BinarySerializable, Disposable {
         out.writeBoolean(gameIsCanced);
         out.writeInt(score);
         out.writeInt(collectedBeers);
-        out.writeBoolean(levelCompleted);
-        out.writeFloat(levelCompletedTimer);
         out.writeFloat(gameTime);
         player.write(out);
         killSequelManager.write(out);
@@ -923,8 +910,6 @@ public class GameController  implements BinarySerializable, Disposable {
         gameIsCanced = in.readBoolean();
         score = in.readInt();
         collectedBeers = in.readInt();
-        levelCompleted = in.readBoolean();
-        levelCompletedTimer = in.readFloat();
         gameTime = in.readFloat();
         player.read(in);
         killSequelManager.read(in);

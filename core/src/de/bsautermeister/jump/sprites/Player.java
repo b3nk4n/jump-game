@@ -69,7 +69,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private float blockJumpTimer;
 
     public enum State {
-        STANDING, CROUCHING, JUMPING, WALKING, DROWNING, DEAD
+        STANDING, CROUCHING, JUMPING, WALKING, VICTORY, DROWNING, DEAD
     }
 
     private GameObjectState<State> state;
@@ -117,8 +117,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private boolean deadAnimationStarted = false;
 
     private float timeToLive;
-
-    private boolean levelCompleted;
 
     private String lastJumpThroughPlatformId;
 
@@ -200,7 +198,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void update(float delta) {
         state.upate(delta);
 
-        if (!levelCompleted && !isDead()) {
+        if (!isVictory() && !isDead()) {
             timeToLive -= delta;
         }
 
@@ -385,7 +383,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             useBigTexture = (int) (((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
         }
 
-        if (levelCompleted) {
+        if (isVictory()) {
             if (useBigTexture) {
                 return onFire ? bigPlayerOnFireVictory : bigPlayerVictory;
             } else {
@@ -560,6 +558,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         return state.is(State.DEAD);
     }
 
+    public boolean isVictory() {
+        return state.is(State.VICTORY);
+    }
+
     private final Vector2 outCenter = new Vector2();
 
     @Override
@@ -725,8 +727,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         return getY() + getHeight() < 0 * Cfg.BLOCK_SIZE / Cfg.PPM;
     }
 
-    public void setLevelCompleted(boolean levelCompleted) {
-        this.levelCompleted = levelCompleted;
+    public void victory() {
+        state.set(State.VICTORY);
     }
 
     public String getLastJumpThroughPlatformId() {
@@ -770,7 +772,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
-        out.writeBoolean(levelCompleted);
         out.writeUTF(lastJumpThroughPlatformId != null ? lastJumpThroughPlatformId : "null");
     }
 
@@ -793,7 +794,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();
-        levelCompleted = in.readBoolean();
         lastJumpThroughPlatformId = in.readUTF();
         if (lastJumpThroughPlatformId.equals("null")) {
             lastJumpThroughPlatformId = null;
