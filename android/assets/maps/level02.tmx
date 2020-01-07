@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="70" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="33" nextobjectid="162">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="70" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="33" nextobjectid="162">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="27" name="backgroundColor" width="70" height="50">
   <data encoding="csv">
@@ -366,11 +366,7 @@
   <object id="131" x="312" y="64" width="16" height="24"/>
  </objectgroup>
  <objectgroup id="10" name="water">
-  <object id="149" x="480" y="736" width="96" height="64">
-   <properties>
-    <property name="is_beer" type="bool" value="true"/>
-   </properties>
-  </object>
+  <object id="149" x="480" y="736" width="96" height="64"/>
  </objectgroup>
  <objectgroup id="12" name="bouncers">
   <object id="123" x="960" y="688" width="16" height="16">

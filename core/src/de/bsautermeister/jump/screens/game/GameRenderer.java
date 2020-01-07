@@ -283,14 +283,12 @@ public class GameRenderer implements Disposable {
         player.getFireball().draw(batch);
 
         ShaderProgram prevShader = batch.getShader();
-        Array<WorldCreator.WaterParams> waterList = controller.getWaterList();
-        for (WorldCreator.WaterParams waterParams : waterList) {
-            Rectangle waterRegion = waterParams.rectangle;
-            TextureRegion texture = waterParams.isBeer ? beerLiquidTexture : waterTexture;
+        Array<Rectangle> waterList = controller.getWaterList();
+        for (Rectangle waterRegion : waterList) {
             batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
-            batch.draw(texture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
+            batch.draw(waterTexture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
                     waterRegion.getWidth(), waterRegion.getHeight());
         }
 

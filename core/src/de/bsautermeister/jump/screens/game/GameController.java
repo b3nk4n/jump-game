@@ -104,7 +104,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private float gameTime;
     private Array<InteractiveTileObject> tileObjects;
-    private Array<WorldCreator.WaterParams> waterList;
+    private Array<Rectangle> waterList;
     private WaterInteractionManager waterInteractionManager;
 
     private final int level;
@@ -222,13 +222,10 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void touchedWater(Drownable drownable, boolean isBeer) {
+        public void touchedWater(Drownable drownable) {
             float volume = getVolumeBasedOnDistanceToCameraCenter(drownable.getWorldCenter().x);
             if (volume > 0) {
                 soundEffects.splashSound.play(volume);
-                if (isBeer) {
-                    soundEffects.drinkingSound.play(volume, 0.9f, 0f);
-                }
             }
         }
 
@@ -1033,7 +1030,7 @@ public class GameController  implements BinarySerializable, Disposable {
         return platforms;
     }
 
-    public Array<WorldCreator.WaterParams> getWaterList() {
+    public Array<Rectangle> getWaterList() {
         return waterList;
     }
 

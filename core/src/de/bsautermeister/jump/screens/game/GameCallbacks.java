@@ -23,7 +23,7 @@ public interface GameCallbacks {
     void hitWall(Enemy enemy);
     void killed(Enemy enemy);
     void kicked(Enemy enemy);
-    void touchedWater(Drownable drownable, boolean isBeer);
+    void touchedWater(Drownable drownable);
     void collectCoin();
     void fire();
     void hurry();

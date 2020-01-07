@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -14,16 +15,14 @@ import de.bsautermeister.jump.physics.WorldCreator;
 
 public class WaterInteractionManager {
     private ParticleEffectPool waterSplashEffectPool;
-    private ParticleEffectPool beerSplashEffectPool;
     private Array<ParticleEffectPool.PooledEffect> activeSplashEffects = new Array<ParticleEffectPool.PooledEffect>();
 
     private final GameCallbacks callbacks;
     private final Array<Drownable> drownables = new Array<Drownable>();
-    private final Array<WorldCreator.WaterParams> waterRegions = new Array<WorldCreator.WaterParams>();
+    private final Array<Rectangle> waterRegions = new Array<Rectangle>();
 
     public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks) {
         waterSplashEffectPool = createEffectPool(AssetPaths.Pfx.SPLASH, atlas);
-        beerSplashEffectPool = createEffectPool(AssetPaths.Pfx.BEER_SPLASH, atlas);
 
         this.callbacks = callbacks;
 
@@ -43,10 +42,10 @@ public class WaterInteractionManager {
     }
 
     public void update(float delta) {
-        for (WorldCreator.WaterParams waterRegion : waterRegions) {
+        for (Rectangle waterRegion : waterRegions) {
             for (Drownable drownable : drownables) {
-                if (waterRegion.rectangle.contains(drownable.getWorldCenter())) {
-                    doDrown(drownable, waterRegion.isBeer);
+                if (waterRegion.contains(drownable.getWorldCenter())) {
+                    doDrown(drownable);
                 }
             }
         }
@@ -61,7 +60,7 @@ public class WaterInteractionManager {
         }
     }
 
-    public void setWaterRegions(Array<WorldCreator.WaterParams> waterRegions) {
+    public void setWaterRegions(Array<Rectangle> waterRegions) {
         this.waterRegions.addAll(waterRegions);
     }
 
@@ -73,15 +72,14 @@ public class WaterInteractionManager {
         drownables.removeValue(drownable, true);
     }
 
-    private void doDrown(Drownable drownable, boolean isBeer) {
+    private void doDrown(Drownable drownable) {
         if (!drownable.isDead() && !drownable.isDrowning() && drownable.getLinearVelocity().y < -0.5f) {
             Vector2 center = drownable.getWorldCenter();
-            ParticleEffectPool.PooledEffect splashEffect = isBeer ?
-                    beerSplashEffectPool.obtain() : waterSplashEffectPool.obtain();
+            ParticleEffectPool.PooledEffect splashEffect = waterSplashEffectPool.obtain();
             splashEffect.start();
             splashEffect.setPosition(center.x, center.y);
             activeSplashEffects.add(splashEffect);
-            callbacks.touchedWater(drownable, isBeer);
+            callbacks.touchedWater(drownable);
 
             drownable.drown();
         }

@@ -225,11 +225,11 @@ public class WorldCreator {
         return coins;
     }
 
-    public Array<WaterParams> getWaterRegions() {
-        Array<WaterParams> waterRegions = new Array<WaterParams>();
+    public Array<Rectangle> getWaterRegions() {
+        Array<Rectangle> waterRegions = new Array<Rectangle>();
         if (hasLayer(map, WATER_KEY)) {
-            for (MapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
-                waterRegions.add(new WaterParams((RectangleMapObject) mapObject));
+            for (RectangleMapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                waterRegions.add(toPPM(mapObject.getRectangle()));
             }
         }
         return waterRegions;
@@ -290,16 +290,6 @@ public class WorldCreator {
             Rectangle rect = mapObject.getRectangle();
             position = new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
             leftDirection = mapObject.getProperties().get("leftDirection", false, Boolean.class);
-        }
-    }
-
-    public static class WaterParams {
-        public final Rectangle rectangle;
-        public final boolean isBeer;
-
-        public WaterParams(RectangleMapObject mapObject) {
-            rectangle = toPPM(mapObject.getRectangle());
-            isBeer = mapObject.getProperties().get("is_beer", false, Boolean.class);
         }
     }
 }
