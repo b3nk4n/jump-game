@@ -16,6 +16,9 @@ public interface Cfg {
     int WORLD_WIDTH = BLOCKS_X * BLOCK_SIZE;
     int WORLD_HEIGHT = BLOCKS_Y * BLOCK_SIZE;
 
+    int WINDOW_WIDTH = Cfg.WORLD_WIDTH * 2;
+    int WINDOW_HEIGHT = Cfg.WORLD_HEIGHT * 2;
+
     float PPM = 100f;
 
     int LEVEL_PAGES = 3;

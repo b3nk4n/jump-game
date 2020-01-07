@@ -9,8 +9,8 @@ import de.bsautermeister.jump.JumpGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = Cfg.WORLD_WIDTH * 2;
-		config.height = Cfg.WORLD_HEIGHT * 2;
+		config.width = Cfg.WINDOW_WIDTH;
+		config.height = Cfg.WINDOW_HEIGHT;
 		new LwjglApplication(new JumpGame(), config);
 	}
 }
