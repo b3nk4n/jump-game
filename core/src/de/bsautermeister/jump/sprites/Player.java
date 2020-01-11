@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -80,9 +81,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private TextureRegion smallPlayerDead;
     private TextureRegion smallPlayerTurn;
     private Animation<TextureRegion> smallPlayerWalk;
-    private TextureRegion smallPlayerJump;
+    private Animation<TextureRegion> smallPlayerJump;
+    private TextureRegion smallPlayerCrouch;
     private TextureRegion smallPlayerDrown;
-    private TextureRegion smallPlayerVictory;
+    private Animation<TextureRegion>[] smallPlayerVictoryArray;
 
     private TextureRegion bigPlayerStand;
     private TextureRegion bigPlayerJump;
@@ -171,10 +173,16 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         smallPlayerWalk = new Animation<TextureRegion>(0.1f,
                 atlas.findRegions(RegionNames.SMALL_PLAYER_WALK), Animation.PlayMode.LOOP_PINGPONG);
         smallPlayerTurn = atlas.findRegion(RegionNames.SMALL_PLAYER_TURN);
-        smallPlayerJump = atlas.findRegion(RegionNames.SMALL_PLAYER_JUMP);
+        smallPlayerJump = new Animation<TextureRegion>(0.125f,
+                atlas.findRegions(RegionNames.SMALL_PLAYER_JUMP), Animation.PlayMode.NORMAL);
+        smallPlayerCrouch = atlas.findRegion(RegionNames.SMALL_PLAYER_CROUCH);
         smallPlayerDrown = atlas.findRegion(RegionNames.SMALL_PLAYER_DROWN);
         smallPlayerDead = atlas.findRegion(RegionNames.SMALL_PLAYER_DEAD);
-        smallPlayerVictory = atlas.findRegion(RegionNames.SMALL_PLAYER_TURN);
+        smallPlayerVictoryArray = new Animation[2];
+        smallPlayerVictoryArray[0] = new Animation<TextureRegion>(0.125f,
+                atlas.findRegions(RegionNames.SMALL_PLAYER_VICTORY), Animation.PlayMode.NORMAL);
+        smallPlayerVictoryArray[1] = new Animation<TextureRegion>(0.125f,
+                atlas.findRegions(RegionNames.SMALL_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
 
         bigPlayerStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND);
         bigPlayerWalk = new Animation<TextureRegion>(0.1f,
@@ -336,7 +344,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 state.freeze();
             }
         } else if (blockJumpTimer < 0 /*touchesGround() && Math.abs(getVelocityRelativeToGround().y) < 0.1*/) {
-            if (down && isBig) {
+            if (down) {
                 state.set(State.CROUCHING);
             } else if (Math.abs(relativeBodyVelocity.x) > 1e-4) {
                 state.set(State.WALKING);
@@ -387,7 +395,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             if (useBigTexture) {
                 return onFire ? bigPlayerOnFireVictory : bigPlayerVictory;
             } else {
-                return smallPlayerVictory;
+                int randIndex = MathUtils.random(smallPlayerVictoryArray.length - 1);
+                randIndex = 1;
+                return smallPlayerVictoryArray[randIndex].getKeyFrame(state.timer());
             }
         }
 
@@ -406,7 +416,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 if (useBigTexture) {
                     textureRegion = onFire ? bigPlayerOnFireJump : bigPlayerJump;
                 } else {
-                    textureRegion = smallPlayerJump;
+                    textureRegion = smallPlayerJump.getKeyFrame(state.timer());
                 }
                 break;
             case WALKING:
@@ -427,7 +437,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 }
                 break;
             case CROUCHING:
-                textureRegion = onFire ? bigPlayerOnFireCrouch : bigPlayerCrouch;
+                if (useBigTexture) {
+                    textureRegion = onFire ? bigPlayerOnFireCrouch : bigPlayerCrouch;
+                } else {
+                    textureRegion = smallPlayerCrouch;
+                }
                 break;
             case STANDING:
             default:

@@ -4,8 +4,11 @@ public interface RegionNames {
     String SMALL_PLAYER_WALK = "small_player_walk";
     String SMALL_PLAYER_STAND = "small_player_stand";
     String SMALL_PLAYER_JUMP = "small_player_jump";
+    String SMALL_PLAYER_CROUCH = "small_player_crouch";
     String SMALL_PLAYER_DEAD = "small_player_dead";
     String SMALL_PLAYER_TURN = "small_player_turn";
+    String SMALL_PLAYER_VICTORY = "small_player_victory";
+    String SMALL_PLAYER_BEER_VICTORY = "small_player_beer_victory";
     String SMALL_PLAYER_DROWN = "small_player_drown";
     String BIG_PLAYER_WALK = "big_player_walk";
     String BIG_PLAYER_STAND = "big_player_stand";
@@ -19,8 +22,6 @@ public interface RegionNames {
     String BIG_PLAYER_CROUCH_ON_FIRE = "big_player_crouch_on_fire";
     String BIG_PLAYER_TURN_ON_FIRE = "big_player_turn_on_fire";
     String BIG_PLAYER_DROWN_ON_FIRE = "big_player_drown_on_fire";
-    String FIREBALL = "fireball";
-    String FIRE_FLOWER = "fireflower";
     String GOOMBA = "goomba";
     String GOOMBA_STOMP = "goomba_stomp";
     String KOOPA = "koopa";
@@ -39,7 +40,6 @@ public interface RegionNames {
     String BREAK_PLATFORM3 = "break_platform3";
     String BREAK_PLATFORM4 = "break_platform4";
     String BEER = "beer";
-    String BEER_LIQUID = "beer_liquid";
     String PREZEL = "prezel";
     String PREZEL_BULLET = "prezel_bullet";
     String BACKGROUND_OVERLAY = "bg-overlay";

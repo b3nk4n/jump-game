@@ -65,7 +65,6 @@ public class GameRenderer implements Disposable {
 
     private final ShaderProgram waterShader;
     private final TextureRegion waterTexture;
-    private final TextureRegion beerLiquidTexture;
     private final ShaderProgram drunkShader;
     private final ShaderProgram stonedShader;
     private final ShaderProgram pixelateShader;
@@ -107,7 +106,6 @@ public class GameRenderer implements Disposable {
         pixelateShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/pixelate.fs");
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
-        beerLiquidTexture = atlas.findRegion(RegionNames.BEER_LIQUID);
 
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
