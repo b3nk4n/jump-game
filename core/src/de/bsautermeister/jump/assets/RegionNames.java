@@ -16,6 +16,9 @@ public interface RegionNames {
     String BIG_PLAYER_CROUCH = "big_player_crouch";
     String BIG_PLAYER_TURN = "big_player_turn";
     String BIG_PLAYER_DROWN = "big_player_drown";
+    String BIG_PLAYER_DEAD = "big_player_dead";
+    String BIG_PLAYER_VICTORY = "big_player_victory";
+    String BIG_PLAYER_BEER_VICTORY = "big_player_beer_victory";
     String BIG_PLAYER_WALK_ON_FIRE = "big_player_walk_on_fire";
     String BIG_PLAYER_STAND_ON_FIRE = "big_player_stand_on_fire";
     String BIG_PLAYER_JUMP_ON_FIRE = "big_player_jump_on_fire";
