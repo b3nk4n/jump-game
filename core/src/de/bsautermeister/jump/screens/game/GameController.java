@@ -135,7 +135,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void use(Player player, Item item) {
             String msg;
             if (item instanceof Beer) {
-                collectedBeers++;
+                updateCollectedBeers(collectedBeers + 1);
                 soundEffects.drinkingSound.play();
                 if (collectedBeers >= totalBeers) {
                     unlockGoal();
@@ -392,9 +392,6 @@ public class GameController  implements BinarySerializable, Disposable {
 
         killSequelManager.reset();
 
-        score = 0;
-        collectedBeers = 0;
-
         initMap(level);
 
         WorldCreator worldCreator = new WorldCreator(callbacks, world, map, atlas);
@@ -438,6 +435,8 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         totalBeers = getTotalBeers();
+        updateCollectedBeers(0);
+        score = 0;
 
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
@@ -677,6 +676,11 @@ public class GameController  implements BinarySerializable, Disposable {
                 platform.setActive(true);
             }
         }
+    }
+
+    private void updateCollectedBeers(int value) {
+        collectedBeers = Math.min(value, totalBeers);
+        player.setCharacterProgress((float)value / totalBeers);
     }
 
     private void pauseGame() {

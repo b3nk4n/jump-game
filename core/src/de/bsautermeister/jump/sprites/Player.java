@@ -77,14 +77,18 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     private boolean runningRight;
 
-    private TextureRegion smallPlayerStand;
-    private Animation<TextureRegion> smallPlayerDead;
-    private TextureRegion smallPlayerTurn;
-    private Animation<TextureRegion> smallPlayerWalk;
-    private Animation<TextureRegion> smallPlayerJump;
-    private TextureRegion smallPlayerCrouch;
-    private Animation<TextureRegion> smallPlayerDrown;
-    private Animation<TextureRegion>[] smallPlayerVictoryArray;
+    private static final int VICTORY_VARIATIONS = 2;
+    private static final int CHARACTER_LEVELS = 4;
+    private float characterProgress;
+
+    private TextureRegion[] smallPlayerStand;
+    private Animation<TextureRegion>[] smallPlayerDead;
+    private TextureRegion[] smallPlayerTurn;
+    private Animation<TextureRegion>[] smallPlayerWalk;
+    private Animation<TextureRegion>[] smallPlayerJump;
+    private TextureRegion[] smallPlayerCrouch;
+    private Animation<TextureRegion>[] smallPlayerDrown;
+    private Animation<TextureRegion>[] smallPlayerVictory;
 
     private TextureRegion bigPlayerStand;
     private Animation<TextureRegion> bigPlayerDead;
@@ -93,7 +97,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private Animation<TextureRegion> bigPlayerWalk;
     private TextureRegion bigPlayerCrouch;
     private Animation<TextureRegion> bigPlayerDrown;
-    private Animation<TextureRegion>[] bigPlayerVictoryArray;
+    private Animation<TextureRegion>[] bigPlayerVictory;
 
     private TextureRegion bigPlayerOnFireStand;
     private TextureRegion bigPlayerOnFireJump;
@@ -139,7 +143,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-        setRegion(smallPlayerStand);
+        setRegion(smallPlayerStand[0]);
 
         timeToLive = INITAL_TTL;
 
@@ -169,22 +173,40 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         stonedTimer = new GameTimer(EFFECT_DURATION);
     }
 
+    private TextureRegion[] createTextureArray(String templateName, int count) {
+        TextureRegion[] result = new TextureRegion[count];
+        for (int i = 0; i < count; ++i) {
+            result[i] = atlas.findRegion(RegionNames.fromTemplate(templateName, i));
+        }
+        return result;
+    }
+
+    private Animation<TextureRegion>[] createAnimationArray(
+            String templateName, int count, float frameDuration, Animation.PlayMode playMode) {
+        Animation<TextureRegion>[] result = new Animation[count];
+        for (int i = 0; i < count; ++i) {
+            result[i] = new Animation<TextureRegion>(frameDuration,
+                    atlas.findRegions(RegionNames.fromTemplate(templateName, i)), playMode);
+        }
+        return result;
+    }
+
     private void initTextures(TextureAtlas atlas) {
-        smallPlayerStand = atlas.findRegion(RegionNames.SMALL_PLAYER_STAND);
-        smallPlayerWalk = new Animation<TextureRegion>(0.1f,
-                atlas.findRegions(RegionNames.SMALL_PLAYER_WALK), Animation.PlayMode.LOOP_PINGPONG);
-        smallPlayerTurn = atlas.findRegion(RegionNames.SMALL_PLAYER_TURN);
-        smallPlayerJump = new Animation<TextureRegion>(0.125f,
-                atlas.findRegions(RegionNames.SMALL_PLAYER_JUMP), Animation.PlayMode.NORMAL);
-        smallPlayerCrouch = atlas.findRegion(RegionNames.SMALL_PLAYER_CROUCH);
-        smallPlayerDrown = new Animation<TextureRegion>(0.25f,
-                atlas.findRegions(RegionNames.SMALL_PLAYER_DROWN), Animation.PlayMode.LOOP);
-        smallPlayerDead = new Animation<TextureRegion>(0.25f,
-                atlas.findRegions(RegionNames.SMALL_PLAYER_DEAD), Animation.PlayMode.LOOP);
-        smallPlayerVictoryArray = new Animation[2];
-        smallPlayerVictoryArray[0] = new Animation<TextureRegion>(0.125f,
+        smallPlayerStand = createTextureArray(RegionNames.SMALL_PLAYER_STAND_TPL, CHARACTER_LEVELS);
+        smallPlayerWalk = createAnimationArray(RegionNames.SMALL_PLAYER_WALK_TPL, CHARACTER_LEVELS,
+                0.1f, Animation.PlayMode.LOOP_PINGPONG);
+        smallPlayerTurn = createTextureArray(RegionNames.SMALL_PLAYER_TURN_TPL, CHARACTER_LEVELS);
+        smallPlayerJump = createAnimationArray(RegionNames.SMALL_PLAYER_JUMP_TPL, CHARACTER_LEVELS,
+                0.125f, Animation.PlayMode.NORMAL);
+        smallPlayerCrouch = createTextureArray(RegionNames.SMALL_PLAYER_CROUCH_TPL, CHARACTER_LEVELS);
+        smallPlayerDrown = createAnimationArray(RegionNames.SMALL_PLAYER_DROWN_TPL, CHARACTER_LEVELS,
+                0.25f, Animation.PlayMode.LOOP);
+        smallPlayerDead = createAnimationArray(RegionNames.SMALL_PLAYER_DEAD_TPL, CHARACTER_LEVELS,
+                0.25f, Animation.PlayMode.LOOP);
+        smallPlayerVictory = new Animation[VICTORY_VARIATIONS];
+        smallPlayerVictory[0] = new Animation<TextureRegion>(0.125f,
                 atlas.findRegions(RegionNames.SMALL_PLAYER_VICTORY), Animation.PlayMode.NORMAL);
-        smallPlayerVictoryArray[1] = new Animation<TextureRegion>(0.125f,
+        smallPlayerVictory[1] = new Animation<TextureRegion>(0.125f,
                 atlas.findRegions(RegionNames.SMALL_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
 
         bigPlayerStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND);
@@ -198,10 +220,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 atlas.findRegions(RegionNames.BIG_PLAYER_DROWN), Animation.PlayMode.LOOP);
         bigPlayerDead = new Animation<TextureRegion>(0.25f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_DEAD), Animation.PlayMode.LOOP);
-        bigPlayerVictoryArray = new Animation[2];
-        bigPlayerVictoryArray[0] = new Animation<TextureRegion>(0.125f,
+        bigPlayerVictory = new Animation[2];
+        bigPlayerVictory[0] = new Animation<TextureRegion>(0.125f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_VICTORY), Animation.PlayMode.NORMAL);
-        bigPlayerVictoryArray[0] = new Animation<TextureRegion>(0.125f,
+        bigPlayerVictory[0] = new Animation<TextureRegion>(0.125f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
 
         bigPlayerOnFireStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND_ON_FIRE);
@@ -397,17 +419,19 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private TextureRegion getFrame() {
         TextureRegion textureRegion;
 
+        int chIdx = (int)Math.floor(characterProgress * (CHARACTER_LEVELS - 1));
+
         boolean useBigTexture = isBig;
         if (isChangingSize()) {
             useBigTexture = (int) (((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
         }
 
         if (isVictory()) {
-            int randIndex = MathUtils.random(smallPlayerVictoryArray.length - 1);
+            int randIndex = MathUtils.random(VICTORY_VARIATIONS - 1);
             if (useBigTexture) {
-                return onFire ? bigPlayerOnFireVictory : bigPlayerVictoryArray[randIndex].getKeyFrame(state.timer());
+                return onFire ? bigPlayerOnFireVictory : bigPlayerVictory[randIndex].getKeyFrame(state.timer());
             } else {
-                return smallPlayerVictoryArray[randIndex].getKeyFrame(state.timer());
+                return smallPlayerVictory[randIndex].getKeyFrame(state.timer());
             }
         }
 
@@ -416,7 +440,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 if (useBigTexture) {
                     textureRegion = onFire ? bigPlayerOnFireDrown : bigPlayerDrown.getKeyFrame(state.timer());
                 } else {
-                    textureRegion = smallPlayerDrown.getKeyFrame(state.timer());
+                    textureRegion = smallPlayerDrown[chIdx].getKeyFrame(state.timer());
                 }
                 break;
             case DEAD:
@@ -425,14 +449,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                             ? bigPlayerDead.getKeyFrame(state.timer())
                             : bigPlayerDead.getKeyFrame(state.timer());
                 } else {
-                    textureRegion = smallPlayerDead.getKeyFrame(state.timer());
+                    textureRegion = smallPlayerDead[chIdx].getKeyFrame(state.timer());
                 }
                 break;
             case JUMPING:
                 if (useBigTexture) {
                     textureRegion = onFire ? bigPlayerOnFireJump : bigPlayerJump.getKeyFrame(state.timer());
                 } else {
-                    textureRegion = smallPlayerJump.getKeyFrame(state.timer());
+                    textureRegion = smallPlayerJump[chIdx].getKeyFrame(state.timer());
                 }
                 break;
             case WALKING:
@@ -441,14 +465,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                         textureRegion = onFire ? bigPlayerOnFireTurn : bigPlayerTurn;
                     } else {
                         Animation<TextureRegion> walk = onFire ? bigPlayerOnFireWalk : bigPlayerWalk;
-                        textureRegion = walk.getKeyFrame(state.timer(), true);
+                        textureRegion = walk.getKeyFrame(state.timer());
                     }
 
                 } else {
                     if (isTurning) {
-                        textureRegion = smallPlayerTurn;
+                        textureRegion = smallPlayerTurn[chIdx];
                     } else {
-                        textureRegion = smallPlayerWalk.getKeyFrame(state.timer(), true);
+                        textureRegion = smallPlayerWalk[chIdx].getKeyFrame(state.timer());
                     }
                 }
                 break;
@@ -456,7 +480,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 if (useBigTexture) {
                     textureRegion = onFire ? bigPlayerOnFireCrouch : bigPlayerCrouch;
                 } else {
-                    textureRegion = smallPlayerCrouch;
+                    textureRegion = smallPlayerCrouch[chIdx];
                 }
                 break;
             case STANDING:
@@ -464,7 +488,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 if (useBigTexture) {
                     textureRegion = onFire ? bigPlayerOnFireStand : bigPlayerStand;
                 } else {
-                    textureRegion = smallPlayerStand;
+                    textureRegion = smallPlayerStand[chIdx];
                 }
                 break;
         }
@@ -781,6 +805,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         body.setLinearVelocity(getLinearVelocity().x, 3f);
     }
 
+    public void setCharacterProgress(float characterProgress) {
+        this.characterProgress = MathUtils.clamp(characterProgress, 0, 1);
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeFloat(body.getPosition().x);
@@ -803,6 +831,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
         out.writeUTF(lastJumpThroughPlatformId != null ? lastJumpThroughPlatformId : "null");
+        out.writeFloat(characterProgress);
     }
 
     @Override
@@ -828,6 +857,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (lastJumpThroughPlatformId.equals("null")) {
             lastJumpThroughPlatformId = null;
         }
+        characterProgress = in.readFloat();
 
         // this is just a lazy workaround, that is needed because we generally create a small player by default
         if (isBig) {
