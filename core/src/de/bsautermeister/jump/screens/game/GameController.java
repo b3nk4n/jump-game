@@ -46,7 +46,7 @@ import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.FireFlower;
-import de.bsautermeister.jump.sprites.Fireball;
+import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
@@ -258,7 +258,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void hit(Fireball fireball, Enemy enemy) {
+        public void hit(PretzelBullet pretzelBullet, Enemy enemy) {
 
         }
 
@@ -479,7 +479,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         killSequelManager.update(delta);
 
-        player.getFireball().update(delta);
+        player.getPretzelBullet().update(delta);
 
         updateEnemies(delta);
         updateItems(delta);
@@ -570,11 +570,11 @@ public class GameController  implements BinarySerializable, Disposable {
             textMessages.poll();
         }
 
-        Fireball fireball = player.getFireball();
-        if (fireball.isActive() && !isVisible(fireball)) {
-            fireball.reset();
+        PretzelBullet pretzelBullet = player.getPretzelBullet();
+        if (pretzelBullet.isActive() && !isVisible(pretzelBullet)) {
+            pretzelBullet.reset();
         } else {
-            fireball.postUpdate();
+            pretzelBullet.postUpdate();
         }
 
         // cleanup jump-through ID of platform for player

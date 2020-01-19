@@ -99,13 +99,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private Animation<TextureRegion>[] bigPlayerDrown;
     private Animation<TextureRegion>[] bigPlayerVictory;
 
-    private TextureRegion bigPlayerOnFireStand;
-    private TextureRegion bigPlayerOnFireJump;
-    private TextureRegion bigPlayerOnFireTurn;
-    private Animation<TextureRegion> bigPlayerOnFireWalk;
-    private TextureRegion bigPlayerOnFireCrouch;
-    private TextureRegion bigPlayerOnFireDrown;
-    private TextureRegion bigPlayerOnFireVictory;
+    private TextureRegion[] bigPlayerPrezelizedStand;
+    private TextureRegion[] bigPlayerPrezelizedTurn;
+    private Animation<TextureRegion>[] bigPlayerPrezelizedWalk;
+    private Animation<TextureRegion>[] bigPlayerPrezelizedJump;
+    private TextureRegion[] bigPlayerPrezelizedCrouch;
 
     ParticleEffect slideEffect = new ParticleEffect();
 
@@ -113,10 +111,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     private final GameTimer changeSizeTimer;
 
-    private boolean onFire;
-    private boolean doFire = false;
-    private GameTimer fireTimer;
-    private Fireball fireball;
+    private boolean pretzelized;
+    private GameTimer throwPretzelTimer;
+    private PretzelBullet pretzelBullet;
 
     private boolean isBig;
     private boolean markRedefineBody;
@@ -166,8 +163,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             }
         });
 
-        fireball = new Fireball(callbacks, world, atlas);
-        fireTimer = new GameTimer(1.0f, true);
+        pretzelBullet = new PretzelBullet(callbacks, world, atlas);
+        throwPretzelTimer = new GameTimer(1.0f, true);
 
         drunkTimer = new GameTimer(EFFECT_DURATION);
         stonedTimer = new GameTimer(EFFECT_DURATION);
@@ -226,14 +223,13 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         bigPlayerVictory[1] = new Animation<TextureRegion>(0.125f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
 
-        bigPlayerOnFireStand = atlas.findRegion(RegionNames.BIG_PLAYER_STAND_ON_FIRE);
-        bigPlayerOnFireWalk = new Animation<TextureRegion>(0.1f,
-                atlas.findRegions(RegionNames.BIG_PLAYER_WALK_ON_FIRE), Animation.PlayMode.LOOP_PINGPONG);
-        bigPlayerOnFireTurn = atlas.findRegion(RegionNames.BIG_PLAYER_TURN_ON_FIRE);
-        bigPlayerOnFireJump = atlas.findRegion(RegionNames.BIG_PLAYER_JUMP_ON_FIRE);
-        bigPlayerOnFireCrouch = atlas.findRegion(RegionNames.BIG_PLAYER_CROUCH_ON_FIRE);
-        bigPlayerOnFireDrown = atlas.findRegion(RegionNames.BIG_PLAYER_DROWN_ON_FIRE);
-        bigPlayerOnFireVictory = atlas.findRegion(RegionNames.BIG_PLAYER_TURN_ON_FIRE);
+        bigPlayerPrezelizedStand = createTextureArray(RegionNames.BIG_PLAYER_PREZELIZED_STAND_TPL, CHARACTER_LEVELS);
+        bigPlayerPrezelizedWalk = createAnimationArray(RegionNames.BIG_PLAYER_PREZELIZED_WALK_TPL, CHARACTER_LEVELS,
+                0.1f, Animation.PlayMode.LOOP_PINGPONG);
+        bigPlayerPrezelizedTurn = createTextureArray(RegionNames.BIG_PLAYER_PREZELIZED_TURN_TPL, CHARACTER_LEVELS);
+        bigPlayerPrezelizedJump = createAnimationArray(RegionNames.BIG_PLAYER_PREZELIZED_JUMP_TPL, CHARACTER_LEVELS,
+                0.125f, Animation.PlayMode.NORMAL);
+        bigPlayerPrezelizedCrouch = createTextureArray(RegionNames.BIG_PLAYER_PREZELIZED_CROUCH_TPL, CHARACTER_LEVELS);
     }
 
     public void update(float delta) {
@@ -257,7 +253,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             changeSizeTimer.update(delta);
         }
 
-        fireTimer.update(delta);
+        throwPretzelTimer.update(delta);
         drunkTimer.update(delta);
         stonedTimer.update(delta);
 
@@ -339,7 +335,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
 
         if (fire) {
-            tryFire();
+            tryThrowPretzel();
         }
 
         Vector2 relativeBodyVelocity = getVelocityRelativeToGround();
@@ -393,17 +389,17 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
     }
 
-    public void tryFire() {
-        if (!isOnFire()) {
-            return;
-        }
-
-        if (!fireball.isActive() && fireTimer.isFinished()) {
+    public void tryThrowPretzel() {
+        if (canThrowPretzel()) {
             float offsetX = runningRight ? getWidth() : 0f;
-            fireball.fire(getX() + offsetX, getY() + getHeight() / 2, runningRight);
+            pretzelBullet.fire(getX() + offsetX, getY() + getHeight() / 2, runningRight);
             callbacks.fire();
-            fireTimer.restart();
+            throwPretzelTimer.restart();
         }
+    }
+
+    private boolean canThrowPretzel() {
+        return pretzelized && !pretzelBullet.isActive() && throwPretzelTimer.isFinished();
     }
 
     public Vector2 getVelocityRelativeToGround() {
@@ -425,11 +421,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (isChangingSize()) {
             useBigTexture = (int) (((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
         }
-
         if (isVictory()) {
             int randIndex = MathUtils.random(VICTORY_VARIATIONS - 1);
             if (useBigTexture) {
-                return onFire ? bigPlayerOnFireVictory : bigPlayerVictory[randIndex].getKeyFrame(state.timer());
+                return bigPlayerVictory[randIndex].getKeyFrame(state.timer());
             } else {
                 return smallPlayerVictory[randIndex].getKeyFrame(state.timer());
             }
@@ -438,23 +433,23 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         switch (state.current()) {
             case DROWNING:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigPlayerOnFireDrown : bigPlayerDrown[chIdx].getKeyFrame(state.timer());
+                    textureRegion = bigPlayerDrown[chIdx].getKeyFrame(state.timer());
                 } else {
                     textureRegion = smallPlayerDrown[chIdx].getKeyFrame(state.timer());
                 }
                 break;
             case DEAD:
                 if (useBigTexture) {
-                    textureRegion = onFire // TODO: correct onFire texture
-                            ? bigPlayerDead[chIdx].getKeyFrame(state.timer())
-                            : bigPlayerDead[chIdx].getKeyFrame(state.timer());
+                    textureRegion = bigPlayerDead[chIdx].getKeyFrame(state.timer());
                 } else {
                     textureRegion = smallPlayerDead[chIdx].getKeyFrame(state.timer());
                 }
                 break;
             case JUMPING:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigPlayerOnFireJump : bigPlayerJump[chIdx].getKeyFrame(state.timer());
+                    textureRegion = canThrowPretzel()
+                            ? bigPlayerPrezelizedJump[chIdx].getKeyFrame(state.timer())
+                            : bigPlayerJump[chIdx].getKeyFrame(state.timer());
                 } else {
                     textureRegion = smallPlayerJump[chIdx].getKeyFrame(state.timer());
                 }
@@ -462,9 +457,13 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             case WALKING:
                 if (useBigTexture) {
                     if (isTurning) {
-                        textureRegion = onFire ? bigPlayerOnFireTurn : bigPlayerTurn[chIdx];
+                        textureRegion = canThrowPretzel()
+                                ? bigPlayerPrezelizedTurn[chIdx]
+                                : bigPlayerTurn[chIdx];
                     } else {
-                        Animation<TextureRegion> walk = onFire ? bigPlayerOnFireWalk : bigPlayerWalk[chIdx];
+                        Animation<TextureRegion> walk = canThrowPretzel()
+                                ? bigPlayerPrezelizedWalk[chIdx]
+                                : bigPlayerWalk[chIdx];
                         textureRegion = walk.getKeyFrame(state.timer());
                     }
 
@@ -478,7 +477,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 break;
             case CROUCHING:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigPlayerOnFireCrouch : bigPlayerCrouch[chIdx];
+                    textureRegion = canThrowPretzel()
+                            ? bigPlayerPrezelizedCrouch[chIdx]
+                            : bigPlayerCrouch[chIdx];
                 } else {
                     textureRegion = smallPlayerCrouch[chIdx];
                 }
@@ -486,7 +487,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             case STANDING:
             default:
                 if (useBigTexture) {
-                    textureRegion = onFire ? bigPlayerOnFireStand : bigPlayerStand[chIdx];
+                    textureRegion = canThrowPretzel()
+                            ? bigPlayerPrezelizedStand[chIdx]
+                            : bigPlayerStand[chIdx];
                 } else {
                     textureRegion = smallPlayerStand[chIdx];
                 }
@@ -655,8 +658,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             blockJumpTimer = 0.33f;
             markRedefineBody = true;
 
-            if (isOnFire()) {
-                onFire = false;
+            if (isPretzelized()) {
+                pretzelized = false;
             }
         } else {
             kill();
@@ -664,11 +667,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void setOnFire() {
-        onFire = true;
+        pretzelized = true;
     }
 
-    public boolean isOnFire() {
-        return onFire;
+    public boolean isPretzelized() {
+        return pretzelized;
     }
 
     public void drunk() {
@@ -797,8 +800,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         this.lastJumpThroughPlatformId = lastJumpThroughPlatformId;
     }
 
-    public Fireball getFireball() {
-        return fireball;
+    public PretzelBullet getPretzelBullet() {
+        return pretzelBullet;
     }
 
     public void pumpUp() {
@@ -820,10 +823,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(runningRight);
         out.writeBoolean(isTurning);
         changeSizeTimer.write(out);
-        out.writeBoolean(onFire);
-        out.writeBoolean(doFire);
-        fireTimer.write(out);
-        fireball.write(out);
+        out.writeBoolean(pretzelized);
+        throwPretzelTimer.write(out);
+        pretzelBullet.write(out);
         out.writeBoolean(isBig);
         drunkTimer.write(out);
         stonedTimer.write(out);
@@ -843,10 +845,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         runningRight = in.readBoolean();
         isTurning = in.readBoolean();
         changeSizeTimer.read(in);
-        onFire = in.readBoolean();
-        doFire = in.readBoolean();
-        fireTimer.read(in);
-        fireball.read(in);
+        pretzelized = in.readBoolean();
+        throwPretzelTimer.read(in);
+        pretzelBullet.read(in);
         isBig = in.readBoolean();
         drunkTimer.read(in);
         stonedTimer.read(in);

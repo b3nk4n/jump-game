@@ -278,7 +278,7 @@ public class GameRenderer implements Disposable {
 
         Player player = controller.getPlayer();
         player.draw(batch);
-        player.getFireball().draw(batch);
+        player.getPretzelBullet().draw(batch);
 
         ShaderProgram prevShader = batch.getShader();
         Array<Rectangle> waterList = controller.getWaterList();

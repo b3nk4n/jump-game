@@ -21,7 +21,7 @@ import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public class Fireball extends Sprite implements BinarySerializable {
+public class PretzelBullet extends Sprite implements BinarySerializable {
 
     private static final float VELOCITY_X = 2.25f;
 
@@ -35,8 +35,8 @@ public class Fireball extends Sprite implements BinarySerializable {
 
     private MarkedAction reset;
 
-    public Fireball(GameCallbacks callbacks, World world, TextureAtlas atlas) {
-        super(atlas.findRegion(RegionNames.PREZEL_BULLET));
+    public PretzelBullet(GameCallbacks callbacks, World world, TextureAtlas atlas) {
+        super(atlas.findRegion(RegionNames.PRETZEL_BULLET));
         this.callbacks = callbacks;
         this.world = world;
         setSize(Cfg.BLOCK_SIZE / 2 /Cfg.PPM, Cfg.BLOCK_SIZE / 2 / Cfg.PPM);

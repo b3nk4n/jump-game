@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Fireball;
+import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
@@ -168,7 +168,7 @@ public class WorldContactListener implements ContactListener {
 
         Player player;
         Enemy enemy;
-        Fireball fireball;
+        PretzelBullet pretzelBullet;
         Platform platform;
         switch (collisionDef) {
             case Bits.PLAYER | Bits.PLATFORM:
@@ -186,10 +186,10 @@ public class WorldContactListener implements ContactListener {
                 break;
 
             case Bits.ENEMY | Bits.FIREBALL:
-                // done in pre-solve to don't have an impulse from the fireball to the other object
-                fireball = (Fireball) resolveUserData(fixtureA, fixtureB, Bits.FIREBALL);
+                // done in pre-solve to don't have an impulse from the pretzelBullet to the other object
+                pretzelBullet = (PretzelBullet) resolveUserData(fixtureA, fixtureB, Bits.FIREBALL);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
-                fireball.resetLater();
+                pretzelBullet.resetLater();
                 enemy.kill(true);
                 contact.setEnabled(false);
                 break;

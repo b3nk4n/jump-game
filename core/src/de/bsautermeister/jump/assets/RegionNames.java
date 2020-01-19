@@ -21,12 +21,11 @@ public class RegionNames {
     public static String BIG_PLAYER_VICTORY = "big_player_3_victory";
     public static String BIG_PLAYER_BEER_VICTORY = "big_player_3_beer_victory";
 
-    public static String BIG_PLAYER_WALK_ON_FIRE = "big_player_walk_on_fire";
-    public static String BIG_PLAYER_STAND_ON_FIRE = "big_player_stand_on_fire";
-    public static String BIG_PLAYER_JUMP_ON_FIRE = "big_player_jump_on_fire";
-    public static String BIG_PLAYER_CROUCH_ON_FIRE = "big_player_crouch_on_fire";
-    public static String BIG_PLAYER_TURN_ON_FIRE = "big_player_turn_on_fire";
-    public static String BIG_PLAYER_DROWN_ON_FIRE = "big_player_drown_on_fire";
+    public static String BIG_PLAYER_PREZELIZED_WALK_TPL = "big_player_prezelized_*_walk";
+    public static String BIG_PLAYER_PREZELIZED_STAND_TPL = "big_player_prezelized_*_stand";
+    public static String BIG_PLAYER_PREZELIZED_JUMP_TPL = "big_player_prezelized_*_jump";
+    public static String BIG_PLAYER_PREZELIZED_CROUCH_TPL = "big_player_prezelized_*_crouch";
+    public static String BIG_PLAYER_PREZELIZED_TURN_TPL = "big_player_prezelized_*_turn";
 
     public static String GOOMBA = "goomba";
     public static String GOOMBA_STOMP = "goomba_stomp";
@@ -46,8 +45,8 @@ public class RegionNames {
     public static String BREAK_PLATFORM3 = "break_platform3";
     public static String BREAK_PLATFORM4 = "break_platform4";
     public static String BEER = "beer";
-    public static String PREZEL = "prezel";
-    public static String PREZEL_BULLET = "prezel_bullet";
+    public static String PRETZEL = "pretzel";
+    public static String PRETZEL_BULLET = "pretzel_bullet";
     public static String BACKGROUND_OVERLAY = "bg-overlay";
 
     public static String LOADING_LOGO = "title";
