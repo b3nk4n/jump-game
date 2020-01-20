@@ -177,9 +177,9 @@ public class WorldCreator {
         if (hasLayer(map, FISHES_KEY)) {
             for (MapObject mapObject : map.getLayers().get(FISHES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                Float startDelay = (Float) mapObject.getProperties().get("start_delay");
-                Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
-                Float velocityFactor = (Float) mapObject.getProperties().get("velocity_factor");
+                Float startDelay = (Float) mapObject.getProperties().get("startDelay");
+                Integer startAngle = (Integer) mapObject.getProperties().get("startAngle");
+                Float velocityFactor = (Float) mapObject.getProperties().get("velocityFactor");
                 String group = (String) mapObject.getProperties().get("group");
                 Fish fish = new Fish(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
@@ -200,7 +200,7 @@ public class WorldCreator {
         if (hasLayer(map, PLATFORMS_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(PLATFORMS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = mapObject.getRectangle();
-                Integer startAngle = (Integer) mapObject.getProperties().get("start_angle");
+                Integer startAngle = (Integer) mapObject.getProperties().get("startAngle");
                 Boolean breakable = (Boolean) mapObject.getProperties().get("breakable");
                 Platform platform = new Platform(callbacks, world, atlas,
                         toPPM(rect),
@@ -245,7 +245,7 @@ public class WorldCreator {
         if (hasLayer(map, BOUNCERS_KEY)) {
             for (MapObject mapObject : map.getLayers().get(BOUNCERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                Integer angle = (Integer) mapObject.getProperties().get("bounce_angle");
+                Integer angle = (Integer) mapObject.getProperties().get("bounceAngle");
                 PlatformBouncer platformBouncer = new PlatformBouncer(
                         toPPM(rect), angle != null ? angle : 0
                 );

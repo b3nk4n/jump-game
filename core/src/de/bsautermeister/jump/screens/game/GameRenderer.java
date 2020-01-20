@@ -110,6 +110,7 @@ public class GameRenderer implements Disposable {
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
+
         box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
 
         backgroundOverlayRegion = atlas.findRegion(RegionNames.BACKGROUND_OVERLAY);
@@ -137,6 +138,7 @@ public class GameRenderer implements Disposable {
         viewport.apply();
 
         frameBuffer.begin();
+        GdxUtils.clearScreen(Color.BLACK);
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
