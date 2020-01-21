@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -219,13 +220,15 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BACKGROUND_COLOR_KEY));
+        mapRenderer.renderImageLayer((TiledMapImageLayer) controller.getMap().getLayers().get(WorldCreator.BG_IMG_STATIC_KEY));
 
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BACKGROUND_PARALLAX_DISTANT_GRAPHICS_KEY, 0.5f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BACKGROUND_PARALLAX_CLOSE_GRAPHICS_KEY, 0.75f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX4_KEY, 0.4f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX3_KEY, 0.55f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX2_KEY, 0.7f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.85f);
 
         mapRenderer.setView(camera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BACKGROUND_GRAPHICS_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BG_TILES_KEY));
 
         Array<BoxCoin> activeBoxCoins = controller.getActiveBoxCoins();
         for (BoxCoin boxCoin : activeBoxCoins) {
@@ -241,7 +244,7 @@ public class GameRenderer implements Disposable {
                 0);
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(layer));
+        mapRenderer.renderImageLayer((TiledMapImageLayer) controller.getMap().getLayers().get(layer));
     }
 
     private void renderForeground(SpriteBatch batch) {
@@ -265,7 +268,7 @@ public class GameRenderer implements Disposable {
         }
 
         mapRenderer.setView(camera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.GRAPHICS_KEY));
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.FG_TILES_KEY));
 
         Array<Platform> platforms = controller.getPlatforms();
         for (Platform platform : platforms) {

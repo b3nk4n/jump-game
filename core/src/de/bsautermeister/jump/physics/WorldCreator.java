@@ -33,11 +33,13 @@ import de.bsautermeister.jump.sprites.Spiky;
 
 public class WorldCreator {
 
-    public static final String BACKGROUND_COLOR_KEY = "backgroundColor";
-    public static final String BACKGROUND_PARALLAX_DISTANT_GRAPHICS_KEY = "backgroundParallaxDistantGraphics";
-    public static final String BACKGROUND_PARALLAX_CLOSE_GRAPHICS_KEY = "backgroundParallaxCloseGraphics";
-    public static final String BACKGROUND_GRAPHICS_KEY = "backgroundGraphics";
-    public static final String GRAPHICS_KEY = "graphics";
+    public static final String BG_IMG_STATIC_KEY = "bgImageStatic";
+    public static final String BG_IMG_PARALLAX1_KEY = "bgImageParallax1";
+    public static final String BG_IMG_PARALLAX2_KEY = "bgImageParallax2";
+    public static final String BG_IMG_PARALLAX3_KEY = "bgImageParallax3";
+    public static final String BG_IMG_PARALLAX4_KEY = "bgImageParallax4";
+    public static final String BG_TILES_KEY = "bgTiles";
+    public static final String FG_TILES_KEY = "fgTiles";
 
     private static final String GROUND_KEY = "ground";
     private static final String PIPES_KEY = "pipes";
