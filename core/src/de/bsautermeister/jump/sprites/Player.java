@@ -366,13 +366,12 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         if (!touchesGround()) {
             if (blockJumpTimer > 0 || state.is(State.JUMPING)) {
-                // keep jumping state
-                return;
+                // keep jumping
             } else {
                 state.set(State.WALKING);
                 state.freeze();
             }
-        } else if (blockJumpTimer < 0 /*touchesGround() && Math.abs(getVelocityRelativeToGround().y) < 0.1*/) {
+        } else if (blockJumpTimer < 0) {
             if (down) {
                 state.set(State.CROUCHING);
             } else if (Math.abs(relativeBodyVelocity.x) > 1e-4) {
