@@ -18,10 +18,10 @@ import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
-public class Mushroom extends Item implements Drownable {
+public class MushroomItem extends Item implements Drownable {
     private boolean drowning = false;
 
-    public Mushroom(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
+    public MushroomItem(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
         super(callbacks, world, x, y);
         setRegion(atlas.findRegion(RegionNames.MUSHROOM), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
         velocity = new Vector2(0.6f, 0);

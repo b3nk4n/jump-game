@@ -665,7 +665,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
     }
 
-    public void setOnFire() {
+    public void pretzelize() {
         pretzelized = true;
     }
 

@@ -40,12 +40,13 @@ import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
-import de.bsautermeister.jump.sprites.Beer;
+import de.bsautermeister.jump.sprites.BeerItem;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.FireFlower;
+import de.bsautermeister.jump.sprites.MushroomItem;
+import de.bsautermeister.jump.sprites.PretzelItem;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
@@ -55,7 +56,6 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Koopa;
-import de.bsautermeister.jump.sprites.Mushroom;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Spiky;
@@ -134,14 +134,14 @@ public class GameController  implements BinarySerializable, Disposable {
         @Override
         public void use(Player player, Item item) {
             String msg;
-            if (item instanceof Beer) {
+            if (item instanceof BeerItem) {
                 updateCollectedBeers(collectedBeers + 1);
                 soundEffects.drinkingSound.play();
                 if (collectedBeers >= totalBeers) {
                     unlockGoal();
                 }
                 msg = "PROST";
-            } else if (item instanceof Mushroom) {
+            } else if (item instanceof MushroomItem) {
                 soundEffects.ohYeahSound.play();
                 msg = "SWEET";
             } else { // prezel
@@ -177,13 +177,13 @@ public class GameController  implements BinarySerializable, Disposable {
                 soundEffects.bumpSound.play();
             } else if (itemBox.isMushroomBox()) {
                 if (player.isBig()) {
-                    spawnItem(new ItemDef(position, FireFlower.class));
+                    spawnItem(new ItemDef(position, PretzelItem.class));
                 } else {
-                    spawnItem(new ItemDef(position, Mushroom.class));
+                    spawnItem(new ItemDef(position, MushroomItem.class));
                 }
                 soundEffects.powerupSpawnSound.play();
             } else if (itemBox.isBeerBox()) {
-                spawnItem(new ItemDef(position, Beer.class));
+                spawnItem(new ItemDef(position, BeerItem.class));
                 soundEffects.powerupSpawnSound.play();
             } else {
                 soundEffects.coinSound.play();
@@ -604,16 +604,16 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         ItemDef itemDef = itemsToSpawn.poll();
-        if (itemDef.getType() == Mushroom.class) {
-            Mushroom mushroom = new Mushroom(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
-            items.put(mushroom.getId(), mushroom);
-            waterInteractionManager.add(mushroom);
-        } else if (itemDef.getType() == FireFlower.class) {
-            FireFlower fireFlower = new FireFlower(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
-            items.put(fireFlower.getId(), fireFlower);
-        } else if (itemDef.getType() == Beer.class) {
-            Beer beer = new Beer(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
-            items.put(beer.getId(), beer);
+        if (itemDef.getType() == MushroomItem.class) {
+            MushroomItem mushroomItem = new MushroomItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+            items.put(mushroomItem.getId(), mushroomItem);
+            waterInteractionManager.add(mushroomItem);
+        } else if (itemDef.getType() == PretzelItem.class) {
+            PretzelItem pretzelItem = new PretzelItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+            items.put(pretzelItem.getId(), pretzelItem);
+        } else if (itemDef.getType() == BeerItem.class) {
+            BeerItem beerItem = new BeerItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+            items.put(beerItem.getId(), beerItem);
         }
     }
 
@@ -941,12 +941,12 @@ public class GameController  implements BinarySerializable, Disposable {
         for (int i = 0; i < numItems; ++i) {
             String itemType = in.readUTF();
             Item item;
-            if (itemType.equals(Mushroom.class.getName())) {
-                item = new Mushroom(callbacks, world, atlas, 0, 0);
-            } else if (itemType.equals(FireFlower.class.getName())) {
-                item = new FireFlower(callbacks, world, atlas, 0, 0);
-            } else if (itemType.equals(Beer.class.getName())) {
-                item = new Beer(callbacks, world, atlas, 0, 0);
+            if (itemType.equals(MushroomItem.class.getName())) {
+                item = new MushroomItem(callbacks, world, atlas, 0, 0);
+            } else if (itemType.equals(PretzelItem.class.getName())) {
+                item = new PretzelItem(callbacks, world, atlas, 0, 0);
+            } else if (itemType.equals(BeerItem.class.getName())) {
+                item = new BeerItem(callbacks, world, atlas, 0, 0);
             } else {
                 throw new IllegalArgumentException("Unknown item type: " + itemType);
             }
