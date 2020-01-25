@@ -42,7 +42,6 @@ public class WorldCreator {
     public static final String FG_TILES_KEY = "fgTiles";
 
     private static final String GROUND_KEY = "ground";
-    private static final String PIPES_KEY = "pipes";
     private static final String BOXES_KEY = "boxes";
     private static final String BRICKS_KEY = "bricks";
     private static final String GOOMBAS_KEY = "goombas";
@@ -74,7 +73,6 @@ public class WorldCreator {
 
     public void buildFromMap() {
         buildStaticLayer(GROUND_KEY, Bits.GROUND, false);
-        buildStaticLayer(PIPES_KEY, Bits.OBJECT, false);
         buildStaticLayer(COLLIDER_KEY, Bits.COLLIDER, true);
 
         for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {

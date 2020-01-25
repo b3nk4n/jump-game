@@ -56,7 +56,6 @@ public abstract class JumpingItem extends Item {
                 Bits.ITEM_BOX |
                 Bits.BRICK |
                 Bits.PLAYER |
-                Bits.OBJECT |
                 Bits.BLOCK_TOP;
 
         fixtureDef.shape = shape;

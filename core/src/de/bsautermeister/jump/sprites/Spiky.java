@@ -101,7 +101,6 @@ public class Spiky extends Enemy implements Drownable {
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.GROUND |
-                Bits.OBJECT |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK |
@@ -120,8 +119,7 @@ public class Spiky extends Enemy implements Drownable {
         fixtureDef.filter.maskBits = Bits.GROUND
                 | Bits.COLLIDER
                 | Bits.ITEM_BOX
-                | Bits.BRICK
-                | Bits.OBJECT;
+                | Bits.BRICK;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));

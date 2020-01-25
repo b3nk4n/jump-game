@@ -43,7 +43,6 @@ public class MushroomItem extends Item implements Drownable {
                 Bits.ITEM_BOX |
                 Bits.BRICK |
                 Bits.PLAYER |
-                Bits.OBJECT |
                 Bits.BLOCK_TOP;
 
         fixtureDef.shape = shape;
@@ -55,8 +54,7 @@ public class MushroomItem extends Item implements Drownable {
         fixtureDef.filter.categoryBits = Bits.ITEM;
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.ITEM_BOX |
-                Bits.BRICK |
-                Bits.OBJECT;
+                Bits.BRICK;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));

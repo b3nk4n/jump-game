@@ -48,7 +48,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             Bits.ENEMY |
             Bits.ENEMY_HEAD |
             Bits.ENEMY_SIDE |
-            Bits.OBJECT |
             Bits.ITEM;
 
     private static final short NO_ENEMY_FILTER_BITS = Bits.GROUND |
@@ -56,7 +55,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             Bits.ITEM_BOX |
             Bits.BRICK |
             Bits.ENEMY_SIDE | // to still block the Flower
-            Bits.OBJECT |
             Bits.ITEM;
 
     private GameCallbacks callbacks;
@@ -571,8 +569,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
-                Bits.BRICK |
-                Bits.OBJECT;
+                Bits.BRICK;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
     }

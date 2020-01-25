@@ -46,7 +46,6 @@ public class WorldContactListener implements ContactListener {
                     player.pumpUp();
                 }
                 break;
-            case Bits.ENEMY_SIDE | Bits.OBJECT:
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
             case Bits.ENEMY_SIDE | Bits.GROUND:
             case Bits.ENEMY_SIDE | Bits.PLATFORM:
@@ -70,7 +69,6 @@ public class WorldContactListener implements ContactListener {
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
                 player.hit(enemy);
                 break;
-            case Bits.ITEM | Bits.OBJECT:
             case Bits.ITEM | Bits.BRICK:
             case Bits.ITEM | Bits.ITEM_BOX:
             case Bits.ITEM | Bits.GROUND:
@@ -88,7 +86,6 @@ public class WorldContactListener implements ContactListener {
             case Bits.PLAYER_FEET | Bits.PLATFORM:
             case Bits.PLAYER_FEET | Bits.ITEM_BOX:
             case Bits.PLAYER_FEET | Bits.BRICK:
-            case Bits.PLAYER_FEET | Bits.OBJECT:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
                 Object other = resolveUserData(fixtureA, fixtureB, ~Bits.PLAYER_FEET);
                 player.touchGround(other);
@@ -130,7 +127,6 @@ public class WorldContactListener implements ContactListener {
             case Bits.PLAYER_FEET | Bits.PLATFORM:
             case Bits.PLAYER_FEET | Bits.ITEM_BOX:
             case Bits.PLAYER_FEET | Bits.BRICK:
-            case Bits.PLAYER_FEET | Bits.OBJECT:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
                 Object other = resolveUserData(fixtureA, fixtureB, ~Bits.PLAYER_FEET);
                 player.leftGround(other);
