@@ -32,7 +32,7 @@ public class Brick extends InteractiveTileObject {
 
     public Brick(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
         super(callbacks, Bits.BRICK, world, map, mapObject);
-        this.goalProtector = mapObject.getProperties().get("goal", false, Boolean.class);
+        this.goalProtector = mapObject.getProperties().get("unlockGoal", false, Boolean.class);
         this.atlas = atlas;
         this.unlockGoal = new MarkedAction();
     }

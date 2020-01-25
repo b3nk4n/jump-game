@@ -18,12 +18,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Coin extends Sprite implements CollectableItem, BinarySerializable, Disposable {
+
+    private static final String TAG_COIN = "coin";
 
     private final GameCallbacks callbacks;
     private final World world;
@@ -73,7 +76,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
         fixtureDef.filter.maskBits = Bits.PLAYER;
         fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
+        fixture.setUserData(new TaggedUserData<CollectableItem>(this, TAG_COIN));
         return body;
     }
 

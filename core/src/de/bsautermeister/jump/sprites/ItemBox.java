@@ -29,9 +29,9 @@ public class ItemBox extends InteractiveTileObject {
 
     public ItemBox(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
         super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
-        tileSet = map.getTileSets().getTileSet("tileset");
-        Boolean multiCoin = (Boolean) mapObject.getProperties().get("multi_coin");
-        Boolean mushroom = (Boolean) mapObject.getProperties().get("mushroom");
+        tileSet = map.getTileSets().getTileSet("OctoberBro");
+        Boolean multiCoin = (Boolean) mapObject.getProperties().get("multiCoin");
+        Boolean mushroom = (Boolean) mapObject.getProperties().get("powerUp");
         Boolean beer = (Boolean) mapObject.getProperties().get("beer");
         if (multiCoin != null && multiCoin) {
             type = Type.COIN;

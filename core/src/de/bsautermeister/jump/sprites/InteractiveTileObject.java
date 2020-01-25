@@ -50,7 +50,7 @@ public abstract class InteractiveTileObject implements BinarySerializable {
         this.objectOnTop = new ObjectSet<String>();
         this.body = defineBody(categoryBit);
         this.bumpUpAnimationTimer = BUMP_UP_ANIMATION_TIME;
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("graphics");
+        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("fgTiles");
         int cellX = (int)(body.getPosition().x * Cfg.PPM / Cfg.BLOCK_SIZE);
         int cellY = ((int)(body.getPosition().y * Cfg.PPM / Cfg.BLOCK_SIZE));
         this.id = cellX + "|" + cellY;

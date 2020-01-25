@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Flower;
@@ -30,6 +31,7 @@ public class WorldContactListener implements ContactListener {
         Enemy enemy;
         InteractiveTileObject tileObject;
         TaggedUserData<Item> taggedItem;
+        TaggedUserData<CollectableItem> taggedCollectableItem;
         TaggedUserData<Enemy> taggedEnemy;
         switch (collisionDef) {
             case Bits.PLAYER_HEAD | Bits.BRICK:
@@ -78,9 +80,9 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Bits.ITEM | Bits.PLAYER:
-                taggedItem = (TaggedUserData<Item>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
+                taggedCollectableItem = (TaggedUserData<CollectableItem>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
-                taggedItem.getUserData().collectBy(player);
+                taggedCollectableItem.getUserData().collectBy(player);
                 break;
             case Bits.PLAYER_FEET | Bits.GROUND:
             case Bits.PLAYER_FEET | Bits.PLATFORM:
