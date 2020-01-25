@@ -220,13 +220,12 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        mapRenderer.renderImageLayer((TiledMapImageLayer) controller.getMap().getLayers().get(WorldCreator.BG_IMG_STATIC_KEY));
-
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX5_KEY, 0.5f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX4_KEY, 0.6f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX3_KEY, 0.7f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX2_KEY, 0.8f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.9f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_STATIC_KEY, 1.0f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX5_KEY, 0.1f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX4_KEY, 0.2f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX3_KEY, 0.4f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX2_KEY, 0.6f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.80f);
 
         mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BG_TILES_KEY));
@@ -240,8 +239,8 @@ public class GameRenderer implements Disposable {
     private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factor) {
         parallaxCamera.setToOrtho(false, camera.viewportWidth, camera.viewportHeight);
         parallaxCamera.position.set(
-                camera.position.x * factor + camera.viewportWidth / 8,
-                camera.position.y * factor + camera.viewportHeight / 7,
+                camera.viewportWidth * (1 - factor) + camera.position.x * factor,
+                camera.viewportHeight * (1 - factor)  + camera.position.y * factor,
                 0);
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);
