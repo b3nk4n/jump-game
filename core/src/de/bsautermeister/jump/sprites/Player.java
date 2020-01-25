@@ -125,6 +125,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private GameTimer drunkTimer;
     private GameTimer stonedTimer;
 
+    private final int randomVictoryIdx;
+
     public Player(GameCallbacks callbacks, World world, TextureAtlas atlas, WorldCreator.StartParams start) {
         this.callbacks = callbacks;
         this.world = world;
@@ -166,6 +168,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         drunkTimer = new GameTimer(EFFECT_DURATION);
         stonedTimer = new GameTimer(EFFECT_DURATION);
+
+        randomVictoryIdx = MathUtils.random(VICTORY_VARIATIONS - 1);
     }
 
     private TextureRegion[] createTextureArray(String templateName, int count) {
@@ -419,11 +423,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             useBigTexture = (int) (((changeSizeTimer.getValue() - (int) changeSizeTimer.getValue())) * 8) % 2 == 0;
         }
         if (isVictory()) {
-            int randIndex = MathUtils.random(VICTORY_VARIATIONS - 1);
             if (useBigTexture) {
-                return bigPlayerVictory[randIndex].getKeyFrame(state.timer());
+                return bigPlayerVictory[randomVictoryIdx].getKeyFrame(state.timer());
             } else {
-                return smallPlayerVictory[randIndex].getKeyFrame(state.timer());
+                return smallPlayerVictory[randomVictoryIdx].getKeyFrame(state.timer());
             }
         }
 
