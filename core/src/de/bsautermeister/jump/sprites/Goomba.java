@@ -166,9 +166,9 @@ public class Goomba extends Enemy implements Drownable {
 
     @Override
     public void onEnemyHit(Enemy enemy) {
-        if (enemy instanceof Koopa) {
-            Koopa koopa = (Koopa) enemy;
-            if (koopa.getState() == Koopa.State.MOVING_SHELL) {
+        if (enemy instanceof Hedgehog) {
+            Hedgehog hedgehog = (Hedgehog) enemy;
+            if (hedgehog.getState() == Hedgehog.State.ROLLING) {
                 kill(true);
                 return;
             }

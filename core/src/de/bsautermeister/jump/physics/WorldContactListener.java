@@ -8,12 +8,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
-import de.bsautermeister.jump.sprites.Koopa;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Spiky;
@@ -56,8 +56,8 @@ public class WorldContactListener implements ContactListener {
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Goomba) {
                     ((Goomba) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
-                } else if (taggedEnemy.getUserData() instanceof Koopa) {
-                    ((Koopa) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
+                    ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Spiky) {
                     ((Spiky) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 }

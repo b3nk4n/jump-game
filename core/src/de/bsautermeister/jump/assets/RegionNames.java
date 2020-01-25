@@ -29,8 +29,9 @@ public class RegionNames {
 
     public static String GOOMBA = "goomba";
     public static String GOOMBA_STOMP = "goomba_stomp";
-    public static String KOOPA = "koopa";
-    public static String KOOPA_MOVING = "koopa_moving";
+    public static String HEDGEHOG_WALK = "hedgehog_walk";
+    public static String HEDGEHOG_ROLL = "hedgehog_roll";
+    public static String HEDGEHOG_ROLLING = "hedgehog_rolling";
     public static String FLOWER = "flower";
     public static String FISH = "fish";
     public static String SPIKY = "spiky";

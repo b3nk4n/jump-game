@@ -81,6 +81,10 @@ public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
         return stateTimer;
     }
 
+    public void setTimer(float value) {
+        stateTimer = value;
+    }
+
     public void freeze() {
         frozen = true;
     }

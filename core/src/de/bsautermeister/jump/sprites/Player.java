@@ -712,10 +712,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void hit(Enemy enemy) {
-        if (enemy instanceof Koopa) {
-            Koopa koopa = (Koopa) enemy;
-            if (koopa.getState() == Koopa.State.STANDING_SHELL) {
-                koopa.kick(getX() <= enemy.getX());
+        if (enemy instanceof Hedgehog) {
+            Hedgehog hedgehog = (Hedgehog) enemy;
+            if (hedgehog.getState() == Hedgehog.State.ROLL) {
+                hedgehog.kick(getX() <= enemy.getX());
                 return;
             }
         }

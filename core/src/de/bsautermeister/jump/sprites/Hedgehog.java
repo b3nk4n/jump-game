@@ -26,11 +26,13 @@ import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
-public class Koopa extends Enemy implements Drownable {
-    public static final float KICK_SPEED = 2f;
+public class Hedgehog extends Enemy implements Drownable {
+    private static final float KICK_SPEED = 2f;
+    private static final float ROTATION_SPEED = 540f;
+    private static final float WAIT_FOR_UNROLL_TIME = 5f;
 
     public enum State {
-        WALKING, STANDING_SHELL, MOVING_SHELL
+        WALKING, ROLL, ROLLING, UNROLL
     }
 
     private GameObjectState<State> state;
@@ -38,23 +40,27 @@ public class Koopa extends Enemy implements Drownable {
     private float speed;
 
     private final Animation<TextureRegion> walkAnimation;
-    private final Animation<TextureRegion> shellAnimation;
+    private final Animation<TextureRegion> rollAnimation;
+    private final Animation<TextureRegion> unrollAnimation;
+    private final TextureRegion rollingTexture;
 
     private static final float SPEED_VALUE = 0.6f;
 
     private boolean previousDirectionLeft;
 
-    public Koopa(GameCallbacks callbacks, World world, TextureAtlas atlas,
-                 float posX, float posY, boolean rightDirection) {
-        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
-        walkAnimation = new Animation(0.2f, atlas.findRegions(RegionNames.KOOPA), Animation.PlayMode.LOOP);
-        shellAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.KOOPA_MOVING), Animation.PlayMode.LOOP);
+    public Hedgehog(GameCallbacks callbacks, World world, TextureAtlas atlas,
+                    float posX, float posY, boolean rightDirection) {
+        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
+        walkAnimation = new Animation(0.05f, atlas.findRegions(RegionNames.HEDGEHOG_WALK), Animation.PlayMode.LOOP);
+        rollAnimation = new Animation(0.15f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
+        unrollAnimation = new Animation(0.15f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
+        rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLLING);
 
         state = new GameObjectState<State>(State.WALKING);
         state.setStateCallback(new GameObjectState.StateCallback<State>() {
             @Override
             public void changed(State previousState, State newState) {
-                if (previousState != State.MOVING_SHELL && newState != State.MOVING_SHELL) {
+                if (previousState != State.ROLLING && newState != State.ROLLING) {
                     return;
                 }
 
@@ -67,9 +73,9 @@ public class Koopa extends Enemy implements Drownable {
 
             private void updateColliderBit(Fixture fixture, State previousState, State newState) {
                 Filter filter = fixture.getFilterData();
-                if (previousState == State.MOVING_SHELL) {
+                if (previousState == State.ROLLING) {
                     filter.maskBits |= ~Bits.COLLIDER;
-                } else if (newState == State.MOVING_SHELL) {
+                } else if (newState == State.ROLLING) {
                     filter.maskBits &= ~Bits.COLLIDER;
                 }
                 fixture.setFilterData(filter);
@@ -77,6 +83,7 @@ public class Koopa extends Enemy implements Drownable {
         });
         speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
         setRegion(getFrame());
+        setOrigin(getWidth() / 2, getHeight() * 5.5f / 16f);
     }
 
     @Override
@@ -86,13 +93,25 @@ public class Koopa extends Enemy implements Drownable {
         if (!isDead() && !isDrowning()) {
             state.upate(delta);
             getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
+
+            if (state.is(State.ROLLING)) {
+                rotate(delta * (speed < 0 ? ROTATION_SPEED : -ROTATION_SPEED));
+            }
+        }
+
+        if (!state.is(State.ROLLING)) {
+            setRotation(0f);
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
                 getBody().getPosition().y - 7 / Cfg.PPM);
         setRegion(getFrame());
 
-        if (state.is(State.STANDING_SHELL) && state.timer() > 5f) {
+        if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
+            state.set(State.UNROLL);
+        }
+
+        if (state.is(State.UNROLL) && state.timer() > 0.5f) {
             state.set(State.WALKING);
             speed = previousDirectionLeft ? -SPEED_VALUE : SPEED_VALUE;
         }
@@ -106,19 +125,26 @@ public class Koopa extends Enemy implements Drownable {
         TextureRegion textureRegion;
 
         switch (state.current()) {
-            case MOVING_SHELL:
-            case STANDING_SHELL:
-                textureRegion = shellAnimation.getKeyFrame(state.timer(), true);
+            case ROLLING:
+                textureRegion = rollingTexture;
+                break;
+            case ROLL:
+                textureRegion = rollAnimation.getKeyFrame(state.timer());
+                break;
+            case UNROLL:
+                textureRegion = unrollAnimation.getKeyFrame(state.timer());
                 break;
             case WALKING:
             default:
-                textureRegion = walkAnimation.getKeyFrame(state.timer(), true);
+                textureRegion = walkAnimation.getKeyFrame(state.timer());
                 break;
         }
 
-        if (speed > 0 && !textureRegion.isFlipX()) {
+        boolean isLeft = speed < 0 || speed == 0 && previousDirectionLeft;
+
+        if (!isLeft && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (speed < 0 && textureRegion.isFlipX()) {
+        } else if (isLeft && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -193,7 +219,7 @@ public class Koopa extends Enemy implements Drownable {
             return;
         }
 
-        if (!state.is(State.STANDING_SHELL)) {
+        if (!state.is(State.ROLL)) {
             stomp();
         } else {
             kick(player.getX() <= getX());
@@ -201,7 +227,11 @@ public class Koopa extends Enemy implements Drownable {
     }
 
     private void stomp() {
-        state.set(State.STANDING_SHELL);
+        state.set(State.ROLL);
+
+        // skip roll animation, when rolling hedgehog is stopped
+        state.setTimer(0.5f);
+
         previousDirectionLeft = speed <= 0;
         speed = 0;
         getCallbacks().stomp(this);
@@ -210,16 +240,16 @@ public class Koopa extends Enemy implements Drownable {
     @Override
     public void onEnemyHit(Enemy enemy) {
         boolean updateDirection = false;
-        if (enemy instanceof Koopa) {
-            Koopa otherKoopa = (Koopa) enemy;
-            if (!state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.MOVING_SHELL) {
+        if (enemy instanceof Hedgehog) {
+            Hedgehog otherHedgehog = (Hedgehog) enemy;
+            if (!state.is(State.ROLLING) && otherHedgehog.getState() == State.ROLLING) {
                 kill(true);
-            } else if(state.is(State.MOVING_SHELL) && otherKoopa.getState() == State.WALKING) {
+            } else if(state.is(State.ROLLING) && otherHedgehog.getState() == State.WALKING) {
                 return;
             } else {
                 updateDirection = true;
             }
-        } else if (!state.is(State.MOVING_SHELL)) {
+        } else if (!state.is(State.ROLLING)) {
             updateDirection = true;
         }
 
@@ -246,7 +276,7 @@ public class Koopa extends Enemy implements Drownable {
     }
 
     public void kick(boolean directionRight) {
-        state.set(State.MOVING_SHELL);
+        state.set(State.ROLLING);
         speed = directionRight ? KICK_SPEED : -KICK_SPEED;
         getCallbacks().kicked(this);
     }

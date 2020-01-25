@@ -141,9 +141,9 @@ public class Spiky extends Enemy implements Drownable {
     @Override
     public void onEnemyHit(Enemy enemy) {
         boolean updateDirection = false;
-        if (enemy instanceof Koopa) {
-            Koopa otherKoopa = (Koopa) enemy;
-            if (otherKoopa.getState() == Koopa.State.MOVING_SHELL) {
+        if (enemy instanceof Hedgehog) {
+            Hedgehog otherHedgehog = (Hedgehog) enemy;
+            if (otherHedgehog.getState() == Hedgehog.State.ROLLING) {
                 kill(true);
             } else {
                 updateDirection = true;

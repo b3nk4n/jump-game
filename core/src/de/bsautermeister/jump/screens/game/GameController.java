@@ -55,7 +55,7 @@ import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
-import de.bsautermeister.jump.sprites.Koopa;
+import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Spiky;
@@ -123,7 +123,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void stomp(Enemy enemy) {
             soundEffects.stompSound.play();
 
-            if (!(enemy instanceof Koopa)) {
+            if (!(enemy instanceof Hedgehog)) {
                 KillSequelManager killSequelManager = getKillSequelManager();
                 killSequelManager.notifyKill();
                 score += killSequelManager.getKillScore();
@@ -246,9 +246,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void hitWall(Enemy enemy) {
-            if (enemy instanceof Koopa) {
-                Koopa koopa = (Koopa) enemy;
-                if (koopa.getState() == Koopa.State.MOVING_SHELL) {
+            if (enemy instanceof Hedgehog) {
+                Hedgehog hedgehog = (Hedgehog) enemy;
+                if (hedgehog.getState() == Hedgehog.State.ROLLING) {
                     float volume = getVolumeBasedOnDistanceToCameraCenter(enemy.getBody().getWorldCenter().x);
                     if (volume > 0) {
                         soundEffects.bumpSound.play(volume);
@@ -923,8 +923,8 @@ public class GameController  implements BinarySerializable, Disposable {
             Enemy enemy;
             if (enemyType.equals(Goomba.class.getName())) {
                 enemy = new Goomba(callbacks, world, atlas, 0, 0, false);
-            } else if (enemyType.equals(Koopa.class.getName())) {
-                enemy = new Koopa(callbacks, world, atlas, 0, 0, false);
+            } else if (enemyType.equals(Hedgehog.class.getName())) {
+                enemy = new Hedgehog(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Spiky.class.getName())) {
                 enemy = new Spiky(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Flower.class.getName())) {

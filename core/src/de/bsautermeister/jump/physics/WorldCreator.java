@@ -27,7 +27,7 @@ import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Goomba;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.ItemBox;
-import de.bsautermeister.jump.sprites.Koopa;
+import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Spiky;
 
@@ -46,7 +46,7 @@ public class WorldCreator {
     private static final String BOXES_KEY = "boxes";
     private static final String BRICKS_KEY = "bricks";
     private static final String GOOMBAS_KEY = "goombas";
-    private static final String KOOPAS_KEY = "koopas";
+    private static final String HEDGEHOGS_KEY = "hedgehogs";
     private static final String SPIKIES_KEY = "spikies";
     private static final String FLOWERS_KEY = "flowers";
     private static final String FISHES_KEY = "fishes";
@@ -143,15 +143,15 @@ public class WorldCreator {
                 enemies.add(goomba);
             }
         }
-        if (hasLayer(map, KOOPAS_KEY)) {
-            for (MapObject mapObject : map.getLayers().get(KOOPAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+        if (hasLayer(map, HEDGEHOGS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(HEDGEHOGS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 String group = (String) mapObject.getProperties().get("group");
                 boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
-                Koopa koopa = new Koopa(callbacks, world, atlas,
+                Hedgehog hedgehog = new Hedgehog(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
-                koopa.setGroup(group);
-                enemies.add(koopa);
+                hedgehog.setGroup(group);
+                enemies.add(hedgehog);
             }
         }
         if (hasLayer(map, SPIKIES_KEY)) {

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="128" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="30" nextobjectid="107">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="128" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="30" nextobjectid="111">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
-  <image source="Sky BG 1.png" width="1280" height="640"/>
+  <image source="Sky BG 1.png" width="3840" height="640"/>
  </imagelayer>
  <imagelayer id="21" name="bgImageParallax5">
-  <image source="Sky BG 2.png" width="1280" height="640"/>
+  <image source="Sky BG 2.png" width="3840" height="640"/>
  </imagelayer>
  <imagelayer id="27" name="bgImageParallax4" offsetx="0" offsety="320">
-  <image source="mountains.png" width="384" height="320"/>
+  <image source="mountains.png" width="1152" height="320"/>
  </imagelayer>
  <imagelayer id="20" name="bgImageParallax3" opacity="0.9">
-  <image source="Clouds.png" width="1280" height="640"/>
+  <image source="Clouds.png" width="3840" height="640"/>
  </imagelayer>
  <imagelayer id="23" name="bgImageParallax2">
-  <image source="Grass 2.png" width="1280" height="640"/>
+  <image source="Grass 2.png" width="3840" height="640"/>
  </imagelayer>
  <imagelayer id="24" name="bgImageParallax1">
-  <image source="Grass 1.png" width="1280" height="640"/>
+  <image source="Grass 1.png" width="3840" height="640"/>
  </imagelayer>
  <layer id="4" name="bgTiles" width="128" height="40">
   <data encoding="csv">
@@ -93,9 +93,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,2,2,2,2,2,3,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,11,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,11,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6,0,0,0,4,5,5,5,5,5,6,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,11,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,0,0,0,0,9,7,2,2,2,2,2,2,2,2,2,2,2,8,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,6,0,0,0,4,5,5,5,5,5,6,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,5,5,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,11,0,0,0,0,17,18,18,18,18,18,18,18,18,18,18,18,18,18,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,43,0,0,0,0,9,10,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,3,0,0,0,9,10,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,21,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,11,0,0,0,9,10,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
@@ -107,7 +107,7 @@
 17,18,18,18,18,18,18,18,18,18,18,18,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,18,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,19
 </data>
  </layer>
- <objectgroup id="6" name="ground" visible="0">
+ <objectgroup id="6" name="ground">
   <object id="1" x="0" y="544" width="256" height="48"/>
   <object id="2" x="0" y="592" width="208" height="48"/>
   <object id="3" x="256" y="480" width="64" height="16"/>
@@ -136,6 +136,9 @@
   <object id="28" x="1728" y="480" width="320" height="16"/>
   <object id="29" x="1696" y="496" width="352" height="16"/>
   <object id="33" x="1664" y="512" width="384" height="128"/>
+  <object id="107" x="656" y="464" width="240" height="32"/>
+  <object id="108" x="656" y="448" width="32" height="16"/>
+  <object id="109" x="864" y="448" width="32" height="16"/>
  </objectgroup>
  <objectgroup id="8" name="boxes">
   <object id="46" x="256" y="240" width="16" height="16">
@@ -170,12 +173,12 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="bricks" visible="0">
+ <objectgroup id="9" name="bricks">
   <object id="51" x="240" y="240" width="16" height="16"/>
   <object id="52" x="272" y="240" width="16" height="16"/>
   <object id="53" x="304" y="240" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="10" name="goombas" visible="0">
+ <objectgroup id="10" name="goombas">
   <object id="56" x="704" y="272" width="16" height="16">
    <properties>
     <property name="group" value="g1"/>
@@ -188,7 +191,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="11" name="koopas" visible="0">
+ <objectgroup id="11" name="hedgehogs">
   <object id="58" x="2000" y="400" width="16" height="16"/>
   <object id="65" x="368" y="288" width="16" height="16"/>
   <object id="66" x="208" y="288" width="16" height="16">
@@ -196,17 +199,18 @@
     <property name="rightDirection" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="110" x="768" y="448" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="12" name="collider" visible="0">
+ <objectgroup id="12" name="collider">
   <object id="60" x="2032" y="400" width="16" height="16"/>
   <object id="61" x="1840" y="400" width="16" height="16"/>
   <object id="63" x="176" y="288" width="16" height="16"/>
   <object id="64" x="400" y="288" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="17" name="spikies" visible="0">
+ <objectgroup id="17" name="spikies">
   <object id="59" x="960" y="240" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="29" name="fish" visible="0">
+ <objectgroup id="29" name="fish">
   <object id="105" x="416" y="624" width="16" height="16">
    <properties>
     <property name="group" value="f1"/>
@@ -222,10 +226,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="flowers" visible="0">
+ <objectgroup id="13" name="flowers">
   <object id="62" x="464" y="496" width="16" height="24"/>
  </objectgroup>
- <objectgroup id="28" name="coins" visible="0">
+ <objectgroup id="28" name="coins">
   <object id="67" x="544" y="432" width="16" height="16"/>
   <object id="68" x="560" y="416" width="16" height="16"/>
   <object id="69" x="544" y="400" width="16" height="16"/>
@@ -263,11 +267,11 @@
   <object id="103" x="304" y="160" width="16" height="16"/>
   <object id="104" x="288" y="144" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="14" name="water" visible="0">
+ <objectgroup id="14" name="water">
   <object id="43" x="208" y="592" width="240" height="48"/>
   <object id="45" x="496" y="528" width="1168" height="112"/>
  </objectgroup>
- <objectgroup id="15" name="bouncers" visible="0">
+ <objectgroup id="15" name="bouncers">
   <object id="38" x="784" y="176" width="16" height="16">
    <properties>
     <property name="bounceAngle" type="int" value="270"/>
@@ -289,7 +293,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="16" name="platforms" visible="0">
+ <objectgroup id="16" name="platforms">
   <object id="37" x="752" y="256" width="64" height="16">
    <properties>
     <property name="startAngle" type="int" value="270"/>
@@ -301,10 +305,10 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="18" name="goal" visible="0">
+ <objectgroup id="18" name="goal">
   <object id="36" x="1936" y="400" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="19" name="start" visible="0">
+ <objectgroup id="19" name="start">
   <object id="34" x="64" y="528" width="16" height="16">
    <properties>
     <property name="directionLeft" type="bool" value="false"/>
