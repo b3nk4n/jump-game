@@ -27,8 +27,11 @@ public class RegionNames {
     public static String BIG_PLAYER_PREZELIZED_CROUCH_TPL = "big_player_prezelized_*_crouch";
     public static String BIG_PLAYER_PREZELIZED_TURN_TPL = "big_player_prezelized_*_turn";
 
-    public static String GOOMBA = "goomba";
-    public static String GOOMBA_STOMP = "goomba_stomp";
+    public static String FOX_WALK = "fox_walk";
+    public static String FOX_ANGRY_WALK = "fox_angry_walk";
+    public static String FOX_STANDING = "fox_standing";
+    public static String FOX_ANGRY_STANDING = "fox_angry_standing";
+    public static String FOX_STROMP = "fox_stomp";
     public static String HEDGEHOG_WALK = "hedgehog_walk";
     public static String HEDGEHOG_ROLL = "hedgehog_roll";
     public static String HEDGEHOG_ROLLING = "hedgehog_rolling";

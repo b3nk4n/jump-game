@@ -11,7 +11,7 @@ import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Flower;
-import de.bsautermeister.jump.sprites.Goomba;
+import de.bsautermeister.jump.sprites.Fox;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
@@ -49,13 +49,22 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
+                taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedEnemy.getUserData() instanceof Fox) {
+                    ((Fox) taggedEnemy.getUserData()).waitAndThenChangeDirectionBySideSensorTag(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
+                    ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Spiky) {
+                    ((Spiky) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                }
+                break;
             case Bits.ENEMY_SIDE | Bits.GROUND:
             case Bits.ENEMY_SIDE | Bits.PLATFORM:
             case Bits.ENEMY_SIDE | Bits.BRICK:
             case Bits.ENEMY_SIDE | Bits.ITEM_BOX:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (taggedEnemy.getUserData() instanceof Goomba) {
-                    ((Goomba) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                if (taggedEnemy.getUserData() instanceof Fox) {
+                    ((Fox) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Spiky) {

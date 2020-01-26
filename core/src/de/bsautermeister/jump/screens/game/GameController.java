@@ -50,7 +50,7 @@ import de.bsautermeister.jump.sprites.PretzelItem;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
-import de.bsautermeister.jump.sprites.Goomba;
+import de.bsautermeister.jump.sprites.Fox;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
@@ -644,13 +644,19 @@ public class GameController  implements BinarySerializable, Disposable {
     private void updateEnemies(float delta) {
         for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
-            if (!enemy.isActive() && Vector2.len2(
-                    enemy.getX() - player.getX(), enemy.getY() - player.getY()) < Cfg.ENEMY_WAKE_UP_DISTANCE2) {
+
+            float len2 = Vector2.len2(enemy.getX() - player.getX(), enemy.getY() - player.getY());
+
+            if (!enemy.isActive() && len2 < Cfg.ENEMY_WAKE_UP_DISTANCE2) {
                 enemy.setActive(true);
 
                 if (enemy.hasGroup()) {
                     wakeUp(enemy.getGroup());
                 }
+            }
+
+            if (enemy instanceof Fox) {
+                ((Fox) enemy).setSquaredDistanceToPlayer(len2);
             }
         }
     }
@@ -921,8 +927,8 @@ public class GameController  implements BinarySerializable, Disposable {
         for (int i = 0; i < numEnemies; ++i) {
             String enemyType = in.readUTF();
             Enemy enemy;
-            if (enemyType.equals(Goomba.class.getName())) {
-                enemy = new Goomba(callbacks, world, atlas, 0, 0, false);
+            if (enemyType.equals(Fox.class.getName())) {
+                enemy = new Fox(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Hedgehog.class.getName())) {
                 enemy = new Hedgehog(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Spiky.class.getName())) {

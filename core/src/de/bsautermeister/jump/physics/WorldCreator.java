@@ -24,7 +24,7 @@ import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
-import de.bsautermeister.jump.sprites.Goomba;
+import de.bsautermeister.jump.sprites.Fox;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Hedgehog;
@@ -45,7 +45,7 @@ public class WorldCreator {
     private static final String GROUND_KEY = "ground";
     private static final String BOXES_KEY = "boxes";
     private static final String BRICKS_KEY = "bricks";
-    private static final String GOOMBAS_KEY = "goombas";
+    private static final String FOXES_KEY = "foxes";
     private static final String HEDGEHOGS_KEY = "hedgehogs";
     private static final String SPIKIES_KEY = "spikies";
     private static final String FLOWERS_KEY = "flowers";
@@ -132,15 +132,15 @@ public class WorldCreator {
 
     public Array<Enemy> createEnemies() {
         Array<Enemy> enemies = new Array<Enemy>();
-        if (hasLayer(map, GOOMBAS_KEY)) {
-            for (MapObject mapObject : map.getLayers().get(GOOMBAS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+        if (hasLayer(map, FOXES_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(FOXES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 String group = (String) mapObject.getProperties().get("group");
                 boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
-                Goomba goomba = new Goomba(callbacks, world, atlas,
+                Fox fox = new Fox(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
-                goomba.setGroup(group);
-                enemies.add(goomba);
+                fox.setGroup(group);
+                enemies.add(fox);
             }
         }
         if (hasLayer(map, HEDGEHOGS_KEY)) {

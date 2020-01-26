@@ -71,7 +71,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
 
     private Body defineBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY()); // TODO top-left vs center (also e.g. in Goomba)
+        bodyDef.position.set(getX(), getY()); // TODO top-left vs center (also e.g. in Fox)
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = world.createBody(bodyDef);
 

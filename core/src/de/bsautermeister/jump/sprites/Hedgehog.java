@@ -52,8 +52,8 @@ public class Hedgehog extends Enemy implements Drownable {
                     float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
         walkAnimation = new Animation(0.05f, atlas.findRegions(RegionNames.HEDGEHOG_WALK), Animation.PlayMode.LOOP);
-        rollAnimation = new Animation(0.15f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
-        unrollAnimation = new Animation(0.15f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
+        rollAnimation = new Animation(0.33f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
+        unrollAnimation = new Animation(0.33f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
         rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLLING);
 
         state = new GameObjectState<State>(State.WALKING);
@@ -111,7 +111,7 @@ public class Hedgehog extends Enemy implements Drownable {
             state.set(State.UNROLL);
         }
 
-        if (state.is(State.UNROLL) && state.timer() > 0.5f) {
+        if (state.is(State.UNROLL) && state.timer() > 1f) {
             state.set(State.WALKING);
             speed = previousDirectionLeft ? -SPEED_VALUE : SPEED_VALUE;
         }

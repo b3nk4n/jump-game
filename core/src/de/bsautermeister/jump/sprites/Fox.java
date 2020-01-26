@@ -25,25 +25,40 @@ import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
-public class Goomba extends Enemy implements Drownable {
+public class Fox extends Enemy implements Drownable {
     private static final float SPEED = 0.8f;
 
+    private static final int NOMRAL_IDX = 0;
+    private static final int ANGRY_IDX = 1;
+
     public enum State {
-        WALKING, STOMPED
+        WALKING, STANDING, STOMPED
     }
 
     private GameObjectState<State> state;
     private boolean drowning;
     private float speed;
+    private boolean previousDirectionLeft;
 
-    private final Animation<TextureRegion> walkAnimation;
-    private final TextureRegion stompedTexture;
+    private float squaredDistanceToPlayer;
 
-    public Goomba(GameCallbacks callbacks, World world, TextureAtlas atlas,
-                  float posX, float posY, boolean rightDirection) {
+    private final Animation<TextureRegion>[] walkAnimation;
+    private final Animation<TextureRegion>[] standingAnimation;
+    private final Animation<TextureRegion> stompedAnimation;
+
+    public Fox(GameCallbacks callbacks, World world, TextureAtlas atlas,
+               float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-        walkAnimation = new Animation(0.4f, atlas.findRegions(RegionNames.GOOMBA), Animation.PlayMode.LOOP);
-        stompedTexture = atlas.findRegion(RegionNames.GOOMBA_STOMP);
+
+        walkAnimation = new Animation[2];
+        walkAnimation[NOMRAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);
+        walkAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_WALK), Animation.PlayMode.LOOP);
+
+        standingAnimation = new Animation[2];
+        standingAnimation[NOMRAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
+        standingAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_STANDING), Animation.PlayMode.LOOP);
+
+        stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STROMP), Animation.PlayMode.NORMAL);
 
         state = new GameObjectState<State>(State.WALKING);
         speed = rightDirection ? SPEED : -SPEED;
@@ -66,6 +81,11 @@ public class Goomba extends Enemy implements Drownable {
             markRemovable();
         }
 
+        if (state.is(State.STANDING) && state.timer() > 2f) {
+            state.set(State.WALKING);
+            speed = previousDirectionLeft ? SPEED : - SPEED;
+        }
+
         if (isDrowning()) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
         }
@@ -74,19 +94,26 @@ public class Goomba extends Enemy implements Drownable {
     private TextureRegion getFrame() {
         TextureRegion textureRegion;
 
+        int characterIdx = squaredDistanceToPlayer > 1.0f ? NOMRAL_IDX : ANGRY_IDX; // TODO only ANGRY when facing the player
+
         switch (state.current()) {
             case STOMPED:
-                textureRegion = stompedTexture;
+                textureRegion = stompedAnimation.getKeyFrame(state.timer());
+                break;
+            case STANDING:
+                textureRegion = standingAnimation[characterIdx].getKeyFrame(state.timer());
                 break;
             case WALKING:
             default:
-                textureRegion = walkAnimation.getKeyFrame(state.timer(), true);
+                textureRegion = walkAnimation[characterIdx].getKeyFrame(state.timer());
                 break;
         }
 
-        if (speed > 0 && !textureRegion.isFlipX()) {
+        boolean isLeft = speed < 0 || speed == 0 && previousDirectionLeft;
+
+        if (!isLeft && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        } else if (speed < 0 && textureRegion.isFlipX()) {
+        } else if (isLeft && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         }
 
@@ -193,6 +220,12 @@ public class Goomba extends Enemy implements Drownable {
         getCallbacks().hitWall(this);
     }
 
+    public void waitAndThenChangeDirectionBySideSensorTag(String sideSensorTag) {
+        state.set(State.STANDING);
+        previousDirectionLeft = speed <= 0;
+        speed = 0;
+    }
+
     private void stomp() {
         getCallbacks().stomp(this);
 
@@ -224,11 +257,16 @@ public class Goomba extends Enemy implements Drownable {
         return getBody().getLinearVelocity();
     }
 
+    public void setSquaredDistanceToPlayer(float squaredDistanceToPlayer) {
+        this.squaredDistanceToPlayer = squaredDistanceToPlayer;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
         out.writeFloat(speed);
+        out.writeBoolean(previousDirectionLeft);
     }
 
     @Override
@@ -236,5 +274,6 @@ public class Goomba extends Enemy implements Drownable {
         super.read(in);
         state.read(in);
         speed = in.readFloat();
+        previousDirectionLeft = in.readBoolean();
     }
 }
