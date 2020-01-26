@@ -28,7 +28,7 @@ import de.bsautermeister.jump.physics.TaggedUserData;
 public class Fox extends Enemy implements Drownable {
     private static final float SPEED = 0.8f;
 
-    private static final int NOMRAL_IDX = 0;
+    private static final int NORMAL_IDX = 0;
     private static final int ANGRY_IDX = 1;
 
     public enum State {
@@ -40,7 +40,7 @@ public class Fox extends Enemy implements Drownable {
     private float speed;
     private boolean previousDirectionLeft;
 
-    private float squaredDistanceToPlayer;
+    private Vector2 playerPosition = new Vector2();
 
     private final Animation<TextureRegion>[] walkAnimation;
     private final Animation<TextureRegion>[] standingAnimation;
@@ -51,11 +51,11 @@ public class Fox extends Enemy implements Drownable {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
 
         walkAnimation = new Animation[2];
-        walkAnimation[NOMRAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);
+        walkAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);
         walkAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_WALK), Animation.PlayMode.LOOP);
 
         standingAnimation = new Animation[2];
-        standingAnimation[NOMRAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
+        standingAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
         standingAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_STANDING), Animation.PlayMode.LOOP);
 
         stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STROMP), Animation.PlayMode.NORMAL);
@@ -92,9 +92,15 @@ public class Fox extends Enemy implements Drownable {
     }
 
     private TextureRegion getFrame() {
+        boolean isLeft = speed < 0 || speed == 0 && previousDirectionLeft;
+
         TextureRegion textureRegion;
 
-        int characterIdx = squaredDistanceToPlayer > 1.0f ? NOMRAL_IDX : ANGRY_IDX; // TODO only ANGRY when facing the player
+        float x = getBody().getPosition().x;
+        float y = getBody().getPosition().y;
+        int characterIdx = (isLeft && playerPosition.x < x || !isLeft && playerPosition.x > x) &&
+                Vector2.len2(playerPosition.x - x, playerPosition.y - y) < 1.0f
+                ? ANGRY_IDX : NORMAL_IDX;
 
         switch (state.current()) {
             case STOMPED:
@@ -109,7 +115,7 @@ public class Fox extends Enemy implements Drownable {
                 break;
         }
 
-        boolean isLeft = speed < 0 || speed == 0 && previousDirectionLeft;
+
 
         if (!isLeft && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
@@ -257,8 +263,8 @@ public class Fox extends Enemy implements Drownable {
         return getBody().getLinearVelocity();
     }
 
-    public void setSquaredDistanceToPlayer(float squaredDistanceToPlayer) {
-        this.squaredDistanceToPlayer = squaredDistanceToPlayer;
+    public void setPlayerPosition(Vector2 playerPosition) {
+        this.playerPosition.set(playerPosition);
     }
 
     @Override
@@ -267,6 +273,8 @@ public class Fox extends Enemy implements Drownable {
         state.write(out);
         out.writeFloat(speed);
         out.writeBoolean(previousDirectionLeft);
+        out.writeFloat(playerPosition.x);
+        out.writeFloat(playerPosition.y);
     }
 
     @Override
@@ -275,5 +283,6 @@ public class Fox extends Enemy implements Drownable {
         state.read(in);
         speed = in.readFloat();
         previousDirectionLeft = in.readBoolean();
+        playerPosition.set(in.readFloat(), in.readFloat());
     }
 }

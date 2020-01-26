@@ -656,7 +656,7 @@ public class GameController  implements BinarySerializable, Disposable {
             }
 
             if (enemy instanceof Fox) {
-                ((Fox) enemy).setSquaredDistanceToPlayer(len2);
+                ((Fox) enemy).setPlayerPosition(player.getBody().getPosition());
             }
         }
     }
