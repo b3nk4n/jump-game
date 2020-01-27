@@ -65,7 +65,8 @@ public class GameRenderer implements Disposable {
     private final FrameBuffer frameBuffer;
 
     private final ShaderProgram waterShader;
-    private final TextureRegion waterTexture;
+    private final TextureRegion waterFrontTexture;
+    private final TextureRegion waterBackTexture;
     private final ShaderProgram drunkShader;
     private final ShaderProgram stonedShader;
     private final ShaderProgram pixelateShader;
@@ -106,7 +107,8 @@ public class GameRenderer implements Disposable {
         stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
         pixelateShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/pixelate.fs");
 
-        waterTexture = atlas.findRegion(RegionNames.WATER);
+        waterFrontTexture = atlas.findRegion(RegionNames.WATER_FRONT);
+        waterBackTexture = atlas.findRegion(RegionNames.WATER_BACK);
 
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
@@ -248,12 +250,12 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderForeground(SpriteBatch batch) {
-        float gameTime = controller.getGameTime();
-
         Array<Coin> coins = controller.getCoins();
         for (Coin coin : coins) {
             coin.draw(batch);
         }
+
+        renderWater(batch, waterBackTexture);
 
         ObjectMap<String, Item> items = controller.getItems();
         for (Item item : items.values()) {
@@ -267,23 +269,47 @@ public class GameRenderer implements Disposable {
             }
         }
 
-        mapRenderer.setView(camera);
-        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.FG_TILES_KEY));
-
         Array<Platform> platforms = controller.getPlatforms();
         for (Platform platform : platforms) {
             platform.draw(batch);
         }
 
         for (Enemy enemy : enemies.values()) {
-            if (!(enemy instanceof Flower)) {
+            if (!(enemy instanceof Flower) && !enemy.isDead()) {
                 enemy.draw(batch);
             }
         }
 
         Player player = controller.getPlayer();
-        player.draw(batch);
+        if (!player.isDead()) {
+            player.draw(batch);
+        }
         player.getPretzelBullet().draw(batch);
+
+        renderWater(batch, waterFrontTexture);
+
+        mapRenderer.setView(camera);
+        mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.FG_TILES_KEY));
+
+        // render dead living objects in the very front
+        for (Enemy enemy : enemies.values()) {
+            if (!(enemy instanceof Flower) && enemy.isDead()) {
+                enemy.draw(batch);
+            }
+        }
+        if (player.isDead()) {
+            player.draw(batch);
+        }
+
+        for (InteractiveTileObject tileObject : controller.getTileObjects()) {
+            // tile-objects itself are drawn in the GRAPHICS layer, while this draw-call renders the
+            // particle fragments in case of a destroyed brick
+            tileObject.draw(batch);
+        }
+    }
+
+    private void renderWater(SpriteBatch batch, TextureRegion waterTexture) {
+        float gameTime = controller.getGameTime();
 
         ShaderProgram prevShader = batch.getShader();
         Array<Rectangle> waterList = controller.getWaterList();
@@ -294,14 +320,7 @@ public class GameRenderer implements Disposable {
             batch.draw(waterTexture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
                     waterRegion.getWidth(), waterRegion.getHeight());
         }
-
         batch.setShader(prevShader);
-
-        for (InteractiveTileObject tileObject : controller.getTileObjects()) {
-            // tile-objects itself are drawn in the GRAPHICS layer, while this draw-call renders the
-            // particle fragments in case of a destroyed brick
-            tileObject.draw(batch);
-        }
     }
 
     private final GlyphLayout layout = new GlyphLayout();
