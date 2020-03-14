@@ -752,7 +752,7 @@ public class GameController  implements BinarySerializable, Disposable {
             camera.position.x = mapPixelWidth - viewport.getWorldWidth() / 2;
         }
 
-        camera.position.y = camera.position.y - (camera.position.y - player.getBody().getPosition().y + viewport.getWorldHeight() * 0.133f) * 0.066f;
+        camera.position.y = camera.position.y - (camera.position.y - player.getBody().getPosition().y + viewport.getWorldHeight() * 0.075f) * 0.066f;
 
         // check camera in bounds (Y)
         if (camera.position.y - viewport.getWorldHeight() / 2 < 0) {
