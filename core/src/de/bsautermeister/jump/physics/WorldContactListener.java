@@ -72,8 +72,8 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Bits.ENEMY: // enemy with enemy
-                ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
-                ((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
+                //((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
+                //((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
                 break;
             case Bits.PLAYER | Bits.ENEMY:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
@@ -198,6 +198,11 @@ public class WorldContactListener implements ContactListener {
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
                 pretzelBullet.resetLater();
                 enemy.kill(true);
+                contact.setEnabled(false);
+                break;
+            case Bits.ENEMY: // enemy with enemy
+                ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
+                ((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
                 contact.setEnabled(false);
                 break;
         }

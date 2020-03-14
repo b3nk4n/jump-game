@@ -119,6 +119,11 @@ public class Hedgehog extends Enemy implements Drownable {
         if (isDrowning()) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
         }
+
+        if (state.is(State.ROLL) || state.is(State.UNROLL) && speed == 0) {
+            // ensure speed is zero, even after other enemy collision
+            getBody().setLinearVelocity(Vector2.Zero);
+        }
     }
 
     private TextureRegion getFrame() {
@@ -244,12 +249,11 @@ public class Hedgehog extends Enemy implements Drownable {
             Hedgehog otherHedgehog = (Hedgehog) enemy;
             if (!state.is(State.ROLLING) && otherHedgehog.getState() == State.ROLLING) {
                 kill(true);
-            } else if(state.is(State.ROLLING) && otherHedgehog.getState() == State.WALKING) {
                 return;
-            } else {
-                updateDirection = true;
             }
-        } else if (!state.is(State.ROLLING)) {
+        }
+
+        if (state.is(State.WALKING)) {
             updateDirection = true;
         }
 
