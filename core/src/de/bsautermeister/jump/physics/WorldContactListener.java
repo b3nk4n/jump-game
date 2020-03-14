@@ -29,10 +29,10 @@ public class WorldContactListener implements ContactListener {
 
         Player player;
         Enemy enemy;
-        InteractiveTileObject tileObject;
         TaggedUserData<Item> taggedItem;
-        TaggedUserData<CollectableItem> taggedCollectableItem;
+        InteractiveTileObject tileObject;
         TaggedUserData<Enemy> taggedEnemy;
+        TaggedUserData<CollectableItem> taggedCollectableItem;
         switch (collisionDef) {
             case Bits.PLAYER_HEAD | Bits.BRICK:
             case Bits.PLAYER_HEAD | Bits.ITEM_BOX:
@@ -70,10 +70,6 @@ public class WorldContactListener implements ContactListener {
                 } else if (taggedEnemy.getUserData() instanceof Spiky) {
                     ((Spiky) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 }
-                break;
-            case Bits.ENEMY: // enemy with enemy
-                //((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
-                //((Enemy) fixtureB.getUserData()).onEnemyHit((Enemy) fixtureA.getUserData());
                 break;
             case Bits.PLAYER | Bits.ENEMY:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
@@ -130,8 +126,8 @@ public class WorldContactListener implements ContactListener {
 
         Player player;
         Enemy enemy;
-        InteractiveTileObject tileObject;
         TaggedUserData<Item> taggedItem;
+        InteractiveTileObject tileObject;
         TaggedUserData<Enemy> taggedEnemy;
         switch (collisionDef) {
             case Bits.PLAYER_FEET | Bits.GROUND:
@@ -175,8 +171,8 @@ public class WorldContactListener implements ContactListener {
 
         Player player;
         Enemy enemy;
-        PretzelBullet pretzelBullet;
         Platform platform;
+        PretzelBullet pretzelBullet;
         switch (collisionDef) {
             case Bits.PLAYER | Bits.PLATFORM:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
