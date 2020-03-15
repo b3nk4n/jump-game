@@ -31,13 +31,12 @@ public class RegionNames {
     public static String FOX_ANGRY_WALK = "fox_angry_walk";
     public static String FOX_STANDING = "fox_standing";
     public static String FOX_ANGRY_STANDING = "fox_angry_standing";
-    public static String FOX_STROMP = "fox_stomp";
+    public static String FOX_STOMP = "fox_stomp";
     public static String HEDGEHOG_WALK = "hedgehog_walk";
     public static String HEDGEHOG_ROLL = "hedgehog_roll";
     public static String HEDGEHOG_ROLLING = "hedgehog_rolling";
     public static String FLOWER = "flower";
     public static String FISH = "fish";
-    public static String SPIKY = "spiky";
     public static String MUSHROOM = "mushroom";
     public static String COIN = "coin";
     public static String BRICK_FRAGMENT = "brick_fragment";

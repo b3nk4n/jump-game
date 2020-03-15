@@ -227,9 +227,6 @@
   <object id="115" x="752" y="80" width="16" height="16"/>
   <object id="117" x="960" y="80" width="16" height="16"/>
  </objectgroup>
- <objectgroup id="17" name="spikies">
-  <object id="59" x="960" y="240" width="16" height="16"/>
- </objectgroup>
  <objectgroup id="29" name="fishes">
   <object id="105" x="416" y="624" width="16" height="16">
    <properties>

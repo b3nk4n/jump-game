@@ -58,7 +58,6 @@ import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
-import de.bsautermeister.jump.sprites.Spiky;
 import de.bsautermeister.jump.text.TextMessage;
 
 public class GameController  implements BinarySerializable, Disposable {
@@ -931,8 +930,6 @@ public class GameController  implements BinarySerializable, Disposable {
                 enemy = new Fox(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Hedgehog.class.getName())) {
                 enemy = new Hedgehog(callbacks, world, atlas, 0, 0, false);
-            } else if (enemyType.equals(Spiky.class.getName())) {
-                enemy = new Spiky(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Flower.class.getName())) {
                 enemy = new Flower(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Fish.class.getName())) {

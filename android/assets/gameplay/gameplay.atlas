@@ -1838,20 +1838,6 @@ small_player_3_walk
   orig: 16, 17
   offset: 0, 0
   index: 2
-spiky
-  rotate: false
-  xy: 672, 144
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 0
-spiky
-  rotate: false
-  xy: 692, 164
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
 water_back
   rotate: false
   xy: 4, 148

@@ -58,7 +58,7 @@ public class Fox extends Enemy implements Drownable {
         standingAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
         standingAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_STANDING), Animation.PlayMode.LOOP);
 
-        stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STROMP), Animation.PlayMode.NORMAL);
+        stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STOMP), Animation.PlayMode.NORMAL);
 
         state = new GameObjectState<State>(State.WALKING);
         speed = rightDirection ? SPEED : -SPEED;

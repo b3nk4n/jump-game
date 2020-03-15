@@ -8,15 +8,14 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Hedgehog;
-import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Fox;
+import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
-import de.bsautermeister.jump.sprites.Spiky;
+import de.bsautermeister.jump.sprites.PretzelBullet;
 
 public class WorldContactListener implements ContactListener {
 
@@ -54,8 +53,6 @@ public class WorldContactListener implements ContactListener {
                     ((Fox) taggedEnemy.getUserData()).waitAndThenChangeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
-                } else if (taggedEnemy.getUserData() instanceof Spiky) {
-                    ((Spiky) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 }
                 break;
             case Bits.ENEMY_SIDE | Bits.GROUND:
@@ -67,8 +64,6 @@ public class WorldContactListener implements ContactListener {
                     ((Fox) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
-                } else if (taggedEnemy.getUserData() instanceof Spiky) {
-                    ((Spiky) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 }
                 break;
             case Bits.PLAYER | Bits.ENEMY:

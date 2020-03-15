@@ -25,11 +25,10 @@ import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Fox;
+import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.ItemBox;
-import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.Platform;
-import de.bsautermeister.jump.sprites.Spiky;
 
 public class WorldCreator {
 
@@ -47,7 +46,6 @@ public class WorldCreator {
     private static final String BRICKS_KEY = "bricks";
     private static final String FOXES_KEY = "foxes";
     private static final String HEDGEHOGS_KEY = "hedgehogs";
-    private static final String SPIKIES_KEY = "spikies";
     private static final String FLOWERS_KEY = "flowers";
     private static final String FISHES_KEY = "fishes";
     private static final String COLLIDER_KEY = "collider";
@@ -152,17 +150,6 @@ public class WorldCreator {
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
                 hedgehog.setGroup(group);
                 enemies.add(hedgehog);
-            }
-        }
-        if (hasLayer(map, SPIKIES_KEY)) {
-            for (MapObject mapObject : map.getLayers().get(SPIKIES_KEY).getObjects().getByType(RectangleMapObject.class)) {
-                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
-                String group = (String) mapObject.getProperties().get("group");
-                boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
-                Spiky spiky = new Spiky(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
-                spiky.setGroup(group);
-                enemies.add(spiky);
             }
         }
         if (hasLayer(map, FLOWERS_KEY)) {
