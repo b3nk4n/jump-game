@@ -712,12 +712,12 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     public float getHammeredRatio() {
         if (hammeredTimer.getProgress() < 0.05) {
-            return hammeredTimer.getProgress() * 20f;
+            return hammeredTimer.getProgress() * 10f;
         }
         if (hammeredTimer.getProgress() >= 0.95) {
-            return (1f - hammeredTimer.getProgress()) * 20f;
+            return (1f - hammeredTimer.getProgress()) * 10f;
         }
-        return 1f;
+        return 0.5f;
     }
 
     public void hit(Enemy enemy) {

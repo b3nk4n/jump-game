@@ -104,7 +104,7 @@ public class GameRenderer implements Disposable {
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
-        stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/invert_colors.fs");
+        stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/grayscale.fs");
         pixelateShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/pixelate.fs");
 
         waterFrontTexture = atlas.findRegion(RegionNames.WATER_FRONT);
