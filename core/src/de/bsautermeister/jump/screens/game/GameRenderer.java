@@ -145,9 +145,9 @@ public class GameRenderer implements Disposable {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        if (player.isStoned()) {
+        if (player.isHammered()) {
             batch.setShader(stonedShader);
-            stonedShader.setUniformf("u_effectRatio", player.getStonedRatio());
+            stonedShader.setUniformf("u_effectRatio", player.getHammeredRatio());
         }
         renderBackground(batch);
         renderForeground(batch);
@@ -183,13 +183,13 @@ public class GameRenderer implements Disposable {
                 camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                 (int)screenPixelPerTileX * 2, (int)screenPixelPerTileY * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
-        if (player.isStoned()) {
+        if (player.isHammered()) {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, 0.5f);
-            float offsetX1 =  screenPixelPerTileX * 0.66f * (float)Math.sin(-gameTime) * player.getStonedRatio();
-            float offsetY1 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getStonedRatio();
-            float offsetX2 =  screenPixelPerTileX * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getStonedRatio();
-            float offsetY2 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.7f) * player.getStonedRatio();
+            float offsetX1 =  screenPixelPerTileX * 0.66f * (float)Math.sin(-gameTime) * player.getHammeredRatio();
+            float offsetY1 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getHammeredRatio();
+            float offsetX2 =  screenPixelPerTileX * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getHammeredRatio();
+            float offsetY2 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.7f) * player.getHammeredRatio();
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                     (int)(screenPixelPerTileX * 2 + offsetX1), (int)(screenPixelPerTileY * 2 - offsetY1), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);

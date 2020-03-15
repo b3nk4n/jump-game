@@ -123,7 +123,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private String lastJumpThroughPlatformId;
 
     private GameTimer drunkTimer;
-    private GameTimer stonedTimer;
+    private GameTimer hammeredTimer;
 
     private final int randomVictoryIdx;
 
@@ -167,7 +167,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         throwPretzelTimer = new GameTimer(1.0f, true);
 
         drunkTimer = new GameTimer(EFFECT_DURATION);
-        stonedTimer = new GameTimer(EFFECT_DURATION);
+        hammeredTimer = new GameTimer(EFFECT_DURATION);
 
         randomVictoryIdx = MathUtils.random(VICTORY_VARIATIONS - 1);
     }
@@ -257,7 +257,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         throwPretzelTimer.update(delta);
         drunkTimer.update(delta);
-        stonedTimer.update(delta);
+        hammeredTimer.update(delta);
 
         TextureRegion textureRegion = getFrame();
         setRegion(textureRegion);
@@ -674,8 +674,22 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void drunk() {
-        float skip = isDrunk() ? 0.1f * EFFECT_DURATION : 0f;
-        drunkTimer.restart(skip);
+        boolean useNormalDrunk;
+        if (isDrunk()) {
+            useNormalDrunk = false;
+        } else if (isHammered()) {
+            useNormalDrunk = true;
+        } else {
+            useNormalDrunk = MathUtils.random(1) == 0;
+        }
+
+        if (useNormalDrunk) {
+            float skip = isDrunk() ? 0.1f * EFFECT_DURATION : 0f;
+            drunkTimer.restart(skip);
+        } else {
+            float skip = isHammered() ? 0.05f * EFFECT_DURATION : 0f;
+            hammeredTimer.restart(skip);
+        }
     }
 
     public boolean isDrunk() {
@@ -692,21 +706,16 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         return 1f;
     }
 
-    public void stoned() {
-        float skip = isStoned() ? 0.05f * EFFECT_DURATION : 0f;
-        stonedTimer.restart(skip);
+    public boolean isHammered() {
+        return hammeredTimer.isRunning();
     }
 
-    public boolean isStoned() {
-        return stonedTimer.isRunning();
-    }
-
-    public float getStonedRatio() {
-        if (stonedTimer.getProgress() < 0.05) {
-            return stonedTimer.getProgress() * 20f;
+    public float getHammeredRatio() {
+        if (hammeredTimer.getProgress() < 0.05) {
+            return hammeredTimer.getProgress() * 20f;
         }
-        if (stonedTimer.getProgress() >= 0.95) {
-            return (1f - stonedTimer.getProgress()) * 20f;
+        if (hammeredTimer.getProgress() >= 0.95) {
+            return (1f - hammeredTimer.getProgress()) * 20f;
         }
         return 1f;
     }
@@ -831,7 +840,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         pretzelBullet.write(out);
         out.writeBoolean(isBig);
         drunkTimer.write(out);
-        stonedTimer.write(out);
+        hammeredTimer.write(out);
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
@@ -853,7 +862,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         pretzelBullet.read(in);
         isBig = in.readBoolean();
         drunkTimer.read(in);
-        stonedTimer.read(in);
+        hammeredTimer.read(in);
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();
