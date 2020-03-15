@@ -45,19 +45,19 @@ import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.MushroomItem;
-import de.bsautermeister.jump.sprites.PretzelItem;
-import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.Fish;
 import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Fox;
+import de.bsautermeister.jump.sprites.GrilledChickenItem;
+import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
-import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
+import de.bsautermeister.jump.sprites.PretzelBullet;
+import de.bsautermeister.jump.sprites.PretzelItem;
 import de.bsautermeister.jump.text.TextMessage;
 
 public class GameController  implements BinarySerializable, Disposable {
@@ -142,9 +142,9 @@ public class GameController  implements BinarySerializable, Disposable {
                     unlockGoal();
                 }
                 msg = "PROST";
-            } else if (item instanceof MushroomItem) {
+            } else if (item instanceof GrilledChickenItem) {
                 soundEffects.ohYeahSound.play();
-                msg = "SWEET";
+                msg = "TASTY";
             } else { // prezel
                 soundEffects.powerupSound.play();
                 msg = "YUMMY";
@@ -176,11 +176,11 @@ public class GameController  implements BinarySerializable, Disposable {
         public void hit(Player player, ItemBox itemBox, Vector2 position, boolean closeEnough) {
             if (itemBox.isBlank() || !closeEnough) {
                 soundEffects.bumpSound.play();
-            } else if (itemBox.isMushroomBox()) {
+            } else if (itemBox.isFoodBox()) {
                 if (player.isBig()) {
                     spawnItem(new ItemDef(position, PretzelItem.class));
                 } else {
-                    spawnItem(new ItemDef(position, MushroomItem.class));
+                    spawnItem(new ItemDef(position, GrilledChickenItem.class));
                 }
                 soundEffects.powerupSpawnSound.play();
             } else if (itemBox.isBeerBox()) {
@@ -617,17 +617,15 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         ItemDef itemDef = itemsToSpawn.poll();
-        if (itemDef.getType() == MushroomItem.class) {
-            MushroomItem mushroomItem = new MushroomItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
-            items.put(mushroomItem.getId(), mushroomItem);
-            waterInteractionManager.add(mushroomItem);
+        Item item;
+        if (itemDef.getType() == GrilledChickenItem.class) {
+            item = new GrilledChickenItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
         } else if (itemDef.getType() == PretzelItem.class) {
-            PretzelItem pretzelItem = new PretzelItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
-            items.put(pretzelItem.getId(), pretzelItem);
-        } else if (itemDef.getType() == BeerItem.class) {
-            BeerItem beerItem = new BeerItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
-            items.put(beerItem.getId(), beerItem);
+            item = new PretzelItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
+        } else {
+            item = new BeerItem(callbacks, world, atlas, itemDef.getPosition().x, itemDef.getPosition().y);
         }
+        items.put(item.getId(), item);
     }
 
     private void showTextMessage(String text, Rectangle rect) {
@@ -958,8 +956,8 @@ public class GameController  implements BinarySerializable, Disposable {
         for (int i = 0; i < numItems; ++i) {
             String itemType = in.readUTF();
             Item item;
-            if (itemType.equals(MushroomItem.class.getName())) {
-                item = new MushroomItem(callbacks, world, atlas, 0, 0);
+            if (itemType.equals(GrilledChickenItem.class.getName())) {
+                item = new GrilledChickenItem(callbacks, world, atlas, 0, 0);
             } else if (itemType.equals(PretzelItem.class.getName())) {
                 item = new PretzelItem(callbacks, world, atlas, 0, 0);
             } else if (itemType.equals(BeerItem.class.getName())) {

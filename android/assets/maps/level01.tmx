@@ -152,7 +152,7 @@
   </object>
   <object id="47" x="288" y="240" width="16" height="16">
    <properties>
-    <property name="powerUp" type="bool" value="true"/>
+    <property name="food" type="bool" value="true"/>
    </properties>
   </object>
   <object id="48" x="320" y="240" width="16" height="16">
@@ -162,7 +162,7 @@
   </object>
   <object id="49" x="224" y="240" width="16" height="16">
    <properties>
-    <property name="powerUp" type="bool" value="true"/>
+    <property name="food" type="bool" value="true"/>
    </properties>
   </object>
   <object id="50" x="336" y="240" width="16" height="16"/>

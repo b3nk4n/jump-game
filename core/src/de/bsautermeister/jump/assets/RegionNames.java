@@ -37,7 +37,6 @@ public class RegionNames {
     public static String HEDGEHOG_ROLLING = "hedgehog_rolling";
     public static String FLOWER = "flower";
     public static String FISH = "fish";
-    public static String MUSHROOM = "mushroom";
     public static String COIN = "coin";
     public static String BRICK_FRAGMENT = "brick_fragment";
     public static String WATER_FRONT = "water_front";
@@ -51,6 +50,7 @@ public class RegionNames {
     public static String BEER = "beer";
     public static String PRETZEL = "pretzel";
     public static String PRETZEL_BULLET = "pretzel_bullet";
+    public static String GRILLED_CHICKEN = "grilled_chicken";
     public static String BACKGROUND_OVERLAY = "bg-overlay";
 
     public static String LOADING_LOGO = "title";

@@ -1285,83 +1285,83 @@ fox_walk
   orig: 24, 16
   offset: 0, 0
   index: 7
-hedgehog_roll
+grilled_chicken
   rotate: false
   xy: 592, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 0
+  index: -1
 hedgehog_roll
   rotate: false
   xy: 612, 123
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
+  index: 0
 hedgehog_roll
   rotate: false
   xy: 632, 144
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 2
-hedgehog_rolling
-  rotate: false
-  xy: 632, 144
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-hedgehog_walk
+  index: 1
+hedgehog_roll
   rotate: false
   xy: 652, 164
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 0
+  index: 2
+hedgehog_rolling
+  rotate: false
+  xy: 652, 164
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 hedgehog_walk
   rotate: false
   xy: 592, 82
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
+  index: 0
 hedgehog_walk
   rotate: false
   xy: 612, 103
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 2
+  index: 1
 hedgehog_walk
   rotate: false
   xy: 632, 124
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 3
+  index: 2
 hedgehog_walk
   rotate: false
   xy: 652, 144
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 4
+  index: 3
 hedgehog_walk
   rotate: false
   xy: 672, 164
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 5
-mushroom
+  index: 4
+hedgehog_walk
   rotate: false
   xy: 612, 83
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: -1
+  index: 5
 particle
   rotate: false
   xy: 72, 176

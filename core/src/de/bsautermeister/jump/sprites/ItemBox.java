@@ -11,14 +11,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 
 public class ItemBox extends InteractiveTileObject {
 
     public enum Type {
         COIN,
-        MUSHROOM,
+        FOOD,
         BEER
     }
 
@@ -31,13 +31,13 @@ public class ItemBox extends InteractiveTileObject {
         super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
         tileSet = map.getTileSets().getTileSet("OctoberBro");
         Boolean multiCoin = (Boolean) mapObject.getProperties().get("multiCoin");
-        Boolean mushroom = (Boolean) mapObject.getProperties().get("powerUp");
+        Boolean food = (Boolean) mapObject.getProperties().get("food");
         Boolean beer = (Boolean) mapObject.getProperties().get("beer");
         if (multiCoin != null && multiCoin) {
             type = Type.COIN;
             remainingItems = 5;
-        } else if (Boolean.TRUE.equals(mushroom)) {
-            type = Type.MUSHROOM;
+        } else if (Boolean.TRUE.equals(food)) {
+            type = Type.FOOD;
             remainingItems = 1;
         } else if (Boolean.TRUE.equals(beer)) {
             type = Type.BEER;
@@ -74,8 +74,8 @@ public class ItemBox extends InteractiveTileObject {
         }
     }
 
-    public boolean isMushroomBox() {
-        return type == Type.MUSHROOM;
+    public boolean isFoodBox() {
+        return type == Type.FOOD;
     }
 
     public boolean isBeerBox() {
