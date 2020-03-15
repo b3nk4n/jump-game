@@ -55,6 +55,7 @@ public class WorldCreator {
     private static final String BOUNCERS_KEY = "bouncers";
     private static final String PLATFORMS_KEY = "platforms";
     private static final String COINS_KEY = "coins";
+    private static final String SPIKES_KEY = "spikes";
 
     private final World world;
     private final TiledMap map;
@@ -221,6 +222,18 @@ public class WorldCreator {
             }
         }
         return waterRegions;
+    }
+
+    public Array<Rectangle> getSpikeRegions() {
+        Array<Rectangle> spikeRegions = new Array<Rectangle>();
+        if (hasLayer(map, SPIKES_KEY)) {
+            for (RectangleMapObject mapObject : map.getLayers().get(SPIKES_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = toPPM(mapObject.getRectangle());
+                rect.setHeight(rect.getHeight() / 2);
+                spikeRegions.add(rect);
+            }
+        }
+        return spikeRegions;
     }
 
     private static Rectangle toPPM(Rectangle rect) {

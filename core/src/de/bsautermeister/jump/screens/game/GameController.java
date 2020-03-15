@@ -112,6 +112,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private boolean gameIsCanced;
 
+    private Array<Rectangle> spikesList;
+
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
         public void jump() {
@@ -437,6 +439,8 @@ public class GameController  implements BinarySerializable, Disposable {
         updateCollectedBeers(0);
         score = 0;
 
+        spikesList = worldCreator.getSpikeRegions();
+
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
         musicPlayer.play();
@@ -486,6 +490,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
         waterInteractionManager.update(delta);
 
+        checkPlayerSpikesCollision();
+
         for (InteractiveTileObject tileObject : tileObjects) {
             tileObject.update(delta);
         }
@@ -526,6 +532,14 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         postUpdate();
+    }
+
+    private void checkPlayerSpikesCollision() {
+        for (Rectangle spikeRect : spikesList) {
+            if (spikeRect.overlaps(player.getBoundingRectangle())) {
+                player.hit(spikeRect);
+            }
+        }
     }
 
     private void postUpdate() {

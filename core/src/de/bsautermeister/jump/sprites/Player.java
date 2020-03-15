@@ -725,6 +725,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
     }
 
+    public void hit(Rectangle spike) {
+        kill();
+    }
+
     private void kill() {
         if (state.is(State.DEAD))
             return;
