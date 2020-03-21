@@ -80,7 +80,7 @@ public class WorldCreator {
         }
 
         for (MapObject mapObject : map.getLayers().get(BOXES_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            tileObjects.add(new ItemBox(callbacks, world, map, mapObject));
+            tileObjects.add(new ItemBox(callbacks, world, map, atlas, mapObject));
         }
     }
 

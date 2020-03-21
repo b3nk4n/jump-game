@@ -13,7 +13,7 @@ beer
   index: -1
 bg-overlay
   rotate: false
-  xy: 1008, 247
+  xy: 632, 99
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
@@ -914,6 +914,34 @@ big_player_prezelized_3_walk
   orig: 16, 24
   offset: 0, 0
   index: 3
+box_fragment0
+  rotate: false
+  xy: 760, 196
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+box_fragment1
+  rotate: false
+  xy: 72, 28
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+box_fragment2
+  rotate: false
+  xy: 68, 16
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+box_fragment3
+  rotate: false
+  xy: 68, 4
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
 break_platform2
   rotate: false
   xy: 4, 8
@@ -937,28 +965,28 @@ break_platform4
   index: -1
 brick_fragment0
   rotate: false
-  xy: 760, 196
+  xy: 1008, 244
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment1
   rotate: false
-  xy: 72, 28
+  xy: 372, 71
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment2
   rotate: false
-  xy: 68, 16
+  xy: 672, 156
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment3
   rotate: false
-  xy: 68, 4
+  xy: 692, 176
   size: 8, 8
   orig: 8, 8
   offset: 0, 0

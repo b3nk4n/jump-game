@@ -27,8 +27,8 @@ public class Brick extends InteractiveTileObject {
     private boolean goalProtector;
     private boolean destroyed;
 
-    private Array<BrickFragment> activeBrickFragments = new Array<BrickFragment>(16);
-    private static Pool<BrickFragment> brickFragmentPool = Pools.get(BrickFragment.class);
+    private Array<BrickFragment> activeFragments = new Array<BrickFragment>(16);
+    private static Pool<BrickFragment> fragmentPool = Pools.get(BrickFragment.class);
 
     public Brick(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
         super(callbacks, Bits.BRICK, world, map, mapObject);
@@ -41,15 +41,7 @@ public class Brick extends InteractiveTileObject {
     public void update(float delta) {
         super.update(delta);
 
-        for (int i = activeBrickFragments.size; --i >= 0;) {
-            BrickFragment brickFragment = activeBrickFragments.get(i);
-            brickFragment.update(delta);
-
-            if (!brickFragment.isAlive()) {
-                activeBrickFragments.removeIndex(i);
-                brickFragmentPool.free(brickFragment);
-            }
-        }
+        updateFragments(delta);
 
         if (unlockGoal.needsAction()) {
             timeToUnlockGoal -= delta;
@@ -62,13 +54,29 @@ public class Brick extends InteractiveTileObject {
         }
     }
 
+    private void updateFragments(float delta) {
+        for (int i = activeFragments.size; --i >= 0;) {
+            BrickFragment fragment = activeFragments.get(i);
+            fragment.update(delta);
+
+            if (!fragment.isAlive()) {
+                activeFragments.removeIndex(i);
+                fragmentPool.free(fragment);
+            }
+        }
+    }
+
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
 
-        for (int i = 0; i < activeBrickFragments.size; ++i) {
-            BrickFragment brickFragment = activeBrickFragments.get(i);
-            brickFragment.draw(batch);
+        drawFragments(batch);
+    }
+
+    private void drawFragments(SpriteBatch batch) {
+        for (int i = 0; i < activeFragments.size; ++i) {
+            BrickFragment fragment = activeFragments.get(i);
+            fragment.draw(batch);
         }
     }
 
@@ -114,30 +122,30 @@ public class Brick extends InteractiveTileObject {
     private void emitFragments() {
         Vector2 pos = new Vector2();
         Vector2 velocity = new Vector2();
-        BrickFragment fragment0 = brickFragmentPool.obtain();
+        BrickFragment fragment0 = fragmentPool.obtain();
         fragment0.init(atlas, 0,
                 getBounds().getPosition(pos)
                         .add(getBounds().width / 4f, getBounds().height * 3f / 4f),
                 velocity.set(-0.33f, 1.0f), 180f);
-        activeBrickFragments.add(fragment0);
-        BrickFragment fragment1 = brickFragmentPool.obtain();
+        activeFragments.add(fragment0);
+        BrickFragment fragment1 = fragmentPool.obtain();
         fragment1.init(atlas, 1,
                 getBounds().getPosition(pos)
                         .add(getBounds().width * 3f / 4f, getBounds().height * 3 / 4f),
                 velocity.set(0.33f, 1.0f), -180f);
-        activeBrickFragments.add(fragment1);
-        BrickFragment fragment2 = brickFragmentPool.obtain();
+        activeFragments.add(fragment1);
+        BrickFragment fragment2 = fragmentPool.obtain();
         fragment2.init(atlas, 2,
                 getBounds().getPosition(pos)
                         .add(getBounds().width / 4f, getBounds().height / 4f),
                 velocity.set(-0.33f, 0.5f), 180f);
-        activeBrickFragments.add(fragment2);
-        BrickFragment fragment3 = brickFragmentPool.obtain();
+        activeFragments.add(fragment2);
+        BrickFragment fragment3 = fragmentPool.obtain();
         fragment3.init(atlas, 3,
                 getBounds().getPosition(pos)
                         .add(getBounds().width *3f / 4f, getBounds().height / 4f),
                 velocity.set(0.33f, 0.5f), -180f);
-        activeBrickFragments.add(fragment3);
+        activeFragments.add(fragment3);
     }
 
     public boolean isGoalProtector() {
@@ -149,8 +157,8 @@ public class Brick extends InteractiveTileObject {
         super.write(out);
         out.writeBoolean(destroyed);
         out.writeBoolean(goalProtector);
-        out.writeInt(activeBrickFragments.size);
-        for (BrickFragment fragment : activeBrickFragments) {
+        out.writeInt(activeFragments.size);
+        for (BrickFragment fragment : activeFragments) {
             fragment.write(out);
         }
     }
@@ -166,7 +174,7 @@ public class Brick extends InteractiveTileObject {
             // TODO we actually might asign the wrong fragment-index here (which probably nobody will ever notice)
             brickFragment.init(atlas, i, Vector2.Zero, Vector2.Zero, 0f);
             brickFragment.read(in);
-            activeBrickFragments.add(brickFragment);
+            activeFragments.add(brickFragment);
         }
 
         if (destroyed) {

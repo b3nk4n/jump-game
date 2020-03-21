@@ -1,10 +1,15 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,10 +30,16 @@ public class ItemBox extends InteractiveTileObject {
     private Type type;
     private int remainingItems;
 
+    private final TextureAtlas atlas;
+
     private static TiledMapTileSet tileSet;
 
-    public ItemBox(GameCallbacks callbacks, World world, TiledMap map, MapObject mapObject) {
+    private Array<ItemBoxFragment> activeFragments = new Array<ItemBoxFragment>(16);
+    private static Pool<ItemBoxFragment> fragmentPool = Pools.get(ItemBoxFragment.class);
+
+    public ItemBox(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
         super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
+        this.atlas = atlas;
         tileSet = map.getTileSets().getTileSet("OctoberBro");
         Boolean multiCoin = (Boolean) mapObject.getProperties().get("multiCoin");
         Boolean food = (Boolean) mapObject.getProperties().get("food");
@@ -45,6 +56,39 @@ public class ItemBox extends InteractiveTileObject {
         } else {
             type = Type.COIN;
             remainingItems = 1;
+        }
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        updateFragments(delta);
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
+
+        drawFragments(batch);
+    }
+
+    private void drawFragments(SpriteBatch batch) {
+        for (int i = 0; i < activeFragments.size; ++i) {
+            ItemBoxFragment fragment = activeFragments.get(i);
+            fragment.draw(batch);
+        }
+    }
+
+    private void updateFragments(float delta) {
+        for (int i = activeFragments.size; --i >= 0;) {
+            ItemBoxFragment fragment = activeFragments.get(i);
+            fragment.update(delta);
+
+            if (!fragment.isAlive()) {
+                activeFragments.removeIndex(i);
+                fragmentPool.free(fragment);
+            }
         }
     }
 
@@ -70,6 +114,9 @@ public class ItemBox extends InteractiveTileObject {
 
             remainingItems--;
             updateCellBlankState();
+            if (isBlank()) {
+                emitFragments();
+            }
             bumpUp();
         }
     }
@@ -91,7 +138,37 @@ public class ItemBox extends InteractiveTileObject {
             getCell().setTile(
                     new DynamicTiledMapTile(
                             tileSet.getTile(Cfg.BLANK_COIN_IDX)));
+
         }
+    }
+
+    private void emitFragments() {
+        Vector2 pos = new Vector2();
+        Vector2 velocity = new Vector2();
+        ItemBoxFragment fragment0 = fragmentPool.obtain();
+        fragment0.init(atlas, 0,
+                getBounds().getPosition(pos)
+                        .add(getBounds().width / 4f, getBounds().height * 3f / 4f),
+                velocity.set(-0.33f, 1.0f), 180f);
+        activeFragments.add(fragment0);
+        ItemBoxFragment fragment1 = fragmentPool.obtain();
+        fragment1.init(atlas, 1,
+                getBounds().getPosition(pos)
+                        .add(getBounds().width * 3f / 4f, getBounds().height * 3 / 4f),
+                velocity.set(0.33f, 1.0f), -180f);
+        activeFragments.add(fragment1);
+        ItemBoxFragment fragment2 = fragmentPool.obtain();
+        fragment2.init(atlas, 2,
+                getBounds().getPosition(pos)
+                        .add(getBounds().width / 4f, getBounds().height / 4f),
+                velocity.set(-0.33f, 0.5f), 180f);
+        activeFragments.add(fragment2);
+        ItemBoxFragment fragment3 = fragmentPool.obtain();
+        fragment3.init(atlas, 3,
+                getBounds().getPosition(pos)
+                        .add(getBounds().width *3f / 4f, getBounds().height / 4f),
+                velocity.set(0.33f, 0.5f), -180f);
+        activeFragments.add(fragment3);
     }
 
     @Override
@@ -99,6 +176,10 @@ public class ItemBox extends InteractiveTileObject {
         super.write(out);
         out.writeInt(remainingItems);
         out.writeUTF(type.name());
+        out.writeInt(activeFragments.size);
+        for (ItemBoxFragment fragment : activeFragments) {
+            fragment.write(out);
+        }
     }
 
     @Override
@@ -106,6 +187,14 @@ public class ItemBox extends InteractiveTileObject {
         super.read(in);
         remainingItems = in.readInt();
         type = Enum.valueOf(Type.class, in.readUTF());
+        int numFragments = in.readInt();
+        for (int i = 0; i < numFragments; ++i) {
+            ItemBoxFragment brickFragment = new ItemBoxFragment();
+            // TODO we actually might asign the wrong fragment-index here (which probably nobody will ever notice)
+            brickFragment.init(atlas, i, Vector2.Zero, Vector2.Zero, 0f);
+            brickFragment.read(in);
+            activeFragments.add(brickFragment);
+        }
 
         updateCellBlankState();
     }
