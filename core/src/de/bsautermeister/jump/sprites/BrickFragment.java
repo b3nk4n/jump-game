@@ -19,9 +19,9 @@ public class BrickFragment extends Sprite implements Pool.Poolable, BinarySerial
     private boolean alive;
     private float rotationSpeed;
 
-    public void init(TextureAtlas atlas, Vector2 centerPosition, Vector2 velocity,
+    public void init(TextureAtlas atlas, int templateIndex, Vector2 centerPosition, Vector2 velocity,
                      float rotationSpeed) {
-        setRegion(atlas.findRegion(RegionNames.BRICK_FRAGMENT));
+        setRegion(atlas.findRegion(RegionNames.fromTemplate(RegionNames.BRICK_FRAGMENT_TPL, templateIndex)));
         setSize(8f / Cfg.PPM, 8f / Cfg.PPM);
         setCenter(centerPosition.x, centerPosition.y);
         setOrigin(getWidth() / 2f, getHeight() / 2f);

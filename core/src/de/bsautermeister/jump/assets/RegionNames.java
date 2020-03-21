@@ -38,7 +38,7 @@ public class RegionNames {
     public static String FLOWER = "flower";
     public static String FISH = "fish";
     public static String COIN = "coin";
-    public static String BRICK_FRAGMENT = "brick_fragment";
+    public static String BRICK_FRAGMENT_TPL = "brick_fragment*";
     public static String WATER_FRONT = "water_front";
     public static String WATER_BACK = "water_back";
     public static String PLATFORM2 = "platform2";

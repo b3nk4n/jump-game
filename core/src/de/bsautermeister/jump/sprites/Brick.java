@@ -114,30 +114,30 @@ public class Brick extends InteractiveTileObject {
     private void emitFragments() {
         Vector2 pos = new Vector2();
         Vector2 velocity = new Vector2();
-        BrickFragment fragment1 = brickFragmentPool.obtain();
-        fragment1.init(atlas,
+        BrickFragment fragment0 = brickFragmentPool.obtain();
+        fragment0.init(atlas, 0,
                 getBounds().getPosition(pos)
                         .add(getBounds().width / 4f, getBounds().height * 3f / 4f),
                 velocity.set(-0.33f, 1.0f), 180f);
-        activeBrickFragments.add(fragment1);
-        BrickFragment fragment2 = brickFragmentPool.obtain();
-        fragment2.init(atlas,
+        activeBrickFragments.add(fragment0);
+        BrickFragment fragment1 = brickFragmentPool.obtain();
+        fragment1.init(atlas, 1,
                 getBounds().getPosition(pos)
                         .add(getBounds().width * 3f / 4f, getBounds().height * 3 / 4f),
                 velocity.set(0.33f, 1.0f), -180f);
-        activeBrickFragments.add(fragment2);
-        BrickFragment fragment3 = brickFragmentPool.obtain();
-        fragment3.init(atlas,
+        activeBrickFragments.add(fragment1);
+        BrickFragment fragment2 = brickFragmentPool.obtain();
+        fragment2.init(atlas, 2,
                 getBounds().getPosition(pos)
                         .add(getBounds().width / 4f, getBounds().height / 4f),
                 velocity.set(-0.33f, 0.5f), 180f);
-        activeBrickFragments.add(fragment3);
-        BrickFragment fragment4 = brickFragmentPool.obtain();
-        fragment4.init(atlas,
+        activeBrickFragments.add(fragment2);
+        BrickFragment fragment3 = brickFragmentPool.obtain();
+        fragment3.init(atlas, 3,
                 getBounds().getPosition(pos)
                         .add(getBounds().width *3f / 4f, getBounds().height / 4f),
                 velocity.set(0.33f, 0.5f), -180f);
-        activeBrickFragments.add(fragment4);
+        activeBrickFragments.add(fragment3);
     }
 
     public boolean isGoalProtector() {
@@ -163,7 +163,8 @@ public class Brick extends InteractiveTileObject {
         int numFragments = in.readInt();
         for (int i = 0; i < numFragments; ++i) {
             BrickFragment brickFragment = new BrickFragment();
-            brickFragment.init(atlas, Vector2.Zero, Vector2.Zero, 0f);
+            // TODO we actually might asign the wrong fragment-index here (which probably nobody will ever notice)
+            brickFragment.init(atlas, i, Vector2.Zero, Vector2.Zero, 0f);
             brickFragment.read(in);
             activeBrickFragments.add(brickFragment);
         }
