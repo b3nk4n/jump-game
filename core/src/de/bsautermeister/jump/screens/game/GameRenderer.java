@@ -185,7 +185,7 @@ public class GameRenderer implements Disposable {
 
         if (player.isHammered()) {
             Color c = batch.getColor();
-            batch.setColor(c.r, c.g, c.b, 0.5f);
+            batch.setColor(c.r, c.g, c.b, player.getHammeredRatio());
             float offsetX1 =  screenPixelPerTileX * 0.66f * (float)Math.sin(-gameTime) * player.getHammeredRatio();
             float offsetY1 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getHammeredRatio();
             float offsetX2 =  screenPixelPerTileX * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getHammeredRatio();
