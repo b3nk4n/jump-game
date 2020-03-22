@@ -711,11 +711,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public float getHammeredRatio() {
-        if (hammeredTimer.getProgress() < 0.05) {
-            return hammeredTimer.getProgress() * 10f;
+        if (hammeredTimer.getProgress() < 0.1) {
+            return hammeredTimer.getProgress() * 5f;
         }
-        if (hammeredTimer.getProgress() >= 0.95) {
-            return (1f - hammeredTimer.getProgress()) * 10f;
+        if (hammeredTimer.getProgress() >= 0.9) {
+            return (1f - hammeredTimer.getProgress()) * 5f;
         }
         return 0.5f;
     }
@@ -750,6 +750,15 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         filter.maskBits = Bits.NOTHING;
         for (Fixture fixture : getBody().getFixtureList()) {
             fixture.setFilterData(filter);
+        }
+
+        // stop player effects
+        if (isHammered()) {
+            hammeredTimer.restart(0.9f * EFFECT_DURATION);
+        }
+
+        if (isDrunk()) {
+            drunkTimer.restart(0.9f * EFFECT_DURATION);
         }
     }
 
