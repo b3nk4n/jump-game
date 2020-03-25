@@ -21,6 +21,8 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 
 public class ItemBox extends InteractiveTileObject {
 
+    private static final int USED_BOX_IDX = 67;
+
     public enum Type {
         COIN,
         FOOD,
@@ -137,7 +139,7 @@ public class ItemBox extends InteractiveTileObject {
         if (isBlank()) {
             getCell().setTile(
                     new DynamicTiledMapTile(
-                            tileSet.getTile(Cfg.BLANK_COIN_IDX)));
+                            tileSet.getTile(USED_BOX_IDX)));
 
         }
     }
