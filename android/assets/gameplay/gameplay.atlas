@@ -13,7 +13,7 @@ beer
   index: -1
 bg-overlay
   rotate: false
-  xy: 632, 99
+  xy: 692, 179
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
@@ -979,14 +979,14 @@ brick_fragment1
   index: -1
 brick_fragment2
   rotate: false
-  xy: 672, 156
+  xy: 652, 136
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment3
   rotate: false
-  xy: 692, 176
+  xy: 672, 156
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -1007,28 +1007,28 @@ coin
   index: 1
 coin
   rotate: false
+  xy: 572, 105
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+coin
+  rotate: false
   xy: 592, 126
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
-coin
-  rotate: false
-  xy: 612, 147
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 3
 fish
   rotate: false
-  xy: 632, 168
+  xy: 612, 147
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 fish
   rotate: false
-  xy: 572, 85
+  xy: 632, 168
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -1336,77 +1336,77 @@ fox_walk
   index: 7
 grilled_chicken
   rotate: false
-  xy: 592, 106
+  xy: 572, 85
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+hedgehog_roll
+  rotate: false
+  xy: 592, 106
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
 hedgehog_roll
   rotate: false
   xy: 612, 127
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 0
+  index: 1
 hedgehog_roll
   rotate: false
   xy: 632, 148
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
-hedgehog_roll
-  rotate: false
-  xy: 652, 168
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
   index: 2
 hedgehog_rolling
   rotate: false
-  xy: 652, 168
+  xy: 632, 148
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 hedgehog_walk
   rotate: false
-  xy: 592, 86
+  xy: 652, 168
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 hedgehog_walk
   rotate: false
-  xy: 612, 107
+  xy: 592, 86
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 hedgehog_walk
   rotate: false
-  xy: 632, 128
+  xy: 612, 107
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 hedgehog_walk
   rotate: false
-  xy: 652, 148
+  xy: 632, 128
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 hedgehog_walk
   rotate: false
-  xy: 672, 168
+  xy: 652, 148
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 hedgehog_walk
   rotate: false
-  xy: 612, 87
+  xy: 672, 168
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -1441,14 +1441,14 @@ platform4
   index: -1
 pretzel
   rotate: false
-  xy: 632, 108
+  xy: 612, 87
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 pretzel_bullet
   rotate: false
-  xy: 652, 128
+  xy: 632, 108
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

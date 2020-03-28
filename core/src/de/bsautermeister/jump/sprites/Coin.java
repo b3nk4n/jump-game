@@ -70,7 +70,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 / Cfg.PPM);
+        shape.setRadius(4 / Cfg.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Bits.ITEM;
         fixtureDef.filter.maskBits = Bits.PLAYER;
