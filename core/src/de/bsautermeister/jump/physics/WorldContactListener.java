@@ -7,8 +7,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.sprites.CollectableItem;
+import de.bsautermeister.jump.sprites.DrunkenGuy;
 import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Fox;
 import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
@@ -104,9 +104,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case Bits.PLAYER | Bits.ENEMY_SIDE:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (taggedEnemy.getUserData() instanceof Flower) {
-                    Flower flower = (Flower) taggedEnemy.getUserData();
-                    flower.setBlocked(true);
+                if (taggedEnemy.getUserData() instanceof DrunkenGuy) {
+                    DrunkenGuy drunkenGuy = (DrunkenGuy) taggedEnemy.getUserData();
+                    drunkenGuy.setBlocked(true);
                 }
                 break;
         }
@@ -145,9 +145,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case Bits.PLAYER | Bits.ENEMY_SIDE:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
-                if (taggedEnemy.getUserData() instanceof Flower) {
-                    Flower flower = (Flower) taggedEnemy.getUserData();
-                    flower.setBlocked(false);
+                if (taggedEnemy.getUserData() instanceof DrunkenGuy) {
+                    DrunkenGuy drunkenGuy = (DrunkenGuy) taggedEnemy.getUserData();
+                    drunkenGuy.setBlocked(false);
                 }
         }
     }

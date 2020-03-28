@@ -40,8 +40,8 @@ import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Coin;
+import de.bsautermeister.jump.sprites.DrunkenGuy;
 import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
@@ -264,7 +264,7 @@ public class GameRenderer implements Disposable {
 
         ObjectMap<String, Enemy> enemies = controller.getEnemies();
         for (Enemy enemy : enemies.values()) {
-            if (enemy instanceof Flower) {
+            if (enemy instanceof DrunkenGuy) {
                 enemy.draw(batch);
             }
         }
@@ -275,7 +275,7 @@ public class GameRenderer implements Disposable {
         }
 
         for (Enemy enemy : enemies.values()) {
-            if (!(enemy instanceof Flower) && !enemy.isDead()) {
+            if (!(enemy instanceof DrunkenGuy) && !enemy.isDead()) {
                 enemy.draw(batch);
             }
         }
@@ -293,7 +293,7 @@ public class GameRenderer implements Disposable {
 
         // render dead living objects in the very front
         for (Enemy enemy : enemies.values()) {
-            if (!(enemy instanceof Flower) && enemy.isDead()) {
+            if (!(enemy instanceof DrunkenGuy) && enemy.isDead()) {
                 enemy.draw(batch);
             }
         }

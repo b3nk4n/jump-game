@@ -54,7 +54,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             Bits.PLATFORM |
             Bits.ITEM_BOX |
             Bits.BRICK |
-            Bits.ENEMY_SIDE | // to still block the Flower
+            Bits.ENEMY_SIDE | // to still block the DrunkenGuy
             Bits.ITEM;
 
     private GameCallbacks callbacks;

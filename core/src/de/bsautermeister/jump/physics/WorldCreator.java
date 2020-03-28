@@ -23,7 +23,7 @@ import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
-import de.bsautermeister.jump.sprites.Flower;
+import de.bsautermeister.jump.sprites.DrunkenGuy;
 import de.bsautermeister.jump.sprites.Fox;
 import de.bsautermeister.jump.sprites.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
@@ -46,7 +46,7 @@ public class WorldCreator {
     private static final String BRICKS_KEY = "bricks";
     private static final String FOXES_KEY = "foxes";
     private static final String HEDGEHOGS_KEY = "hedgehogs";
-    private static final String FLOWERS_KEY = "flowers";
+    private static final String DRUNKEN_GUYS_KEY = "drunkenGuys";
     private static final String FISHES_KEY = "fishes";
     private static final String COLLIDER_KEY = "collider";
     private static final String WATER_KEY = "water";
@@ -153,14 +153,14 @@ public class WorldCreator {
                 enemies.add(hedgehog);
             }
         }
-        if (hasLayer(map, FLOWERS_KEY)) {
-            for (MapObject mapObject : map.getLayers().get(FLOWERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+        if (hasLayer(map, DRUNKEN_GUYS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(DRUNKEN_GUYS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
                 String group = (String) mapObject.getProperties().get("group");
-                Flower flower = new Flower(callbacks, world, atlas,
+                DrunkenGuy drunkenGuy = new DrunkenGuy(callbacks, world, atlas,
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM);
-                flower.setGroup(group);
-                enemies.add(flower);
+                drunkenGuy.setGroup(group);
+                enemies.add(drunkenGuy);
             }
         }
         if (hasLayer(map, FISHES_KEY)) {

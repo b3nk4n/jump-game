@@ -22,7 +22,7 @@ import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
-public class Flower extends Enemy {
+public class DrunkenGuy extends Enemy {
     private static final float MOVE_SPEED = 0.25f;
     private static final float HIDDEN_TIME = 2f;
     private static final float WAIT_TIME = 1.5f;
@@ -40,12 +40,12 @@ public class Flower extends Enemy {
     private final static float hiddenOffsetY = Cfg.BLOCK_SIZE / 4 / Cfg.PPM;
 
     private boolean blocked;
-    private float gameTime;
+    private float peekTime;
 
-    public Flower(GameCallbacks callbacks, World world, TextureAtlas atlas,
-                  float posX, float posY) {
+    public DrunkenGuy(GameCallbacks callbacks, World world, TextureAtlas atlas,
+                      float posX, float posY) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
-        animation = new Animation(0.33f, atlas.findRegions(RegionNames.FLOWER), Animation.PlayMode.LOOP);
+        animation = new Animation(0.1f, atlas.findRegions(RegionNames.DRUNKEN_GUY), Animation.PlayMode.LOOP);
         state = new GameObjectState<State>(State.HIDDEN);
         hiddenTargetY = getBody().getPosition().y - hiddenOffsetY;
         waitingTargetY = getBody().getPosition().y + getHeight();
@@ -55,7 +55,7 @@ public class Flower extends Enemy {
     @Override
     public void update(float delta) {
         super.update(delta);
-        gameTime += delta;
+        peekTime += delta;
 
         if (!isActive()) {
             return;
@@ -64,7 +64,7 @@ public class Flower extends Enemy {
         state.upate(delta);
         setPosition(getBody().getPosition().x - getWidth() / 2,
                 getBody().getPosition().y - Cfg.BLOCK_SIZE * 0.75f / Cfg.PPM);
-        setRegion(animation.getKeyFrame(gameTime));
+        setRegion(animation.getKeyFrame(peekTime));
 
         if (state.is(State.KILLED)) {
             if (getBody().getPosition().y > hiddenTargetY) {
@@ -74,6 +74,7 @@ public class Flower extends Enemy {
             }
         } else if (state.is(State.HIDDEN) && state.timer() > HIDDEN_TIME && !isBlocked()) {
             getBody().setLinearVelocity(0, MOVE_SPEED);
+            peekTime = 0f;
             state.set(State.MOVE_UP);
         } else if (state.is(State.MOVE_UP) && getBody().getPosition().y >= waitingTargetY) {
             getBody().setLinearVelocity(Vector2.Zero);
@@ -140,7 +141,7 @@ public class Flower extends Enemy {
         out.writeFloat(hiddenTargetY);
         out.writeFloat(waitingTargetY);
         out.writeBoolean(blocked);
-        out.writeFloat(gameTime);
+        out.writeFloat(peekTime);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class Flower extends Enemy {
         hiddenTargetY = in.readFloat();
         waitingTargetY = in.readFloat();
         blocked = in.readBoolean();
-        gameTime = in.readFloat();
+        peekTime = in.readFloat();
     }
 
     public boolean isBlocked() {

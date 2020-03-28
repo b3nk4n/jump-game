@@ -257,7 +257,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="13" name="flowers">
+ <objectgroup id="13" name="drunkenGuys">
   <object id="62" x="472" y="481" width="16" height="24"/>
  </objectgroup>
  <objectgroup id="28" name="coins">

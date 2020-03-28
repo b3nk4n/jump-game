@@ -44,9 +44,9 @@ import de.bsautermeister.jump.sprites.BeerItem;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
+import de.bsautermeister.jump.sprites.DrunkenGuy;
 import de.bsautermeister.jump.sprites.Enemy;
 import de.bsautermeister.jump.sprites.Fish;
-import de.bsautermeister.jump.sprites.Flower;
 import de.bsautermeister.jump.sprites.Fox;
 import de.bsautermeister.jump.sprites.GrilledChickenItem;
 import de.bsautermeister.jump.sprites.Hedgehog;
@@ -942,8 +942,8 @@ public class GameController  implements BinarySerializable, Disposable {
                 enemy = new Fox(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Hedgehog.class.getName())) {
                 enemy = new Hedgehog(callbacks, world, atlas, 0, 0, false);
-            } else if (enemyType.equals(Flower.class.getName())) {
-                enemy = new Flower(callbacks, world, atlas, 0, 0);
+            } else if (enemyType.equals(DrunkenGuy.class.getName())) {
+                enemy = new DrunkenGuy(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Fish.class.getName())) {
                 enemy = new Fish(callbacks, world, atlas, 0, 0);
             } else {
