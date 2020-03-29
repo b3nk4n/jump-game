@@ -469,7 +469,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         gameTime += delta;
-        world.step(1 / 60f, 8, 3);
+        world.step(delta, 8, 3);
 
         if (!player.isVictory()) {
             handleInput();
