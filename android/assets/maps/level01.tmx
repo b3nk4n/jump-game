@@ -305,7 +305,7 @@
  </objectgroup>
  <objectgroup id="14" name="water">
   <object id="45" x="192" y="576" width="272" height="64"/>
-  <object id="121" x="480" y="576" width="80" height="64"/>
+  <object id="121" x="480" y="592" width="80" height="48"/>
   <object id="122" x="576" y="576" width="1104" height="64"/>
  </objectgroup>
  <objectgroup id="15" name="bouncers">

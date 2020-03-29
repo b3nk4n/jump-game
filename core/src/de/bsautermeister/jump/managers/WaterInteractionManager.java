@@ -45,7 +45,7 @@ public class WaterInteractionManager {
         for (Rectangle waterRegion : waterRegions) {
             for (Drownable drownable : drownables) {
                 if (waterRegion.contains(drownable.getWorldCenter())) {
-                    doDrown(drownable);
+                    doDrown(drownable, waterRegion);
                 }
             }
         }
@@ -72,12 +72,12 @@ public class WaterInteractionManager {
         drownables.removeValue(drownable, true);
     }
 
-    private void doDrown(Drownable drownable) {
+    private void doDrown(Drownable drownable, Rectangle waterRegion) {
         if (!drownable.isDead() && !drownable.isDrowning() && drownable.getLinearVelocity().y < -0.5f) {
             Vector2 center = drownable.getWorldCenter();
             ParticleEffectPool.PooledEffect splashEffect = waterSplashEffectPool.obtain();
             splashEffect.start();
-            splashEffect.setPosition(center.x, center.y);
+            splashEffect.setPosition(center.x, waterRegion.y + waterRegion.height - Cfg.BLOCK_SIZE / Cfg.PPM * 0.5f);
             activeSplashEffects.add(splashEffect);
             callbacks.touchedWater(drownable);
 

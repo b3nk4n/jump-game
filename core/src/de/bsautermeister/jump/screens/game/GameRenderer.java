@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -317,8 +318,13 @@ public class GameRenderer implements Disposable {
             batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
-            batch.draw(waterTexture, waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
-                    waterRegion.getWidth(), waterRegion.getHeight());
+            int regionHeightInPixel = MathUtils.round(waterRegion.getHeight() * Cfg.PPM);
+            batch.draw(waterTexture.getTexture(),
+                    waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
+                    waterRegion.getWidth(), waterRegion.getHeight(),
+                    waterTexture.getRegionX(), waterTexture.getRegionY(),
+                    waterTexture.getRegionWidth(), regionHeightInPixel,
+                    false, false);
         }
         batch.setShader(prevShader);
     }
