@@ -136,7 +136,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         state = new GameObjectState<State>(State.STANDING);
         runningRight = !start.leftDirection;
 
-        defineSmallBody(start.position, true);
+        defineSmallBody(start.centerPosition, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
@@ -649,10 +649,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
     }
 
-    private void shrinkOrKill(Enemy enemy) {
+    private void shrinkOrKill() {
         if (isBig()) {
             changeSizeTimer.restart();
-            callbacks.hit(this, enemy);
+            callbacks.hit(this);
             isBig = false;
             blockJumpTimer = 0.33f;
             markRedefineBody = true;
@@ -730,12 +730,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
 
         if (!isInvincible()) {
-            shrinkOrKill(enemy);
+            shrinkOrKill();
         }
     }
 
     public void hit(Rectangle spike) {
-        kill();
+        if (!isInvincible()) {
+            shrinkOrKill();
+        }
     }
 
     private void kill() {

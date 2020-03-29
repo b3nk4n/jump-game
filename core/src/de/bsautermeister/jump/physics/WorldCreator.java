@@ -228,7 +228,7 @@ public class WorldCreator {
         Array<Rectangle> spikeRegions = new Array<Rectangle>();
         if (hasLayer(map, SPIKES_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(SPIKES_KEY).getObjects().getByType(RectangleMapObject.class)) {
-                Rectangle rect = toPPM(mapObject.getRectangle());
+                Rectangle rect = toPPM(mapObject.getRectangle());;
                 rect.setHeight(rect.getHeight() / 2);
                 spikeRegions.add(rect);
             }
@@ -284,12 +284,12 @@ public class WorldCreator {
     }
 
     public static class StartParams {
-        public final Vector2 position;
+        public final Vector2 centerPosition;
         public final boolean leftDirection;
 
         public StartParams(RectangleMapObject mapObject) {
             Rectangle rect = mapObject.getRectangle();
-            position = new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
+            centerPosition = new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
             leftDirection = mapObject.getProperties().get("leftDirection", false, Boolean.class);
         }
     }

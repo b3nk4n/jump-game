@@ -155,7 +155,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void hit(Player player, Enemy enemy) {
+        public void hit(Player player) {
             if (player.isBig()) {
                 soundEffects.powerDownSound.play();
             }

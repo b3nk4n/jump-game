@@ -39,7 +39,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         super(atlas.findRegion(RegionNames.PRETZEL_BULLET));
         this.callbacks = callbacks;
         this.world = world;
-        setSize(Cfg.BLOCK_SIZE / 2 /Cfg.PPM, Cfg.BLOCK_SIZE / 2 / Cfg.PPM);
+        setSize(Cfg.BLOCK_SIZE / 2 / Cfg.PPM, Cfg.BLOCK_SIZE / 2 / Cfg.PPM);
         setOrigin(getWidth() / 2, getHeight() / 2);
         body = defineBody();
         reset = new MarkedAction();
@@ -71,7 +71,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
 
     private Body defineBody() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY()); // TODO top-left vs center (also e.g. in Fox)
+        bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = world.createBody(bodyDef);
 

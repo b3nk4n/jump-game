@@ -14,8 +14,8 @@ import de.bsautermeister.jump.sprites.Player;
 public interface GameCallbacks {
     void jump();
     void stomp(Enemy enemy);
+    void hit(Player player);
     void use(Player player, Item item);
-    void hit(Player player, Enemy enemy);
     void hit(Player player, Brick brick, boolean closeEnough);
     void hit(Player player, ItemBox itemBox, Vector2 position, boolean closeEnough);
     void hit(PretzelBullet pretzelBullet, Enemy enemy);
