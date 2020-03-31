@@ -178,7 +178,7 @@ public class Hedgehog extends Enemy implements Drownable {
                 Bits.PLAYER |
                 Bits.ENEMY |
                 Bits.BLOCK_TOP |
-                Bits.FIREBALL;
+                Bits.BULLET;
 
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);

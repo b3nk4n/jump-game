@@ -1,11 +1,14 @@
 package de.bsautermeister.jump.physics;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.DrunkenGuy;
 import de.bsautermeister.jump.sprites.Enemy;
@@ -28,6 +31,7 @@ public class WorldContactListener implements ContactListener {
 
         Player player;
         Enemy enemy;
+        PretzelBullet bullet;
         TaggedUserData<Item> taggedItem;
         InteractiveTileObject tileObject;
         TaggedUserData<Enemy> taggedEnemy;
@@ -109,7 +113,29 @@ public class WorldContactListener implements ContactListener {
                     drunkenGuy.setBlocked(true);
                 }
                 break;
+            case Bits.BULLET | Bits.GROUND:
+            case Bits.BULLET | Bits.PLATFORM:
+            case Bits.BULLET | Bits.BRICK:
+            case Bits.BULLET | Bits.ITEM_BOX:
+                bullet = (PretzelBullet) resolveUserData(fixtureA, fixtureB, Bits.BULLET);
+                Vector2 contactPos = getAvgContactPosition(contact);
+                angleVector.set(contactPos);
+                float angle = angleVector.sub(bullet.getBody().getPosition()).angle();
+                if (!(angle > 210 && angle < 330 || angle > 30 && angle < 150)) {
+                    bullet.explode(contactPos);
+                }
+                break;
         }
+    }
+
+    private final Vector2 angleVector = new Vector2();
+    private final Vector2 contactPositon = new Vector2();
+    private Vector2 getAvgContactPosition(Contact contact) {
+        contactPositon.set(0, 0);
+        for (int i = 0; i < contact.getWorldManifold().getNumberOfContactPoints(); ++i) {
+            contactPositon.add(contact.getWorldManifold().getPoints()[i]);
+        }
+        return contactPositon.scl(1f / contact.getWorldManifold().getNumberOfContactPoints());
     }
 
     @Override
@@ -183,11 +209,11 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
 
-            case Bits.ENEMY | Bits.FIREBALL:
+            case Bits.ENEMY | Bits.BULLET:
                 // done in pre-solve to don't have an impulse from the pretzelBullet to the other object
-                pretzelBullet = (PretzelBullet) resolveUserData(fixtureA, fixtureB, Bits.FIREBALL);
+                pretzelBullet = (PretzelBullet) resolveUserData(fixtureA, fixtureB, Bits.BULLET);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
-                pretzelBullet.resetLater();
+                pretzelBullet.explode(pretzelBullet.getBody().getPosition());
                 enemy.kill(true);
                 contact.setEnabled(false);
                 break;

@@ -1,21 +1,29 @@
 package de.bsautermeister.jump.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.physics.TaggedUserData;
 import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
@@ -30,10 +38,14 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
     private Body body;
     private float rotation;
     private boolean rightDirection;
+    private float activeTime;
 
     private float previousVelocityY;
 
     private MarkedAction reset;
+
+    private static ParticleEffectPool explodeEffectPool;
+    private static Array<ParticleEffectPool.PooledEffect> activeExplodeEffects = new Array<ParticleEffectPool.PooledEffect>();
 
     public PretzelBullet(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         super(atlas.findRegion(RegionNames.PRETZEL_BULLET));
@@ -43,7 +55,18 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         setOrigin(getWidth() / 2, getHeight() / 2);
         body = defineBody();
         reset = new MarkedAction();
+
+        // TODO only works like this, because PrezelBullet is only instantiated a single time
+        explodeEffectPool = createEffectPool(AssetPaths.Pfx.EXPLODE, atlas);
+
         reset();
+    }
+
+    private ParticleEffectPool createEffectPool(String effectPath , TextureAtlas atlas) {
+        ParticleEffect splashEffect = new ParticleEffect();
+        splashEffect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
+        splashEffect.scaleEffect(0.1f / Cfg.PPM);
+        return new ParticleEffectPool(splashEffect, 8, 16);
     }
 
     public void reset() {
@@ -53,6 +76,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         setPosition(-1, -1);
         rotation = 0;
         previousVelocityY = 0;
+        activeTime = 0f;
     }
 
     public void fire(float posX, float posY, boolean rightDirection) {
@@ -79,10 +103,10 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         fixtureDef.density = 0f;
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 1f;
-        CircleShape shape = new CircleShape(); // TODO square, so that it bounces always in the same direction?
+        CircleShape shape = new CircleShape();
         shape.setRadius(3f / Cfg.PPM);
         fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Bits.FIREBALL;
+        fixtureDef.filter.categoryBits = Bits.BULLET;
         fixtureDef.filter.maskBits = Bits.ENEMY |
                 Bits.GROUND |
                 Bits.BRICK |
@@ -96,31 +120,39 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
     }
 
     public void update(float delta) {
-        if (!isActive()) {
-            return;
+        if (isActive()) {
+            if (activeTime > 0.01f && (rightDirection && body.getLinearVelocity().x <= 0 || !rightDirection && body.getLinearVelocity().x >= 0)) {
+                // ensure that the bullet never changes direction and does not get stuck! (not sure whether this is still needed)
+                reset.mark();
+                return;
+            }
+
+            if (previousVelocityY < 0 && body.getLinearVelocity().y >= 0) {
+                // started to jump up
+                body.setLinearVelocity(body.getLinearVelocity().x, 1.75f);
+            }
+
+            body.setLinearVelocity(rightDirection ? VELOCITY_X : -VELOCITY_X, body.getLinearVelocity().y);
+            if (rightDirection) {
+                rotation -= 360 * delta;
+            } else {
+                rotation += 360 * delta;
+            }
+            setRotation(rotation);
+            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
+            setFlip(!rightDirection, false);
+            previousVelocityY = body.getLinearVelocity().y;
+            activeTime += delta;
         }
 
-        if (rightDirection && body.getLinearVelocity().x < 0 ||
-            !rightDirection && body.getLinearVelocity().x > 0) {
-            explode();
-            return;
+        for (int i = activeExplodeEffects.size - 1; i >= 0; i--) {
+            ParticleEffectPool.PooledEffect effect = activeExplodeEffects.get(i);
+            effect.update(delta);
+            if (effect.isComplete()) {
+                activeExplodeEffects.removeIndex(i);
+                effect.free();
+            }
         }
-
-        if (previousVelocityY < 0 && body.getLinearVelocity().y > 0) {
-            // started to jump up
-            body.setLinearVelocity(body.getLinearVelocity().x, 1.75f);
-        }
-
-        body.setLinearVelocity(rightDirection ? VELOCITY_X : -VELOCITY_X, body.getLinearVelocity().y);
-        if (rightDirection) {
-            rotation -= 360 * delta;
-        } else {
-            rotation += 360 * delta;
-        }
-        setRotation(rotation);
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
-        setFlip(!rightDirection, false);
-        previousVelocityY = body.getLinearVelocity().y;
     }
 
     public void postUpdate() {
@@ -134,16 +166,22 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
 
     @Override
     public void draw(Batch batch) {
-        if (!isActive()) {
-            return;
+        if (isActive()) {
+            super.draw(batch);
         }
 
-        super.draw(batch);
+        for (ParticleEffectPool.PooledEffect effect : activeExplodeEffects) {
+            effect.draw(batch);
+        }
     }
 
-    public void explode() {
-        // todo explode when hitting other object
-        reset();
+    public void explode(Vector2 contactPosition) {
+        ParticleEffectPool.PooledEffect splashEffect = explodeEffectPool.obtain();
+        splashEffect.start();
+        splashEffect.setPosition(contactPosition.x, contactPosition.y);
+        activeExplodeEffects.add(splashEffect);
+
+        reset.mark();
     }
 
     @Override
@@ -155,6 +193,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         out.writeFloat(rotation);
         out.writeBoolean(rightDirection);
         out.writeFloat(previousVelocityY);
+        out.writeFloat(activeTime);
         reset.write(out);
     }
 
@@ -165,6 +204,11 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         rotation = in.readFloat();
         rightDirection = in.readBoolean();
         previousVelocityY = in.readFloat();
+        activeTime = in.readFloat();
         reset.read(in);
+    }
+
+    public Body getBody() {
+        return body;
     }
 }

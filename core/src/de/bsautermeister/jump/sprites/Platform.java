@@ -125,7 +125,7 @@ public class Platform extends Sprite implements BinarySerializable {
                 Bits.PLAYER_FEET |
                 Bits.ENEMY |
                 Bits.ITEM |
-                Bits.FIREBALL;
+                Bits.BULLET;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         return body;

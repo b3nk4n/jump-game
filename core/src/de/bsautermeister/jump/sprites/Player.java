@@ -393,7 +393,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void tryThrowPretzel() {
         if (canThrowPretzel()) {
             float offsetX = runningRight ? getWidth() : 0f;
-            pretzelBullet.fire(getX() + offsetX, getY() + getHeight() / 2, runningRight);
+            float crouchOffset = state.is(State.CROUCHING) ? getHeight() / 4 : 0f;
+            pretzelBullet.fire(getX() + offsetX, getY() + getHeight() / 2 - crouchOffset, runningRight);
             callbacks.fire();
             throwPretzelTimer.restart();
         }

@@ -9,9 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.AssetPaths;
-import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 
 public class WaterInteractionManager {
     private ParticleEffectPool waterSplashEffectPool;

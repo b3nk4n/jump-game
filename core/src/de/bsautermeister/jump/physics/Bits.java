@@ -6,7 +6,7 @@ public interface Bits {
     short PLAYER = 1 << 1;
     short BRICK = 1 << 2;
     short ITEM_BOX = 1 << 3;
-    short FIREBALL = 1 << 4;
+    short BULLET = 1 << 4;
     short ENEMY = 1 << 5;
     short ENEMY_HEAD = 1 << 6;
     short ITEM = 1 << 7;
