@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Frustum;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -58,6 +57,7 @@ import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.PretzelItem;
+import de.bsautermeister.jump.sprites.Tent;
 import de.bsautermeister.jump.text.TextMessage;
 
 public class GameController  implements BinarySerializable, Disposable {
@@ -89,7 +89,6 @@ public class GameController  implements BinarySerializable, Disposable {
     private int totalBeers;
 
     private WorldCreator.StartParams start;
-    private Rectangle goal;
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
@@ -113,6 +112,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private boolean gameIsCanced;
 
     private Array<Rectangle> spikesList;
+
+    private Tent tent;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -407,8 +408,10 @@ public class GameController  implements BinarySerializable, Disposable {
         textMessages.clear();
 
         start = worldCreator.getStart();
-        goal = worldCreator.getGoal();
+        Rectangle goal = worldCreator.getGoal();
         player = new Player(callbacks, world, atlas, start);
+
+        tent = new Tent(atlas, goal);
 
         platforms.addAll(worldCreator.createPlatforms());
         if (gameToResume != null) {
@@ -575,7 +578,7 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
-        if (Intersector.overlaps(goal, player.getBoundingRectangle()) && player.getBody().getLinearVelocity().len2() < 0.001f) {
+        if (tent.isEntering(player)) {
             completeLevel();
         }
 
@@ -727,6 +730,8 @@ public class GameController  implements BinarySerializable, Disposable {
                 }
             }
         }
+
+        tent.open();
     }
 
     private void spawnItem(ItemDef itemDef) {
@@ -923,6 +928,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Platform platform : platforms) {
             platform.write(out);
         }
+        tent.write(out);
     }
 
     @Override
@@ -986,6 +992,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Platform platform : platforms) {
             platform.read(in);
         }
+        tent.read(in);
     }
 
     @Override
@@ -1076,5 +1083,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public GameOverOverlay.Callback getGameOverCallback() {
         return gameOverCallback;
+    }
+
+    public Tent getTent() {
+        return tent;
     }
 }

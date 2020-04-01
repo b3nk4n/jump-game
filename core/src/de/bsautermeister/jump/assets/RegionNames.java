@@ -52,6 +52,8 @@ public class RegionNames {
     public static String PRETZEL = "pretzel";
     public static String PRETZEL_BULLET = "pretzel_bullet";
     public static String GRILLED_CHICKEN = "grilled_chicken";
+    public static String TENT_OPEN = "tent_open";
+    public static String TENT_CLOSED = "tent_closed";
     public static String BACKGROUND_OVERLAY = "bg-overlay";
 
     public static String LOADING_LOGO = "title";

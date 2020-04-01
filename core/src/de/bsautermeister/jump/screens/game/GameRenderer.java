@@ -47,14 +47,13 @@ import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
+import de.bsautermeister.jump.sprites.Tent;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameRenderer implements Disposable {
 
     private final SpriteBatch batch;
-    private final AssetManager assetManager;
-    private final TextureAtlas atlas;
     private final GameController controller;
     private final OrthographicCamera camera;
     private final OrthographicCamera backgroundParallaxCamera;
@@ -85,8 +84,6 @@ public class GameRenderer implements Disposable {
     public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
                         GameController controller) {
         this.batch = batch;
-        this.assetManager = assetManager;
-        this.atlas = atlas;
         this.controller = controller;
         this.camera = controller.getCamera();
         this.backgroundParallaxCamera = new OrthographicCamera();
@@ -231,6 +228,9 @@ public class GameRenderer implements Disposable {
         renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.80f);
 
         mapRenderer.setView(camera);
+
+        controller.getTent().draw(batch);
+
         mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.BG_TILES_KEY));
 
         Array<BoxCoin> activeBoxCoins = controller.getActiveBoxCoins();
