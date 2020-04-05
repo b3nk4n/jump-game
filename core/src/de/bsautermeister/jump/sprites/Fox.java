@@ -69,8 +69,9 @@ public class Fox extends Enemy implements Drownable {
     public void update(float delta) {
         super.update(delta);
 
-        if (!isDead() && !isDrowning()) {
-            state.upate(delta);
+        state.upate(delta);
+        if (!isDead() && !isDrowning() && !state.is(State.STOMPED)) {
+
             getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
         }
 

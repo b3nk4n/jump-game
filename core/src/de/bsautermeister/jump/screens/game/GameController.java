@@ -207,12 +207,6 @@ public class GameController  implements BinarySerializable, Disposable {
                 showTextMessage(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
                 return;
             }
-
-            Item item = items.get(objectId);
-            if (item != null) {
-                item.reverseVelocity(true, false);
-                item.bounceUp();
-            }
         }
 
         @Override

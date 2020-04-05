@@ -76,6 +76,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     public void dispose() {
         if (!destroyBody.isDone()) {
             world.destroyBody(body);
+            System.out.println(body);
         }
     }
 

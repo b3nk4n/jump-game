@@ -17,8 +17,6 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public abstract class Item extends Sprite implements CollectableItem, BinarySerializable, Disposable {
-    public static final String TAG_LEFT = "left";
-    public static final String TAG_RIGHT = "right";
     public static final String TAG_BASE = "base";
 
     /**
@@ -41,7 +39,6 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
 
     private GameCallbacks callbacks;
     private World world;
-    protected Vector2 velocity;
     private final Body body;
 
     private MarkedAction destroyBody;
@@ -58,7 +55,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         setPosition(centerX - Cfg.BLOCK_SIZE / Cfg.PPM / 2, spawnY);
         destroyBody = new MarkedAction();
         body = defineBody(centerX, centerY + Cfg.BLOCK_SIZE / Cfg.PPM);
-        body.setActive(false);
+        //body.setActive(false);
     }
 
     public abstract Body defineBody(float x, float y);
@@ -70,7 +67,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
             setY(spawnInterpolation.apply(spawnY, targetY, progress));
 
             if (state.timer() > SPAWN_TIME) {
-                body.setActive(true);
+                //body.setActive(true);
                 state.set(State.SPAWNED);
             }
         } else {
@@ -101,19 +98,6 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         destroyBody.mark();
     }
 
-    public void reverseVelocity(boolean reverseX, boolean reverseY) {
-        if (reverseX) {
-            velocity.x = -velocity.x;
-        }
-        if (reverseY) {
-            velocity.y = -velocity.y;
-        }
-    }
-
-    public void bounceUp() {
-        body.applyLinearImpulse(new Vector2(0, 1.5f), body.getWorldCenter(), true);
-    }
-
     public String getId() {
         return id;
     }
@@ -141,8 +125,6 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
-        out.writeFloat(velocity.x);
-        out.writeFloat(velocity.y);
         destroyBody.write(out);
     }
 
@@ -151,7 +133,6 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         id = in.readUTF();
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
-        velocity.set(in.readFloat(), in.readFloat());
         destroyBody.read(in);
     }
 }

@@ -28,7 +28,6 @@ public abstract class JumpingItem extends Item {
     public JumpingItem(GameCallbacks callbacks, World world, TextureAtlas atlas, String regionName, float x, float y) {
         super(callbacks, world, x, y);
         setRegion(atlas.findRegion(regionName), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
-        velocity = Vector2.Zero;
         impulsTimer = new GameTimer(3f);
         state.setStateCallback(new GameObjectState.StateCallback<State>() {
             @Override

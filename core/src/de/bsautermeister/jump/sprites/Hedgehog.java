@@ -90,8 +90,8 @@ public class Hedgehog extends Enemy implements Drownable {
     public void update(float delta) {
         super.update(delta);
 
+        state.upate(delta);
         if (!isDead() && !isDrowning()) {
-            state.upate(delta);
             getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
 
             if (state.is(State.ROLLING)) {

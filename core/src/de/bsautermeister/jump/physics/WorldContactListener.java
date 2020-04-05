@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.physics;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -8,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.sprites.CollectableItem;
 import de.bsautermeister.jump.sprites.DrunkenGuy;
 import de.bsautermeister.jump.sprites.Enemy;
@@ -74,14 +72,6 @@ public class WorldContactListener implements ContactListener {
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
                 player.hit(enemy);
-                break;
-            case Bits.ITEM | Bits.BRICK:
-            case Bits.ITEM | Bits.ITEM_BOX:
-            case Bits.ITEM | Bits.GROUND:
-                taggedItem = (TaggedUserData<Item>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
-                if (!Item.TAG_BASE.equals(taggedItem.getTag())) {
-                    taggedItem.getUserData().reverseVelocity(true, false);
-                }
                 break;
             case Bits.ITEM | Bits.PLAYER:
                 taggedCollectableItem = (TaggedUserData<CollectableItem>) resolveUserData(fixtureA, fixtureB, Bits.ITEM);
