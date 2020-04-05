@@ -408,6 +408,13 @@ public class GameController  implements BinarySerializable, Disposable {
         tent = new Tent(atlas, goal);
 
         platforms.addAll(worldCreator.createPlatforms());
+        tileObjects = worldCreator.getTileObjects();
+        spikesList = worldCreator.getSpikeRegions();
+
+        totalBeers = getTotalBeers();
+        updateCollectedBeers(0);
+        score = 0;
+
         if (gameToResume != null) {
             load(gameToResume);
         } else {
@@ -419,7 +426,6 @@ public class GameController  implements BinarySerializable, Disposable {
 
         camera.position.set(player.getBody().getPosition(), 0);
 
-        tileObjects = worldCreator.getTileObjects();
         waterList = worldCreator.getWaterRegions();
         waterInteractionManager.reset();
         waterInteractionManager.setWaterRegions(waterList);
@@ -431,12 +437,6 @@ public class GameController  implements BinarySerializable, Disposable {
                 waterInteractionManager.add(drownableEnemy);
             }
         }
-
-        totalBeers = getTotalBeers();
-        updateCollectedBeers(0);
-        score = 0;
-
-        spikesList = worldCreator.getSpikeRegions();
 
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);

@@ -44,6 +44,7 @@ public class GameScreen extends ScreenBase {
         super(game);
         this.level = level;
         this.gameToResume = null;
+        GameStats.INSTANCE.updateLastStartedLevel(level);
     }
 
     /**
