@@ -4,6 +4,7 @@
 
 uniform float u_time;
 uniform float u_width;
+uniform float u_opacity;
 uniform sampler2D u_texture;
 
 varying vec4 v_color;
@@ -15,5 +16,5 @@ void main() {
     float freq = u_width * 6.66;
     float x = v_texCoords.x;
     float y = v_texCoords.y + (sin(x * freq + speed) * amplitude) - (sin((-x * freq + speed) * 0.66) * amplitude * 0.66);
-    gl_FragColor = v_color * texture2D(u_texture, vec2(x, y));
+    gl_FragColor = vec4(v_color.rgb, u_opacity) * texture2D(u_texture, vec2(x, y));
 }

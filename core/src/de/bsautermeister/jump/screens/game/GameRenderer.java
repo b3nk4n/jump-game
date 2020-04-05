@@ -47,7 +47,6 @@ import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
-import de.bsautermeister.jump.sprites.Tent;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -65,8 +64,7 @@ public class GameRenderer implements Disposable {
     private final FrameBuffer frameBuffer;
 
     private final ShaderProgram waterShader;
-    private final TextureRegion waterFrontTexture;
-    private final TextureRegion waterBackTexture;
+    private final TextureRegion waterTexture;
     private final ShaderProgram drunkShader;
     private final ShaderProgram stonedShader;
     private final ShaderProgram pixelateShader;
@@ -105,8 +103,7 @@ public class GameRenderer implements Disposable {
         stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/grayscale.fs");
         pixelateShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/pixelate.fs");
 
-        waterFrontTexture = atlas.findRegion(RegionNames.WATER_FRONT);
-        waterBackTexture = atlas.findRegion(RegionNames.WATER_BACK);
+        waterTexture = atlas.findRegion(RegionNames.WATER);
 
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
@@ -256,7 +253,7 @@ public class GameRenderer implements Disposable {
             coin.draw(batch);
         }
 
-        renderWater(batch, waterBackTexture);
+        renderWater(batch, waterTexture, 1f);
 
         ObjectMap<String, Item> items = controller.getItems();
         for (Item item : items.values()) {
@@ -287,7 +284,7 @@ public class GameRenderer implements Disposable {
         }
         player.getPretzelBullet().draw(batch);
 
-        renderWater(batch, waterFrontTexture);
+        renderWater(batch, waterTexture, 0.5f);
 
         mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.FG_TILES_KEY));
@@ -309,7 +306,7 @@ public class GameRenderer implements Disposable {
         }
     }
 
-    private void renderWater(SpriteBatch batch, TextureRegion waterTexture) {
+    private void renderWater(SpriteBatch batch, TextureRegion waterTexture, float opacity) {
         float gameTime = controller.getGameTime();
 
         ShaderProgram prevShader = batch.getShader();
@@ -317,14 +314,15 @@ public class GameRenderer implements Disposable {
         for (Rectangle waterRegion : waterList) {
             batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
+            waterShader.setUniformf("u_opacity", opacity);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
-            int regionHeightInPixel = MathUtils.round(waterRegion.getHeight() * Cfg.PPM);
-            batch.draw(waterTexture.getTexture(),
-                    waterRegion.getX(), (waterRegion.getY() - 1f / Cfg.PPM),
-                    waterRegion.getWidth(), waterRegion.getHeight(),
-                    waterTexture.getRegionX(), waterTexture.getRegionY(),
-                    waterTexture.getRegionWidth(), regionHeightInPixel,
-                    false, false);
+           int regionHeightInPixel = MathUtils.round(waterRegion.getHeight() * Cfg.PPM);
+           batch.draw(waterTexture.getTexture(),
+                   waterRegion.getX(), (waterRegion.getY()),
+                   waterRegion.getWidth(), waterRegion.getHeight(),
+                   waterTexture.getRegionX(), waterTexture.getRegionY(),
+                   waterTexture.getRegionWidth(), regionHeightInPixel,
+                   false, false);
         }
         batch.setShader(prevShader);
     }

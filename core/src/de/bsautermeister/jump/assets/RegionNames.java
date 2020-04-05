@@ -40,8 +40,7 @@ public class RegionNames {
     public static String COIN = "coin";
     public static String BRICK_FRAGMENT_TPL = "brick_fragment*";
     public static String BOX_FRAGMENT_TPL = "box_fragment*";
-    public static String WATER_FRONT = "water_front";
-    public static String WATER_BACK = "water_back";
+    public static String WATER = "water";
     public static String PLATFORM2 = "platform2";
     public static String PLATFORM3 = "platform3";
     public static String PLATFORM4 = "platform4";
