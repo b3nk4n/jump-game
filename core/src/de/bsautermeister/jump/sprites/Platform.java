@@ -124,6 +124,7 @@ public class Platform extends Sprite implements BinarySerializable {
         fixtureDef.filter.maskBits = Bits.PLAYER |
                 Bits.PLAYER_FEET |
                 Bits.ENEMY |
+                Bits.ENEMY_SIDE |
                 Bits.ITEM |
                 Bits.BULLET;
         Fixture fixture = body.createFixture(fixtureDef);

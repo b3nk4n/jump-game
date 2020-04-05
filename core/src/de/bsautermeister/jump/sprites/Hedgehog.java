@@ -204,7 +204,8 @@ public class Hedgehog extends Enemy implements Drownable {
         fixtureDef.filter.maskBits = Bits.GROUND
                 | Bits.COLLIDER
                 | Bits.ITEM_BOX
-                | Bits.BRICK;
+                | Bits.BRICK
+                | Bits.PLATFORM;
         fixtureDef.isSensor = true;
         sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
                 new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
@@ -301,6 +302,7 @@ public class Hedgehog extends Enemy implements Drownable {
     }
 
     private final Vector2 outCenter = new Vector2();
+
     @Override
     public Vector2 getWorldCenter() {
         Rectangle rect = getBoundingRectangle();
