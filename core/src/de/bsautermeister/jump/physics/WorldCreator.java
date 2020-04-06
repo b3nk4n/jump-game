@@ -56,6 +56,7 @@ public class WorldCreator {
     private static final String PLATFORMS_KEY = "platforms";
     private static final String COINS_KEY = "coins";
     private static final String SPIKES_KEY = "spikes";
+    private static final String POLES_KEY = "poles";
 
     private final World world;
     private final TiledMap map;
@@ -218,6 +219,16 @@ public class WorldCreator {
         Array<Rectangle> waterRegions = new Array<Rectangle>();
         if (hasLayer(map, WATER_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                waterRegions.add(toPPM(mapObject.getRectangle()));
+            }
+        }
+        return waterRegions;
+    }
+
+    public Array<Rectangle> getPoleRegions() {
+        Array<Rectangle> waterRegions = new Array<Rectangle>();
+        if (hasLayer(map, POLES_KEY)) {
+            for (RectangleMapObject mapObject : map.getLayers().get(POLES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 waterRegions.add(toPPM(mapObject.getRectangle()));
             }
         }

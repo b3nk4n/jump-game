@@ -30,7 +30,7 @@ public class Tent extends Sprite implements BinarySerializable {
 
         tentWidth = getRegionWidth() / Cfg.PPM;
         setBounds(goal.getX() + (goal.getWidth() - tentWidth) / 2f, goal.getY(),
-                tentWidth, getRegionHeight() / 2 / Cfg.PPM);
+                tentWidth, getRegionHeight() / Cfg.PPM);
     }
 
     public void update(float delta) {

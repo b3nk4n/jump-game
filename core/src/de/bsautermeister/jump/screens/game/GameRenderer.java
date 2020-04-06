@@ -47,6 +47,7 @@ import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
+import de.bsautermeister.jump.sprites.Pole;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -225,6 +226,10 @@ public class GameRenderer implements Disposable {
         renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.80f);
 
         mapRenderer.setView(camera);
+
+        for (Pole pole : controller.getPoles()) {
+            pole.draw(batch);
+        }
 
         controller.getTent().draw(batch);
 

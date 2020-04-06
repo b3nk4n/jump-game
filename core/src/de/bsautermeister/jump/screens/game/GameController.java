@@ -55,6 +55,7 @@ import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.ItemDef;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
+import de.bsautermeister.jump.sprites.Pole;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.PretzelItem;
 import de.bsautermeister.jump.sprites.Tent;
@@ -114,6 +115,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private Array<Rectangle> spikesList;
 
     private Tent tent;
+    private Array<Pole> poles = new Array<Pole>();
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -436,6 +438,11 @@ public class GameController  implements BinarySerializable, Disposable {
                 Drownable drownableEnemy = (Drownable) enemy;
                 waterInteractionManager.add(drownableEnemy);
             }
+        }
+
+        poles.clear();
+        for (Rectangle poleRect : worldCreator.getPoleRegions()) {
+            poles.add(new Pole(atlas, poleRect));
         }
 
         musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
@@ -1083,5 +1090,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public Tent getTent() {
         return tent;
+    }
+
+    public Array<Pole> getPoles() {
+        return poles;
     }
 }
