@@ -528,9 +528,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(fixtureDef, shape, normalFilterMask);
-        createFeetFixture(fixtureDef, 9.33f, -6.5f);
-        createHeadSensorFixture(fixtureDef, 4f, 6.1f);
-        createGroundSensorFixture(fixtureDef, 9f, -7f);
+        createFeetFixture(fixtureDef, 9.33f, -6.0f);
+        createHeadSensorFixture(fixtureDef, 4f, 5.6f);
+        createGroundSensorFixture(fixtureDef, 9f, -6.5f);
     }
 
     private void defineBigBody(Vector2 position, boolean normalFilterMask) {
@@ -545,11 +545,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(fixtureDef, shape, normalFilterMask);
-        shape.setPosition(new Vector2(0, 11f / Cfg.PPM));
+        shape.setPosition(new Vector2(0, 10f / Cfg.PPM));
         createBodyFixture(fixtureDef, shape, normalFilterMask);
-        createFeetFixture(fixtureDef, 10f, -6.5f);
-        createHeadSensorFixture(fixtureDef, 4f, 21.1f);
-        createGroundSensorFixture(fixtureDef, 9.33f, -7f);
+        createFeetFixture(fixtureDef, 10f, -6f);
+        createHeadSensorFixture(fixtureDef, 4f, 15.6f);
+        createGroundSensorFixture(fixtureDef, 9.33f, -6.5f);
     }
 
     private void createBodyFixture(FixtureDef fixtureDef, Shape shape, boolean normalFilterMask) {
@@ -586,7 +586,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
         fixtureDef.filter.categoryBits = Bits.PLAYER_HEAD;
         fixtureDef.shape = headShape;
-        fixtureDef.isSensor = true; // does not collide in the physics simulation
+        //fixtureDef.isSensor = true; // does not collide in the physics simulation
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
     }
