@@ -167,7 +167,7 @@ public class Fox extends Enemy implements Drownable {
 
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
-        fixtureDef.filter.maskBits = Bits.PLAYER;
+        fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
         body.createFixture(fixtureDef).setUserData(this);
 
         EdgeShape sideShape = new EdgeShape();

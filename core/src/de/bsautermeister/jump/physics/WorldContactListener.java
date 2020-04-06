@@ -41,10 +41,10 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.ITEM_BOX | Bits.BRICK);
                 tileObject.onHeadHit(player);
                 break;
-            case Bits.ENEMY_HEAD | Bits.PLAYER:
-                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
+            case Bits.ENEMY_HEAD | Bits.PLAYER_FEET:
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
-                if (player.getBody().getLinearVelocity().y < 0) {
+                if (player.getBody().getLinearVelocity().y < 0.1) {
                     enemy.onHeadHit(player);
                     player.pumpUp();
                 }
@@ -78,12 +78,12 @@ public class WorldContactListener implements ContactListener {
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
                 taggedCollectableItem.getUserData().collectBy(player);
                 break;
-            case Bits.PLAYER_FEET | Bits.GROUND:
-            case Bits.PLAYER_FEET | Bits.PLATFORM:
-            case Bits.PLAYER_FEET | Bits.ITEM_BOX:
-            case Bits.PLAYER_FEET | Bits.BRICK:
-                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
-                Object other = resolveUserData(fixtureA, fixtureB, ~Bits.PLAYER_FEET);
+            case Bits.PLAYER_GROUND | Bits.GROUND:
+            case Bits.PLAYER_GROUND | Bits.PLATFORM:
+            case Bits.PLAYER_GROUND | Bits.ITEM_BOX:
+            case Bits.PLAYER_GROUND | Bits.BRICK:
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_GROUND);
+                Object other = resolveUserData(fixtureA, fixtureB, ~Bits.PLAYER_GROUND);
                 player.touchGround(other);
                 break;
             case Bits.BLOCK_TOP | Bits.ENEMY:
@@ -141,12 +141,12 @@ public class WorldContactListener implements ContactListener {
         InteractiveTileObject tileObject;
         TaggedUserData<Enemy> taggedEnemy;
         switch (collisionDef) {
-            case Bits.PLAYER_FEET | Bits.GROUND:
-            case Bits.PLAYER_FEET | Bits.PLATFORM:
-            case Bits.PLAYER_FEET | Bits.ITEM_BOX:
-            case Bits.PLAYER_FEET | Bits.BRICK:
-                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
-                Object other = resolveUserData(fixtureA, fixtureB, ~Bits.PLAYER_FEET);
+            case Bits.PLAYER_GROUND | Bits.GROUND:
+            case Bits.PLAYER_GROUND | Bits.PLATFORM:
+            case Bits.PLAYER_GROUND | Bits.ITEM_BOX:
+            case Bits.PLAYER_GROUND | Bits.BRICK:
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_GROUND);
+                Object other = resolveUserData(fixtureA, fixtureB, ~Bits.PLAYER_GROUND);
                 player.leftGround(other);
                 break;
             case Bits.BLOCK_TOP | Bits.ENEMY:

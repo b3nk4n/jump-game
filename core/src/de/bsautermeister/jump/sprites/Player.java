@@ -570,9 +570,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         feetShape.set(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
+        fixtureDef.filter.categoryBits = Bits.PLAYER_FEET;
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
+                Bits.ENEMY_HEAD |
                 Bits.BRICK;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
@@ -596,7 +598,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         EdgeShape groundSensorShape = new EdgeShape();
         groundSensorShape.set(new Vector2(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, bottomY / Cfg.PPM));
-        fixtureDef.filter.categoryBits = Bits.PLAYER_FEET;
+        fixtureDef.filter.categoryBits = Bits.PLAYER_GROUND;
         fixtureDef.shape = groundSensorShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);

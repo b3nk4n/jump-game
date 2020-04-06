@@ -195,7 +195,8 @@ public class Hedgehog extends Enemy implements Drownable {
 
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
-        fixtureDef.filter.maskBits = Bits.PLAYER;
+        fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
+        fixtureDef.isSensor = true;
         body.createFixture(fixtureDef).setUserData(this);
 
         EdgeShape sideShape = new EdgeShape();
