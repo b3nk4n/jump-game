@@ -44,7 +44,7 @@ public class MenuScreen extends ScreenBase {
 
         getGame().getMusicPlayer().selectMusic(AssetPaths.Music.MENU_AUDIO);
         getGame().getMusicPlayer().setVolume(MusicPlayer.MAX_VOLUME, true);
-        getGame().getMusicPlayer().play();
+        getGame().getMusicPlayer().playFromBeginning();
     }
 
     private void initialize() {

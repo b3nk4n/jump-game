@@ -30,7 +30,6 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
-import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
@@ -270,7 +269,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void hurry() {
             if (!musicPlayer.isSelected(AssetPaths.Music.HURRY_AUDIO)) {
                 musicPlayer.selectMusic(AssetPaths.Music.HURRY_AUDIO);
-                musicPlayer.play();
+                musicPlayer.playFromBeginning();
             }
         }
 
@@ -418,6 +417,9 @@ public class GameController  implements BinarySerializable, Disposable {
         updateCollectedBeers(0);
         score = 0;
 
+        musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
+        musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
+
         if (gameToResume != null) {
             load(gameToResume);
         } else {
@@ -446,9 +448,7 @@ public class GameController  implements BinarySerializable, Disposable {
             poles.add(new Pole(atlas, poleRect));
         }
 
-        musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
-        musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
-        musicPlayer.play();
+        musicPlayer.resumeOrPlay();
     }
 
     private void initMap(int level) {
@@ -878,8 +878,6 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     public void save() {
-        pauseGame();
-
         // don't do anything in case player is dead, kind of dead or level is finished
         if (player.isDead() || player.isDrowning() || player.isVictory() || gameIsCanced) {
             LOG.error("Did NOT save game state");
@@ -887,7 +885,7 @@ public class GameController  implements BinarySerializable, Disposable {
             return;
         }
 
-        // TODO pause the game?
+        pauseGame();
 
         final FileHandle fileHandle = JumpGame.getSavedDataHandle();
         if (!BinarySerializer.write(this, fileHandle.write(false))) {
@@ -898,6 +896,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     @Override
     public void write(DataOutputStream out) throws IOException {
+        musicPlayer.write(out);
+
         if (state.isPaused()) {
             // don't store the paused state, because otherwise the game resumes in the pause menu
             out.writeUTF(stateBeforePause.name());
@@ -939,6 +939,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     @Override
     public void read(DataInputStream in) throws IOException {
+        musicPlayer.read(in);
+
         state = Enum.valueOf(GameState.class, in.readUTF());
         gameIsCanced = in.readBoolean();
         score = in.readInt();

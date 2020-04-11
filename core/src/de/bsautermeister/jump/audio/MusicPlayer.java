@@ -5,13 +5,19 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Logger;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-// TODO resume music a) at the right position and b) with the correct track (e.g. hurry music)
-public class MusicPlayer implements Disposable {
+import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.serializer.BinarySerializable;
+
+// TODO resume music with the correct track (e.g. hurry music)
+public class MusicPlayer implements BinarySerializable, Disposable {
+    private static final Logger LOG = new Logger(MusicPlayer.class.getSimpleName(), Cfg.LOG_LEVEL);
+
     private final static float VOLUME_CHANGE_IN_SECONDS = 2.0f;
     public final static float MAX_VOLUME = 0.33f;
 
@@ -23,6 +29,7 @@ public class MusicPlayer implements Disposable {
     private Array<Music> fadeOutAndDisposeQueue = new Array<Music>();
 
     public void selectMusic(String filePath) {
+        LOG.debug("Select: " + filePath);
         if (music != null) {
             fadeOutAndDisposeQueue.add(music);
         }
@@ -66,7 +73,17 @@ public class MusicPlayer implements Disposable {
         }
     }
 
-    public void play() {
+    public void playFromBeginning() {
+        if (music == null) {
+            return;
+        }
+
+        LOG.debug("Play music from beginning");
+        music.stop();
+        music.play();
+    }
+
+    public void resumeOrPlay() {
         if (music == null) {
             return;
         }
@@ -75,11 +92,20 @@ public class MusicPlayer implements Disposable {
         music.play();
     }
 
+    public boolean isPlaying() {
+        if (music == null) {
+            return false;
+        }
+
+        return music.isPlaying();
+    }
+
     public void pause() {
         if (music == null) {
             return;
         }
 
+        LOG.debug("Pause music");
         music.pause();
     }
 
@@ -88,6 +114,7 @@ public class MusicPlayer implements Disposable {
             return;
         }
 
+        LOG.debug("Stop music");
         music.stop();
     }
 
@@ -107,12 +134,22 @@ public class MusicPlayer implements Disposable {
         return selectedFilePath.equals(filePath);
     }
 
+    @Override
     public void write(DataOutputStream out) throws IOException {
+        LOG.debug("Write music state");
         out.writeFloat(music.getPosition());
     }
 
+    @Override
     public void read(DataInputStream in) throws IOException {
-        music.setPosition(in.readFloat());
+        LOG.debug("Read music state");
+        float pos = in.readFloat();
+        if (pos > 0) {
+            // at least on Desktop it is required to call play first
+            // before seeking the audio position
+            music.play();
+            music.setPosition(pos);
+        }
     }
 
     @Override

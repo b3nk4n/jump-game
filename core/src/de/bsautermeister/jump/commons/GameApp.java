@@ -54,13 +54,15 @@ public abstract class GameApp implements ApplicationListener {
     @Override
     public void pause() {
         transitionContext.pause();
-        musicPlayer.pause();
+        if (musicPlayer.isPlaying()) {
+            musicPlayer.pause();
+        }
     }
 
     @Override
     public void resume() {
         transitionContext.resume();
-        musicPlayer.play();
+        musicPlayer.resumeOrPlay();
     }
 
     @Override
