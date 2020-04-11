@@ -16,7 +16,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.Styles;
+import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.game.GameScreen;
@@ -39,6 +41,10 @@ public class MenuScreen extends ScreenBase {
 
         // use default BACK button handling (exit game)
         Gdx.input.setCatchBackKey(false);
+
+        getGame().getMusicPlayer().selectMusic(AssetPaths.Music.MENU_AUDIO);
+        getGame().getMusicPlayer().setVolume(MusicPlayer.MAX_VOLUME, true);
+        getGame().getMusicPlayer().play();
     }
 
     private void initialize() {
