@@ -30,6 +30,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
+import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
@@ -877,6 +878,8 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     public void save() {
+        pauseGame();
+
         // don't do anything in case player is dead, kind of dead or level is finished
         if (player.isDead() || player.isDrowning() || player.isVictory() || gameIsCanced) {
             LOG.error("Did NOT save game state");
