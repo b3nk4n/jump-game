@@ -33,4 +33,6 @@ public interface Cfg {
 
     float ENEMY_WAKE_UP_DISTANCE2 = (float)Math.pow(Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM, 2);
     float MAX_FALLING_SPEED = -4f;
+
+    float HURRY_WARNING_TIME = 60f;
 }

@@ -14,7 +14,6 @@ import java.io.IOException;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
-// TODO resume music with the correct track (e.g. hurry music)
 public class MusicPlayer implements BinarySerializable, Disposable {
     private static final Logger LOG = new Logger(MusicPlayer.class.getSimpleName(), Cfg.LOG_LEVEL);
 

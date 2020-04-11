@@ -417,9 +417,6 @@ public class GameController  implements BinarySerializable, Disposable {
         updateCollectedBeers(0);
         score = 0;
 
-        musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
-        musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
-
         if (gameToResume != null) {
             load(gameToResume);
         } else {
@@ -427,6 +424,10 @@ public class GameController  implements BinarySerializable, Disposable {
                 enemies.put(enemy.getId(), enemy);
             }
             coins.addAll(worldCreator.createCoins());
+
+            musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
+            musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
+            musicPlayer.playFromBeginning();
         }
 
         camera.position.set(player.getBody().getPosition(), 0);
@@ -447,8 +448,6 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Rectangle poleRect : worldCreator.getPoleRegions()) {
             poles.add(new Pole(atlas, poleRect));
         }
-
-        musicPlayer.resumeOrPlay();
     }
 
     private void initMap(int level) {
@@ -515,7 +514,7 @@ public class GameController  implements BinarySerializable, Disposable {
         upateCameraPosition();
         camera.update();
 
-        if (player.getTimeToLive() <= 60) {
+        if (player.getTimeToLive() <= Cfg.HURRY_WARNING_TIME) {
             callbacks.hurry(); // TODO call only once?
         }
 
@@ -896,8 +895,6 @@ public class GameController  implements BinarySerializable, Disposable {
 
     @Override
     public void write(DataOutputStream out) throws IOException {
-        musicPlayer.write(out);
-
         if (state.isPaused()) {
             // don't store the paused state, because otherwise the game resumes in the pause menu
             out.writeUTF(stateBeforePause.name());
@@ -909,6 +906,7 @@ public class GameController  implements BinarySerializable, Disposable {
         out.writeInt(collectedBeers);
         out.writeFloat(gameTime);
         player.write(out);
+        musicPlayer.write(out);
         killSequelManager.write(out);
         out.writeInt(enemies.size);
         for (Enemy enemy : enemies.values()) {
@@ -939,14 +937,18 @@ public class GameController  implements BinarySerializable, Disposable {
 
     @Override
     public void read(DataInputStream in) throws IOException {
-        musicPlayer.read(in);
-
         state = Enum.valueOf(GameState.class, in.readUTF());
         gameIsCanced = in.readBoolean();
         score = in.readInt();
         collectedBeers = in.readInt();
         gameTime = in.readFloat();
         player.read(in);
+
+        musicPlayer.selectMusic(player.getTimeToLive() <= Cfg.HURRY_WARNING_TIME ? AssetPaths.Music.HURRY_AUDIO : AssetPaths.Music.NORMAL_AUDIO);
+        musicPlayer.read(in);
+        musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
+        musicPlayer.resumeOrPlay();
+
         killSequelManager.read(in);
         int numEnemies = in.readInt();
         for (int i = 0; i < numEnemies; ++i) {
