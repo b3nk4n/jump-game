@@ -488,6 +488,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         player.getPretzelBullet().update(delta);
 
+        tent.setPlayerPosition(player.getWorldCenter());
         tent.update(delta);
 
         updateEnemies(delta);

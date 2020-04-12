@@ -137,15 +137,23 @@ public class MusicPlayer implements BinarySerializable, Disposable {
     public void write(DataOutputStream out) throws IOException {
         LOG.debug("Write music state");
         out.writeFloat(music.getPosition());
+        out.writeFloat(currentVolume);
+        out.writeFloat(targetVolume);
+        out.writeUTF(selectedFilePath);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         LOG.debug("Read music state");
         float pos = in.readFloat();
+        currentVolume = in.readFloat();
+        targetVolume = in.readFloat();
+        String musicPath = in.readUTF();
         if (pos > 0) {
             // at least on Desktop it is required to call play first
             // before seeking the audio position
+            selectMusic(musicPath);
+            music.setVolume(currentVolume);
             music.play();
             music.setPosition(pos);
         }
