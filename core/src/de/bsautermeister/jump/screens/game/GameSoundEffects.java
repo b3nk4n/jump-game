@@ -2,43 +2,60 @@ package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
 
 import de.bsautermeister.jump.assets.AssetDescriptors;
 
 public class GameSoundEffects implements Disposable {
     public Sound bumpSound;
-    public Sound powerupSpawnSound;
-    public Sound powerupSound;
+    public Sound foodSpawnSound;
+    public Sound beerSpawnSound;
+    public Sound coinSpawnSound;
+    public Sound eatFoodSound;
     public Sound coinSound;
     public Sound breakBlockSound;
     public Sound stompSound;
-    public Sound powerDownSound;
-    public Sound playerDieSound;
+    public Sound complainSound;
+    private Sound[] swearingSounds;
     public Sound jumpSound;
+    public Sound landingSound;
     public Sound kickedSound;
     public Sound splashSound;
     public Sound fireSound;
     public Sound drinkingSound;
-    public Sound ohYeahSound;
     public Sound successSound;
 
     public GameSoundEffects(AssetManager assetManager) {
         bumpSound = assetManager.get(AssetDescriptors.Sounds.BUMP);
-        powerupSpawnSound = assetManager.get(AssetDescriptors.Sounds.POWERUP_SPAWN);
-        powerupSound = assetManager.get(AssetDescriptors.Sounds.POWERUP);
+        foodSpawnSound = assetManager.get(AssetDescriptors.Sounds.FOOD_SPAWN);
+        beerSpawnSound = assetManager.get(AssetDescriptors.Sounds.BEER_SPAWN);
+        coinSpawnSound = assetManager.get(AssetDescriptors.Sounds.COIN_SPAWN);
+        eatFoodSound = assetManager.get(AssetDescriptors.Sounds.EAT_FOOD);
         coinSound = assetManager.get(AssetDescriptors.Sounds.COIN);
         breakBlockSound = assetManager.get(AssetDescriptors.Sounds.BREAK_BLOCK);
         stompSound = assetManager.get(AssetDescriptors.Sounds.STOMP);
-        powerDownSound = assetManager.get(AssetDescriptors.Sounds.POWERDOWN);
-        playerDieSound = assetManager.get(AssetDescriptors.Sounds.PLAYER_DIE);
+        complainSound = assetManager.get(AssetDescriptors.Sounds.COMPLAIN);
+        swearingSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.SWEARING1),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING2),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING3),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING4),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING5),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING6),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING7)
+        };
         jumpSound = assetManager.get(AssetDescriptors.Sounds.JUMP);
+        landingSound = assetManager.get(AssetDescriptors.Sounds.LANDING);
         kickedSound = assetManager.get(AssetDescriptors.Sounds.KICKED);
         splashSound = assetManager.get(AssetDescriptors.Sounds.SPLASH);
         fireSound = assetManager.get(AssetDescriptors.Sounds.FIRE);
         drinkingSound = assetManager.get(AssetDescriptors.Sounds.DRINKING);
-        ohYeahSound = assetManager.get(AssetDescriptors.Sounds.OH_YEAH);
         successSound = assetManager.get(AssetDescriptors.Sounds.SUCCESS);
+    }
+
+    public Sound randomSwearingSound() {
+        return swearingSounds[MathUtils.random(swearingSounds.length - 1)];
     }
 
     @Override
@@ -46,18 +63,5 @@ public class GameSoundEffects implements Disposable {
         // disposing sound effects has weird side effects:
         // - Effect stop playing the next time
         // - GdxRuntimeException: Unable to allocate audio buffers.
-        /*bumpSound.dispose();
-        powerupSpawnSound.dispose();
-        powerupSound.dispose();
-        coinSound.dispose();
-        breakBlockSound.dispose();
-        stompSound.dispose();
-        powerDownSound.dispose();
-        playerDieSound.dispose();
-        jumpSound.dispose();
-        kickedSound.dispose();
-        splashSound.dispose();
-        fireSound.dispose();
-        drinkingSound.dispose();*/
     }
 }

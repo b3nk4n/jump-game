@@ -21,18 +21,26 @@ public interface AssetPaths {
     interface Sounds {
         String BUMP = "audio/sounds/bump.wav";
         String BREAK_BLOCK = "audio/sounds/breakblock.wav";
-        String POWERUP_SPAWN = "audio/sounds/powerup_spawn.wav";
+        String FOOD_SPAWN = "audio/sounds/bump_food.wav";
+        String BEER_SPAWN = "audio/sounds/bump_glasses.wav";
+        String COIN_SPAWN = "audio/sounds/bump_coin.wav";
         String COIN = "audio/sounds/coin.wav";
         String STOMP = "audio/sounds/stomp.wav";
-        String POWERUP = "audio/sounds/powerup.wav";
-        String POWERDOWN = "audio/sounds/powerdown.wav";
-        String PLAYER_DIE = "audio/sounds/player_die.wav";
+        String EAT_FOOD = "audio/sounds/eat_food.wav";
+        String COMPLAIN = "audio/sounds/complain.wav";
+        String SWEARING1 = "audio/sounds/swearing1.wav";
+        String SWEARING2 = "audio/sounds/swearing2.wav";
+        String SWEARING3 = "audio/sounds/swearing3.wav";
+        String SWEARING4 = "audio/sounds/swearing4.wav";
+        String SWEARING5 = "audio/sounds/swearing5.wav";
+        String SWEARING6 = "audio/sounds/swearing6.wav";
+        String SWEARING7 = "audio/sounds/swearing7.wav";
         String JUMP = "audio/sounds/jump.wav";
+        String LANDING = "audio/sounds/landing.wav";
         String KICKED = "audio/sounds/kicked.wav";
         String SPLASH = "audio/sounds/splash.wav";
         String FIRE = "audio/sounds/fire.wav";
         String DRINKING = "audio/sounds/drinking.wav";
-        String OH_YEAH = "audio/sounds/oh_yeah.wav";
         String SUCCESS = "audio/sounds/success.wav";
     }
 

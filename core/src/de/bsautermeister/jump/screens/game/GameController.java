@@ -120,7 +120,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
         public void jump() {
-            soundEffects.jumpSound.play(0.33f);
+            soundEffects.jumpSound.play(1f);
         }
 
         @Override
@@ -146,10 +146,10 @@ public class GameController  implements BinarySerializable, Disposable {
                 }
                 msg = "PROST";
             } else if (item instanceof GrilledChickenItem) {
-                soundEffects.ohYeahSound.play();
+                soundEffects.eatFoodSound.play();
                 msg = "TASTY";
             } else { // prezel
-                soundEffects.powerupSound.play();
+                soundEffects.eatFoodSound.play();
                 msg = "YUMMY";
             }
 
@@ -160,7 +160,7 @@ public class GameController  implements BinarySerializable, Disposable {
         @Override
         public void hit(Player player) {
             if (player.isBig()) {
-                soundEffects.powerDownSound.play();
+                soundEffects.complainSound.play();
             }
         }
 
@@ -185,12 +185,12 @@ public class GameController  implements BinarySerializable, Disposable {
                 } else {
                     spawnItem(new ItemDef(position, GrilledChickenItem.class));
                 }
-                soundEffects.powerupSpawnSound.play();
+                soundEffects.foodSpawnSound.play();
             } else if (itemBox.isBeerBox()) {
                 spawnItem(new ItemDef(position, BeerItem.class));
-                soundEffects.powerupSpawnSound.play();
+                soundEffects.beerSpawnSound.play();
             } else {
-                soundEffects.coinSound.play();
+                soundEffects.coinSpawnSound.play();
                 BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
                 activeBoxCoins.add(boxCoin);
                 score += Cfg.COIN_SCORE;
@@ -289,8 +289,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void playerDied() {
-            musicPlayer.stop();
-            soundEffects.playerDieSound.play();
+            musicPlayer.setVolume(0.1f, false);
+            soundEffects.randomSwearingSound().play();
         }
 
         private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2 / Cfg.PPM;
