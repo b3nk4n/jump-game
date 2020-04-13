@@ -263,6 +263,14 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
+        public void hitWall(PretzelBullet pretzelBullet) {
+            float volume = getVolumeBasedOnDistanceToCameraCenter(pretzelBullet.getBody().getWorldCenter().x);
+            if (volume > 0) {
+                soundEffects.kickedSound.play(volume / 2f);
+            }
+        }
+
+        @Override
         public void hit(PretzelBullet pretzelBullet, Enemy enemy) {
 
         }

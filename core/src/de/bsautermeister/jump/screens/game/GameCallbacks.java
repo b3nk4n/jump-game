@@ -22,6 +22,7 @@ public interface GameCallbacks {
     void hit(PretzelBullet pretzelBullet, Enemy enemy);
     void indirectObjectHit(InteractiveTileObject tileObject, String objectId);
     void hitWall(Enemy enemy);
+    void hitWall(PretzelBullet pretzelBullet);
     void killed(Enemy enemy);
     void kicked(Enemy enemy);
     void touchedWater(Drownable drownable);

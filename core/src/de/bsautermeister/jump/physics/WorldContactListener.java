@@ -112,7 +112,7 @@ public class WorldContactListener implements ContactListener {
                 angleVector.set(contactPos);
                 float angle = angleVector.sub(bullet.getBody().getPosition()).angle();
                 if (!(angle > 210 && angle < 330 || angle > 30 && angle < 150)) {
-                    bullet.explode(contactPos);
+                    bullet.hitWall(contactPos);
                 }
                 break;
         }

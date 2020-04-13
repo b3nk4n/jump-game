@@ -184,6 +184,11 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         reset.mark();
     }
 
+    public void hitWall(Vector2 contactPosition) {
+        explode(contactPosition);
+        callbacks.hitWall(this);
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeFloat(body.getPosition().x);
