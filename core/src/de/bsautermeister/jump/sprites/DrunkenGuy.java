@@ -44,7 +44,7 @@ public class DrunkenGuy extends Enemy {
 
     public DrunkenGuy(GameCallbacks callbacks, World world, TextureAtlas atlas,
                       float posX, float posY) {
-        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
+        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         animation = new Animation(0.1f, atlas.findRegions(RegionNames.DRUNKEN_GUY), Animation.PlayMode.LOOP);
         state = new GameObjectState<State>(State.HIDDEN);
         hiddenTargetY = getBody().getPosition().y - hiddenOffsetY;
@@ -110,8 +110,8 @@ public class DrunkenGuy extends Enemy {
         fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
         fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
         fixtureDef.isSensor = true;
-        topSensor.set(new Vector2(-Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM + hiddenOffsetY),
-                new Vector2(Cfg.BLOCK_SIZE / Cfg.PPM, 14f / Cfg.PPM + hiddenOffsetY));
+        topSensor.set(new Vector2(-Cfg.BLOCK_SIZE_PPM, 14f / Cfg.PPM + hiddenOffsetY),
+                new Vector2(Cfg.BLOCK_SIZE_PPM, 14f / Cfg.PPM + hiddenOffsetY));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_TOP));
 

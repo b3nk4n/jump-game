@@ -124,6 +124,13 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
+        public void landed(float landingHeight) {
+            if (landingHeight > Cfg.MIN_LANDING_HEIGHT) {
+                soundEffects.landingSound.play(MathUtils.clamp(0.33f + landingHeight / (8 * Cfg.BLOCK_SIZE_PPM), 0f, 1f));
+            }
+        }
+
+        @Override
         public void stomp(Enemy enemy) {
             soundEffects.stompSound.play();
 
@@ -744,7 +751,7 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void checkPlayerInBounds() {
-        float blockSizePpm = Cfg.BLOCK_SIZE / Cfg.PPM;
+        float blockSizePpm = Cfg.BLOCK_SIZE_PPM;
         float padding = 2 * blockSizePpm;
         float x = player.getBody().getPosition().x;
         if (x - blockSizePpm / 2  < padding) {

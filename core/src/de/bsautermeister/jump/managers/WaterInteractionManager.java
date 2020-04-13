@@ -76,7 +76,7 @@ public class WaterInteractionManager {
             Vector2 center = drownable.getWorldCenter();
             ParticleEffectPool.PooledEffect splashEffect = waterSplashEffectPool.obtain();
             splashEffect.start();
-            splashEffect.setPosition(center.x, waterRegion.y + waterRegion.height - Cfg.BLOCK_SIZE / Cfg.PPM * 0.5f);
+            splashEffect.setPosition(center.x, waterRegion.y + waterRegion.height - Cfg.BLOCK_SIZE_PPM * 0.5f);
             activeSplashEffects.add(splashEffect);
             callbacks.touchedWater(drownable);
 

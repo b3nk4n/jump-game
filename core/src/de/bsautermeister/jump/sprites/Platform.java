@@ -67,7 +67,7 @@ public class Platform extends Sprite implements BinarySerializable {
 
     private TextureAtlas.AtlasRegion getTextureRegion(TextureAtlas atlas, Rectangle bounds,
                                                       boolean breakable) {
-        int width = Math.round(bounds.width / (Cfg.BLOCK_SIZE / Cfg.PPM));
+        int width = Math.round(bounds.width / (Cfg.BLOCK_SIZE_PPM));
         switch (width) {
             case 2:
                 return atlas.findRegion(breakable ?

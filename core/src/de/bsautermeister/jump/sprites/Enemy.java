@@ -97,7 +97,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     }
 
     protected boolean isOutOfBounds() {
-        return getBody().getPosition().y < - 2 * Cfg.BLOCK_SIZE / Cfg.PPM;
+        return getBody().getPosition().y < - 2 * Cfg.BLOCK_SIZE_PPM;
     }
 
     public void markDestroyBody() {

@@ -127,6 +127,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     private final int randomVictoryIdx;
 
+    /**
+     * Stores the recent highest Y position to determine whether to play the landing sound effect.
+     */
+    private float recentHighestYForLanding;
+
     public Player(GameCallbacks callbacks, World world, TextureAtlas atlas, WorldCreator.StartParams start) {
         this.callbacks = callbacks;
         this.world = world;
@@ -139,7 +144,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         defineSmallBody(start.centerPosition, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
-                Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
+                Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         setRegion(smallPlayerStand[0]);
 
         timeToLive = INITAL_TTL;
@@ -170,6 +175,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         hammeredTimer = new GameTimer(EFFECT_DURATION);
 
         randomVictoryIdx = MathUtils.random(VICTORY_VARIATIONS - 1);
+
+        recentHighestYForLanding = -Float.MAX_VALUE;
     }
 
     private TextureRegion[] createTextureArray(String templateName, int count) {
@@ -322,6 +329,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         // limit falling speed
         if (body.getLinearVelocity().y < Cfg.MAX_FALLING_SPEED) {
             body.setLinearVelocity(body.getLinearVelocity().x, Cfg.MAX_FALLING_SPEED);
+        }
+
+        if (body.getPosition().y > recentHighestYForLanding) {
+            recentHighestYForLanding = body.getPosition().y;
         }
     }
 
@@ -774,6 +785,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void touchGround(Object ground) {
         groundContactCounter++;
 
+        if (groundContactCounter == 1) {
+            callbacks.landed(recentHighestYForLanding - body.getPosition().y);
+            recentHighestYForLanding = body.getPosition().y;
+        }
+
         if (ground instanceof Platform) {
             platformContact = (Platform) ground;
         }
@@ -807,7 +823,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     private boolean isOutOfGame() {
-        return getY() + getHeight() < 0 * Cfg.BLOCK_SIZE / Cfg.PPM;
+        return getY() + getHeight() < 0 * Cfg.BLOCK_SIZE_PPM;
     }
 
     public void victory() {
@@ -860,6 +876,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         out.writeFloat(timeToLive);
         out.writeUTF(lastJumpThroughPlatformId != null ? lastJumpThroughPlatformId : "null");
         out.writeFloat(characterProgress);
+        out.writeFloat(recentHighestYForLanding);
     }
 
     @Override
@@ -885,6 +902,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             lastJumpThroughPlatformId = null;
         }
         characterProgress = in.readFloat();
+        recentHighestYForLanding = in.readFloat();
 
         // this is just a lazy workaround, that is needed because we generally create a small player by default
         if (isBig) {

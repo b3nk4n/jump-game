@@ -48,7 +48,7 @@ public class Fox extends Enemy implements Drownable {
 
     public Fox(GameCallbacks callbacks, World world, TextureAtlas atlas,
                float posX, float posY, boolean rightDirection) {
-        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
+        super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
 
         walkAnimation = new Animation[2];
         walkAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);

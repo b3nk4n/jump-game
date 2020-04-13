@@ -43,7 +43,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
         this.callbacks = callbacks;
         this.world = world;
         initAnimation(atlas);
-        setBounds(posX, posY, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
+        setBounds(posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         destroyBody = new MarkedAction();
         body = defineBody(posX + getWidth() / 2, posY + getHeight() / 2);
 

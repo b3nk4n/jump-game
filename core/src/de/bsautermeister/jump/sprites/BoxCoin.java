@@ -20,14 +20,14 @@ public class BoxCoin extends Sprite implements BinarySerializable {
     private Animation<TextureRegion> spinningAnimation;
     private float stateTime;
     private static final float ANIMATION_TIME = 0.5f;
-    private static final float ANIMATION_OFFSET_Y = 4 * Cfg.BLOCK_SIZE / Cfg.PPM;
+    private static final float ANIMATION_OFFSET_Y = 4 * Cfg.BLOCK_SIZE_PPM;
     private final Interpolation bumpUpInterpolation = Interpolation.linear;
 
     public BoxCoin(TextureAtlas atlas, Vector2 position) {
         spinningAnimation = new Animation<TextureRegion>(0.1f, atlas.findRegions(RegionNames.COIN), Animation.PlayMode.LOOP);
         spawnPosition = new Vector2(position.x - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM),
                 position.y - (Cfg.BLOCK_SIZE / 2f / Cfg.PPM));
-        setBounds(0, 0, Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
+        setBounds(0, 0, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         setPosition(spawnPosition.x, spawnPosition.y);
         stateTime = 0;
         setRegion(spinningAnimation.getKeyFrame(stateTime));

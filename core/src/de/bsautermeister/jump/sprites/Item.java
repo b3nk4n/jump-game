@@ -23,7 +23,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
      * Add a tiny y-offset to the spawn postition, because the block-item is moving and would
      * otherwise expose the bottom of the item as a small visual glitch.
      */
-    private static final float SPAWN_ITEM_OFFSET_Y = 0.15f * Cfg.BLOCK_SIZE / Cfg.PPM;
+    private static final float SPAWN_ITEM_OFFSET_Y = 0.15f * Cfg.BLOCK_SIZE_PPM;
 
     private static final float SPAWN_TIME = 0.75f;
 
@@ -47,14 +47,14 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
 
     public Item(GameCallbacks callbacks, World world, float centerX, float centerY) {
         this.id = UUID.randomUUID().toString();
-        this.spawnY = centerY - Cfg.BLOCK_SIZE / Cfg.PPM / 2 + SPAWN_ITEM_OFFSET_Y;
-        this.targetY = spawnY + Cfg.BLOCK_SIZE / Cfg.PPM;
+        this.spawnY = centerY - Cfg.BLOCK_SIZE_PPM / 2 + SPAWN_ITEM_OFFSET_Y;
+        this.targetY = spawnY + Cfg.BLOCK_SIZE_PPM;
         this.callbacks = callbacks;
         this.world = world;
-        this.setSize(Cfg.BLOCK_SIZE / Cfg.PPM, Cfg.BLOCK_SIZE / Cfg.PPM);
-        setPosition(centerX - Cfg.BLOCK_SIZE / Cfg.PPM / 2, spawnY);
+        this.setSize(Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
+        setPosition(centerX - Cfg.BLOCK_SIZE_PPM / 2, spawnY);
         destroyBody = new MarkedAction();
-        body = defineBody(centerX, centerY + Cfg.BLOCK_SIZE / Cfg.PPM);
+        body = defineBody(centerX, centerY + Cfg.BLOCK_SIZE_PPM);
         //body.setActive(false);
     }
 
@@ -71,7 +71,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
                 state.set(State.SPAWNED);
             }
         } else {
-            boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE / Cfg.PPM;
+            boolean outOfBounds = getBody().getPosition().y < - Cfg.BLOCK_SIZE_PPM;
             if (outOfBounds) {
                 destroyBody.mark();
             }

@@ -9,17 +9,19 @@ public interface Cfg {
     float HUD_WIDTH = 1280; // still world units! (only loading screen)
     float HUD_HEIGHT = 720; // still world units! (only loading screen)
 
+    float PPM = 100f;
+
     int BLOCK_SIZE = 16;
     int BLOCKS_X = 25;
     int BLOCKS_Y = 13;
+
+    float BLOCK_SIZE_PPM = BLOCK_SIZE / PPM;
 
     int WORLD_WIDTH = BLOCKS_X * BLOCK_SIZE;
     int WORLD_HEIGHT = BLOCKS_Y * BLOCK_SIZE;
 
     int WINDOW_WIDTH = Cfg.WORLD_WIDTH * 2;
     int WINDOW_HEIGHT = Cfg.WORLD_HEIGHT * 2;
-
-    float PPM = 100f;
 
     int LEVEL_PAGES = 3;
     int LEVEL_ROWS = 2;
@@ -35,4 +37,6 @@ public interface Cfg {
     float MAX_FALLING_SPEED = -4f;
 
     float HURRY_WARNING_TIME = 60f;
+
+    float MIN_LANDING_HEIGHT = (BLOCK_SIZE / 2) / PPM;
 }
