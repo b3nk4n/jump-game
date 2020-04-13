@@ -1025,6 +1025,7 @@ public class GameController  implements BinarySerializable, Disposable {
     public void dispose() {
         map.dispose();
         world.dispose();
+        tent.dispose();
     }
 
     public float getGameTime() {
