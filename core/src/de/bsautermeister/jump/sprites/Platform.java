@@ -123,6 +123,7 @@ public class Platform extends Sprite implements BinarySerializable {
         fixtureDef.filter.categoryBits = Bits.PLATFORM;
         fixtureDef.filter.maskBits = Bits.PLAYER |
                 Bits.PLAYER_GROUND |
+                Bits.PLAYER_FEET |
                 Bits.ENEMY |
                 Bits.ENEMY_SIDE |
                 Bits.ITEM |

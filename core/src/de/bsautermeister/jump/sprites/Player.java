@@ -270,8 +270,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         setRegion(textureRegion);
 
         // set texture bounds always at the bottom of the body
+        float yOffset = 0.5f / Cfg.PPM; // that player feed is not stuck half a pixel in the ground
         float leftX = body.getPosition().x - getWidth() / 2;
-        float bottomY = body.getPosition().y - 8f / Cfg.PPM;
+        float bottomY = body.getPosition().y - 8f / Cfg.PPM + yOffset;
         float textureWidth = textureRegion.getRegionWidth() / Cfg.PPM;
         float textureHeight = textureRegion.getRegionHeight() / Cfg.PPM;
         setBounds(leftX, bottomY, textureWidth, textureHeight);
