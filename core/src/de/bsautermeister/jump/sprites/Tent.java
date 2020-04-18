@@ -1,16 +1,12 @@
 package de.bsautermeister.jump.sprites;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.io.DataInputStream;
@@ -21,6 +17,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.audio.MusicPlayer;
+import de.bsautermeister.jump.effects.SimplePooledEffect;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Tent extends Sprite implements BinarySerializable, Disposable {
@@ -41,8 +38,7 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
     private float wabbleTime;
     private Vector2 playerPosition = new Vector2(Float.MAX_VALUE, Float.MAX_VALUE);
 
-    private static ParticleEffectPool musicEffectPool;
-    private static Array<ParticleEffectPool.PooledEffect> activeMusicEffects = new Array<ParticleEffectPool.PooledEffect>();
+    private final SimplePooledEffect singingEffect;
 
     public Tent(TextureAtlas atlas, Rectangle goal) {
         setRegion(atlas.findRegion(RegionNames.TENT_CLOSED));
@@ -55,16 +51,9 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
         setBounds(goal.getX() + (goal.getWidth() - tentWidth) / 2f, goal.getY(),
                 tentWidth, getRegionHeight() / Cfg.PPM);
 
-        musicEffectPool = createEffectPool(AssetPaths.Pfx.MUSIC, atlas);
+        singingEffect = new SimplePooledEffect(AssetPaths.Pfx.MUSIC, atlas, 0.2f / Cfg.PPM);
 
         music = new MusicPlayer();
-    }
-
-    private ParticleEffectPool createEffectPool(String effectPath , TextureAtlas atlas) {
-        ParticleEffect effect = new ParticleEffect();
-        effect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
-        effect.scaleEffect(0.2f / Cfg.PPM);
-        return new ParticleEffectPool(effect, 8, 16);
     }
 
     public void update(float delta) {
@@ -84,16 +73,9 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
             } else if (music.isPlaying()) {
                 music.setVolume(0f, false);
             }
-            music.update(delta);
 
-            for (int i = activeMusicEffects.size - 1; i >= 0; i--) {
-                ParticleEffectPool.PooledEffect effect = activeMusicEffects.get(i);
-                effect.update(delta);
-                if (effect.isComplete()) {
-                    activeMusicEffects.removeIndex(i);
-                    effect.free();
-                }
-            }
+            music.update(delta);
+            singingEffect.update(delta);
         }
     }
 
@@ -101,9 +83,7 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
     public void draw(Batch batch) {
         super.draw(batch);
 
-        for (ParticleEffectPool.PooledEffect effect : activeMusicEffects) {
-            effect.draw(batch);
-        }
+        singingEffect.draw(batch);
     }
 
     private String pickRandomSong() {
@@ -123,10 +103,7 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
         open = true;
         setRegion(atlas.findRegion(RegionNames.TENT_OPEN));
 
-        ParticleEffectPool.PooledEffect effect = musicEffectPool.obtain();
-        effect.setPosition(center.x, center.y + 2 * Cfg.BLOCK_SIZE_PPM);
-        effect.start();
-        activeMusicEffects.add(effect);
+        singingEffect.emit(center.x, center.y + 2 * Cfg.BLOCK_SIZE_PPM);
     }
 
     public boolean isEntering(Player player) {

@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.effects.SimplePooledEffect;
 import de.bsautermeister.jump.physics.TaggedUserData;
 import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
@@ -44,8 +45,8 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
 
     private MarkedAction reset;
 
-    private static ParticleEffectPool explodeEffectPool;
-    private static Array<ParticleEffectPool.PooledEffect> activeExplodeEffects = new Array<ParticleEffectPool.PooledEffect>();
+
+    private final SimplePooledEffect explodeEffect;
 
     public PretzelBullet(GameCallbacks callbacks, World world, TextureAtlas atlas) {
         super(atlas.findRegion(RegionNames.PRETZEL_BULLET));
@@ -56,17 +57,9 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         body = defineBody();
         reset = new MarkedAction();
 
-        // TODO only works like this, because PrezelBullet is only instantiated a single time
-        explodeEffectPool = createEffectPool(AssetPaths.Pfx.EXPLODE, atlas);
+        explodeEffect = new SimplePooledEffect(AssetPaths.Pfx.EXPLODE, atlas, 0.1f / Cfg.PPM);
 
         reset();
-    }
-
-    private ParticleEffectPool createEffectPool(String effectPath , TextureAtlas atlas) {
-        ParticleEffect effect = new ParticleEffect();
-        effect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
-        effect.scaleEffect(0.1f / Cfg.PPM);
-        return new ParticleEffectPool(effect, 8, 16);
     }
 
     public void reset() {
@@ -145,14 +138,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
             activeTime += delta;
         }
 
-        for (int i = activeExplodeEffects.size - 1; i >= 0; i--) {
-            ParticleEffectPool.PooledEffect effect = activeExplodeEffects.get(i);
-            effect.update(delta);
-            if (effect.isComplete()) {
-                activeExplodeEffects.removeIndex(i);
-                effect.free();
-            }
-        }
+        explodeEffect.update(delta);
     }
 
     public void postUpdate() {
@@ -170,17 +156,11 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
             super.draw(batch);
         }
 
-        for (ParticleEffectPool.PooledEffect effect : activeExplodeEffects) {
-            effect.draw(batch);
-        }
+        explodeEffect.draw(batch);
     }
 
     public void explode(Vector2 contactPosition) {
-        ParticleEffectPool.PooledEffect effect = explodeEffectPool.obtain();
-        effect.start();
-        effect.setPosition(contactPosition.x, contactPosition.y);
-        activeExplodeEffects.add(effect);
-
+        explodeEffect.emit(contactPosition.x, contactPosition.y);
         reset.mark();
     }
 
