@@ -76,12 +76,16 @@ public class WorldCreator {
         buildStaticLayer(GROUND_KEY, Bits.GROUND, false);
         buildStaticLayer(COLLIDER_KEY, Bits.COLLIDER, true);
 
-        for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            tileObjects.add(new Brick(callbacks, world, map, atlas, mapObject));
+        if (hasLayer(map, BRICKS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(BRICKS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                tileObjects.add(new Brick(callbacks, world, map, atlas, mapObject));
+            }
         }
 
-        for (MapObject mapObject : map.getLayers().get(BOXES_KEY).getObjects().getByType(RectangleMapObject.class)) {
-            tileObjects.add(new ItemBox(callbacks, world, map, atlas, mapObject));
+        if (hasLayer(map, BOXES_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(BOXES_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                tileObjects.add(new ItemBox(callbacks, world, map, atlas, mapObject));
+            }
         }
     }
 

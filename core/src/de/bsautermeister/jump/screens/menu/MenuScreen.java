@@ -28,11 +28,17 @@ public class MenuScreen extends ScreenBase {
     private final Viewport viewport;
     private final Stage stage;
 
+    private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
+
+    private final MenuBackgroundRenderer backgroundRenderer;
+
     public MenuScreen(GameApp game) {
         super(game);
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         this.stage = new Stage(viewport, game.getBatch());
         this.stage.setDebugAll(Cfg.DEBUG_MODE);
+
+        backgroundRenderer = new MenuBackgroundRenderer(getBatch(), atlas);
     }
 
     @Override
@@ -48,7 +54,7 @@ public class MenuScreen extends ScreenBase {
     }
 
     private void initialize() {
-        TextureAtlas atlas = getAsset(AssetDescriptors.Atlas.UI); // TODO load a background image
+        TextureAtlas atlas = getAsset(AssetDescriptors.Atlas.UI); // TODO load a background image and dispose this
         Skin skin = getAsset(AssetDescriptors.Skins.UI);
 
         Table table = new Table();
@@ -91,13 +97,24 @@ public class MenuScreen extends ScreenBase {
     public void render(float delta) {
         GdxUtils.clearScreen(Color.BLACK);
 
+        backgroundRenderer.update(delta);
+        backgroundRenderer.render();
+
         stage.act();
         stage.draw();
     }
 
     @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        backgroundRenderer.resize(width, height);
+    }
+
+    @Override
     public void dispose() {
         stage.dispose();
+        backgroundRenderer.dispose();
+        atlas.dispose();
     }
 
     @Override

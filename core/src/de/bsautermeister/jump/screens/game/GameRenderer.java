@@ -68,7 +68,6 @@ public class GameRenderer implements Disposable {
     private final TextureRegion waterTexture;
     private final ShaderProgram drunkShader;
     private final ShaderProgram stonedShader;
-    private final ShaderProgram pixelateShader;
 
     private final BitmapFont font;
 
@@ -102,7 +101,6 @@ public class GameRenderer implements Disposable {
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
         stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/grayscale.fs");
-        pixelateShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/pixelate.fs");
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
@@ -153,6 +151,11 @@ public class GameRenderer implements Disposable {
         frameBuffer.end();
 
         batch.begin();
+        if (gameTime < 0.25f) {
+            float progress = Interpolation.smooth.apply(Math.min(4 * gameTime, 1.0f));
+            batch.setColor(progress, progress, progress, 1f);
+        }
+
         if (player.isDrunk()) {
             batch.setShader(drunkShader);
             drunkShader.setUniformf("u_time", gameTime);
@@ -160,17 +163,6 @@ public class GameRenderer implements Disposable {
             drunkShader.setUniformf("u_amplitude", 7.1f * player.getDrunkRatio(), 9.1f * player.getDrunkRatio());
             drunkShader.setUniformf("u_waveLength", 111f, 311f);
             drunkShader.setUniformf("u_velocity", 71f, 111f);
-        } else if (gameTime < 1.5f) {
-            // pixelate in / out should only be shown when drunk effect is not active (alternative: merge effects to single shader)
-            float startGranularity = Gdx.graphics.getWidth() * (16f / Cfg.WINDOW_WIDTH);
-            float progress = Interpolation.circleOut.apply(Math.min(0.75f * gameTime, 1.0f));
-            float granularity = startGranularity - (float)Math.round(progress * startGranularity);
-            if (granularity > 0) {
-                batch.setShader(pixelateShader);
-                pixelateShader.setUniformf("u_imageSize", frameBuffer.getWidth(), frameBuffer.getHeight());
-                pixelateShader.setUniformf("u_granularity", granularity);
-                pixelateShader.setUniformf("u_brightness", progress);
-            }
         }
 
         float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
@@ -387,7 +379,6 @@ public class GameRenderer implements Disposable {
         waterShader.dispose();
         drunkShader.dispose();
         stonedShader.dispose();
-        pixelateShader.dispose();
         frameBuffer.dispose();
         font.dispose();
         hud.dispose();

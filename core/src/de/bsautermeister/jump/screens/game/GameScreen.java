@@ -91,6 +91,7 @@ public class GameScreen extends ScreenBase {
     public void dispose() {
         renderer.dispose();
         controller.dispose();
+        atlas.dispose();
     }
 
     @Override
