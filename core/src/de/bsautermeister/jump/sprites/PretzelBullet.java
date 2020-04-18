@@ -63,10 +63,10 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
     }
 
     private ParticleEffectPool createEffectPool(String effectPath , TextureAtlas atlas) {
-        ParticleEffect splashEffect = new ParticleEffect();
-        splashEffect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
-        splashEffect.scaleEffect(0.1f / Cfg.PPM);
-        return new ParticleEffectPool(splashEffect, 8, 16);
+        ParticleEffect effect = new ParticleEffect();
+        effect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
+        effect.scaleEffect(0.1f / Cfg.PPM);
+        return new ParticleEffectPool(effect, 8, 16);
     }
 
     public void reset() {
@@ -176,10 +176,10 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
     }
 
     public void explode(Vector2 contactPosition) {
-        ParticleEffectPool.PooledEffect splashEffect = explodeEffectPool.obtain();
-        splashEffect.start();
-        splashEffect.setPosition(contactPosition.x, contactPosition.y);
-        activeExplodeEffects.add(splashEffect);
+        ParticleEffectPool.PooledEffect effect = explodeEffectPool.obtain();
+        effect.start();
+        effect.setPosition(contactPosition.x, contactPosition.y);
+        activeExplodeEffects.add(effect);
 
         reset.mark();
     }

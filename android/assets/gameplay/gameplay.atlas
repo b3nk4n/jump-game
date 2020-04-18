@@ -965,28 +965,28 @@ break_platform4
   index: -1
 brick_fragment0
   rotate: false
-  xy: 890, 71
+  xy: 96, 6
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment1
   rotate: false
-  xy: 1010, 128
+  xy: 890, 71
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment2
   rotate: false
-  xy: 902, 71
+  xy: 1010, 128
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment3
   rotate: false
-  xy: 914, 71
+  xy: 902, 71
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -1542,6 +1542,20 @@ particle
   xy: 460, 200
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+particle_music1
+  rotate: false
+  xy: 85, 4
+  size: 7, 10
+  orig: 7, 10
+  offset: 0, 0
+  index: -1
+particle_music2
+  rotate: false
+  xy: 72, 4
+  size: 9, 10
+  orig: 9, 10
   offset: 0, 0
   index: -1
 particle_sqaure

@@ -58,5 +58,6 @@ public interface AssetPaths {
         String SLIDE_SMOKE = "pfx/slide-smoke.pfx";
         String SPLASH = "pfx/splash.pfx";
         String EXPLODE = "pfx/explode.pfx";
+        String MUSIC = "pfx/music.pfx";
     }
 }
