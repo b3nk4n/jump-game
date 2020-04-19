@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens.menu;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.sprites.Snorer;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuBackgroundRenderer implements Disposable {
@@ -37,13 +39,14 @@ public class MenuBackgroundRenderer implements Disposable {
     private final TmxMapLoader mapLoader;
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
-    private Array<Rectangle> waterList;
+    private final Array<Rectangle> waterList;
+    private final Snorer snorer;
 
     private final Interpolation interpolation = new Interpolation.SwingOut(1.0f);
 
     private float gameTime;
 
-    public MenuBackgroundRenderer(SpriteBatch batch, TextureAtlas atlas) {
+    public MenuBackgroundRenderer(AssetManager assetManager, SpriteBatch batch, TextureAtlas atlas) {
         this.batch = batch;
         camera = new OrthographicCamera();
         backgroundParallaxCamera = new OrthographicCamera();
@@ -60,6 +63,8 @@ public class MenuBackgroundRenderer implements Disposable {
         WorldCreator worldCreator = new WorldCreator(null, null, map, atlas);
         worldCreator.buildFromMap();
         waterList = worldCreator.getWaterRegions();
+
+        snorer = new Snorer(assetManager, atlas, worldCreator.getSnorerRegion());
     }
 
     public void update(float delta) {
@@ -68,6 +73,8 @@ public class MenuBackgroundRenderer implements Disposable {
         camera.position.x = viewport.getWorldWidth() / 2 + Cfg.BLOCK_SIZE_PPM;
         camera.position.y = viewport.getWorldHeight() / 2 + interpolation.apply(
                 3.66f, 2 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / 3, 0f, 1f));
+
+        snorer.update(delta);
     }
 
     public void render() {
@@ -85,7 +92,6 @@ public class MenuBackgroundRenderer implements Disposable {
 
         renderBackground(batch);
         renderForeground(batch);
-        batch.setShader(null);
         batch.end();
     }
 
@@ -119,6 +125,8 @@ public class MenuBackgroundRenderer implements Disposable {
 
         mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.FG_TILES_KEY));
+
+        snorer.draw(batch);
     }
 
     private void renderWater(SpriteBatch batch, TextureRegion waterTexture, float opacity) {
@@ -147,5 +155,6 @@ public class MenuBackgroundRenderer implements Disposable {
     public void dispose() {
         mapRenderer.dispose();
         waterShader.dispose();
+        snorer.stop();
     }
 }

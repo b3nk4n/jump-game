@@ -54,6 +54,7 @@ public class RegionNames {
     public static String TENT_OPEN = "tent_open";
     public static String TENT_CLOSED = "tent_closed";
     public static String POLE = "pole";
+    public static String SNORER = "snorer";
     public static String BACKGROUND_OVERLAY = "bg-overlay";
 
     public static String LOADING_LOGO = "title";

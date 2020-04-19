@@ -233,7 +233,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void collectCoin() {
-            soundEffects.coinSound.play();
+            soundEffects.coinSound.play(0.5f);
             score += Cfg.COIN_SCORE;
         }
 

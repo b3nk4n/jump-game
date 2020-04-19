@@ -42,6 +42,7 @@ public interface AssetPaths {
         String FIRE = "audio/sounds/fire.wav";
         String DRINKING = "audio/sounds/drinking.wav";
         String SUCCESS = "audio/sounds/success.wav";
+        String SNORE = "audio/sounds/snore.wav";
     }
 
     interface Music {
@@ -59,5 +60,6 @@ public interface AssetPaths {
         String SPLASH = "pfx/splash.pfx";
         String EXPLODE = "pfx/explode.pfx";
         String MUSIC = "pfx/music.pfx";
+        String SNORE = "pfx/snore.pfx";
     }
 }

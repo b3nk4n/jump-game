@@ -57,6 +57,7 @@ public class WorldCreator {
     private static final String COINS_KEY = "coins";
     private static final String SPIKES_KEY = "spikes";
     private static final String POLES_KEY = "poles";
+    private static final String SNORER_KEY = "snorer";
 
     private final World world;
     private final TiledMap map;
@@ -237,6 +238,14 @@ public class WorldCreator {
             }
         }
         return waterRegions;
+    }
+
+    public Rectangle getSnorerRegion() {
+        if (hasLayer(map, SNORER_KEY)) {
+            RectangleMapObject mapObject = map.getLayers().get(SNORER_KEY).getObjects().getByType(RectangleMapObject.class).first();
+            return toPPM(mapObject.getRectangle());
+        }
+        return null;
     }
 
     public Array<Rectangle> getSpikeRegions() {

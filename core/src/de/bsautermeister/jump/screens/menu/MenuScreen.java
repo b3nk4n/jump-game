@@ -38,7 +38,7 @@ public class MenuScreen extends ScreenBase {
         this.stage = new Stage(viewport, game.getBatch());
         this.stage.setDebugAll(Cfg.DEBUG_MODE);
 
-        backgroundRenderer = new MenuBackgroundRenderer(getBatch(), atlas);
+        backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
     }
 
     @Override
