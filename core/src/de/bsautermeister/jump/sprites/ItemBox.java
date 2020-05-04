@@ -36,7 +36,7 @@ public class ItemBox extends InteractiveTileObject {
 
     private static TiledMapTileSet tileSet;
 
-    private Array<ItemBoxFragment> activeFragments = new Array<ItemBoxFragment>(16);
+    private Array<ItemBoxFragment> activeFragments = new Array<>(16);
     private static Pool<ItemBoxFragment> fragmentPool = Pools.get(ItemBoxFragment.class);
 
     public ItemBox(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {

@@ -184,7 +184,7 @@ public class GameRenderer implements Disposable {
             batch.draw(frameBuffer.getColorBufferTexture(),
                     camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
                     (int)(screenPixelPerTileX * 2 - offsetX2), (int)(screenPixelPerTileY * 2 + offsetY2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-            batch.setColor(c);
+            batch.setColor(Color.WHITE);
         }
 
         batch.setShader(null);

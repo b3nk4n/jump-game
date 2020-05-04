@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.bsautermeister.jump" >
 
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="27" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -11,6 +9,8 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
+        android:isGame="true"
+        android:appCategory="game"
         android:label="@string/app_name"
         android:theme="@style/GdxTheme" >
         <activity

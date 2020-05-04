@@ -52,14 +52,14 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
     }
 
     private void initAnimation(TextureAtlas atlas) {
-        Array<TextureRegion> frames = new Array<TextureRegion>();
+        Array<TextureRegion> frames = new Array<>();
         for (int i = 0; i < 10; ++i) {
             frames.add(atlas.findRegion(RegionNames.COIN, 0));
         }
         for (int i = 0; i < 4; ++i) {
             frames.add(atlas.findRegion(RegionNames.COIN, i));
         }
-        animation = new Animation<TextureRegion>(0.1f, frames, Animation.PlayMode.LOOP);
+        animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
     }
 
     private Body defineBody(float centerX, float centerY) {

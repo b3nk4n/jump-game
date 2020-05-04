@@ -27,7 +27,7 @@ public class Brick extends InteractiveTileObject {
     private boolean goalProtector;
     private boolean destroyed;
 
-    private Array<BrickFragment> activeFragments = new Array<BrickFragment>(16);
+    private Array<BrickFragment> activeFragments = new Array<>(16);
     private static Pool<BrickFragment> fragmentPool = Pools.get(BrickFragment.class);
 
     public Brick(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {

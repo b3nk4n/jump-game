@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 public class SimplePooledEffect {
 
     private final ParticleEffectPool effectPool;
-    private final Array<ParticleEffectPool.PooledEffect> activeEffects = new Array<ParticleEffectPool.PooledEffect>(16);
+    private final Array<ParticleEffectPool.PooledEffect> activeEffects = new Array<>(16);
 
     public SimplePooledEffect(String effectPath , TextureAtlas atlas, float scaleFactor) {
         ParticleEffect effect = new ParticleEffect();

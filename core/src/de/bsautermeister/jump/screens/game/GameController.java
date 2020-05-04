@@ -115,7 +115,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private Array<Rectangle> spikesList;
 
     private Tent tent;
-    private Array<Pole> poles = new Array<Pole>();
+    private Array<Pole> poles = new Array<>();
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -369,16 +369,16 @@ public class GameController  implements BinarySerializable, Disposable {
         this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
         mapLoader = new TmxMapLoader();
-        enemies = new ObjectMap<String, Enemy>();
-        platforms = new Array<Platform>();
-        coins = new Array<Coin>();
+        enemies = new ObjectMap<>();
+        platforms = new Array<>();
+        coins = new Array<>();
 
         items = new ObjectMap();
-        itemsToSpawn = new LinkedBlockingQueue<ItemDef>();
+        itemsToSpawn = new LinkedBlockingQueue<>();
 
-        activeBoxCoins = new Array<BoxCoin>();
+        activeBoxCoins = new Array<>();
 
-        textMessages = new LinkedBlockingQueue<TextMessage>();
+        textMessages = new LinkedBlockingQueue<>();
 
         killSequelManager = new KillSequelManager();
 

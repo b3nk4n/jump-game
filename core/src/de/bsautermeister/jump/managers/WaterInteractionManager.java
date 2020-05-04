@@ -15,8 +15,8 @@ public class WaterInteractionManager {
     private final SimplePooledEffect waterSplashEffect;
 
     private final GameCallbacks callbacks;
-    private final Array<Drownable> drownables = new Array<Drownable>();
-    private final Array<Rectangle> waterRegions = new Array<Rectangle>();
+    private final Array<Drownable> drownables = new Array<>();
+    private final Array<Rectangle> waterRegions = new Array<>();
 
     public WaterInteractionManager(TextureAtlas atlas, GameCallbacks callbacks) {
         waterSplashEffect = new SimplePooledEffect(AssetPaths.Pfx.SPLASH, atlas, 0.1f / Cfg.PPM);

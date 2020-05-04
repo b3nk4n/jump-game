@@ -6,9 +6,9 @@ import com.badlogic.gdx.Preferences;
 public class GameStats {
     private final Preferences prefs;
 
-    public static final String KEY_HIGHEST_FINISHED_LEVEL = "highestFinishedLevel";
-    public static final String KEY_LAST_STARTED_LEVEL = "lastStartedLevel";
-    public static final String KEY_LEVEL_STARTS_PREFIX = "levelStars";
+    private static final String KEY_HIGHEST_FINISHED_LEVEL = "highestFinishedLevel";
+    private static final String KEY_LAST_STARTED_LEVEL = "lastStartedLevel";
+    private static final String KEY_LEVEL_STARTS_PREFIX = "levelStars";
 
     private Integer cachedHighestLevel;
 

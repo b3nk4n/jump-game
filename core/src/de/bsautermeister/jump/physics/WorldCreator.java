@@ -136,7 +136,7 @@ public class WorldCreator {
     }
 
     public Array<Enemy> createEnemies() {
-        Array<Enemy> enemies = new Array<Enemy>();
+        Array<Enemy> enemies = new Array<>();
         if (hasLayer(map, FOXES_KEY)) {
             for (MapObject mapObject : map.getLayers().get(FOXES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
@@ -190,7 +190,7 @@ public class WorldCreator {
 
     public Array<Platform> createPlatforms() {
         Array<PlatformBouncer> bouncerRegions = getPlatformBouncerRegions();
-        Array<Platform> platforms = new Array<Platform>();
+        Array<Platform> platforms = new Array<>();
 
         if (hasLayer(map, PLATFORMS_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(PLATFORMS_KEY).getObjects().getByType(RectangleMapObject.class)) {
@@ -209,7 +209,7 @@ public class WorldCreator {
     }
 
     public Array<Coin> createCoins() {
-        Array<Coin> coins = new Array<Coin>();
+        Array<Coin> coins = new Array<>();
         if (hasLayer(map, COINS_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(COINS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = mapObject.getRectangle();
@@ -221,7 +221,7 @@ public class WorldCreator {
     }
 
     public Array<Rectangle> getWaterRegions() {
-        Array<Rectangle> waterRegions = new Array<Rectangle>();
+        Array<Rectangle> waterRegions = new Array<>();
         if (hasLayer(map, WATER_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(WATER_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 waterRegions.add(toPPM(mapObject.getRectangle()));
@@ -231,7 +231,7 @@ public class WorldCreator {
     }
 
     public Array<Rectangle> getPoleRegions() {
-        Array<Rectangle> waterRegions = new Array<Rectangle>();
+        Array<Rectangle> waterRegions = new Array<>();
         if (hasLayer(map, POLES_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(POLES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 waterRegions.add(toPPM(mapObject.getRectangle()));
@@ -249,7 +249,7 @@ public class WorldCreator {
     }
 
     public Array<Rectangle> getSpikeRegions() {
-        Array<Rectangle> spikeRegions = new Array<Rectangle>();
+        Array<Rectangle> spikeRegions = new Array<>();
         if (hasLayer(map, SPIKES_KEY)) {
             for (RectangleMapObject mapObject : map.getLayers().get(SPIKES_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = toPPM(mapObject.getRectangle());;
@@ -266,7 +266,7 @@ public class WorldCreator {
     }
 
     private Array<PlatformBouncer> getPlatformBouncerRegions() {
-        Array<PlatformBouncer> bouncerRegions = new Array<PlatformBouncer>();
+        Array<PlatformBouncer> bouncerRegions = new Array<>();
         if (hasLayer(map, BOUNCERS_KEY)) {
             for (MapObject mapObject : map.getLayers().get(BOUNCERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();

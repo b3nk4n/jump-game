@@ -10,78 +10,78 @@ public interface AssetDescriptors {
 
     interface Fonts {
         AssetDescriptor<BitmapFont> MARIO12 =
-                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO12, BitmapFont.class);
+                new AssetDescriptor<>(AssetPaths.Fonts.MARIO12, BitmapFont.class);
         AssetDescriptor<BitmapFont> MARIO18 =
-                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO18, BitmapFont.class);
+                new AssetDescriptor<>(AssetPaths.Fonts.MARIO18, BitmapFont.class);
         AssetDescriptor<BitmapFont> MARIO24 =
-                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO24, BitmapFont.class);
+                new AssetDescriptor<>(AssetPaths.Fonts.MARIO24, BitmapFont.class);
         AssetDescriptor<BitmapFont> MARIO32 =
-                new AssetDescriptor<BitmapFont>(AssetPaths.Fonts.MARIO32, BitmapFont.class);
+                new AssetDescriptor<>(AssetPaths.Fonts.MARIO32, BitmapFont.class);
     }
 
     interface Atlas {
         AssetDescriptor<TextureAtlas> LOADING =
-                new AssetDescriptor<TextureAtlas>(AssetPaths.Atlas.LOADING, TextureAtlas.class);
+                new AssetDescriptor<>(AssetPaths.Atlas.LOADING, TextureAtlas.class);
         AssetDescriptor<TextureAtlas> GAMEPLAY =
-                new AssetDescriptor<TextureAtlas>(AssetPaths.Atlas.GAMEPLAY, TextureAtlas.class);
+                new AssetDescriptor<>(AssetPaths.Atlas.GAMEPLAY, TextureAtlas.class);
         AssetDescriptor<TextureAtlas> UI =
-                new AssetDescriptor<TextureAtlas>(AssetPaths.Atlas.UI, TextureAtlas.class);
+                new AssetDescriptor<>(AssetPaths.Atlas.UI, TextureAtlas.class);
     }
 
     interface Skins {
         AssetDescriptor<Skin> UI =
-                new AssetDescriptor<Skin>(AssetPaths.Skins.UI, Skin.class);
+                new AssetDescriptor<>(AssetPaths.Skins.UI, Skin.class);
     }
 
     interface Sounds {
         AssetDescriptor<Sound> COIN =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.COIN, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.COIN, Sound.class);
         AssetDescriptor<Sound> BUMP =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.BUMP, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.BUMP, Sound.class);
         AssetDescriptor<Sound> BREAK_BLOCK =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.BREAK_BLOCK, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.BREAK_BLOCK, Sound.class);
         AssetDescriptor<Sound> FOOD_SPAWN =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.FOOD_SPAWN, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.FOOD_SPAWN, Sound.class);
         AssetDescriptor<Sound> BEER_SPAWN =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.BEER_SPAWN, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.BEER_SPAWN, Sound.class);
         AssetDescriptor<Sound> COIN_SPAWN =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.COIN_SPAWN, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.COIN_SPAWN, Sound.class);
         AssetDescriptor<Sound> EAT_FOOD =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.EAT_FOOD, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.EAT_FOOD, Sound.class);
         AssetDescriptor<Sound> STOMP =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.STOMP, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.STOMP, Sound.class);
         AssetDescriptor<Sound> COMPLAIN =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.COMPLAIN, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.COMPLAIN, Sound.class);
         AssetDescriptor<Sound> SWEARING1 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING1, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING1, Sound.class);
         AssetDescriptor<Sound> SWEARING2 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING2, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING2, Sound.class);
         AssetDescriptor<Sound> SWEARING3 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING3, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING3, Sound.class);
         AssetDescriptor<Sound> SWEARING4 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING4, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING4, Sound.class);
         AssetDescriptor<Sound> SWEARING5 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING5, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING5, Sound.class);
         AssetDescriptor<Sound> SWEARING6 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING6, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING6, Sound.class);
         AssetDescriptor<Sound> SWEARING7 =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SWEARING7, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING7, Sound.class);
         AssetDescriptor<Sound> JUMP =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.JUMP, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.JUMP, Sound.class);
         AssetDescriptor<Sound> LANDING =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.LANDING, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.LANDING, Sound.class);
         AssetDescriptor<Sound> KICKED =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.KICKED, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.KICKED, Sound.class);
         AssetDescriptor<Sound> SPLASH =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SPLASH, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SPLASH, Sound.class);
         AssetDescriptor<Sound> FIRE =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.FIRE, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.FIRE, Sound.class);
         AssetDescriptor<Sound> DRINKING =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.DRINKING, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.DRINKING, Sound.class);
         AssetDescriptor<Sound> SUCCESS =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SUCCESS, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SUCCESS, Sound.class);
         AssetDescriptor<Sound> SNORE =
-                new AssetDescriptor<Sound>(AssetPaths.Sounds.SNORE, Sound.class);
+                new AssetDescriptor<>(AssetPaths.Sounds.SNORE, Sound.class);
     }
 
     AssetDescriptor[] ALL = {

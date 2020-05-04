@@ -14,7 +14,7 @@ import de.bsautermeister.jump.screens.transition.ScreenTransition;
 public class TransitionContext {
 
     private float transitionTime;
-    private ScreenTransition transtion;
+    private ScreenTransition transition;
     private boolean renderedToTexture;
     private boolean transitionInProgress;
     private Viewport transitionViewport;
@@ -39,7 +39,7 @@ public class TransitionContext {
             return;
         }
 
-        this.transtion = transtion;
+        this.transition = transtion;
 
         // screen size
         int width = Gdx.graphics.getWidth();
@@ -105,7 +105,7 @@ public class TransitionContext {
     }
 
     private void updateTransition() {
-        if (transtion == null || isTransitionFinished()) {
+        if (transition == null || isTransitionFinished()) {
             if (currentScreen != null) {
                 currentScreen.hide();
             }
@@ -116,7 +116,7 @@ public class TransitionContext {
             // switch screens and reset
             currentScreen = nextScreen;
             nextScreen = null;
-            transtion = null;
+            transition = null;
             currentFrameBuffer.dispose();
             currentFrameBuffer = null;
             nextFrameBuffer.dispose();
@@ -135,7 +135,7 @@ public class TransitionContext {
 
         // render transition to screen
         batch.setProjectionMatrix(transitionViewport.getCamera().combined);
-        transtion.render(batch, currentScreenTexture, nextScreenTexture, progress);
+        transition.render(batch, currentScreenTexture, nextScreenTexture, progress);
     }
 
     public void resize(int width, int height) {
@@ -190,6 +190,6 @@ public class TransitionContext {
     }
 
     private float getDuration() {
-        return transtion == null ? 0 : transtion.getDuration();
+        return transition == null ? 0 : transition.getDuration();
     }
 }

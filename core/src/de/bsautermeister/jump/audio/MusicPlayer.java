@@ -25,7 +25,7 @@ public class MusicPlayer implements BinarySerializable, Disposable {
     private Music music;
     private String selectedFilePath;
 
-    private Array<Music> fadeOutAndDisposeQueue = new Array<Music>();
+    private Array<Music> fadeOutAndDisposeQueue = new Array<>();
 
     public void selectMusic(String filePath) {
         LOG.debug("Select: " + filePath);
