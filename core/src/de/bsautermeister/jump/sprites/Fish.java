@@ -43,7 +43,7 @@ public class Fish extends Enemy implements Drownable {
                 float posX, float posY) {
         super(callbacks, world, posX, 0f, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         animation = new Animation(0.25f, atlas.findRegions(RegionNames.FISH), Animation.PlayMode.LOOP);
-        state = new GameObjectState<State>(State.WAITING);
+        state = new GameObjectState<>(State.WAITING);
         setRegion(animation.getKeyFrame(state.timer()));
         setOriginCenter();
         startCenterX = getX() + getWidth() / 2;

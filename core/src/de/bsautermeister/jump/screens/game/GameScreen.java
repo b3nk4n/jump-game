@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -68,7 +69,7 @@ public class GameScreen extends ScreenBase {
         JumpGame.deleteSavedData();
 
         // enable phones BACK button
-        Gdx.input.setCatchBackKey(true);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
     @Override

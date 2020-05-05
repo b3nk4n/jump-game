@@ -60,7 +60,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         }
 
         // limit falling speed
-        if (body.getLinearVelocity().y < Cfg.MAX_FALLING_SPEED) {
+        if (body != null && body.getLinearVelocity().y < Cfg.MAX_FALLING_SPEED) {
             body.setLinearVelocity(body.getLinearVelocity().x, Cfg.MAX_FALLING_SPEED);
         }
     }
@@ -76,17 +76,13 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
     public void dispose() {
         if (!destroyBody.isDone()) {
             world.destroyBody(body);
-            System.out.println(body);
+            body = null;
         }
     }
 
     public void kill(boolean applyPush) {
         dead = true;
-        Filter filter = new Filter();
-        filter.maskBits = Bits.NOTHING;
-        for (Fixture fixture : getBody().getFixtureList()) {
-            fixture.setFilterData(filter);
-        }
+        updateMaskFilter(Bits.NOTHING);
 
         callbacks.killed(this);
 
@@ -96,8 +92,16 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         }
     }
 
+    protected void updateMaskFilter(short filterBit) {
+        Filter filter = new Filter();
+        filter.maskBits = filterBit;
+        for (Fixture fixture : getBody().getFixtureList()) {
+            fixture.setFilterData(filter);
+        }
+    }
+
     protected boolean isOutOfBounds() {
-        return getBody().getPosition().y < - 2 * Cfg.BLOCK_SIZE_PPM;
+        return body != null && getBody().getPosition().y < - 2 * Cfg.BLOCK_SIZE_PPM;
     }
 
     public void markDestroyBody() {

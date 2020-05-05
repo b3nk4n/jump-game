@@ -46,7 +46,7 @@ public class DrunkenGuy extends Enemy {
                       float posX, float posY) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
         animation = new Animation(0.1f, atlas.findRegions(RegionNames.DRUNKEN_GUY), Animation.PlayMode.LOOP);
-        state = new GameObjectState<State>(State.HIDDEN);
+        state = new GameObjectState<>(State.HIDDEN);
         hiddenTargetY = getBody().getPosition().y - hiddenOffsetY;
         waitingTargetY = getBody().getPosition().y + getHeight();
         setRegion(animation.getKeyFrame(state.timer()));

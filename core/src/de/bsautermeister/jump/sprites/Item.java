@@ -39,11 +39,11 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
 
     private GameCallbacks callbacks;
     private World world;
-    private final Body body;
+    private Body body;
 
     private MarkedAction destroyBody;
 
-    protected final GameObjectState<State> state = new GameObjectState<State>(State.SPAWNING);
+    protected final GameObjectState<State> state = new GameObjectState<>(State.SPAWNING);
 
     public Item(GameCallbacks callbacks, World world, float centerX, float centerY) {
         this.id = UUID.randomUUID().toString();
@@ -91,6 +91,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
     public void dispose() {
         if (!destroyBody.isDone()) {
             world.destroyBody(body);
+            body = null;
         }
     }
 

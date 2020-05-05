@@ -46,6 +46,7 @@ public class Fox extends Enemy implements Drownable {
     private final Animation<TextureRegion>[] standingAnimation;
     private final Animation<TextureRegion> stompedAnimation;
 
+    @SuppressWarnings("unchecked")
     public Fox(GameCallbacks callbacks, World world, TextureAtlas atlas,
                float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
@@ -60,7 +61,7 @@ public class Fox extends Enemy implements Drownable {
 
         stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STOMP), Animation.PlayMode.NORMAL);
 
-        state = new GameObjectState<State>(State.WALKING);
+        state = new GameObjectState<>(State.WALKING);
         speed = rightDirection ? SPEED : -SPEED;
         setRegion(getFrame());
     }
@@ -70,39 +71,38 @@ public class Fox extends Enemy implements Drownable {
         super.update(delta);
 
         state.upate(delta);
-        if (!isDead() && !isDrowning() && !state.is(State.STOMPED)) {
 
-            getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
-        }
+        if (!state.is(State.STOMPED)) {
+            if (!isDead() && !isDrowning()) {
+                getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
+            }
 
-        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
-        setRegion(getFrame());
+            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
+            setRegion(getFrame());
 
-        if (state.is(State.STOMPED) && state.timer() > 1f) {
-            markRemovable();
-        }
+            if (state.is(State.STANDING) && state.timer() > 2f) {
+                state.set(State.WALKING);
+                speed = previousDirectionLeft ? SPEED : - SPEED;
+            }
 
-        if (state.is(State.STANDING) && state.timer() > 2f) {
-            state.set(State.WALKING);
-            speed = previousDirectionLeft ? SPEED : - SPEED;
-        }
+            if (isDrowning()) {
+                getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
+            }
+        } else if (state.is(State.STOMPED)) {
+            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
+            setRegion(getFrame());
 
-        if (isDrowning()) {
-            getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
+            if (state.timer() > 1f) {
+                markDestroyBody();
+                markRemovable();
+            }
         }
     }
 
     private TextureRegion getFrame() {
-        boolean isLeft = speed < 0 || speed == 0 && previousDirectionLeft;
+        int characterIdx = isAngry() ? ANGRY_IDX : NORMAL_IDX;
 
         TextureRegion textureRegion;
-
-        float x = getBody().getPosition().x;
-        float y = getBody().getPosition().y;
-        int characterIdx = (isLeft && playerPosition.x < x || !isLeft && playerPosition.x > x) &&
-                Vector2.len2(playerPosition.x - x, playerPosition.y - y) < 1.0f
-                ? ANGRY_IDX : NORMAL_IDX;
-
         switch (state.current()) {
             case STOMPED:
                 textureRegion = stompedAnimation.getKeyFrame(state.timer());
@@ -116,8 +116,7 @@ public class Fox extends Enemy implements Drownable {
                 break;
         }
 
-
-
+        boolean isLeft = isLeft();
         if (!isLeft && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         } else if (isLeft && textureRegion.isFlipX()) {
@@ -129,6 +128,18 @@ public class Fox extends Enemy implements Drownable {
         }
 
         return textureRegion;
+    }
+
+    private boolean isLeft() {
+        return speed < 0 || speed == 0 && previousDirectionLeft;
+    }
+
+    private boolean isAngry() {
+        boolean isLeft = isLeft();
+        float x = getBody().getPosition().x;
+        float y = getBody().getPosition().y;
+        return (isLeft && playerPosition.x < x || !isLeft && playerPosition.x > x) &&
+                Vector2.len2(playerPosition.x - x, playerPosition.y - y) < 1.0f;
     }
 
     @Override
@@ -238,7 +249,7 @@ public class Fox extends Enemy implements Drownable {
         getCallbacks().stomp(this);
 
         state.set(State.STOMPED);
-        markDestroyBody();
+        updateMaskFilter(Bits.ENVIRONMENT_ONLY);
     }
 
     @Override

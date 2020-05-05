@@ -56,7 +56,7 @@ public class Hedgehog extends Enemy implements Drownable {
         unrollAnimation = new Animation(0.33f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
         rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLLING);
 
-        state = new GameObjectState<State>(State.WALKING);
+        state = new GameObjectState<>(State.WALKING);
         state.setStateCallback(new GameObjectState.StateCallback<State>() {
             @Override
             public void changed(State previousState, State newState) {

@@ -114,7 +114,7 @@ public class Brick extends InteractiveTileObject {
     }
 
     private void destroy() {
-        updateCategoryFilter(Bits.NOTHING);
+        updateMaskFilter(Bits.NOTHING);
         getCell().setTile(null);
         destroyed = true;
     }

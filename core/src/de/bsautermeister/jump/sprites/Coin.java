@@ -33,7 +33,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
 
     private Animation<TextureRegion> animation;
 
-    private final Body body;
+    private Body body;
     private MarkedAction destroyBody;
 
     private float gameTime;
@@ -107,6 +107,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
     public void dispose() {
         if (!destroyBody.isDone()) {
             world.destroyBody(body);
+            body = null;
         }
     }
 

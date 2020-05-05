@@ -37,25 +37,17 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Player extends Sprite implements BinarySerializable, Drownable {
 
-    public static final float INITAL_TTL = 200;
+    public static final float INITIAL_TTL = 200;
 
     private static final float EFFECT_DURATION = 10f;
 
-    private static final short NORMAL_FILTER_BITS = Bits.GROUND |
-            Bits.PLATFORM |
-            Bits.ITEM_BOX |
-            Bits.BRICK |
-            Bits.ENEMY |
-            Bits.ENEMY_HEAD |
-            Bits.ENEMY_SIDE |
-            Bits.ITEM;
-
-    private static final short NO_ENEMY_FILTER_BITS = Bits.GROUND |
-            Bits.PLATFORM |
-            Bits.ITEM_BOX |
-            Bits.BRICK |
+    private static final short NO_ENEMY_FILTER_BITS = Bits.ENVIRONMENT_ONLY |
             Bits.ENEMY_SIDE | // to still block the DrunkenGuy
             Bits.ITEM;
+
+    private static final short NORMAL_FILTER_BITS = NO_ENEMY_FILTER_BITS |
+            Bits.ENEMY |
+            Bits.ENEMY_HEAD;
 
     private GameCallbacks callbacks;
     private World world;
@@ -138,7 +130,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         this.atlas = atlas;
         initTextures(atlas);
 
-        state = new GameObjectState<State>(State.STANDING);
+        state = new GameObjectState<>(State.STANDING);
         runningRight = !start.leftDirection;
 
         defineSmallBody(start.centerPosition, true);
@@ -147,7 +139,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         setRegion(smallPlayerStand[0]);
 
-        timeToLive = INITAL_TTL;
+        timeToLive = INITIAL_TTL;
 
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
         slideEffect.scaleEffect(0.1f / Cfg.PPM);

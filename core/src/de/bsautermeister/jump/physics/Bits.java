@@ -17,4 +17,6 @@ public interface Bits {
     short BLOCK_TOP = 1 << 12;
     short COLLIDER = 1 << 13;
     short PLATFORM = 1 << 14;
+
+    short ENVIRONMENT_ONLY = GROUND | BRICK | ITEM_BOX | PLATFORM;
 }

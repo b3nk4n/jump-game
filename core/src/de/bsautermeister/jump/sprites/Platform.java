@@ -53,7 +53,7 @@ public class Platform extends Sprite implements BinarySerializable {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
-        state = new GameObjectState<State>(State.MOVING);
+        state = new GameObjectState<>(State.MOVING);
         setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 
         setRegion(getTextureRegion(atlas, bounds, breakable));

@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectSet;
 
@@ -93,10 +94,12 @@ public abstract class InteractiveTileObject implements BinarySerializable {
 
     public abstract void onHeadHit(Player player);
 
-    public void updateCategoryFilter(short filterBit) {
+    protected void updateMaskFilter(short filterBit) {
         Filter filter = new Filter();
-        filter.categoryBits = filterBit;
-        body.getFixtureList().get(0).setFilterData(filter);
+        filter.maskBits = filterBit;
+        for (Fixture fixture : getBody().getFixtureList()) {
+            fixture.setFilterData(filter);
+        }
     }
 
     public String getId() {

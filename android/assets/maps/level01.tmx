@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="140" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="32" nextobjectid="162">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="140" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="32" nextobjectid="165">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="3840" height="640"/>
@@ -220,6 +220,9 @@
  </objectgroup>
  <objectgroup id="10" name="foxes">
   <object id="123" x="240" y="528" width="16" height="16"/>
+  <object id="162" x="880" y="80" width="16" height="16"/>
+  <object id="163" x="592" y="80" width="16" height="16"/>
+  <object id="164" x="928" y="80" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="11" name="hedgehogs" visible="0">
   <object id="58" x="1968" y="400" width="16" height="16"/>
