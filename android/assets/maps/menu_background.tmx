@@ -108,7 +108,7 @@
 </data>
  </layer>
  <objectgroup id="33" name="water">
-  <object id="162" x="208" y="592" width="64" height="48"/>
+  <object id="162" x="192" y="592" width="96" height="48"/>
  </objectgroup>
  <objectgroup id="34" name="snorer">
   <object id="163" x="96" y="560" width="16" height="16"/>

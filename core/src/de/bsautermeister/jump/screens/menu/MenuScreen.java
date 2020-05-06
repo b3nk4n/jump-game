@@ -1,23 +1,15 @@
 package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
-import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
@@ -26,7 +18,7 @@ import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuScreen extends ScreenBase {
     private final Viewport viewport;
-    private final Stage stage;
+    private MenuStage stage;
 
     private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
@@ -35,54 +27,32 @@ public class MenuScreen extends ScreenBase {
     public MenuScreen(GameApp game) {
         super(game);
         this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
-        this.stage = new Stage(viewport, game.getBatch());
-        this.stage.setDebugAll(Cfg.DEBUG_MODE);
-
         backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
     }
 
     @Override
     public void show() {
-        initialize();
+        this.stage = new MenuStage(viewport, getGame().getBatch(), getAssetManager(),
+                new MenuStage.Callbacks() {
+                    @Override
+                    public void playClicked() {
+                        playNewGame();
+                    }
+
+                    @Override
+                    public void continueClicked() {
+                        continueGame();
+                    }
+                }
+        );
+        stage.initialize();
 
         // use default BACK button handling (exit game)
-        Gdx.input.setCatchBackKey(false);
+        Gdx.input.setCatchKey(Input.Keys.BACK, false);
 
         getGame().getMusicPlayer().selectMusic(AssetPaths.Music.MENU_AUDIO);
         getGame().getMusicPlayer().setVolume(MusicPlayer.MAX_VOLUME, true);
         getGame().getMusicPlayer().playFromBeginning();
-    }
-
-    private void initialize() {
-        TextureAtlas atlas = getAsset(AssetDescriptors.Atlas.UI); // TODO load a background image and dispose this
-        Skin skin = getAsset(AssetDescriptors.Skins.UI);
-
-        Table table = new Table();
-        table.center();
-        table.setFillParent(true);
-
-        Button playButton = new Button(skin, Styles.Button.PLAY);
-        playButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                playNewGame();
-            }
-        });
-        table.add(playButton).pad(8f);
-
-        if (JumpGame.hasSavedData()) {
-            Button continueButton = new Button(skin, Styles.Button.CONTINUE);
-            continueButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    continueGame();
-                }
-            });
-            table.add(continueButton).pad(8f);
-        }
-
-        table.pack();
-        stage.addActor(table);
     }
 
     private void playNewGame() {
