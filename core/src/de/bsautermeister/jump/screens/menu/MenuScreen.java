@@ -42,8 +42,7 @@ public class MenuScreen extends ScreenBase {
         stage.setDebugAll(Cfg.DEBUG_MODE);
         setContent(createMainContent());
 
-        // use default BACK button handling (exit game)
-        Gdx.input.setCatchKey(Input.Keys.BACK, false);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
         getGame().getMusicPlayer().selectMusic(AssetPaths.Music.MENU_AUDIO);
         getGame().getMusicPlayer().setVolume(MusicPlayer.MAX_VOLUME, true);
@@ -111,6 +110,14 @@ public class MenuScreen extends ScreenBase {
 
         stage.act();
         stage.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            if (content instanceof MainMenuContent) {
+                Gdx.app.exit();
+            } else if (content instanceof SelectLevelMenuContent) {
+                setContent(createMainContent());
+            }
+        }
     }
 
     @Override

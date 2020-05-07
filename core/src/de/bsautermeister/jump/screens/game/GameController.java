@@ -866,7 +866,7 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void checkPauseInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             pauseGame();
         }
     }
