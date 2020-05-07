@@ -1,10 +1,8 @@
 package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,45 +10,39 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameStats;
 
-public class SelectLevelStage extends Stage {
-    private final AssetManager assetManager;
+public class SelectLevelMenuContent extends Table {
     private final Callbacks callbacks;
 
     private final int page;
 
-    public SelectLevelStage(Viewport viewport, Batch batch, AssetManager assetManager, int page,
-                            Callbacks callbacks) {
-        super(viewport, batch);
-        this.assetManager = assetManager;
+    public SelectLevelMenuContent(int page, AssetManager assetManager, Callbacks callbacks) {
         this.page = page;
         this.callbacks = callbacks;
-        setDebugAll(Cfg.DEBUG_MODE);
+        initialize(assetManager);
     }
 
-    public void initialize() {
+    public void initialize(AssetManager assetManager) {
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI); // TODO load a background image
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
 
-        Table table = new Table();
-        table.center();
-        table.setFillParent(true);
+        center();
+        setFillParent(true);
 
         Button leftButton = new Button(skin, Styles.Button.ARROW_LEFT);
         leftButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                callbacks.leftClicked();;
+                callbacks.leftClicked();
             }
         });
         leftButton.setVisible(page > 1);
-        table.add(leftButton).center();
+        add(leftButton).center();
 
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
@@ -60,7 +52,7 @@ public class SelectLevelStage extends Stage {
             levelTable.row();
         }
         levelTable.pack();
-        table.add(levelTable).expandX();
+        add(levelTable).expandX();
 
         Button rightButton = new Button(skin, Styles.Button.ARROW_RIGHT);
         rightButton.addListener(new ClickListener() {
@@ -70,10 +62,9 @@ public class SelectLevelStage extends Stage {
             }
         });
         rightButton.setVisible(page < Cfg.LEVEL_PAGES);
-        table.add(rightButton).center();
+        add(rightButton).center();
 
-        table.pack();
-        addActor(table);
+        pack();
     }
 
     private Button createLevelButton(Skin skin, final int stage, final int level) {

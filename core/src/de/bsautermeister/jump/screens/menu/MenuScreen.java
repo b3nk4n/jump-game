@@ -5,6 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,11 +22,13 @@ import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuScreen extends ScreenBase {
     private final Viewport viewport;
-    private MenuStage stage;
+    private Stage stage;
 
     private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
     private final MenuBackgroundRenderer backgroundRenderer;
+
+    private Table content;
 
     public MenuScreen(GameApp game) {
         super(game);
@@ -32,20 +38,9 @@ public class MenuScreen extends ScreenBase {
 
     @Override
     public void show() {
-        this.stage = new MenuStage(viewport, getGame().getBatch(), getAssetManager(),
-                new MenuStage.Callbacks() {
-                    @Override
-                    public void playClicked() {
-                        playNewGame();
-                    }
-
-                    @Override
-                    public void continueClicked() {
-                        continueGame();
-                    }
-                }
-        );
-        stage.initialize();
+        stage = new Stage(viewport, getGame().getBatch());
+        stage.setDebugAll(Cfg.DEBUG_MODE);
+        setContent(createMainContent());
 
         // use default BACK button handling (exit game)
         Gdx.input.setCatchKey(Input.Keys.BACK, false);
@@ -55,17 +50,61 @@ public class MenuScreen extends ScreenBase {
         getGame().getMusicPlayer().playFromBeginning();
     }
 
-    private void playNewGame() {
-        setScreen(new SelectLevelScreen(getGame(), 1));
+    private void setContent(Table newContent) {
+        if (content != null) {
+            content.addAction(Actions.sequence(
+                    Actions.alpha(0f, 0.5f, Interpolation.smooth),
+                    Actions.removeActor()
+            ));
+        }
+        newContent.addAction(Actions.sequence(
+                Actions.alpha(0f),
+                Actions.delay(0.5f),
+                Actions.alpha(1f, 0.5f, Interpolation.smooth)
+        ));
+        content = newContent;
+        stage.addActor(newContent);
     }
 
-    private void continueGame() {
-        setScreen(new GameScreen(getGame()));
+    private Table createMainContent() {
+        return new MainMenuContent(getAssetManager(), new MainMenuContent.Callbacks() {
+            @Override
+            public void playClicked() {
+                setContent(createSelectLevelContent(1));
+            }
+
+            @Override
+            public void continueClicked() {
+                setScreen(new GameScreen(getGame()));
+            }
+        });
+    }
+
+    private Table createSelectLevelContent(int page) {
+        return new SelectLevelMenuContent(page, getAssetManager(), new SelectLevelMenuContent.Callbacks() {
+            @Override
+            public void leftClicked() {
+                setContent(createSelectLevelContent(1));
+            }
+
+            @Override
+            public void rightClicked() {
+                setContent(createSelectLevelContent(2));
+            }
+
+            @Override
+            public void levelSelected(int absoluteLevel) {
+                setScreen(new GameScreen(getGame(), absoluteLevel));
+            }
+        });
     }
 
     @Override
     public void render(float delta) {
         GdxUtils.clearScreen(Color.BLACK);
+
+        // ensure background tint color is not affected by actor actions
+        getBatch().setColor(Color.WHITE);
 
         backgroundRenderer.update(delta);
         backgroundRenderer.render();

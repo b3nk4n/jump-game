@@ -1,40 +1,32 @@
 package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 
-public class MenuStage extends Stage {
+public class MainMenuContent extends Table {
 
-    private final AssetManager assetManager;
     private final Callbacks callbacks;
 
-    public MenuStage(Viewport viewport, Batch batch, AssetManager assetManager, Callbacks callbacks) {
-        super(viewport, batch);
-        this.assetManager = assetManager;
+    public MainMenuContent(AssetManager assetManager, Callbacks callbacks) {
         this.callbacks = callbacks;
-        setDebugAll(Cfg.DEBUG_MODE);
+        initialize(assetManager);
     }
 
-    void initialize() {
+    void initialize(AssetManager assetManager) {
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI); // TODO load a background image or a title image and dispose it
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
 
-        Table table = new Table();
-        table.center();
-        table.setFillParent(true);
+        center();
+        setFillParent(true);
 
         Button playButton = new Button(skin, Styles.Button.PLAY);
         playButton.addListener(new ClickListener() {
@@ -43,7 +35,7 @@ public class MenuStage extends Stage {
                 callbacks.playClicked();
             }
         });
-        table.add(playButton).pad(8f);
+        add(playButton).pad(8f);
 
         if (JumpGame.hasSavedData()) {
             Button continueButton = new Button(skin, Styles.Button.CONTINUE);
@@ -53,11 +45,10 @@ public class MenuStage extends Stage {
                     callbacks.continueClicked();
                 }
             });
-            table.add(continueButton).pad(8f);
+            add(continueButton).pad(8f);
         }
 
-        table.pack();
-        addActor(table);
+        pack();
     }
 
     public interface Callbacks {
