@@ -323,7 +323,7 @@
     <property name="bounceAngle" type="int" value="270"/>
    </properties>
   </object>
-  <object id="39" x="784" y="384" width="16" height="16">
+  <object id="39" x="784" y="416" width="16" height="16">
    <properties>
     <property name="bounceAngle" type="int" value="90"/>
    </properties>

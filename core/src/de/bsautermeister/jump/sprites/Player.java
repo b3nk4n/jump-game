@@ -262,7 +262,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         setRegion(textureRegion);
 
         // set texture bounds always at the bottom of the body
-        float yOffset = 0.5f / Cfg.PPM; // that player feed is not stuck half a pixel in the ground
+        float yOffset = 2f / Cfg.PPM; // that the player sprite's feed are not stuck in the ground
         float leftX = body.getPosition().x - getWidth() / 2;
         float bottomY = body.getPosition().y - 8f / Cfg.PPM + yOffset;
         float textureWidth = textureRegion.getRegionWidth() / Cfg.PPM;
@@ -574,6 +574,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         feetShape.set(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
+        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Bits.PLAYER_FEET;
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.PLATFORM |
@@ -590,7 +591,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
         fixtureDef.filter.categoryBits = Bits.PLAYER_HEAD;
         fixtureDef.shape = headShape;
-        //fixtureDef.isSensor = true; // does not collide in the physics simulation
+        fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
     }
