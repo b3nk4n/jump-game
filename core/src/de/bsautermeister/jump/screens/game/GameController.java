@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -116,6 +117,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private Tent tent;
     private Array<Pole> poles = new Array<>();
+
+    private float munichRatio = 0f;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -497,6 +500,7 @@ public class GameController  implements BinarySerializable, Disposable {
         handleSpawningItems();
 
         player.update(delta);
+        updateMunichRation(delta);
         checkPlayerInBounds();
 
         killSequelManager.update(delta);
@@ -554,6 +558,19 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         postUpdate();
+    }
+
+    private void updateMunichRation(float delta) {
+        float playerX = player.getWorldCenter().x;
+        float tentX = tent.getX() + tent.getWidth() / 2f;
+        float diffX = Math.abs(tentX - playerX);
+
+        if (diffX < Cfg.MUNICH_THRESHOLD) {
+            munichRatio += delta;
+        } else {
+            munichRatio -= delta;
+        }
+        munichRatio = MathUtils.clamp(munichRatio, 0f, 1f);
     }
 
     private void checkPlayerSpikesCollision() {
@@ -922,6 +939,7 @@ public class GameController  implements BinarySerializable, Disposable {
         out.writeInt(collectedBeers);
         out.writeFloat(gameTime);
         player.write(out);
+        out.writeFloat(munichRatio);
         musicPlayer.write(out);
         killSequelManager.write(out);
         out.writeInt(enemies.size);
@@ -959,7 +977,7 @@ public class GameController  implements BinarySerializable, Disposable {
         collectedBeers = in.readInt();
         gameTime = in.readFloat();
         player.read(in);
-
+        munichRatio = in.readFloat();
         musicPlayer.selectMusic(player.getTimeToLive() <= Cfg.HURRY_WARNING_TIME ? AssetPaths.Music.HURRY_AUDIO : AssetPaths.Music.NORMAL_AUDIO);
         musicPlayer.read(in);
         musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
@@ -1118,5 +1136,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public Array<Pole> getPoles() {
         return poles;
+    }
+
+    public float getMunichRatio() {
+        return munichRatio;
     }
 }

@@ -38,6 +38,8 @@ public class WorldCreator {
     public static final String BG_IMG_PARALLAX3_KEY = "bgImageParallax3";
     public static final String BG_IMG_PARALLAX4_KEY = "bgImageParallax4";
     public static final String BG_IMG_PARALLAX5_KEY = "bgImageParallax5";
+    public static final String BG_IMG_MUNICH1_KEY = "bgImageMunich1";
+    public static final String BG_IMG_MUNICH2_KEY = "bgImageMunich2";
     public static final String BG_TILES_KEY = "bgTiles";
     public static final String FG_TILES_KEY = "fgTiles";
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="140" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="32" nextobjectid="165">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="140" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="34" nextobjectid="165">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="3840" height="640"/>
@@ -12,6 +12,12 @@
  </imagelayer>
  <imagelayer id="20" name="bgImageParallax3" opacity="0.9">
   <image source="clouds.png" width="3840" height="640"/>
+ </imagelayer>
+ <imagelayer id="33" name="bgImageMunich2" offsetx="400" offsety="200">
+  <image source="munich-2.png" width="1429" height="500"/>
+ </imagelayer>
+ <imagelayer id="32" name="bgImageMunich1" offsetx="400" offsety="200">
+  <image source="munich-1.png" width="1429" height="500"/>
  </imagelayer>
  <imagelayer id="23" name="bgImageParallax2" offsetx="0" offsety="376">
   <image source="pine2.png" width="2064" height="264"/>

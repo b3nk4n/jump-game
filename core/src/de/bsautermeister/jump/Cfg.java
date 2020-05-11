@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Logger;
 
 public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
-    boolean DEBUG_MODE = true;
+    boolean DEBUG_MODE = false;
 
     float HUD_WIDTH = 1280; // still world units! (only loading screen)
     float HUD_HEIGHT = 720; // still world units! (only loading screen)
@@ -39,4 +39,6 @@ public interface Cfg {
     float HURRY_WARNING_TIME = 60f;
 
     float MIN_LANDING_HEIGHT = (BLOCK_SIZE / 2) / PPM;
+
+    float MUNICH_THRESHOLD = 5f;
 }
