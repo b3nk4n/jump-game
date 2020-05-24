@@ -32,14 +32,16 @@ import de.bsautermeister.jump.sprites.Platform;
 
 public class WorldCreator {
 
-    public static final String BG_IMG_STATIC_KEY = "bgImageStatic";
-    public static final String BG_IMG_PARALLAX1_KEY = "bgImageParallax1";
-    public static final String BG_IMG_PARALLAX2_KEY = "bgImageParallax2";
-    public static final String BG_IMG_PARALLAX3_KEY = "bgImageParallax3";
-    public static final String BG_IMG_PARALLAX4_KEY = "bgImageParallax4";
-    public static final String BG_IMG_PARALLAX5_KEY = "bgImageParallax5";
+    public static final String BG_IMG_GRASS1_KEY = "bgImageGrass1";
+    public static final String BG_IMG_GRASS2_KEY = "bgImageGrass2";
+    public static final String BG_IMG_FORREST1_KEY = "bgImageForrest1";
+    public static final String BG_IMG_FORREST2_KEY = "bgImageForrest2";
     public static final String BG_IMG_MUNICH1_KEY = "bgImageMunich1";
     public static final String BG_IMG_MUNICH2_KEY = "bgImageMunich2";
+    public static final String BG_IMG_CLOUDS1_KEY = "bgImageClouds1";
+    public static final String BG_IMG_MOUNTAINS_KEY = "bgImageMountains";
+    public static final String BG_IMG_CLOUDS2_KEY = "bgImageClouds2";
+    public static final String BG_IMG_STATIC_KEY = "bgImageStatic";
     public static final String BG_TILES_KEY = "bgTiles";
     public static final String FG_TILES_KEY = "fgTiles";
 

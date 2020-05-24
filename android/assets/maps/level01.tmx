@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="140" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="34" nextobjectid="165">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="140" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="36" nextobjectid="165">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="3840" height="640"/>
  </imagelayer>
- <imagelayer id="21" name="bgImageParallax5">
+ <imagelayer id="21" name="bgImageClouds2">
   <image source="sky2.png" width="3840" height="640"/>
  </imagelayer>
- <imagelayer id="27" name="bgImageParallax4" offsetx="0" offsety="320">
+ <imagelayer id="27" name="bgImageMountains" offsetx="0" offsety="320">
   <image source="mountains.png" width="1152" height="320"/>
  </imagelayer>
- <imagelayer id="20" name="bgImageParallax3" opacity="0.9">
+ <imagelayer id="20" name="bgImageClouds1" opacity="0.9">
   <image source="clouds.png" width="3840" height="640"/>
  </imagelayer>
- <imagelayer id="33" name="bgImageMunich2" offsetx="400" offsety="200">
-  <image source="munich-2.png" width="1429" height="500"/>
+ <imagelayer id="33" name="bgImageMunich2" offsetx="800" offsety="290">
+  <image source="munich-2.png" width="715" height="250"/>
  </imagelayer>
- <imagelayer id="32" name="bgImageMunich1" offsetx="400" offsety="200">
-  <image source="munich-1.png" width="1429" height="500"/>
+ <imagelayer id="32" name="bgImageMunich1" offsetx="800" offsety="300">
+  <image source="munich-1.png" width="715" height="250"/>
  </imagelayer>
- <imagelayer id="23" name="bgImageParallax2" offsetx="0" offsety="376">
+ <imagelayer id="23" name="bgImageForrest2" offsetx="0" offsety="400">
   <image source="pine2.png" width="2064" height="264"/>
  </imagelayer>
- <imagelayer id="24" name="bgImageParallax1" offsetx="0" offsety="440">
+ <imagelayer id="24" name="bgImageForrest1" offsetx="0" offsety="440">
   <image source="pine1.png" width="2064" height="200"/>
+ </imagelayer>
+ <imagelayer id="35" name="bgImageGrass2" offsetx="0" offsety="400">
+  <image source="grass2.png" width="1600" height="232"/>
+ </imagelayer>
+ <imagelayer id="34" name="bgImageGrass1" offsetx="0" offsety="400">
+  <image source="grass1.png" width="1600" height="240"/>
  </imagelayer>
  <layer id="4" name="bgTiles" width="140" height="40">
   <data encoding="csv">

@@ -40,5 +40,6 @@ public interface Cfg {
 
     float MIN_LANDING_HEIGHT = (BLOCK_SIZE / 2) / PPM;
 
-    float MUNICH_THRESHOLD = 5f;
+    float MUNICH_START_THRESHOLD_X = 7.5f;
+    float MUNICH_FULL_THRESHOLD_X = 2f;
 }

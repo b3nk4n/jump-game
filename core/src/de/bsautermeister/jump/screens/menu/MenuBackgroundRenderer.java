@@ -96,23 +96,25 @@ public class MenuBackgroundRenderer implements Disposable {
     }
 
     private void renderBackground(SpriteBatch batch) {
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_STATIC_KEY, 1.0f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX5_KEY, 0.1f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX4_KEY, 0.2f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX3_KEY, 0.4f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX2_KEY, 0.6f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.80f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.05f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MOUNTAINS_KEY, 0.2f, 0.1f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_CLOUDS1_KEY, 0.4f, 0.2f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.325f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.4f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.425f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.45f);
 
         mapRenderer.setView(camera);
 
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BG_TILES_KEY));
     }
 
-    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factor) {
+    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factorX, float factorY) {
         parallaxCamera.setToOrtho(false, camera.viewportWidth, camera.viewportHeight);
         parallaxCamera.position.set(
-                camera.viewportWidth * (1 - factor) + camera.position.x * factor,
-                camera.viewportHeight * (1 - factor)  + camera.position.y * factor,
+                camera.viewportWidth * (1 - factorX) + camera.position.x * factorX,
+                camera.viewportHeight * (1 - factorY)  + camera.position.y * factorY,
                 0);
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);

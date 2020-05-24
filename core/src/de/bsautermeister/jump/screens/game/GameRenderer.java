@@ -48,7 +48,6 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Pole;
-import de.bsautermeister.jump.sprites.Tent;
 import de.bsautermeister.jump.text.TextMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -212,17 +211,18 @@ public class GameRenderer implements Disposable {
 
     private void renderBackground(SpriteBatch batch) {
         float munichRatio = controller.getMunichRatio();
-        float munichOffset = Interpolation.smooth.apply(3f, 0f, munichRatio);
-        float forestOffset = Interpolation.smooth.apply(0, 0.66f, munichRatio);
+        float munichOffset = Interpolation.smooth.apply(1.5f, 0f, munichRatio);
 
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_STATIC_KEY, 1.0f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX5_KEY, 0.1f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX4_KEY, 0.2f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX3_KEY, 0.4f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MUNICH2_KEY, 0.5f, munichOffset);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MUNICH1_KEY, 0.625f, munichOffset);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX2_KEY, 0.65f, forestOffset);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_PARALLAX1_KEY, 0.80f, forestOffset);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MOUNTAINS_KEY, 0.2f, 0.15f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_CLOUDS1_KEY, 0.4f, 0.25f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MUNICH2_KEY, 0.5f, 0.3f, munichOffset);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MUNICH1_KEY, 0.625f, 0.35f, munichOffset);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.4f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.45f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.45f);
+        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.6f);
 
         mapRenderer.setView(camera);
 
@@ -240,16 +240,16 @@ public class GameRenderer implements Disposable {
         }
     }
 
-    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factor) {
-        renderParallaxLayer(parallaxCamera, layer, factor, 0f);
+    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factorX, float factorY) {
+        renderParallaxLayer(parallaxCamera, layer, factorX, factorY, 0f);
     }
 
-    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factor,
-                                     float yOffset) {
+    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factorX,
+                                     float factorY, float yOffset) {
         parallaxCamera.setToOrtho(false, camera.viewportWidth, camera.viewportHeight);
         parallaxCamera.position.set(
-                camera.viewportWidth * (1 - factor) + camera.position.x * factor,
-                camera.viewportHeight * (1 - factor)  + camera.position.y * factor + yOffset,
+                camera.viewportWidth * (1 - factorX) + camera.position.x * factorX,
+                camera.viewportHeight * (1 - factorY)  + camera.position.y * factorY + yOffset,
                 0);
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);

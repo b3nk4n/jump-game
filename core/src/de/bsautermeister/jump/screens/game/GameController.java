@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Frustum;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -565,11 +564,21 @@ public class GameController  implements BinarySerializable, Disposable {
         float tentX = tent.getX() + tent.getWidth() / 2f;
         float diffX = Math.abs(tentX - playerX);
 
-        if (diffX < Cfg.MUNICH_THRESHOLD) {
-            munichRatio += delta;
-        } else {
-            munichRatio -= delta;
+        float targetRatio = 0f;
+        if (diffX < Cfg.MUNICH_FULL_THRESHOLD_X) {
+            targetRatio = 1f;
+        } else if (diffX < Cfg.MUNICH_START_THRESHOLD_X) {
+            float x = Cfg.MUNICH_START_THRESHOLD_X - Cfg.MUNICH_FULL_THRESHOLD_X;
+            float slope = -1 / x;
+            float intercept = 1 + Cfg.MUNICH_FULL_THRESHOLD_X * -slope;
+            targetRatio = intercept + diffX * slope;
         }
+
+        float diffToTarget = targetRatio - munichRatio;
+        float absDiffToTarget = Math.abs(diffToTarget);
+        float absTargetChange = Math.min(absDiffToTarget, Math.max(0.00025f, delta * 2 * absDiffToTarget));
+        munichRatio += absTargetChange * Math.signum(diffToTarget);
+
         munichRatio = MathUtils.clamp(munichRatio, 0f, 1f);
     }
 
