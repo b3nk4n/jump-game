@@ -21,11 +21,11 @@ public class RegionNames {
     public static String BIG_PLAYER_VICTORY = "big_player_3_victory";
     public static String BIG_PLAYER_BEER_VICTORY = "big_player_3_beer_victory";
 
-    public static String BIG_PLAYER_PREZELIZED_WALK_TPL = "big_player_prezelized_*_walk";
-    public static String BIG_PLAYER_PREZELIZED_STAND_TPL = "big_player_prezelized_*_stand";
-    public static String BIG_PLAYER_PREZELIZED_JUMP_TPL = "big_player_prezelized_*_jump";
-    public static String BIG_PLAYER_PREZELIZED_CROUCH_TPL = "big_player_prezelized_*_crouch";
-    public static String BIG_PLAYER_PREZELIZED_TURN_TPL = "big_player_prezelized_*_turn";
+    public static String BIG_PLAYER_PREZELIZED_WALK = "big_player_prezelized_walk";
+    public static String BIG_PLAYER_PREZELIZED_STAND = "big_player_prezelized_stand";
+    public static String BIG_PLAYER_PREZELIZED_JUMP = "big_player_prezelized_jump";
+    public static String BIG_PLAYER_PREZELIZED_CROUCH = "big_player_prezelized_crouch";
+    public static String BIG_PLAYER_PREZELIZED_TURN = "big_player_prezelized_turn";
 
     public static String FOX_WALK = "fox_walk";
     public static String FOX_ANGRY_WALK = "fox_angry_walk";
@@ -34,7 +34,6 @@ public class RegionNames {
     public static String FOX_STOMP = "fox_stomp";
     public static String HEDGEHOG_WALK = "hedgehog_walk";
     public static String HEDGEHOG_ROLL = "hedgehog_roll";
-    public static String HEDGEHOG_ROLLING = "hedgehog_rolling";
     public static String DRUNKEN_GUY = "drunken_guy";
     public static String FISH = "fish";
     public static String COIN = "coin";

@@ -51,10 +51,13 @@ public class Hedgehog extends Enemy implements Drownable {
     public Hedgehog(GameCallbacks callbacks, World world, TextureAtlas atlas,
                     float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
-        walkAnimation = new Animation(0.05f, atlas.findRegions(RegionNames.HEDGEHOG_WALK), Animation.PlayMode.LOOP);
-        rollAnimation = new Animation(0.33f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
-        unrollAnimation = new Animation(0.33f, atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
-        rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLLING);
+        walkAnimation = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.HEDGEHOG_WALK), Animation.PlayMode.LOOP);
+        rollAnimation = new Animation<TextureRegion>(0.33f,
+                atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
+        unrollAnimation = new Animation<TextureRegion>(0.33f,
+                atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
+        rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLL, 2);
 
         state = new GameObjectState<>(State.WALKING);
         state.setStateCallback(new GameObjectState.StateCallback<State>() {
