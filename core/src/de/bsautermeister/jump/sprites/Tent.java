@@ -45,7 +45,7 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
         this.center = new Vector2(goal.getX() + goal.getWidth() / 2,
                 goal.getY() + goal.getHeight() / 2);
         this.atlas = atlas;
-        this.goal = goal;
+        this.goal = new Rectangle(goal.x - Cfg.BLOCK_SIZE_PPM, goal.y, goal.width + 2 * Cfg.BLOCK_SIZE_PPM, goal.height);
 
         tentWidth = getRegionWidth() / Cfg.PPM;
         setBounds(goal.getX() + (goal.getWidth() - tentWidth) / 2f, goal.getY(),
