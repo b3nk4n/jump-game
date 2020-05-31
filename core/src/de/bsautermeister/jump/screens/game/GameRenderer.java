@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -36,6 +35,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.rendering.ParallaxRenderer;
 import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
@@ -56,7 +56,6 @@ public class GameRenderer implements Disposable {
     private final SpriteBatch batch;
     private final GameController controller;
     private final OrthographicCamera camera;
-    private final OrthographicCamera backgroundParallaxCamera;
     private final Viewport viewport;
 
     private final Viewport hudViewport;
@@ -73,6 +72,7 @@ public class GameRenderer implements Disposable {
 
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final Box2DDebugRenderer box2DDebugRenderer;
+    private final ParallaxRenderer parallaxRenderer;
 
     private final Stage overlayStage;
     private final PauseOverlay pauseOverlay;
@@ -84,7 +84,6 @@ public class GameRenderer implements Disposable {
         this.batch = batch;
         this.controller = controller;
         this.camera = controller.getCamera();
-        this.backgroundParallaxCamera = new OrthographicCamera();
         this.viewport = controller.getViewport();
 
         float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
@@ -107,6 +106,7 @@ public class GameRenderer implements Disposable {
         font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
+        this.parallaxRenderer = new ParallaxRenderer(camera, controller.getMap(), mapRenderer);
 
         box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
 
@@ -213,16 +213,16 @@ public class GameRenderer implements Disposable {
         float munichRatio = controller.getMunichRatio();
         float munichOffset = Interpolation.smooth.apply(1.5f, 0f, munichRatio);
 
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MOUNTAINS_KEY, 0.2f, 0.15f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_CLOUDS1_KEY, 0.4f, 0.25f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MUNICH2_KEY, 0.5f, 0.3f, munichOffset);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_MUNICH1_KEY, 0.625f, 0.35f, munichOffset);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.4f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.45f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.45f);
-        renderParallaxLayer(backgroundParallaxCamera, WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.6f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MOUNTAINS_KEY, 0.2f, 0.15f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS1_KEY, 0.4f, 0.25f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MUNICH2_KEY, 0.5f, 0.3f, munichOffset);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MUNICH1_KEY, 0.625f, 0.35f, munichOffset);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.4f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.45f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.45f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.6f);
 
         mapRenderer.setView(camera);
 
@@ -238,22 +238,6 @@ public class GameRenderer implements Disposable {
         for (BoxCoin boxCoin : activeBoxCoins) {
             boxCoin.draw(batch);
         }
-    }
-
-    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factorX, float factorY) {
-        renderParallaxLayer(parallaxCamera, layer, factorX, factorY, 0f);
-    }
-
-    private void renderParallaxLayer(OrthographicCamera parallaxCamera, String layer, float factorX,
-                                     float factorY, float yOffset) {
-        parallaxCamera.setToOrtho(false, camera.viewportWidth, camera.viewportHeight);
-        parallaxCamera.position.set(
-                camera.viewportWidth * (1 - factorX) + camera.position.x * factorX,
-                camera.viewportHeight * (1 - factorY)  + camera.position.y * factorY + yOffset,
-                0);
-        parallaxCamera.update();
-        mapRenderer.setView(parallaxCamera);
-        mapRenderer.renderImageLayer((TiledMapImageLayer) controller.getMap().getLayers().get(layer));
     }
 
     private void renderForeground(SpriteBatch batch) {
