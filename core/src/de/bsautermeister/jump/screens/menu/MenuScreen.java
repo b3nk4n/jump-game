@@ -94,8 +94,7 @@ public class MenuScreen extends ScreenBase {
 
             @Override
             public void levelSelected(int absoluteLevel) {
-                //setScreen(new GameScreen(getGame(), absoluteLevel));
-                setScreen(new FinishScreen(getGame()));
+                setScreen(new GameScreen(getGame(), absoluteLevel));
             }
         });
     }

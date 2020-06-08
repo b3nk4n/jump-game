@@ -11,6 +11,7 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
+import de.bsautermeister.jump.screens.finish.FinishScreen;
 import de.bsautermeister.jump.screens.menu.MenuScreen;
 
 public class GameScreen extends ScreenBase {
@@ -29,7 +30,8 @@ public class GameScreen extends ScreenBase {
         public void success(int level) {
             GameStats.INSTANCE.updateHighestFinishedLevel(level);
             GameStats.INSTANCE.updateLevelStars(level, 2); // TODO calculate stars
-            setScreen(new GameScreen(getGame(), level + 1));
+            //setScreen(new GameScreen(getGame(), level + 1));
+            setScreen(new FinishScreen(getGame()));
         }
 
         @Override
