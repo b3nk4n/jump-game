@@ -58,6 +58,7 @@ public class RegionNames {
     public static String BACKGROUND_OVERLAY = "bg-overlay";
 
     public static String TENT_INSIDE_BACKGROUND = "tent_inside";
+    public static String TENT_DECORATION_BACKGROUND = "tent_inside_decoration";
 
     public static String LOADING_LOGO = "title";
     public static String LOADING_ANIMATION = "loading";

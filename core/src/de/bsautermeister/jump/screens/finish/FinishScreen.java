@@ -27,6 +27,7 @@ public class FinishScreen extends ScreenBase {
     private final AssetManager assetManager;
 
     private TextureRegion tentInsideBackground;
+    private TextureRegion tentInsideDecoration;
     private TextureRegion tableRow;
 
     private float gameTime;
@@ -77,6 +78,7 @@ public class FinishScreen extends ScreenBase {
     public void show() {
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.GAMEPLAY);
         tentInsideBackground = atlas.findRegion(RegionNames.TENT_INSIDE_BACKGROUND);
+        tentInsideDecoration = atlas.findRegion(RegionNames.TENT_DECORATION_BACKGROUND);
         tableRow = atlas.findRegion(RegionNames.TABLE_ROW);
         person = new Animation<TextureRegion>(0.066f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
@@ -116,6 +118,7 @@ public class FinishScreen extends ScreenBase {
 
     private void renderBackground() {
         batch.draw(tentInsideBackground, 0, 0);
+        batch.draw(tentInsideDecoration, 0, 0);
     }
 
     private void renderForeground(float delta) {
