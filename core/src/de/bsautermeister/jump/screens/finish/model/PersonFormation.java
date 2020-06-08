@@ -2,58 +2,23 @@ package de.bsautermeister.jump.screens.finish.model;
 
 import com.badlogic.gdx.utils.Array;
 
-public final class PersonFormation {
-    private PersonFormation() {}
+public class PersonFormation {
 
-    public static Array<Array<Person>> createBlockCheersFormation() {
-        Array<Array<Person>> result = new Array<>();
-        for (int i = 0; i < 9; ++i) {
-            result.add(createBlockCheersRow());
+    private Array<Array<Person>> rows;
+
+    public PersonFormation(Array<Array<Person>> rows) {
+        this.rows = rows;
+    }
+
+    public void update(float delta) {
+        for (Array<Person> row : rows) {
+            for (Person person : row) {
+                person.update(delta);
+            }
         }
-        return result;
     }
 
-    private static Array<Person> createBlockCheersRow() {
-        return Array.with(
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                new Person(0f, createCheersAnimation()),
-                Person.empty(),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                new Person(1f, createCheersAnimation()),
-                Person.empty(),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation()),
-                new Person(2f, createCheersAnimation())
-        );
-    }
-
-    private static Animatable createCheersAnimation() {
-        return new PathAnimation(0f, true, Array.with(
-                new PathAnimation.Item(1.0f, 1f),
-                new PathAnimation.Item(2.0f, 1f),
-                new PathAnimation.Item(1.0f, 0f),
-                new PathAnimation.Item(2.0f, 0f),
-                new PathAnimation.Item(1.0f, 1f),
-                new PathAnimation.Item(2.0f, 1f),
-                new PathAnimation.Item(1.0f, 0f),
-                new PathAnimation.Item(2.0f, 0f)
-        ));
+    public Array<Person> getRow(int index) {
+        return rows.get(index);
     }
 }

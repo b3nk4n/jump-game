@@ -18,6 +18,7 @@ import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.finish.model.Person;
 import de.bsautermeister.jump.screens.finish.model.PersonFormation;
+import de.bsautermeister.jump.screens.finish.model.PersonFormationFactory;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class FinishScreen extends ScreenBase {
@@ -33,7 +34,7 @@ public class FinishScreen extends ScreenBase {
 
     private Animation<TextureRegion> person;
 
-    private Array<Array<Person>> personFormation;
+    private PersonFormation personFormation;
 
     public FinishScreen(GameApp game) {
         super(game);
@@ -44,7 +45,7 @@ public class FinishScreen extends ScreenBase {
         camera.setToOrtho(false, Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         viewport = new StretchViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT, camera);
 
-        personFormation = PersonFormation.createBlockCheersFormation();
+        personFormation = PersonFormationFactory.createRandomFormation();
     }
 
     @Override
@@ -60,7 +61,7 @@ public class FinishScreen extends ScreenBase {
     @Override
     public void render(float delta) {
         // update
-        updatePersons(delta);
+        personFormation.update(delta);
 
         camera.update();
 
@@ -78,14 +79,6 @@ public class FinishScreen extends ScreenBase {
         batch.end();
     }
 
-    private void updatePersons(float delta) {
-        for (Array<Person> row : personFormation) {
-            for (Person person : row) {
-                person.update(delta);
-            }
-        }
-    }
-
     private void renderBackground() {
         batch.draw(tentInsideBackground, 0, 0);
         batch.draw(tentInsideDecoration, 0, 0);
@@ -94,18 +87,18 @@ public class FinishScreen extends ScreenBase {
     private void renderForeground(float delta) {
         float width = viewport.getWorldWidth();
 
-        drawRow(personFormation.get(0), width / 2, 36, -2.5f, 0.725f, 0.725f);
+        drawRow(personFormation.getRow(0), width / 2, 36, -2.5f, 0.725f, 0.725f);
         drawTableRow(width / 2, 33, 0.625f, 0.75f);
-        drawRow(personFormation.get(1), width / 2, 28, -2.25f, 0.775f, 0.775f);
-        drawRow(personFormation.get(2), width / 2, 24, -2.0f, 0.8f, 0.8f);
+        drawRow(personFormation.getRow(1), width / 2, 28, -2.25f, 0.775f, 0.775f);
+        drawRow(personFormation.getRow(2), width / 2, 24, -2.0f, 0.8f, 0.8f);
         drawTableRow(width / 2, 20, 0.75f, 0.825f);
-        drawRow(personFormation.get(3), width / 2, 16, -1.5f, 0.85f, 0.85f);
-        drawRow(personFormation.get(4), width / 2, 12, -1.25f, 0.875f, 0.875f);
+        drawRow(personFormation.getRow(3), width / 2, 16, -1.5f, 0.85f, 0.85f);
+        drawRow(personFormation.getRow(4), width / 2, 12, -1.25f, 0.875f, 0.875f);
         drawTableRow(width / 2, 7, 0.875f, 0.9f);
-        drawRow(personFormation.get(5), width / 2, 4, -0.75f, 0.925f, 0.925f);
-        drawRow(personFormation.get(6), width / 2, 0, -0.5f, 0.95f, 0.95f);
+        drawRow(personFormation.getRow(5), width / 2, 4, -0.75f, 0.925f, 0.925f);
+        drawRow(personFormation.getRow(6), width / 2, 0, -0.5f, 0.95f, 0.95f);
         drawTableRow(width / 2, -6, 1.0f, 0.975f);
-        drawRow(personFormation.get(7), width / 2, -8, 0, 1.0f, 1.0f);
+        drawRow(personFormation.getRow(7), width / 2, -8, 0, 1.0f, 1.0f);
     }
 
     private void drawTableRow(float centerX, float bottomY, float scale, float tint) {
