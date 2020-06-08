@@ -126,29 +126,32 @@ public class FinishScreen extends ScreenBase {
 
         float personStateTime = personAnimationPath.getValue();
 
-        drawRow(FORMATION, personStateTime, width / 2, 36, -2.5f, 0.725f);
-        drawTableRow(width / 2, 33, 0.625f);
-        drawRow(FORMATION, personStateTime, width / 2, 28, -2.25f, 0.775f);
-        drawRow(FORMATION, personStateTime, width / 2, 24, -2.0f, 0.8f);
-        drawTableRow(width / 2, 20, 0.75f);
-        drawRow(FORMATION, personStateTime, width / 2, 16, -1.5f, 0.85f);
-        drawRow(FORMATION, personStateTime, width / 2, 12, -1.25f, 0.875f);
-        drawTableRow(width / 2, 7, 0.875f);
-        drawRow(FORMATION, personStateTime, width / 2, 4, -0.75f, 0.925f);
-        drawRow(FORMATION, personStateTime, width / 2, 0, -0.5f, 0.95f);
-        drawTableRow(width / 2, -6, 1.0f);
-        drawRow(FORMATION, personStateTime, width / 2, -8, 0, 1.0f);
+        drawRow(FORMATION, personStateTime, width / 2, 36, -2.5f, 0.725f, 0.725f);
+        drawTableRow(width / 2, 33, 0.625f, 0.75f);
+        drawRow(FORMATION, personStateTime, width / 2, 28, -2.25f, 0.775f, 0.775f);
+        drawRow(FORMATION, personStateTime, width / 2, 24, -2.0f, 0.8f, 0.8f);
+        drawTableRow(width / 2, 20, 0.75f, 0.825f);
+        drawRow(FORMATION, personStateTime, width / 2, 16, -1.5f, 0.85f, 0.85f);
+        drawRow(FORMATION, personStateTime, width / 2, 12, -1.25f, 0.875f, 0.875f);
+        drawTableRow(width / 2, 7, 0.875f, 0.9f);
+        drawRow(FORMATION, personStateTime, width / 2, 4, -0.75f, 0.925f, 0.925f);
+        drawRow(FORMATION, personStateTime, width / 2, 0, -0.5f, 0.95f, 0.95f);
+        drawTableRow(width / 2, -6, 1.0f, 0.975f);
+        drawRow(FORMATION, personStateTime, width / 2, -8, 0, 1.0f, 1.0f);
     }
 
-    private void drawTableRow(float centerX, float bottomY, float scale) {
+    private void drawTableRow(float centerX, float bottomY, float scale, float tint) {
+        batch.setColor(tint, tint, tint, 1.0f);
         float posX = centerX - tableRow.getRegionWidth() / 2;
         batch.draw(tableRow, posX, bottomY,
                 tableRow.getRegionWidth() / 2, 0.0f,
                 tableRow.getRegionWidth(), tableRow.getRegionHeight(),
                 scale, scale, 0.0f);
+        batch.setColor(Color.WHITE);
     }
 
-    private void drawRow(Array<PersonMeta> formation, float stateTime, float centerX, float bottomY, float padding, float scale) {
+    private void drawRow(Array<PersonMeta> formation, float stateTime, float centerX, float bottomY, float padding, float scale, float tint) {
+        batch.setColor(tint, tint, tint, 1.0f);
         // right
         int startIdx = formation.size / 2;
         float startX = centerX + padding / 2;
@@ -180,6 +183,7 @@ public class FinishScreen extends ScreenBase {
                     personFrame.getRegionWidth(), personFrame.getRegionHeight(),
                     scale, scale, 0.0f);
         }
+        batch.setColor(Color.WHITE);
     }
 
     private static class PersonMeta {
