@@ -92,7 +92,7 @@ public class Fox extends Enemy implements Drownable {
             setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
             setRegion(getFrame());
 
-            if (state.timer() > 1f) {
+            if (state.timer() > 0.7f) {
                 markDestroyBody();
                 markRemovable();
             }
