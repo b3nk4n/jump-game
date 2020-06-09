@@ -17,7 +17,6 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
-import de.bsautermeister.jump.screens.finish.FinishScreen;
 import de.bsautermeister.jump.screens.game.GameScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -77,6 +76,11 @@ public class MenuScreen extends ScreenBase {
             public void continueClicked() {
                 setScreen(new GameScreen(getGame()));
             }
+
+            @Override
+            public void aboutClicked() {
+                setContent(new AboutContent(getAssetManager()));
+            }
         });
     }
 
@@ -115,7 +119,7 @@ public class MenuScreen extends ScreenBase {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             if (content instanceof MainMenuContent) {
                 Gdx.app.exit();
-            } else if (content instanceof SelectLevelMenuContent) {
+            } else {
                 setContent(createMainContent());
             }
         }

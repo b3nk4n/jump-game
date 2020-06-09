@@ -12,6 +12,7 @@ public interface Styles {
     interface Button {
         String PLAY = "play";
         String CONTINUE = "continue";
+        String ABOUT = "about";
         String ARROW_LEFT = "arrow_left";
         String ARROW_RIGHT = "arrow_right";
     }

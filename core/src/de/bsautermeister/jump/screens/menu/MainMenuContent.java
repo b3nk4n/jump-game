@@ -48,11 +48,23 @@ public class MainMenuContent extends Table {
             add(continueButton).pad(8f);
         }
 
+        row();
+
+        Button aboutButton = new Button(skin, Styles.Button.ABOUT);
+        aboutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                callbacks.aboutClicked();
+            }
+        });
+        add(aboutButton).pad(8f);
+
         pack();
     }
 
     public interface Callbacks {
         void playClicked();
         void continueClicked();
+        void aboutClicked();
     }
 }
