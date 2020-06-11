@@ -3,15 +3,18 @@ package de.bsautermeister.jump.screens.finish.model;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Person {
+    public static final int VARIATIONS = 7;
+
     public final boolean isPlaceholder;
+    private int characterIdx;
     private float activeTime;
     private final Animatable spriteAnimation;
     private final boolean swinging;
     private float rotation = 0f;
-    // TODO character bit, color, action (wipping, jumping, cheering)? Or even sub-typing?
 
     private Person(boolean isPlaceholder, float delay, Animatable spriteAnimation, boolean swinging) {
         this.isPlaceholder = isPlaceholder;
+        this.characterIdx = MathUtils.random(VARIATIONS - 1);
         this.activeTime = -delay;
         this.spriteAnimation = spriteAnimation;
         this.swinging = swinging;
@@ -50,5 +53,9 @@ public class Person {
 
     public float getRotation() {
         return rotation;
+    }
+
+    public int getCharacterIdx() {
+        return characterIdx;
     }
 }

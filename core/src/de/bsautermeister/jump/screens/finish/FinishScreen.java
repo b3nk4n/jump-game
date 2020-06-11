@@ -34,7 +34,7 @@ public class FinishScreen extends ScreenBase {
     private TextureRegion tentInsideDecoration;
     private TextureRegion tableRow;
 
-    private Animation<TextureRegion> personAnimation;
+    private Animation<TextureRegion>[] personAnimations;
 
     private PersonFormation personFormation;
 
@@ -56,8 +56,21 @@ public class FinishScreen extends ScreenBase {
         tentInsideBackground = atlas.findRegion(RegionNames.TENT_INSIDE_BACKGROUND);
         tentInsideDecoration = atlas.findRegion(RegionNames.TENT_DECORATION_BACKGROUND);
         tableRow = atlas.findRegion(RegionNames.TABLE_ROW);
-        personAnimation = new Animation<TextureRegion>(0.05f,
+        personAnimations = new Animation[Person.VARIATIONS];
+        personAnimations[0] = new Animation<TextureRegion>(0.05f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
+        personAnimations[1] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_1), Animation.PlayMode.NORMAL);
+        personAnimations[2] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_2), Animation.PlayMode.NORMAL);
+        personAnimations[3] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_3), Animation.PlayMode.NORMAL);
+        personAnimations[4] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_4), Animation.PlayMode.NORMAL);
+        personAnimations[5] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_5), Animation.PlayMode.NORMAL);
+        personAnimations[6] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_6), Animation.PlayMode.NORMAL);
     }
 
     @Override
@@ -128,7 +141,8 @@ public class FinishScreen extends ScreenBase {
 
             if (person.isPlaceholder) continue;
 
-            TextureRegion personFrame = this.personAnimation.getKeyFrame(person.getAnimationValue());
+            Animation<TextureRegion> animation = this.personAnimations[person.getCharacterIdx()];
+            TextureRegion personFrame = animation.getKeyFrame(person.getAnimationValue());
             float posX = startX + x * (padding + personFrame.getRegionWidth() * scale);
             batch.draw(personFrame, posX, bottomY,
                     personFrame.getRegionWidth() / 2, 0.0f,
@@ -144,7 +158,8 @@ public class FinishScreen extends ScreenBase {
 
             if (person.isPlaceholder) continue;
 
-            TextureRegion personFrame = this.personAnimation.getKeyFrame(person.getAnimationValue());
+            Animation<TextureRegion> animation = this.personAnimations[person.getCharacterIdx()];
+            TextureRegion personFrame = animation.getKeyFrame(person.getAnimationValue());
             float posX = startX - x * padding - (x + 1) *  (personFrame.getRegionWidth() * scale);
             batch.draw(personFrame, posX, bottomY,
                     personFrame.getRegionWidth() / 2, 0.0f,

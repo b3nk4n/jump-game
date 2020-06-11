@@ -13,7 +13,7 @@ beer
   index: -1
 bg-overlay
   rotate: false
-  xy: 16, 11
+  xy: 809, 337
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
@@ -671,21 +671,21 @@ box_fragment0
   index: -1
 box_fragment1
   rotate: false
-  xy: 620, 75
+  xy: 112, 8
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 box_fragment2
   rotate: false
-  xy: 620, 63
+  xy: 1006, 500
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 box_fragment3
   rotate: false
-  xy: 4, 8
+  xy: 15, 8
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -713,28 +713,28 @@ break_platform4
   index: -1
 brick_fragment0
   rotate: false
-  xy: 1006, 500
+  xy: 853, 321
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment1
   rotate: false
-  xy: 797, 483
+  xy: 893, 307
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment2
   rotate: false
-  xy: 392, 35
+  xy: 813, 258
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
   index: -1
 brick_fragment3
   rotate: false
-  xy: 372, 15
+  xy: 124, 8
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -748,21 +748,21 @@ coin
   index: 0
 coin
   rotate: false
-  xy: 400, 67
+  xy: 392, 20
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 coin
   rotate: false
-  xy: 420, 67
+  xy: 810, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 coin
   rotate: false
-  xy: 440, 67
+  xy: 830, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -909,14 +909,14 @@ drunken_guy
   index: 19
 fish
   rotate: false
-  xy: 460, 67
+  xy: 850, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 fish
   rotate: false
-  xy: 480, 67
+  xy: 870, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -1245,70 +1245,70 @@ fox_walk
   index: 7
 grilled_chicken
   rotate: false
-  xy: 500, 67
+  xy: 890, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 hedgehog_roll
   rotate: false
-  xy: 520, 67
+  xy: 910, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 hedgehog_roll
   rotate: false
-  xy: 540, 67
+  xy: 930, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 hedgehog_roll
   rotate: false
-  xy: 560, 67
+  xy: 950, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 hedgehog_walk
   rotate: false
-  xy: 580, 67
+  xy: 970, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 0
 hedgehog_walk
   rotate: false
-  xy: 600, 67
+  xy: 990, 472
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 hedgehog_walk
   rotate: false
-  xy: 632, 59
+  xy: 812, 63
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 hedgehog_walk
   rotate: false
-  xy: 652, 51
+  xy: 832, 63
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 hedgehog_walk
   rotate: false
-  xy: 672, 51
+  xy: 829, 333
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 hedgehog_walk
   rotate: false
-  xy: 672, 51
+  xy: 829, 333
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -1322,14 +1322,14 @@ particle
   index: -1
 particle_music1
   rotate: false
-  xy: 781, 131
+  xy: 4, 6
   size: 7, 10
   orig: 7, 10
   offset: 0, 0
   index: -1
 particle_music2
   rotate: false
-  xy: 768, 131
+  xy: 797, 481
   size: 9, 10
   orig: 9, 10
   offset: 0, 0
@@ -1343,11 +1343,347 @@ particle_sqaure
   index: -1
 particle_z
   rotate: false
-  xy: 692, 51
+  xy: 849, 333
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+person1_beer_victory
+  rotate: false
+  xy: 768, 159
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 0
+person1_beer_victory
+  rotate: false
+  xy: 768, 131
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 1
+person1_beer_victory
+  rotate: false
+  xy: 788, 223
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+person1_beer_victory
+  rotate: false
+  xy: 788, 195
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 3
+person1_beer_victory
+  rotate: false
+  xy: 788, 167
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+person1_beer_victory
+  rotate: false
+  xy: 788, 139
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 5
+person1_beer_victory
+  rotate: false
+  xy: 776, 103
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 6
+person1_beer_victory
+  rotate: false
+  xy: 808, 223
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
+person2_beer_victory
+  rotate: false
+  xy: 808, 195
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 0
+person2_beer_victory
+  rotate: false
+  xy: 808, 167
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 1
+person2_beer_victory
+  rotate: false
+  xy: 808, 139
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+person2_beer_victory
+  rotate: false
+  xy: 796, 111
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 3
+person2_beer_victory
+  rotate: false
+  xy: 816, 111
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+person2_beer_victory
+  rotate: false
+  xy: 112, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 5
+person2_beer_victory
+  rotate: false
+  xy: 132, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 6
+person2_beer_victory
+  rotate: false
+  xy: 152, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
+person3_beer_victory
+  rotate: false
+  xy: 172, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 0
+person3_beer_victory
+  rotate: false
+  xy: 192, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 1
+person3_beer_victory
+  rotate: false
+  xy: 212, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+person3_beer_victory
+  rotate: false
+  xy: 232, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 3
+person3_beer_victory
+  rotate: false
+  xy: 252, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+person3_beer_victory
+  rotate: false
+  xy: 272, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 5
+person3_beer_victory
+  rotate: false
+  xy: 292, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 6
+person3_beer_victory
+  rotate: false
+  xy: 312, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
+person4_beer_victory
+  rotate: false
+  xy: 332, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 0
+person4_beer_victory
+  rotate: false
+  xy: 352, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 1
+person4_beer_victory
+  rotate: false
+  xy: 372, 20
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+person4_beer_victory
+  rotate: false
+  xy: 392, 40
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 3
+person4_beer_victory
+  rotate: false
+  xy: 712, 71
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+person4_beer_victory
+  rotate: false
+  xy: 732, 75
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 5
+person4_beer_victory
+  rotate: false
+  xy: 752, 75
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 6
+person4_beer_victory
+  rotate: false
+  xy: 772, 75
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
+person5_beer_victory
+  rotate: false
+  xy: 792, 75
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 0
+person5_beer_victory
+  rotate: false
+  xy: 812, 83
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 1
+person5_beer_victory
+  rotate: false
+  xy: 832, 83
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+person5_beer_victory
+  rotate: false
+  xy: 825, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 3
+person5_beer_victory
+  rotate: false
+  xy: 845, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+person5_beer_victory
+  rotate: false
+  xy: 865, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 5
+person5_beer_victory
+  rotate: false
+  xy: 885, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 6
+person5_beer_victory
+  rotate: false
+  xy: 905, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
+person6_beer_victory
+  rotate: false
+  xy: 925, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 0
+person6_beer_victory
+  rotate: false
+  xy: 945, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 1
+person6_beer_victory
+  rotate: false
+  xy: 965, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+person6_beer_victory
+  rotate: false
+  xy: 985, 444
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 3
+person6_beer_victory
+  rotate: false
+  xy: 809, 416
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+person6_beer_victory
+  rotate: false
+  xy: 829, 416
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 5
+person6_beer_victory
+  rotate: false
+  xy: 809, 388
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 6
+person6_beer_victory
+  rotate: false
+  xy: 849, 416
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
 platform2
   rotate: false
   xy: 112, 68
@@ -1378,448 +1714,448 @@ pole
   index: -1
 pretzel
   rotate: false
-  xy: 392, 47
+  xy: 869, 319
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 pretzel_bullet
   rotate: false
-  xy: 412, 47
+  xy: 889, 319
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 small_player_0_crouch
   rotate: false
-  xy: 768, 166
+  xy: 805, 451
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_0_dead
   rotate: false
-  xy: 768, 145
+  xy: 829, 395
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_0_dead
   rotate: false
-  xy: 788, 230
+  xy: 809, 367
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_0_drown
   rotate: false
-  xy: 788, 209
+  xy: 869, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_0_drown
   rotate: false
-  xy: 788, 188
+  xy: 849, 395
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_0_jump
   rotate: false
-  xy: 788, 167
+  xy: 829, 374
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_0_jump
   rotate: false
-  xy: 788, 146
+  xy: 809, 346
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_0_jump
   rotate: false
-  xy: 432, 46
+  xy: 869, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_0_stand
   rotate: false
-  xy: 452, 46
+  xy: 889, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_0_turn
   rotate: false
-  xy: 472, 46
+  xy: 849, 374
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_0_walk
   rotate: false
-  xy: 492, 46
+  xy: 829, 353
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_0_walk
   rotate: false
-  xy: 512, 46
+  xy: 869, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_0_walk
   rotate: false
-  xy: 532, 46
+  xy: 889, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_1_crouch
   rotate: false
-  xy: 552, 46
+  xy: 909, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_1_dead
   rotate: false
-  xy: 572, 46
+  xy: 849, 353
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_1_dead
   rotate: false
-  xy: 592, 46
+  xy: 869, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_1_drown
   rotate: false
-  xy: 612, 42
+  xy: 889, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_1_drown
   rotate: false
-  xy: 632, 38
+  xy: 909, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_1_jump
   rotate: false
-  xy: 652, 30
+  xy: 929, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_1_jump
   rotate: false
-  xy: 672, 30
+  xy: 889, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_1_jump
   rotate: false
-  xy: 692, 30
+  xy: 909, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_1_stand
   rotate: false
-  xy: 776, 110
+  xy: 929, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_1_turn
   rotate: false
-  xy: 776, 89
+  xy: 949, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_1_walk
   rotate: false
-  xy: 808, 230
+  xy: 909, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_1_walk
   rotate: false
-  xy: 808, 209
+  xy: 929, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_1_walk
   rotate: false
-  xy: 808, 188
+  xy: 949, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_2_crouch
   rotate: false
-  xy: 808, 167
+  xy: 969, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_2_dead
   rotate: false
-  xy: 808, 146
+  xy: 929, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_2_dead
   rotate: false
-  xy: 796, 125
+  xy: 949, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_2_drown
   rotate: false
-  xy: 796, 104
+  xy: 969, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_2_drown
   rotate: false
-  xy: 796, 83
+  xy: 949, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_2_jump
   rotate: false
-  xy: 816, 125
+  xy: 969, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_2_jump
   rotate: false
-  xy: 816, 104
+  xy: 969, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_2_jump
   rotate: false
-  xy: 816, 83
+  xy: 989, 423
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_2_stand
   rotate: false
-  xy: 112, 27
+  xy: 989, 402
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_2_turn
   rotate: false
-  xy: 132, 27
+  xy: 989, 381
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_2_walk
   rotate: false
-  xy: 112, 6
+  xy: 989, 360
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_2_walk
   rotate: false
-  xy: 152, 27
+  xy: 869, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_2_walk
   rotate: false
-  xy: 132, 6
+  xy: 889, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_3_beer_victory
   rotate: false
-  xy: 172, 27
+  xy: 909, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_3_victory
   rotate: false
-  xy: 172, 27
+  xy: 909, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_3_beer_victory
   rotate: false
-  xy: 152, 6
+  xy: 929, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_3_beer_victory
   rotate: false
-  xy: 192, 27
+  xy: 949, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_3_beer_victory
   rotate: false
-  xy: 172, 6
+  xy: 969, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 3
 small_player_3_beer_victory
   rotate: false
-  xy: 212, 27
+  xy: 989, 339
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 4
 small_player_3_crouch
   rotate: false
-  xy: 192, 6
+  xy: 909, 318
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_3_dead
   rotate: false
-  xy: 232, 27
+  xy: 929, 318
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_3_dead
   rotate: false
-  xy: 212, 6
+  xy: 949, 318
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_3_drown
   rotate: false
-  xy: 252, 27
+  xy: 969, 318
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_3_drown
   rotate: false
-  xy: 232, 6
+  xy: 989, 318
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_3_jump
   rotate: false
-  xy: 272, 27
+  xy: 813, 312
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_3_jump
   rotate: false
-  xy: 252, 6
+  xy: 833, 312
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_3_jump
   rotate: false
-  xy: 292, 27
+  xy: 813, 291
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_3_stand
   rotate: false
-  xy: 272, 6
+  xy: 833, 291
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_3_turn
   rotate: false
-  xy: 312, 27
+  xy: 813, 270
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: -1
 small_player_3_victory
   rotate: false
-  xy: 292, 6
+  xy: 833, 270
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_3_victory
   rotate: false
-  xy: 332, 27
+  xy: 853, 298
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 2
 small_player_3_victory
   rotate: false
-  xy: 312, 6
+  xy: 853, 277
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 3
 small_player_3_victory
   rotate: false
-  xy: 352, 27
+  xy: 873, 298
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 4
 small_player_3_walk
   rotate: false
-  xy: 372, 27
+  xy: 873, 277
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 0
 small_player_3_walk
   rotate: false
-  xy: 332, 6
+  xy: 853, 256
   size: 16, 17
   orig: 16, 17
   offset: 0, 0
   index: 1
 small_player_3_walk
   rotate: false
-  xy: 352, 6
+  xy: 873, 256
   size: 16, 17
   orig: 16, 17
   offset: 0, 0

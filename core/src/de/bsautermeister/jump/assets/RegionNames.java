@@ -57,6 +57,13 @@ public class RegionNames {
     public static String TABLE_ROW = "table_row";
     public static String BACKGROUND_OVERLAY = "bg-overlay";
 
+    public static String PERSON_1 = "person1_beer_victory";
+    public static String PERSON_2 = "person2_beer_victory";
+    public static String PERSON_3 = "person3_beer_victory";
+    public static String PERSON_4 = "person4_beer_victory";
+    public static String PERSON_5 = "person5_beer_victory";
+    public static String PERSON_6 = "person6_beer_victory";
+
     public static String TENT_INSIDE_BACKGROUND = "tent_inside";
     public static String TENT_DECORATION_BACKGROUND = "tent_inside_decoration";
 
