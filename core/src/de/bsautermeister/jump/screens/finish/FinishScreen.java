@@ -32,7 +32,7 @@ public class FinishScreen extends ScreenBase {
     private TextureRegion tentInsideDecoration;
     private TextureRegion tableRow;
 
-    private Animation<TextureRegion> person;
+    private Animation<TextureRegion> personAnimation;
 
     private PersonFormation personFormation;
 
@@ -45,7 +45,7 @@ public class FinishScreen extends ScreenBase {
         camera.setToOrtho(false, Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         viewport = new StretchViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT, camera);
 
-        personFormation = PersonFormationFactory.createRandomFormation();
+        personFormation = PersonFormationFactory.createSwingRowFormation();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class FinishScreen extends ScreenBase {
         tentInsideBackground = atlas.findRegion(RegionNames.TENT_INSIDE_BACKGROUND);
         tentInsideDecoration = atlas.findRegion(RegionNames.TENT_DECORATION_BACKGROUND);
         tableRow = atlas.findRegion(RegionNames.TABLE_ROW);
-        person = new Animation<TextureRegion>(0.05f,
+        personAnimation = new Animation<TextureRegion>(0.05f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
     }
 
@@ -87,18 +87,18 @@ public class FinishScreen extends ScreenBase {
     private void renderForeground(float delta) {
         float width = viewport.getWorldWidth();
 
-        drawRow(personFormation.getRow(0), width / 2, 36, -2.5f, 0.725f, 0.725f);
+        drawPersonRow(personFormation.getRow(0), width / 2, 36, -2.5f, 0.725f, 0.725f);
         drawTableRow(width / 2, 33, 0.625f, 0.75f);
-        drawRow(personFormation.getRow(1), width / 2, 28, -2.25f, 0.775f, 0.775f);
-        drawRow(personFormation.getRow(2), width / 2, 24, -2.0f, 0.8f, 0.8f);
+        drawPersonRow(personFormation.getRow(1), width / 2, 28, -2.25f, 0.775f, 0.775f);
+        drawPersonRow(personFormation.getRow(2), width / 2, 24, -2.0f, 0.8f, 0.8f);
         drawTableRow(width / 2, 20, 0.75f, 0.825f);
-        drawRow(personFormation.getRow(3), width / 2, 16, -1.5f, 0.85f, 0.85f);
-        drawRow(personFormation.getRow(4), width / 2, 12, -1.25f, 0.875f, 0.875f);
+        drawPersonRow(personFormation.getRow(3), width / 2, 16, -1.5f, 0.85f, 0.85f);
+        drawPersonRow(personFormation.getRow(4), width / 2, 12, -1.25f, 0.875f, 0.875f);
         drawTableRow(width / 2, 7, 0.875f, 0.9f);
-        drawRow(personFormation.getRow(5), width / 2, 4, -0.75f, 0.925f, 0.925f);
-        drawRow(personFormation.getRow(6), width / 2, 0, -0.5f, 0.95f, 0.95f);
+        drawPersonRow(personFormation.getRow(5), width / 2, 4, -0.75f, 0.925f, 0.925f);
+        drawPersonRow(personFormation.getRow(6), width / 2, 0, -0.5f, 0.95f, 0.95f);
         drawTableRow(width / 2, -6, 1.0f, 0.975f);
-        drawRow(personFormation.getRow(7), width / 2, -8, 0, 1.0f, 1.0f);
+        drawPersonRow(personFormation.getRow(7), width / 2, -8, 0, 1.0f, 1.0f);
     }
 
     private void drawTableRow(float centerX, float bottomY, float scale, float tint) {
@@ -111,7 +111,7 @@ public class FinishScreen extends ScreenBase {
         batch.setColor(Color.WHITE);
     }
 
-    private void drawRow(Array<Person> formation, float centerX, float bottomY, float padding, float scale, float tint) {
+    private void drawPersonRow(Array<Person> formation, float centerX, float bottomY, float padding, float scale, float tint) {
         batch.setColor(tint, tint, tint, 1.0f);
         // right
         int startIdx = formation.size / 2;
@@ -121,12 +121,12 @@ public class FinishScreen extends ScreenBase {
 
             if (person.isPlaceholder) continue;
 
-            TextureRegion personFrame = this.person.getKeyFrame(person.getAnimationValue());
+            TextureRegion personFrame = this.personAnimation.getKeyFrame(person.getAnimationValue());
             float posX = startX + x * (padding + personFrame.getRegionWidth() * scale);
             batch.draw(personFrame, posX, bottomY,
                     personFrame.getRegionWidth() / 2, 0.0f,
                     personFrame.getRegionWidth(), personFrame.getRegionHeight(),
-                    scale, scale, 0.0f);
+                    scale, scale, person.getRotation());
         }
 
         // left
@@ -137,12 +137,12 @@ public class FinishScreen extends ScreenBase {
 
             if (person.isPlaceholder) continue;
 
-            TextureRegion personFrame = this.person.getKeyFrame(person.getAnimationValue());
+            TextureRegion personFrame = this.personAnimation.getKeyFrame(person.getAnimationValue());
             float posX = startX - x * padding - (x + 1) *  (personFrame.getRegionWidth() * scale);
             batch.draw(personFrame, posX, bottomY,
                     personFrame.getRegionWidth() / 2, 0.0f,
                     personFrame.getRegionWidth(), personFrame.getRegionHeight(),
-                    scale, scale, 0.0f);
+                    scale, scale, person.getRotation());
         }
         batch.setColor(Color.WHITE);
     }

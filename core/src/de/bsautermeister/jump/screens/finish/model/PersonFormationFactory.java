@@ -7,16 +7,28 @@ public final class PersonFormationFactory {
     private PersonFormationFactory() {}
 
     public static PersonFormation createRandomFormation() {
-        if (MathUtils.random(1) == 0) {
-            return createBlockCheersFormation();
+        switch (MathUtils.random(2)) {
+            case 0:
+                return createBlockCheersFormation();
+            case 1:
+                return createLaolaCheersFormation();
+            default:
+                return createSwingRowFormation();
         }
-        return createLaolaCheersFormation();
     }
 
     public static PersonFormation createBlockCheersFormation() {
         Array<Array<Person>> result = new Array<>();
         for (int i = 0; i < 9; ++i) {
             result.add(createBlockCheersRow());
+        }
+        return new PersonFormation(result);
+    }
+
+    public static PersonFormation createSwingRowFormation() {
+        Array<Array<Person>> result = new Array<>();
+        for (int i = 0; i < 9; ++i) {
+            result.add(createSwingRow(i * 0.2f));
         }
         return new PersonFormation(result);
     }
@@ -83,5 +95,37 @@ public final class PersonFormationFactory {
                 new PathAnimation.Item(1.0f, 0f),
                 new PathAnimation.Item(2.0f, 0f)
         ));
+    }
+
+    private static Array<Person> createSwingRow(float delta) {
+        FixedAnimation fixedAnimation = new FixedAnimation(1f);
+        return Array.with(
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                Person.empty(),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                Person.empty(),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true),
+                new Person(delta, fixedAnimation, true)
+        );
     }
 }

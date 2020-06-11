@@ -3,7 +3,7 @@ package de.bsautermeister.jump.screens.finish.model;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 
-public class PathAnimation implements Animatable { // TODO to sway to the music: SinewaveAnimation class (with same interface)
+public class PathAnimation implements Animatable {
     private float pathItemTimeElapsed;
 
     private final boolean loop;
