@@ -212,6 +212,8 @@ public class GameRenderer implements Disposable {
     private void renderBackground(SpriteBatch batch) {
         float munichRatio = controller.getMunichRatio();
         float munichOffset = Interpolation.smooth.apply(1.5f, 0f, munichRatio);
+        float forestOffset = Interpolation.smooth.apply(0f, 1.0f, munichRatio);
+        float grassOffset = Interpolation.smooth.apply(0f, -0.25f, munichRatio);
 
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);
@@ -219,10 +221,10 @@ public class GameRenderer implements Disposable {
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS1_KEY, 0.4f, 0.25f);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MUNICH2_KEY, 0.5f, 0.3f, munichOffset);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MUNICH1_KEY, 0.625f, 0.35f, munichOffset);
-        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.4f);
-        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.45f);
-        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.45f);
-        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.6f);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.4f, forestOffset);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.45f, forestOffset);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.45f, grassOffset);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.6f, grassOffset);
 
         mapRenderer.setView(camera);
 

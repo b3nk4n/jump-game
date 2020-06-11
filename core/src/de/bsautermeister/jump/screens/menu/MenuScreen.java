@@ -116,7 +116,7 @@ public class MenuScreen extends ScreenBase {
         stage.act();
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (content instanceof MainMenuContent) {
                 Gdx.app.exit();
             } else {

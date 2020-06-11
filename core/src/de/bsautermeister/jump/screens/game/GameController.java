@@ -560,9 +560,9 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void updateMunichRation(float delta) {
-        float playerX = player.getWorldCenter().x;
+        float cameraX = camera.position.x;
         float tentX = tent.getX() + tent.getWidth() / 2f;
-        float diffX = Math.abs(tentX - playerX);
+        float diffX = Math.abs(tentX - cameraX);
 
         float targetRatio = 0f;
         if (diffX < Cfg.MUNICH_FULL_THRESHOLD_X) {
@@ -576,7 +576,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         float diffToTarget = targetRatio - munichRatio;
         float absDiffToTarget = Math.abs(diffToTarget);
-        float absTargetChange = Math.min(absDiffToTarget, Math.max(0.00025f, delta * 2 * absDiffToTarget));
+        float absTargetChange = Math.min(absDiffToTarget, Math.max(0.00025f, delta * 5 * absDiffToTarget));
         munichRatio += absTargetChange * Math.signum(diffToTarget);
 
         munichRatio = MathUtils.clamp(munichRatio, 0f, 1f);
