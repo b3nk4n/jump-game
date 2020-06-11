@@ -79,7 +79,7 @@ public abstract class JumpingItem extends Item {
 
         if (state.is(State.SPAWNED)) {
             setPosition(getBody().getPosition().x - getWidth() / 2,
-                    getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
+                    getBody().getPosition().y - getHeight() / 2 + 1.33f / Cfg.PPM);
 
             impulsTimer.update(delta);
             if (impulsTimer.isFinished()) {

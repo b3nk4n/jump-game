@@ -48,7 +48,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
     public Item(GameCallbacks callbacks, World world, float centerX, float centerY) {
         this.id = UUID.randomUUID().toString();
         this.spawnY = centerY - Cfg.BLOCK_SIZE_PPM / 2 + SPAWN_ITEM_OFFSET_Y;
-        this.targetY = spawnY + Cfg.BLOCK_SIZE_PPM;
+        this.targetY = spawnY + Cfg.BLOCK_SIZE_PPM - SPAWN_ITEM_OFFSET_Y;
         this.callbacks = callbacks;
         this.world = world;
         this.setSize(Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);

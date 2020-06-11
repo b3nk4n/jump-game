@@ -63,7 +63,7 @@ public class DrunkenGuy extends Enemy {
 
         state.upate(delta);
         setPosition(getBody().getPosition().x - getWidth() / 2,
-                getBody().getPosition().y - Cfg.BLOCK_SIZE * 0.75f / Cfg.PPM);
+                getBody().getPosition().y - Cfg.BLOCK_SIZE * 0.775f / Cfg.PPM);
         setRegion(animation.getKeyFrame(peekTime));
 
         if (state.is(State.KILLED)) {
