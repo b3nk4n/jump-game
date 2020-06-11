@@ -40,24 +40,21 @@ public class MusicPlayer implements BinarySerializable, Disposable {
     }
 
     public void update(float delta) {
-        if (music == null) {
-            return;
-        }
+        if (music != null) {
+            if (targetVolume != currentVolume) {
+                float diff = targetVolume - currentVolume;
 
-        if (targetVolume != currentVolume) {
-            float diff = targetVolume - currentVolume;
-
-            if (diff > 0) {
-                currentVolume += delta / VOLUME_CHANGE_IN_SECONDS;
-                currentVolume = Math.min(targetVolume, currentVolume);
-            } else {
-                currentVolume -= delta / VOLUME_CHANGE_IN_SECONDS;
-                currentVolume = Math.max(targetVolume, currentVolume);
+                if (diff > 0) {
+                    currentVolume += delta / VOLUME_CHANGE_IN_SECONDS;
+                    currentVolume = Math.min(targetVolume, currentVolume);
+                } else {
+                    currentVolume -= delta / VOLUME_CHANGE_IN_SECONDS;
+                    currentVolume = Math.max(targetVolume, currentVolume);
+                }
             }
+
+            music.setVolume(currentVolume);
         }
-
-        music.setVolume(currentVolume);
-
 
         if (fadeOutAndDisposeQueue.size > 0) {
             for (Music fadeOutMusic : fadeOutAndDisposeQueue) {
@@ -115,6 +112,15 @@ public class MusicPlayer implements BinarySerializable, Disposable {
 
         LOG.debug("Stop music");
         music.stop();
+    }
+
+    public void fadeOutStop() {
+        if (music == null) {
+            return;
+        }
+
+        fadeOutAndDisposeQueue.add(music);
+        music = null;
     }
 
     public void setVolume(float volume, boolean immediate) {

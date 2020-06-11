@@ -64,7 +64,7 @@ public class GameScreen extends ScreenBase {
         super.show();
 
         soundEffects = new GameSoundEffects(getAssetManager());
-        controller = new GameController(callbacks, getGame().getMusicPlayer(), soundEffects,
+        controller = new GameController(callbacks, getGame(), soundEffects,
                 level, gameToResume);
         renderer = new GameRenderer(getBatch(), getAssetManager(), atlas, controller);
 

@@ -44,9 +44,9 @@ public class MenuScreen extends ScreenBase {
 
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
-        getGame().getMusicPlayer().selectMusic(AssetPaths.Music.MENU_AUDIO);
-        getGame().getMusicPlayer().setVolume(MusicPlayer.MAX_VOLUME, true);
-        getGame().getMusicPlayer().playFromBeginning();
+        getGame().getBackgroundMusic().selectMusic(AssetPaths.Music.MENU_AUDIO);
+        getGame().getBackgroundMusic().setVolume(MusicPlayer.MAX_VOLUME, true);
+        getGame().getBackgroundMusic().playFromBeginning();
     }
 
     private void setContent(Table newContent) {

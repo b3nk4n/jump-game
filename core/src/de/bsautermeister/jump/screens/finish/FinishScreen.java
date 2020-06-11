@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens.finish;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,6 +20,7 @@ import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.finish.model.Person;
 import de.bsautermeister.jump.screens.finish.model.PersonFormation;
 import de.bsautermeister.jump.screens.finish.model.PersonFormationFactory;
+import de.bsautermeister.jump.screens.menu.MenuScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class FinishScreen extends ScreenBase {
@@ -64,6 +66,11 @@ public class FinishScreen extends ScreenBase {
         personFormation.update(delta);
 
         camera.update();
+
+        if (Gdx.input.isTouched()) {
+            getGame().getForegroundMusic().fadeOutStop();
+            setScreen(new MenuScreen(getGame()));
+        }
 
         // draw
         viewport.apply();

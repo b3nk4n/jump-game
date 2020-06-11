@@ -24,12 +24,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
+import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
@@ -65,10 +67,16 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private static final Logger LOG = new Logger(GameController.class.getSimpleName(), Cfg.LOG_LEVEL);
 
+    private final static String[] TENT_SONGS = {
+            AssetPaths.Music.PROSIT_AUDIO,
+            AssetPaths.Music.PROSIT2_AUDIO
+    };
+
     private GameState stateBeforePause;
     private GameState state;
 
-    private final MusicPlayer musicPlayer;
+    private final MusicPlayer backgroundMusic;
+    private final MusicPlayer foregroundMusic;
     private final GameSoundEffects soundEffects;
 
     private TextureAtlas atlas;
@@ -89,7 +97,6 @@ public class GameController  implements BinarySerializable, Disposable {
     private int collectedBeers;
     private int totalBeers;
 
-    private WorldCreator.StartParams start;
     private ObjectMap<String, Enemy> enemies;
     private ObjectMap<String, Item> items;
     private LinkedBlockingQueue<ItemDef> itemsToSpawn;
@@ -216,7 +223,6 @@ public class GameController  implements BinarySerializable, Disposable {
                 killSequelManager.notifyKill();
                 score += killSequelManager.getKillScore();
                 showTextMessage(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
-                return;
             }
         }
 
@@ -284,9 +290,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void hurry() {
-            if (!musicPlayer.isSelected(AssetPaths.Music.HURRY_AUDIO)) {
-                musicPlayer.selectMusic(AssetPaths.Music.HURRY_AUDIO);
-                musicPlayer.playFromBeginning();
+            if (!backgroundMusic.isSelected(AssetPaths.Music.HURRY_AUDIO)) {
+                backgroundMusic.selectMusic(AssetPaths.Music.HURRY_AUDIO);
+                backgroundMusic.playFromBeginning();
             }
         }
 
@@ -300,17 +306,17 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void goalReached() {
-            musicPlayer.setVolume(0f, false);
+            backgroundMusic.setVolume(0f, false);
             soundEffects.successSound.play();
         }
 
         @Override
         public void playerDied() {
-            musicPlayer.setVolume(0.1f, false);
+            backgroundMusic.setVolume(0.1f, false);
             soundEffects.randomSwearingSound().play();
         }
 
-        private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2 / Cfg.PPM;
+        private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2f / Cfg.PPM;
         private float getVolumeBasedOnDistanceToCameraCenter(float otherWorldCenterX) {
             float cameraWorldCenterX = camera.position.x;
             float distanceX = Math.abs(cameraWorldCenterX - otherWorldCenterX);
@@ -334,7 +340,7 @@ public class GameController  implements BinarySerializable, Disposable {
         @Override
         public void quit() {
             LOG.debug("QUIT pressed");
-            musicPlayer.setVolume(0f, false);
+            backgroundMusic.setVolume(0f, false);
             gameIsCanced = true;
             markBackToMenu = true;
         }
@@ -362,7 +368,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private final GameScreenCallbacks screenCallbacks;
 
-    public GameController(GameScreenCallbacks screenCallbacks, MusicPlayer musicPlayer, GameSoundEffects soundEffects,
+    public GameController(GameScreenCallbacks screenCallbacks, GameApp game, GameSoundEffects soundEffects,
                           int level, FileHandle gameToResume) {
         this.level = level;
         this.gameToResume = gameToResume;
@@ -375,7 +381,7 @@ public class GameController  implements BinarySerializable, Disposable {
         platforms = new Array<>();
         coins = new Array<>();
 
-        items = new ObjectMap();
+        items = new ObjectMap<>();
         itemsToSpawn = new LinkedBlockingQueue<>();
 
         activeBoxCoins = new Array<>();
@@ -384,7 +390,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
         killSequelManager = new KillSequelManager();
 
-        this.musicPlayer = musicPlayer;
+        this.backgroundMusic = game.getBackgroundMusic();
+        this.foregroundMusic = game.getForegroundMusic();
 
         camera = new OrthographicCamera();
         viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
@@ -420,7 +427,7 @@ public class GameController  implements BinarySerializable, Disposable {
         activeBoxCoins.clear();
         textMessages.clear();
 
-        start = worldCreator.getStart();
+        WorldCreator.StartParams start = worldCreator.getStart();
         Rectangle goal = worldCreator.getGoal();
         player = new Player(callbacks, world, atlas, start);
 
@@ -442,9 +449,9 @@ public class GameController  implements BinarySerializable, Disposable {
             }
             coins.addAll(worldCreator.createCoins());
 
-            musicPlayer.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
-            musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
-            musicPlayer.playFromBeginning();
+            backgroundMusic.selectMusic(AssetPaths.Music.NORMAL_AUDIO);
+            backgroundMusic.setVolume(MusicPlayer.MAX_VOLUME, true);
+            backgroundMusic.playFromBeginning();
         }
 
         camera.position.set(player.getBody().getPosition(), 0);
@@ -474,7 +481,7 @@ public class GameController  implements BinarySerializable, Disposable {
             map.dispose();
         }
 
-        this.map = mapLoader.load(String.format("maps/level%02d.tmx", level));
+        this.map = mapLoader.load(String.format(Locale.ROOT, "maps/level%02d.tmx", level));
         float mapWidth = map.getProperties().get("width", Integer.class);
         float mapHeight = map.getProperties().get("height", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);
@@ -507,7 +514,7 @@ public class GameController  implements BinarySerializable, Disposable {
         player.getPretzelBullet().update(delta);
 
         tent.setPlayerPosition(player.getWorldCenter());
-        tent.update(delta);
+        updateTent(delta);
 
         updateEnemies(delta);
         updateItems(delta);
@@ -557,6 +564,26 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         postUpdate();
+    }
+
+    private void updateTent(float delta) {
+        tent.update(delta);
+
+        if (tent.isOpen()) {
+            float tentVolume = getTentVolume();
+            if (tentVolume > 0) {
+                foregroundMusic.setVolume(tentVolume, false);
+                if (!foregroundMusic.isPlaying()) {
+                    String randomTentSong = TENT_SONGS[MathUtils.random(TENT_SONGS.length - 1)];
+                    foregroundMusic.selectMusic(randomTentSong);
+                    foregroundMusic.resumeOrPlay();
+                }
+            } else if (foregroundMusic.isPlaying()) {
+                foregroundMusic.setVolume(0f, false);
+            }
+
+            foregroundMusic.update(delta);
+        }
     }
 
     private void updateMunichRation(float delta) {
@@ -910,6 +937,13 @@ public class GameController  implements BinarySerializable, Disposable {
         return result;
     }
 
+    private float getTentVolume() {
+        Vector2 playerPosition = player.getWorldCenter();
+        Vector2 tentPosition = tent.getWorldCenter();
+        float dst2 = Vector2.dst2(playerPosition.x, playerPosition.y, tentPosition.x, tentPosition.y);
+        return MathUtils.clamp(1.11f - (dst2 / 10f), 0f, 1f);
+    }
+
     public void load(FileHandle handle) {
         if (handle.exists()) {
             if (!BinarySerializer.read(this, handle.read())) {
@@ -949,7 +983,8 @@ public class GameController  implements BinarySerializable, Disposable {
         out.writeFloat(gameTime);
         player.write(out);
         out.writeFloat(munichRatio);
-        musicPlayer.write(out);
+        backgroundMusic.write(out);
+        foregroundMusic.write(out);
         killSequelManager.write(out);
         out.writeInt(enemies.size);
         for (Enemy enemy : enemies.values()) {
@@ -987,11 +1022,8 @@ public class GameController  implements BinarySerializable, Disposable {
         gameTime = in.readFloat();
         player.read(in);
         munichRatio = in.readFloat();
-        musicPlayer.selectMusic(player.getTimeToLive() <= Cfg.HURRY_WARNING_TIME ? AssetPaths.Music.HURRY_AUDIO : AssetPaths.Music.NORMAL_AUDIO);
-        musicPlayer.read(in);
-        musicPlayer.setVolume(MusicPlayer.MAX_VOLUME, true);
-        musicPlayer.resumeOrPlay();
-
+        backgroundMusic.read(in);
+        foregroundMusic.read(in);
         killSequelManager.read(in);
         int numEnemies = in.readInt();
         for (int i = 0; i < numEnemies; ++i) {
@@ -1052,7 +1084,6 @@ public class GameController  implements BinarySerializable, Disposable {
     public void dispose() {
         map.dispose();
         world.dispose();
-        tent.dispose();
     }
 
     public float getGameTime() {

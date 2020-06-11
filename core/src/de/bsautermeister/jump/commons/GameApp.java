@@ -15,7 +15,8 @@ public abstract class GameApp implements ApplicationListener {
 
     private TransitionContext transitionContext;
 
-    private MusicPlayer musicPlayer;
+    private MusicPlayer backgroundMusic;
+    private MusicPlayer foregroundMusic;
 
     @Override
     public void create() {
@@ -24,7 +25,8 @@ public abstract class GameApp implements ApplicationListener {
 
         transitionContext = new TransitionContext(batch);
 
-        musicPlayer = new MusicPlayer();
+        backgroundMusic = new MusicPlayer();
+        foregroundMusic = new MusicPlayer();
     }
 
     public void setScreen(ScreenBase screen) {
@@ -43,7 +45,8 @@ public abstract class GameApp implements ApplicationListener {
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
         transitionContext.render(delta);
-        musicPlayer.update(delta);
+        backgroundMusic.update(delta);
+        foregroundMusic.update(delta);
     }
 
     @Override
@@ -54,15 +57,19 @@ public abstract class GameApp implements ApplicationListener {
     @Override
     public void pause() {
         transitionContext.pause();
-        if (musicPlayer.isPlaying()) {
-            musicPlayer.pause();
+        if (backgroundMusic.isPlaying()) {
+            backgroundMusic.pause();
+        }
+        if (foregroundMusic.isPlaying()) {
+            foregroundMusic.pause();
         }
     }
 
     @Override
     public void resume() {
         transitionContext.resume();
-        musicPlayer.resumeOrPlay();
+        backgroundMusic.resumeOrPlay();
+        foregroundMusic.resumeOrPlay();
     }
 
     @Override
@@ -70,7 +77,8 @@ public abstract class GameApp implements ApplicationListener {
         transitionContext.dispose();
         assetManager.dispose();
         batch.dispose();
-        musicPlayer.dispose();
+        backgroundMusic.dispose();
+        foregroundMusic.dispose();
     }
 
     public AssetManager getAssetManager() {
@@ -81,7 +89,11 @@ public abstract class GameApp implements ApplicationListener {
         return batch;
     }
 
-    public MusicPlayer getMusicPlayer() {
-        return musicPlayer;
+    public MusicPlayer getBackgroundMusic() {
+        return backgroundMusic;
+    }
+
+    public MusicPlayer getForegroundMusic() {
+        return foregroundMusic;
     }
 }

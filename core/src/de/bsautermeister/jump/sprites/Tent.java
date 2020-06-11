@@ -20,19 +20,12 @@ import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.effects.SimplePooledEffect;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public class Tent extends Sprite implements BinarySerializable, Disposable {
+public class Tent extends Sprite implements BinarySerializable {
 
     private final TextureAtlas atlas;
     private final float tentWidth;
     private final Rectangle goal;
     private final Vector2 center;
-
-    private final MusicPlayer music;
-
-    private final static String[] SONGS = {
-            AssetPaths.Music.PROSIT_AUDIO,
-            AssetPaths.Music.PROSIT2_AUDIO
-    };
 
     private boolean open;
     private float wabbleTime;
@@ -52,8 +45,6 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
                 tentWidth, getRegionHeight() / Cfg.PPM);
 
         singingEffect = new SimplePooledEffect(AssetPaths.Pfx.MUSIC, atlas, 0.2f / Cfg.PPM);
-
-        music = new MusicPlayer();
     }
 
     public void update(float delta) {
@@ -63,18 +54,6 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
             float heightFactor  = 1.0f - (0.02f + MathUtils.sin(3f * wabbleTime) * 0.02f);
             setSize(tentWidth, getRegionHeight() * heightFactor / Cfg.PPM);
 
-            float tentVolume = getTentVolume();
-            if (tentVolume > 0) {
-                music.setVolume(tentVolume, false);
-                if (!music.isPlaying()) {
-                    music.selectMusic(pickRandomSong());
-                    music.resumeOrPlay();
-                }
-            } else if (music.isPlaying()) {
-                music.setVolume(0f, false);
-            }
-
-            music.update(delta);
             singingEffect.update(delta);
         }
     }
@@ -84,15 +63,6 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
         super.draw(batch);
 
         singingEffect.draw(batch);
-    }
-
-    private String pickRandomSong() {
-        return SONGS[MathUtils.random(SONGS.length - 1)];
-    }
-
-    private float getTentVolume() {
-        float dst2 = Vector2.dst2(playerPosition.x, playerPosition.y, center.x, center.y);
-        return MathUtils.clamp(1.11f - (dst2 / 10f), 0f, 1f);
     }
 
     public void setPlayerPosition(Vector2 playerPosition) {
@@ -110,27 +80,27 @@ public class Tent extends Sprite implements BinarySerializable, Disposable {
         return open && Intersector.overlaps(goal, player.getBoundingRectangle()) && player.getBody().getLinearVelocity().len2() < 0.001f;
     }
 
+    public Vector2 getWorldCenter() {
+        return center;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeBoolean(open);
         out.writeFloat(wabbleTime);
-        music.write(out);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         open = in.readBoolean();
         wabbleTime = in.readFloat();
-        music.read(in);
 
         if (open) {
             open();
         }
-    }
-
-    @Override
-    public void dispose() {
-        music.stop();
-        music.dispose();
     }
 }
