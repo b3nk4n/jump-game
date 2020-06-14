@@ -63,6 +63,17 @@ public class RegionNames {
     public static String PERSON_4 = "person4_beer_victory";
     public static String PERSON_5 = "person5_beer_victory";
     public static String PERSON_6 = "person6_beer_victory";
+    public static String PERSON_7 = "person7_beer_victory";
+    public static String PERSON_8 = "person8_beer_victory";
+    public static String PERSON_9 = "person9_beer_victory";
+    public static String PERSON_10 = "person10_beer_victory";
+    public static String GIRL_1 = "girl1_beer_victory";
+    public static String GIRL_2 = "girl2_beer_victory";
+    public static String GIRL_3 = "girl3_beer_victory";
+    public static String GIRL_4 = "girl4_beer_victory";
+    public static String GIRL_5 = "girl5_beer_victory";
+    public static String GIRL_6 = "girl6_beer_victory";
+    public static String GIRLFRIEND = "girlfriend_beer_victory";
 
     public static String TENT_INSIDE_BACKGROUND = "tent_inside";
     public static String TENT_DECORATION_BACKGROUND = "tent_inside_decoration";

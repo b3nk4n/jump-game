@@ -3,7 +3,7 @@ package de.bsautermeister.jump.screens.finish.model;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Person {
-    public static final int VARIATIONS = 7;
+    public static final int VARIATIONS = 10 + 6 + 2;
 
     public final boolean isPlaceholder;
     private int characterIdx;
