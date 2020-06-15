@@ -34,6 +34,7 @@ public class FinishScreen extends ScreenBase {
     private TextureRegion tentInsideDecoration;
     private TextureRegion tableRow;
 
+
     private Animation<TextureRegion>[] personAnimations;
 
     private PersonFormation personFormation;
@@ -47,7 +48,7 @@ public class FinishScreen extends ScreenBase {
         camera.setToOrtho(false, Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         viewport = new StretchViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT, camera);
 
-        personFormation = PersonFormationFactory.createSwingRowFormation();
+        personFormation = PersonFormationFactory.createDiagonalLaolaCheersFormation();
     }
 
     @Override
@@ -60,39 +61,39 @@ public class FinishScreen extends ScreenBase {
         personAnimations[0] = new Animation<TextureRegion>(0.05f,
                 atlas.findRegions(RegionNames.BIG_PLAYER_BEER_VICTORY), Animation.PlayMode.NORMAL);
         personAnimations[1] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_1), Animation.PlayMode.NORMAL);
-        personAnimations[2] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_2), Animation.PlayMode.NORMAL);
-        personAnimations[3] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_3), Animation.PlayMode.NORMAL);
-        personAnimations[4] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_4), Animation.PlayMode.NORMAL);
-        personAnimations[5] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_5), Animation.PlayMode.NORMAL);
-        personAnimations[6] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_6), Animation.PlayMode.NORMAL);
-        personAnimations[7] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_7), Animation.PlayMode.NORMAL);
-        personAnimations[8] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_8), Animation.PlayMode.NORMAL);
-        personAnimations[9] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_9), Animation.PlayMode.NORMAL);
-        personAnimations[10] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.PERSON_10), Animation.PlayMode.NORMAL);
-        personAnimations[11] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.GIRL_1), Animation.PlayMode.NORMAL);
-        personAnimations[12] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.GIRL_2), Animation.PlayMode.NORMAL);
-        personAnimations[13] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.GIRL_3), Animation.PlayMode.NORMAL);
-        personAnimations[14] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.GIRL_4), Animation.PlayMode.NORMAL);
-        personAnimations[15] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.GIRL_5), Animation.PlayMode.NORMAL);
-        personAnimations[16] = new Animation<TextureRegion>(0.05f,
-                atlas.findRegions(RegionNames.GIRL_6), Animation.PlayMode.NORMAL);
-        personAnimations[17] = new Animation<TextureRegion>(0.05f,
                 atlas.findRegions(RegionNames.GIRLFRIEND), Animation.PlayMode.NORMAL);
+        personAnimations[2] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_1), Animation.PlayMode.NORMAL);
+        personAnimations[3] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_2), Animation.PlayMode.NORMAL);
+        personAnimations[4] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_3), Animation.PlayMode.NORMAL);
+        personAnimations[5] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_4), Animation.PlayMode.NORMAL);
+        personAnimations[6] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_5), Animation.PlayMode.NORMAL);
+        personAnimations[7] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_6), Animation.PlayMode.NORMAL);
+        personAnimations[8] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_7), Animation.PlayMode.NORMAL);
+        personAnimations[9] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_8), Animation.PlayMode.NORMAL);
+        personAnimations[10] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_9), Animation.PlayMode.NORMAL);
+        personAnimations[11] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.PERSON_10), Animation.PlayMode.NORMAL);
+        personAnimations[12] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.GIRL_1), Animation.PlayMode.NORMAL);
+        personAnimations[13] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.GIRL_2), Animation.PlayMode.NORMAL);
+        personAnimations[14] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.GIRL_3), Animation.PlayMode.NORMAL);
+        personAnimations[15] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.GIRL_4), Animation.PlayMode.NORMAL);
+        personAnimations[16] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.GIRL_5), Animation.PlayMode.NORMAL);
+        personAnimations[17] = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.GIRL_6), Animation.PlayMode.NORMAL);
     }
 
     @Override
