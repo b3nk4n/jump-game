@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -213,7 +214,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 0.1f, Animation.PlayMode.LOOP_PINGPONG);
         bigPlayerTurn = createTextureArray(RegionNames.BIG_PLAYER_TURN_TPL, CHARACTER_LEVELS);
         bigPlayerJump = createAnimationArray(RegionNames.BIG_PLAYER_JUMP_TPL, CHARACTER_LEVELS,
-                0.125f, Animation.PlayMode.NORMAL);
+                0.1f, Animation.PlayMode.NORMAL);
         bigPlayerCrouch = createTextureArray(RegionNames.BIG_PLAYER_CROUCH_TPL, CHARACTER_LEVELS);
         bigPlayerDrown = createAnimationArray(RegionNames.BIG_PLAYER_DROWN_TPL, CHARACTER_LEVELS,
                 0.25f, Animation.PlayMode.LOOP);
@@ -262,7 +263,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         updateTextureRegions();
 
         // set texture bounds always at the bottom of the body
-        float yOffset = 2f / Cfg.PPM; // that the player sprite's feed are not stuck in the ground
+        float yOffset = 0f;//2f / Cfg.PPM; // that the player sprite's feed are not stuck in the ground
         float leftX = body.getPosition().x - getWidth() / 2;
         float bottomY = body.getPosition().y - 8f / Cfg.PPM + yOffset;
         float textureWidth = getRegionWidth() / Cfg.PPM;
@@ -546,7 +547,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(fixtureDef, shape, normalFilterMask);
-        createFeetFixture(fixtureDef, 9.33f, -6.0f);
+        createFeetFixture(fixtureDef, 6f, -6.0f);
         createHeadSensorFixture(fixtureDef, 4f, 5.6f);
         createGroundSensorFixture(fixtureDef, 9f, -6.5f);
     }
@@ -565,9 +566,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         createBodyFixture(fixtureDef, shape, normalFilterMask);
         shape.setPosition(new Vector2(0, 10f / Cfg.PPM));
         createBodyFixture(fixtureDef, shape, normalFilterMask);
-        createFeetFixture(fixtureDef, 10f, -6f);
+        createFeetFixture(fixtureDef, 6f, -6f);
         createHeadSensorFixture(fixtureDef, 4f, 15.6f);
-        createGroundSensorFixture(fixtureDef, 9.33f, -6.5f);
+        createGroundSensorFixture(fixtureDef, 9.0f, -6.5f);
     }
 
     private void createBodyFixture(FixtureDef fixtureDef, Shape shape, boolean normalFilterMask) {
@@ -588,7 +589,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         feetShape.set(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
         fixtureDef.shape = feetShape;
-        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Bits.PLAYER_FEET;
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.PLATFORM |

@@ -186,7 +186,8 @@ public class WorldContactListener implements ContactListener {
         PretzelBullet pretzelBullet;
         switch (collisionDef) {
             case Bits.PLAYER | Bits.PLATFORM:
-                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER);
+            case Bits.PLAYER_FEET | Bits.PLATFORM:
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER | Bits.PLAYER_FEET);
                 platform = (Platform) resolveUserData(fixtureA, fixtureB, Bits.PLATFORM);
 
                 if (player.hasLastJumpThroughPlatformId()) {
