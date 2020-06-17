@@ -9,7 +9,7 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 public class GrilledChickenItem extends JumpingItem {
 
     public GrilledChickenItem(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
-        super(callbacks, world, atlas, RegionNames.GRILLED_CHICKEN, x, y);
+        super(callbacks, world, atlas, RegionNames.GRILLED_CHICKEN, x, y, false);
     }
 
     @Override

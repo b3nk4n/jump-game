@@ -126,25 +126,25 @@ public class Brick extends InteractiveTileObject {
         fragment0.init(atlas, 0,
                 getBounds().getPosition(pos)
                         .add(getBounds().width / 4f, getBounds().height * 3f / 4f),
-                velocity.set(-0.33f, 1.0f), 180f);
+                velocity.set(-1f, 3.0f), 180f);
         activeFragments.add(fragment0);
         BrickFragment fragment1 = fragmentPool.obtain();
         fragment1.init(atlas, 1,
                 getBounds().getPosition(pos)
                         .add(getBounds().width * 3f / 4f, getBounds().height * 3 / 4f),
-                velocity.set(0.33f, 1.0f), -180f);
+                velocity.set(1f, 3.0f), -180f);
         activeFragments.add(fragment1);
         BrickFragment fragment2 = fragmentPool.obtain();
         fragment2.init(atlas, 2,
                 getBounds().getPosition(pos)
                         .add(getBounds().width / 4f, getBounds().height / 4f),
-                velocity.set(-0.33f, 0.5f), 180f);
+                velocity.set(-1f, 1.5f), 180f);
         activeFragments.add(fragment2);
         BrickFragment fragment3 = fragmentPool.obtain();
         fragment3.init(atlas, 3,
                 getBounds().getPosition(pos)
                         .add(getBounds().width *3f / 4f, getBounds().height / 4f),
-                velocity.set(0.33f, 0.5f), -180f);
+                velocity.set(1f, 1.5f), -180f);
         activeFragments.add(fragment3);
     }
 

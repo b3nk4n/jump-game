@@ -24,7 +24,7 @@ import de.bsautermeister.jump.physics.Bits;
 
 public class Fish extends Enemy implements Drownable {
     private static final float WAIT_TIME = 3f;
-    private static final float JUMP_POWER = 3f;
+    private static final float JUMP_POWER = 15f;
 
     public enum State {
         WAITING, JUMPING, DROWNING

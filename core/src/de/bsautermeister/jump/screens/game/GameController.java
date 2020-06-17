@@ -409,7 +409,7 @@ public class GameController  implements BinarySerializable, Disposable {
             world.dispose();
         }
 
-        this.world = new World(new Vector2(0,-9.81f), true);
+        this.world = new World(new Vector2(0,Cfg.GRAVITY), true);
         this.world.setContactListener(new WorldContactListener());
 
         killSequelManager.reset();

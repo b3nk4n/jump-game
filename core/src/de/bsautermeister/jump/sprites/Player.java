@@ -18,7 +18,6 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -263,9 +262,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         updateTextureRegions();
 
         // set texture bounds always at the bottom of the body
-        float yOffset = 0f;//2f / Cfg.PPM; // that the player sprite's feed are not stuck in the ground
         float leftX = body.getPosition().x - getWidth() / 2;
-        float bottomY = body.getPosition().y - 8f / Cfg.PPM + yOffset;
+        float bottomY = body.getPosition().y - 6.25f / Cfg.PPM;
         float textureWidth = getRegionWidth() / Cfg.PPM;
         float textureHeight = getRegionHeight() / Cfg.PPM;
         setBounds(leftX, bottomY, textureWidth, textureHeight);
@@ -295,7 +293,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             } else if (!deadAnimationStarted) {
                 getBody().setActive(true);
                 if (!isOutOfGame()) {
-                    getBody().applyLinearImpulse(new Vector2(0, 4.5f), getBody().getWorldCenter(), true);
+                    getBody().applyLinearImpulse(new Vector2(0, 10f), getBody().getWorldCenter(), true);
                 }
                 deadAnimationStarted = true;
             }
@@ -351,24 +349,24 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
 
         if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
-            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, 19.5f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.05f;
             callbacks.jump();
             return;
         }
-        if (right && body.getLinearVelocity().x <= 2 && !down) {
-            body.applyForceToCenter(new Vector2(7.5f, 0), true);
+        if (right && body.getLinearVelocity().x <= Cfg.MAX_HORIZONTAL_SPEED && !down) {
+            body.applyForceToCenter(new Vector2(25f, 0), true);
         }
-        if (left && body.getLinearVelocity().x >= -2 && !down) {
-            body.applyForceToCenter(new Vector2(-7.5f, 0), true);
+        if (left && body.getLinearVelocity().x >= -Cfg.MAX_HORIZONTAL_SPEED && !down) {
+            body.applyForceToCenter(new Vector2(-25f, 0), true);
         }
-        if ((!left && !right && state.is(State.JUMPING))) {
+        if ((!left && !right/* && state.is(State.JUMPING)*/)) {
             // horizontally decelerate fast, but don't stop immediately
-            body.applyForceToCenter(new Vector2(-5 * relativeBodyVelocity.x, 0), true);
+            body.applyForceToCenter(new Vector2(-6 * relativeBodyVelocity.x, 0), true);
         }
         if (down) {
-            body.applyForceToCenter(new Vector2(0f, -2f), true);
+            body.applyForceToCenter(new Vector2(0f, -3f), true);
         }
 
         if (!touchesGround()) {
@@ -543,7 +541,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 0.8f;
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(fixtureDef, shape, normalFilterMask);
@@ -560,7 +557,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 0.8f;
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(fixtureDef, shape, normalFilterMask);
@@ -855,7 +851,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void pumpUp() {
-        body.setLinearVelocity(getLinearVelocity().x, 3f);
+        body.setLinearVelocity(getLinearVelocity().x, 10f);
     }
 
     public void setCharacterProgress(float characterProgress) {

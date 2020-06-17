@@ -88,7 +88,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
 
         if (applyPush) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x / 2, 0);
-            getBody().applyLinearImpulse(new Vector2(0, 3f), getBody().getWorldCenter(), true);
+            getBody().applyLinearImpulse(new Vector2(0, 8f), getBody().getWorldCenter(), true);
         }
     }
 

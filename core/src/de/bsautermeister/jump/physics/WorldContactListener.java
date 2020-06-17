@@ -41,8 +41,9 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.ITEM_BOX | Bits.BRICK);
                 tileObject.onHeadHit(player);
                 break;
+            case Bits.ENEMY_HEAD | Bits.PLAYER:
             case Bits.ENEMY_HEAD | Bits.PLAYER_FEET:
-                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET | Bits.PLAYER);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
                 if (player.getBody().getLinearVelocity().y < 0.1) {
                     enemy.onHeadHit(player);
@@ -194,7 +195,8 @@ public class WorldContactListener implements ContactListener {
                     if (platform.getId().equals(player.getLastJumpThroughPlatformId())) {
                         contact.setEnabled(false);
                     }
-                } else if (player.getVelocityRelativeToGround().y > 0.5) {
+                } else if (player.getVelocityRelativeToGround().y > 3f) { // not zero, because there is some positive impulse when landing on the moving platform
+                    System.out.println(player.getVelocityRelativeToGround().y);
                     player.setLastJumpThroughPlatformId(platform.getId());
                     contact.setEnabled(false);
                 }

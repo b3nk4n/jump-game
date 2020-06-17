@@ -48,7 +48,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
         body = defineBody(posX + getWidth() / 2, posY + getHeight() / 2);
 
         // start with an offset, so that not all coins have the same animation frame cycle
-        gameTime = 1000f - 0.75f * posX + 0.75f * posY;
+        gameTime = 100f - 0.0075f * posX + 0.0075f * posY;
     }
 
     private void initAnimation(TextureAtlas atlas) {

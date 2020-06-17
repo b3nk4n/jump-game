@@ -27,7 +27,7 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Hedgehog extends Enemy implements Drownable {
-    private static final float KICK_SPEED = 2f;
+    private static final float KICK_SPEED = 8f;
     private static final float ROTATION_SPEED = 540f;
     private static final float WAIT_FOR_UNROLL_TIME = 5f;
 
@@ -44,7 +44,7 @@ public class Hedgehog extends Enemy implements Drownable {
     private final Animation<TextureRegion> unrollAnimation;
     private final TextureRegion rollingTexture;
 
-    private static final float SPEED_VALUE = 0.6f;
+    private static final float SPEED_VALUE = 3.0f;
 
     private boolean previousDirectionLeft;
 
@@ -107,7 +107,7 @@ public class Hedgehog extends Enemy implements Drownable {
         }
 
         setPosition(getBody().getPosition().x - getWidth() / 2,
-                getBody().getPosition().y - 7 / Cfg.PPM);
+                getBody().getPosition().y - 6 / Cfg.PPM);
         setRegion(getFrame());
 
         if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
@@ -190,10 +190,10 @@ public class Hedgehog extends Enemy implements Drownable {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-3.5f, 12).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(3.5f, 12).scl(1 / Cfg.PPM);
-        vertices[2] = new Vector2(-2.5f, 6).scl(1 / Cfg.PPM);
-        vertices[3] = new Vector2(2.5f, 6).scl(1 / Cfg.PPM);
+        vertices[0] = new Vector2(-3.5f, 10).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(3.5f, 10).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-2.5f, 4).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(2.5f, 4).scl(1 / Cfg.PPM);
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;

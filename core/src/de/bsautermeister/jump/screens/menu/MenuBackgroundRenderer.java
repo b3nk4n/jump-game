@@ -49,7 +49,7 @@ public class MenuBackgroundRenderer implements Disposable {
     public MenuBackgroundRenderer(AssetManager assetManager, SpriteBatch batch, TextureAtlas atlas) {
         this.batch = batch;
         camera = new OrthographicCamera();
-        viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
+        viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
 
@@ -72,7 +72,7 @@ public class MenuBackgroundRenderer implements Disposable {
 
         camera.position.x = viewport.getWorldWidth() / 2 + Cfg.BLOCK_SIZE_PPM;
         camera.position.y = viewport.getWorldHeight() / 2 + interpolation.apply(
-                3.66f, 2 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / 3, 0f, 1f));
+                32f, 2 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / 3, 0f, 1f));
 
         snorer.update(delta);
     }

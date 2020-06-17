@@ -211,9 +211,9 @@ public class GameRenderer implements Disposable {
 
     private void renderBackground(SpriteBatch batch) {
         float munichRatio = controller.getMunichRatio();
-        float munichOffset = Interpolation.smooth.apply(1.5f, 0f, munichRatio);
-        float forestOffset = Interpolation.smooth.apply(0f, 1.0f, munichRatio);
-        float grassOffset = Interpolation.smooth.apply(0f, -0.25f, munichRatio);
+        float munichOffset = Interpolation.smooth.apply(1.5f * 6.25f, 0f, munichRatio);
+        float forestOffset = Interpolation.smooth.apply(0f, 1.0f * 6.25f, munichRatio);
+        float grassOffset = Interpolation.smooth.apply(0f, -0.25f * 6.25f, munichRatio);
 
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);

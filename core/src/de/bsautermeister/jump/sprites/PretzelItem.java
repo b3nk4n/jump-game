@@ -9,7 +9,7 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 public class PretzelItem extends JumpingItem {
 
     public PretzelItem(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
-        super(callbacks, world, atlas, RegionNames.PRETZEL, x, y);
+        super(callbacks, world, atlas, RegionNames.PRETZEL, x, y, false);
     }
 
     @Override

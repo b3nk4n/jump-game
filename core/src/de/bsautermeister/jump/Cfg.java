@@ -9,7 +9,7 @@ public interface Cfg {
     float HUD_WIDTH = 1280; // still world units! (only loading screen)
     float HUD_HEIGHT = 720; // still world units! (only loading screen)
 
-    float PPM = 100f;
+    float PPM = 16f;
 
     int BLOCK_SIZE = 16;
     int BLOCKS_X = 25;
@@ -34,12 +34,17 @@ public interface Cfg {
     String COIN_SCORE_STRING = String.valueOf(COIN_SCORE);
 
     float ENEMY_WAKE_UP_DISTANCE2 = (float)Math.pow(Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM, 2);
-    float MAX_FALLING_SPEED = -4f;
+    float MAX_FALLING_SPEED = -20f;
+    float MAX_HORIZONTAL_SPEED = 8f;
 
     float HURRY_WARNING_TIME = 60f;
 
     float MIN_LANDING_HEIGHT = (BLOCK_SIZE / 2) / PPM;
 
-    float MUNICH_START_THRESHOLD_X = 10f;
-    float MUNICH_FULL_THRESHOLD_X = 3.33f;
+    float MUNICH_START_THRESHOLD_X = 10f * 6.25f;
+    float MUNICH_FULL_THRESHOLD_X = 3.33f * 6.25f;
+
+    float GROUND_FRICTION = 0.1f;
+
+    float GRAVITY = -4 * 9.81f;
 }

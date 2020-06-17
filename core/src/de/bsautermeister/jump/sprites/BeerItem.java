@@ -10,7 +10,7 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 public class BeerItem extends JumpingItem {
 
     public BeerItem(GameCallbacks callbacks, World world, TextureAtlas atlas, float x, float y) {
-        super(callbacks, world, atlas, RegionNames.BEER, x, y);
+        super(callbacks, world, atlas, RegionNames.BEER, x, y, true);
         setRegion(atlas.findRegion(RegionNames.BEER), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
     }
 

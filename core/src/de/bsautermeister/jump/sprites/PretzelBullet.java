@@ -32,7 +32,7 @@ import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class PretzelBullet extends Sprite implements BinarySerializable {
 
-    private static final float VELOCITY_X = 2.25f;
+    private static final float VELOCITY_X = 10f;
 
     private final GameCallbacks callbacks;
     private final World world;
@@ -122,7 +122,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
 
             if (previousVelocityY < 0 && body.getLinearVelocity().y >= 0) {
                 // started to jump up
-                body.setLinearVelocity(body.getLinearVelocity().x, 1.75f);
+                body.setLinearVelocity(body.getLinearVelocity().x, 9f);
             }
 
             body.setLinearVelocity(rightDirection ? VELOCITY_X : -VELOCITY_X, body.getLinearVelocity().y);

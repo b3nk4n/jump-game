@@ -28,9 +28,9 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Platform extends Sprite implements BinarySerializable {
-    private static final float SPEED = 0.5f;
+    private static final float SPEED = 2.5f;
     private static final float SHAKE_TIME = 0.5f;
-    private static final Vector2 FALLING_VELOCITY = new Vector2(0, -9.81f);
+    private static final Vector2 FALLING_VELOCITY = new Vector2(0, Cfg.GRAVITY);
 
     private enum State {
         MOVING, BREAKING, FALLING
@@ -120,6 +120,7 @@ public class Platform extends Sprite implements BinarySerializable {
                 -bounds.getWidth() / 2, -bounds.getHeight() / 2 + cornerWidth,
         });
         fixtureDef.shape = shape;
+        fixtureDef.friction = Cfg.GROUND_FRICTION;
         fixtureDef.filter.categoryBits = Bits.PLATFORM;
         fixtureDef.filter.maskBits = Bits.PLAYER |
                 Bits.PLAYER_GROUND |

@@ -24,11 +24,14 @@ import de.bsautermeister.jump.tools.GameTimer;
 public abstract class JumpingItem extends Item {
 
     private GameTimer impulsTimer;
+    private boolean doJump;
 
-    public JumpingItem(GameCallbacks callbacks, World world, TextureAtlas atlas, String regionName, float x, float y) {
+    public JumpingItem(GameCallbacks callbacks, World world, TextureAtlas atlas, String regionName, float x, float y,
+                       boolean doJump) {
         super(callbacks, world, x, y);
+        this.doJump = doJump;
         setRegion(atlas.findRegion(regionName), 0, 0, Cfg.BLOCK_SIZE, Cfg.BLOCK_SIZE);
-        impulsTimer = new GameTimer(3f);
+        impulsTimer = new GameTimer(5f);
         state.setStateCallback(new GameObjectState.StateCallback<State>() {
             @Override
             public void changed(State previousState, State newState) {
@@ -47,7 +50,6 @@ public abstract class JumpingItem extends Item {
         Body body = getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.restitution = 0.66f;
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / Cfg.PPM);
         fixtureDef.filter.categoryBits = Bits.ITEM;
@@ -79,12 +81,14 @@ public abstract class JumpingItem extends Item {
 
         if (state.is(State.SPAWNED)) {
             setPosition(getBody().getPosition().x - getWidth() / 2,
-                    getBody().getPosition().y - getHeight() / 2 + 1.33f / Cfg.PPM);
+                    getBody().getPosition().y - getHeight() / 2 + 1.75f / Cfg.PPM);
 
-            impulsTimer.update(delta);
-            if (impulsTimer.isFinished()) {
-                impulsTimer.restart();
-                getBody().setLinearVelocity(0f, 2f);
+            if (doJump) {
+                impulsTimer.update(delta);
+                if (impulsTimer.isFinished()) {
+                    impulsTimer.restart();
+                    getBody().setLinearVelocity(0f, 6f);
+                }
             }
         }
     }
@@ -93,11 +97,13 @@ public abstract class JumpingItem extends Item {
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         impulsTimer.write(out);
+        out.writeBoolean(doJump);
     }
 
     @Override
     public void read(DataInputStream in) throws IOException {
         super.read(in);
         impulsTimer.read(in);
+        doJump = in.readBoolean();
     }
 }

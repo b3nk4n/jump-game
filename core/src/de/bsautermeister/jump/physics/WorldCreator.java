@@ -118,6 +118,7 @@ public class WorldCreator {
         shape.setAsBox(bounds.getWidth() / 2 / Cfg.PPM,
                 bounds.getHeight() / 2 / Cfg.PPM);
         fixtureDef.shape = shape;
+        fixtureDef.friction = Cfg.GROUND_FRICTION;
         fixtureDef.filter.categoryBits = categoryBit;
         fixtureDef.isSensor = asSensor;
         Fixture fixture = body.createFixture(fixtureDef);

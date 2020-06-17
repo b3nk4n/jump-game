@@ -43,7 +43,7 @@ public abstract class Fragment extends Sprite implements Pool.Poolable, BinarySe
     }
 
     public void update(float delta) {
-        velocity.set(velocity.x * 0.99f, velocity.y - 0.05f);
+        velocity.set(velocity.x * 0.99f, velocity.y - 0.2f);
         setPosition(getX() + velocity.x * delta, getY() + velocity.y * delta);
         setRotation(getRotation() + rotationSpeed * delta);
 

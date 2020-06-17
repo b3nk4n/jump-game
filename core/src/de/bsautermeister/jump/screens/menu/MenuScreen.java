@@ -17,7 +17,6 @@ import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
-import de.bsautermeister.jump.screens.finish.FinishScreen;
 import de.bsautermeister.jump.screens.game.GameScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -99,8 +98,7 @@ public class MenuScreen extends ScreenBase {
 
             @Override
             public void levelSelected(int absoluteLevel) {
-                //setScreen(new GameScreen(getGame(), absoluteLevel));
-                setScreen(new FinishScreen(getGame()));
+                setScreen(new GameScreen(getGame(), absoluteLevel));
             }
         });
     }

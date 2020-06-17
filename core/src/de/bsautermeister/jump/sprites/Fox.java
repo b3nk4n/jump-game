@@ -26,7 +26,7 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class Fox extends Enemy implements Drownable {
-    private static final float SPEED = 0.8f;
+    private static final float SPEED = 4.0f;
 
     private static final int NORMAL_IDX = 0;
     private static final int ANGRY_IDX = 1;
@@ -77,7 +77,7 @@ public class Fox extends Enemy implements Drownable {
                 getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
             }
 
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
+            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
             setRegion(getFrame());
 
             if (state.is(State.STANDING) && state.timer() > 2f) {
@@ -150,7 +150,6 @@ public class Fox extends Enemy implements Drownable {
         Body body = getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = 0.8f;
         CircleShape shape = new CircleShape();
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.filter.categoryBits = Bits.ENEMY;
@@ -170,10 +169,10 @@ public class Fox extends Enemy implements Drownable {
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-3.5f, 12).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(3.5f, 12).scl(1 / Cfg.PPM);
-        vertices[2] = new Vector2(-2.5f, 6).scl(1 / Cfg.PPM);
-        vertices[3] = new Vector2(2.5f, 6).scl(1 / Cfg.PPM);
+        vertices[0] = new Vector2(-3.5f, 10).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(3.5f, 10).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-2.5f, 4).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(2.5f, 4).scl(1 / Cfg.PPM);
         headShape.set(vertices);
 
         fixtureDef.shape = headShape;

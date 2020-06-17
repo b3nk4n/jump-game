@@ -23,7 +23,7 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
 
 public class DrunkenGuy extends Enemy {
-    private static final float MOVE_SPEED = 0.25f;
+    private static final float MOVE_SPEED = 1.5f;
     private static final float HIDDEN_TIME = 2f;
     private static final float WAIT_TIME = 1.5f;
 
@@ -63,7 +63,7 @@ public class DrunkenGuy extends Enemy {
 
         state.upate(delta);
         setPosition(getBody().getPosition().x - getWidth() / 2,
-                getBody().getPosition().y - Cfg.BLOCK_SIZE * 0.775f / Cfg.PPM);
+                getBody().getPosition().y - Cfg.BLOCK_SIZE * 0.75f / Cfg.PPM);
         setRegion(animation.getKeyFrame(peekTime));
 
         if (state.is(State.KILLED)) {
