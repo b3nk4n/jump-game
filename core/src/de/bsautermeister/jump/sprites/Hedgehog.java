@@ -53,9 +53,9 @@ public class Hedgehog extends Enemy implements Drownable {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         walkAnimation = new Animation<TextureRegion>(0.05f,
                 atlas.findRegions(RegionNames.HEDGEHOG_WALK), Animation.PlayMode.LOOP);
-        rollAnimation = new Animation<TextureRegion>(0.33f,
+        rollAnimation = new Animation<TextureRegion>(0.1f,
                 atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
-        unrollAnimation = new Animation<TextureRegion>(0.33f,
+        unrollAnimation = new Animation<TextureRegion>(0.2f,
                 atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
         rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLL, 2);
 
@@ -119,7 +119,7 @@ public class Hedgehog extends Enemy implements Drownable {
                 getBody().getPosition().y - 6 / Cfg.PPM);
         setRegion(getFrame());
 
-        if (state.is(State.UNROLL) && state.timer() > 1f) {
+        if (state.is(State.UNROLL) && state.timer() > 0.66f) {
             state.set(State.WALKING);
             speed = previousDirectionLeft ? -SPEED_VALUE : SPEED_VALUE;
         }
@@ -148,7 +148,7 @@ public class Hedgehog extends Enemy implements Drownable {
                 break;
         }
 
-        boolean isLeft = speed < 0 || speed == 0 && previousDirectionLeft;
+        boolean isLeft = isLeftDirection();
 
         if (!isLeft && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
@@ -161,6 +161,10 @@ public class Hedgehog extends Enemy implements Drownable {
         }
 
         return textureRegion;
+    }
+
+    private boolean isLeftDirection() {
+        return speed < 0 || speed == 0 && previousDirectionLeft;
     }
 
     @Override
@@ -237,10 +241,13 @@ public class Hedgehog extends Enemy implements Drownable {
     }
 
     private void stomp() {
+        boolean wasWalking = state.is(State.WALKING);
         state.set(State.ROLL);
 
-        // skip roll animation, when rolling hedgehog is stopped
-        state.setTimer(0.5f);
+        if (!wasWalking) {
+            // skip roll animation, when rolling hedgehog is stopped
+            state.setTimer(1f);
+        }
 
         previousDirectionLeft = speed <= 0;
         speed = 0;
