@@ -100,6 +100,15 @@ public class Hedgehog extends Enemy implements Drownable {
             if (state.is(State.ROLLING)) {
                 rotate(delta * (speed < 0 ? ROTATION_SPEED : -ROTATION_SPEED));
             }
+
+            if (state.is(State.ROLL) || state.is(State.UNROLL) && speed == 0) {
+                // ensure speed is zero, even after other enemy collision
+                getBody().setLinearVelocity(Vector2.Zero);
+            }
+
+            if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
+                state.set(State.UNROLL);
+            }
         }
 
         if (!state.is(State.ROLLING)) {
@@ -110,10 +119,6 @@ public class Hedgehog extends Enemy implements Drownable {
                 getBody().getPosition().y - 6 / Cfg.PPM);
         setRegion(getFrame());
 
-        if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
-            state.set(State.UNROLL);
-        }
-
         if (state.is(State.UNROLL) && state.timer() > 1f) {
             state.set(State.WALKING);
             speed = previousDirectionLeft ? -SPEED_VALUE : SPEED_VALUE;
@@ -121,11 +126,6 @@ public class Hedgehog extends Enemy implements Drownable {
 
         if (isDrowning()) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
-        }
-
-        if (state.is(State.ROLL) || state.is(State.UNROLL) && speed == 0) {
-            // ensure speed is zero, even after other enemy collision
-            getBody().setLinearVelocity(Vector2.Zero);
         }
     }
 

@@ -205,7 +205,8 @@ public class Fox extends Enemy implements Drownable {
         if (player.isDead() || player.isInvincible()) {
             return;
         }
-
+        Vector2 velocity = getBody().getLinearVelocity();
+        getBody().setLinearVelocity(velocity.x * 0.5f, velocity.y);
         stomp();
     }
 
