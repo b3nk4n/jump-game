@@ -42,9 +42,9 @@ public class AboutContent extends Table {
 
     private void updateLabels(CreditEntry entry) {
         creditContainer.clearChildren();
-        creditContainer.add(new Label(entry.title, skin)).row();
+        creditContainer.add(new Label(entry.title, skin, Styles.Label.XXLARGE)).row();
         for (String line : entry.lines) {
-            creditContainer.add(new Label(line, skin, Styles.Label.SMALL)).row();
+            creditContainer.add(new Label(line, skin, Styles.Label.LARGE)).row();
         }
         creditContainer.pack();
         creditContainer.addAction(

@@ -9,14 +9,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public interface AssetDescriptors {
 
     interface Fonts {
-        AssetDescriptor<BitmapFont> MARIO12 =
-                new AssetDescriptor<>(AssetPaths.Fonts.MARIO12, BitmapFont.class);
-        AssetDescriptor<BitmapFont> MARIO18 =
-                new AssetDescriptor<>(AssetPaths.Fonts.MARIO18, BitmapFont.class);
-        AssetDescriptor<BitmapFont> MARIO24 =
-                new AssetDescriptor<>(AssetPaths.Fonts.MARIO24, BitmapFont.class);
-        AssetDescriptor<BitmapFont> MARIO32 =
-                new AssetDescriptor<>(AssetPaths.Fonts.MARIO32, BitmapFont.class);
+        AssetDescriptor<BitmapFont> S =
+                new AssetDescriptor<>(AssetPaths.Fonts.S, BitmapFont.class);
+        AssetDescriptor<BitmapFont> M =
+                new AssetDescriptor<>(AssetPaths.Fonts.M, BitmapFont.class);
+        AssetDescriptor<BitmapFont> L =
+                new AssetDescriptor<>(AssetPaths.Fonts.L, BitmapFont.class);
+        AssetDescriptor<BitmapFont> XL =
+                new AssetDescriptor<>(AssetPaths.Fonts.XL, BitmapFont.class);
+        AssetDescriptor<BitmapFont> XXL =
+                new AssetDescriptor<>(AssetPaths.Fonts.XXL, BitmapFont.class);
+        AssetDescriptor<BitmapFont> TITLE =
+                new AssetDescriptor<>(AssetPaths.Fonts.TITLE, BitmapFont.class);
     }
 
     interface Atlas {
@@ -85,7 +89,7 @@ public interface AssetDescriptors {
     }
 
     AssetDescriptor[] ALL = {
-            Fonts.MARIO12, Fonts.MARIO18,Fonts.MARIO24, Fonts.MARIO32,
+            Fonts.S, Fonts.M, Fonts.L, Fonts.XL, Fonts.XXL, Fonts.TITLE,
             Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.FOOD_SPAWN, Sounds.BEER_SPAWN,
             Sounds.COIN_SPAWN, Sounds.EAT_FOOD, Sounds.STOMP, Sounds.COMPLAIN, Sounds.LANDING,

@@ -21,7 +21,7 @@ import de.bsautermeister.jump.screens.game.GameScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuScreen extends ScreenBase {
-    private final Viewport viewport;
+    private final Viewport uiViewport;
     private Stage stage;
 
     private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
@@ -32,13 +32,13 @@ public class MenuScreen extends ScreenBase {
 
     public MenuScreen(GameApp game) {
         super(game);
-        this.viewport = new FitViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
+        this.uiViewport = new FitViewport(Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
         backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
     }
 
     @Override
     public void show() {
-        stage = new Stage(viewport, getGame().getBatch());
+        stage = new Stage(uiViewport, getGame().getBatch());
         stage.setDebugAll(Cfg.DEBUG_MODE);
         setContent(createMainContent());
 

@@ -18,12 +18,18 @@ public interface Styles {
     }
 
     interface Label {
-        String DEFAULT = "default";
         String SMALL = "small";
+        String DEFAULT = "default";
+        String LARGE = "large";
+        String XLARGE = "xlarge";
+        String XXLARGE = "xxlarge";
+        String TITLE = "title";
     }
 
     interface Fonts {
-        String FONT32 = "font32";
-        String FONT24 = "font24";
+        String FONT_S = "font_s";
+        String FONT_M = "font_m";
+        String FONT_L = "font_l";
+        String FONT_XL = "font_xl";
     }
 }

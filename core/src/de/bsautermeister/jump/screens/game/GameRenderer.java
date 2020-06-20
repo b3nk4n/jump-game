@@ -103,7 +103,7 @@ public class GameRenderer implements Disposable {
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
-        font = assetManager.get(AssetDescriptors.Fonts.MARIO12);
+        font = assetManager.get(AssetDescriptors.Fonts.S);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
         this.parallaxRenderer = new ParallaxRenderer(camera, controller.getMap(), mapRenderer);

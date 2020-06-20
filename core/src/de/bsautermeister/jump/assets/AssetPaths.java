@@ -8,10 +8,12 @@ public interface AssetPaths {
     }
 
     interface Fonts {
-        String MARIO12 = "ui/fonts/new-super-mario-font-12.fnt";
-        String MARIO18 = "ui/fonts/new-super-mario-font-18.fnt";
-        String MARIO24 = "ui/fonts/new-super-mario-font-24.fnt";
-        String MARIO32 = "ui/fonts/new-super-mario-font-32.fnt";
+        String S = "ui/fonts/KarmaticArcade-20.fnt";
+        String M = "ui/fonts/KarmaticArcade-31.fnt";
+        String L = "ui/fonts/KarmaticArcade-41.fnt";
+        String XL = "ui/fonts/KarmaticArcade-51.fnt";
+        String XXL = "ui/fonts/KarmaticArcade-61.fnt";
+        String TITLE = "ui/fonts/KarmaticArcade-82.fnt";
     }
 
     interface Skins {

@@ -60,7 +60,7 @@ public class LoadingScreen extends ScreenBase {
         TextureAtlas atlas = getAsset(AssetDescriptors.Atlas.LOADING);
 
         // Grab the regions from the atlas and create some images
-        logo = new Image(atlas.findRegion(RegionNames.LOADING_LOGO));
+        logo = new Image(atlas.findRegion(RegionNames.LOADING_TEXT));
         loadingFrame = new Image(atlas.findRegion(RegionNames.LOADING_FRAME));
         loadingBarHidden = new Image(atlas.findRegion(RegionNames.LOADING_BAR_HIDDEN));
         screenBg = new Image(atlas.findRegion(RegionNames.LOADING_BACKGROUND));

@@ -1,9 +1,9 @@
 package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -22,11 +22,13 @@ public class MainMenuContent extends Table {
     }
 
     void initialize(AssetManager assetManager) {
-        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI); // TODO load a background image or a title image and dispose it
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
 
         center();
         setFillParent(true);
+
+        Label title = new Label("October Bro", skin, Styles.Label.TITLE);
+        add(title).pad(8f).row();
 
         Button playButton = new Button(skin, Styles.Button.PLAY);
         playButton.addListener(new ClickListener() {

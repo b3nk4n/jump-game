@@ -1,10 +1,22 @@
 {
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-    "font24": {
-      "file": "ui/fonts/new-super-mario-font-24.fnt"
+    "font_s": {
+      "file": "ui/fonts/KarmaticArcade-20.fnt"
     },
-    "font32": {
-      "file": "ui/fonts/new-super-mario-font-32.fnt"
+    "font_m": {
+      "file": "ui/fonts/KarmaticArcade-31.fnt"
+    },
+    "font_l": {
+      "file": "ui/fonts/KarmaticArcade-41.fnt"
+    },
+    "font_xl": {
+      "file": "ui/fonts/KarmaticArcade-51.fnt"
+    },
+    "font_xxl": {
+      "file": "ui/fonts/KarmaticArcade-61.fnt"
+    },
+    "font_title": {
+      "file": "ui/fonts/KarmaticArcade-82.fnt"
     }
   },
   "com.badlogic.gdx.graphics.Color": {
@@ -61,35 +73,51 @@
         "up": "level",
         "down": "level_down",
         "disabled": "play_disabled",
-        "font": "font24",
+        "font": "font_s",
         "fontColor": "black"
       },
       "level_stars1": {
         "up": "level_1star",
         "down": "level_down",
-        "font": "font24",
+        "font": "font_s",
         "fontColor": "black"
       },
       "level_stars2": {
         "up": "level_2stars",
         "down": "level_down",
-        "font": "font24",
+        "font": "font_s",
         "fontColor": "black"
       },
       "level_stars3": {
         "up": "level_3stars",
         "down": "level_down",
-        "font": "font24",
+        "font": "font_s",
         "fontColor": "black"
       }
     },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
     "default": {
-      "font": "font32",
+      "font": "font_m",
       "fontColor": "white"
     },
     "small": {
-      "font": "font24",
+      "font": "font_s",
+      "fontColor": "white"
+    }
+    "large": {
+      "font": "font_l",
+      "fontColor": "white"
+    },
+    "xlarge": {
+      "font": "font_xl",
+      "fontColor": "white"
+    },
+    "xxlarge": {
+      "font": "font_xxl",
+      "fontColor": "white"
+    },
+    "title": {
+      "font": "font_title",
       "fontColor": "white"
     }
   }
