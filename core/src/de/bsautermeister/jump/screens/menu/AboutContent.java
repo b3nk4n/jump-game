@@ -9,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
+import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
+
+import static de.bsautermeister.jump.screens.menu.controls.AnimatedLabel.TEXT_ANIMATION_DURATION;
 
 public class AboutContent extends Table {
 
@@ -42,17 +45,20 @@ public class AboutContent extends Table {
 
     private void updateLabels(CreditEntry entry) {
         creditContainer.clearChildren();
-        creditContainer.add(new Label(entry.title, skin, Styles.Label.XXLARGE)).row();
+        creditContainer.add(new AnimatedLabel(skin, Styles.Label.XXLARGE, 64)
+                .typeText(entry.title, 0f))
+                .pad(32f)
+                .row();
+        int i = 0;
         for (String line : entry.lines) {
-            creditContainer.add(new Label(line, skin, Styles.Label.LARGE)).row();
+            creditContainer.add(new AnimatedLabel(skin, Styles.Label.LARGE, 64)
+                    .typeText(line, 0.75f + i++ * 0.25f)).row();
         }
         creditContainer.pack();
         creditContainer.addAction(
                 Actions.sequence(
                         Actions.show(),
-                        Actions.fadeIn(0.5f, Interpolation.smooth),
-                        Actions.delay(3f),
-                        Actions.fadeOut(1f, Interpolation.smooth),
+                        Actions.delay(TEXT_ANIMATION_DURATION),
                         Actions.hide(),
                         Actions.run(new Runnable() {
                             @Override
