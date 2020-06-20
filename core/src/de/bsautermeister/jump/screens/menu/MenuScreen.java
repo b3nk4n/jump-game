@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -52,15 +51,9 @@ public class MenuScreen extends ScreenBase {
     private void setContent(Table newContent) {
         if (content != null) {
             content.addAction(Actions.sequence(
-                    Actions.alpha(0f, 0.5f, Interpolation.smooth),
                     Actions.removeActor()
             ));
         }
-        newContent.addAction(Actions.sequence(
-                Actions.alpha(0f),
-                Actions.delay(0.5f),
-                Actions.alpha(1f, 0.5f, Interpolation.smooth)
-        ));
         content = newContent;
         stage.addActor(newContent);
     }
