@@ -82,7 +82,6 @@ public class RegionNames {
     public static String LOADING_ANIMATION = "loading";
     public static String LOADING_FRAME = "frame";
     public static String LOADING_BAR_HIDDEN = "loading-hidden";
-    public static String LOADING_BACKGROUND = "screen-bg";
     public static String LOADING_FRAME_BACKGROUND = "frame-bg";
 
     private RegionNames() {}

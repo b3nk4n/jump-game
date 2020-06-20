@@ -1,6 +1,7 @@
 package de.bsautermeister.jump.screens.loading;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -30,7 +31,6 @@ public class LoadingScreen extends ScreenBase {
     private Image logo;
     private Image loadingFrame;
     private Image loadingBarHidden;
-    private Image screenBg;
     private Image loadingBg;
 
     private float startX, endX;
@@ -63,16 +63,14 @@ public class LoadingScreen extends ScreenBase {
         logo = new Image(atlas.findRegion(RegionNames.LOADING_TEXT));
         loadingFrame = new Image(atlas.findRegion(RegionNames.LOADING_FRAME));
         loadingBarHidden = new Image(atlas.findRegion(RegionNames.LOADING_BAR_HIDDEN));
-        screenBg = new Image(atlas.findRegion(RegionNames.LOADING_BACKGROUND));
         loadingBg = new Image(atlas.findRegion(RegionNames.LOADING_FRAME_BACKGROUND));
 
         // Add the loading bar animation
         Animation anim = new Animation<TextureAtlas.AtlasRegion>(0.05f, atlas.findRegions(RegionNames.LOADING_ANIMATION));
-        anim.setPlayMode(Animation.PlayMode.LOOP_REVERSED);
+        anim.setPlayMode(Animation.PlayMode.LOOP);
         loadingBar = new LoadingBar(anim);
 
         // Add all the actors to the stage
-        stage.addActor(screenBg);
         stage.addActor(loadingBar);
         stage.addActor(loadingBg);
         stage.addActor(loadingBarHidden);
@@ -91,57 +89,53 @@ public class LoadingScreen extends ScreenBase {
 
     @Override
     public void resize(int width, int height) {
-        // Set our screen to always be XXX x 480 in size
         stage.getViewport().update(width , height, true);
 
-        // Make the background fill the screen
-        screenBg.setSize(width, height);
         // Place the logo in the middle of the screen on top of the loading bar
         logo.setX((stage.getWidth() - logo.getWidth()) / 2);
         logo.setY((stage.getHeight() - logo.getHeight()) / 2 + 80);
         logo.setOrigin(Align.center);
-        logo.setScale(0.9f);
 
         // Place the loading frame in the middle of the screen
         loadingFrame.setX((stage.getWidth() - loadingFrame.getWidth()) / 2);
         loadingFrame.setY((stage.getHeight() - loadingFrame.getHeight()) / 2);
 
-        // Place the loading bar at the same spot as the frame, adjusted a few px
-        loadingBar.setX(loadingFrame.getX() + 15);
-        loadingBar.setY(loadingFrame.getY() + 5);
+        // Place the loading bar at the same spot as the frame
+        loadingBar.setX(loadingFrame.getX());
+        loadingBar.setY(loadingFrame.getY());
 
-        // Place the image that will hide the bar on top of the bar, adjusted a few px
-        loadingBarHidden.setX(loadingBar.getX() + 35);
-        loadingBarHidden.setY(loadingBar.getY() - 3);
+        // Place the image that will hide the bar on top of the bar
+        loadingBarHidden.setX(loadingBar.getX());
+        loadingBarHidden.setY(loadingBar.getY());
         // The start position and how far to move the hidden loading bar
-        startX = loadingBarHidden.getX();
-        endX = 440;
+        startX = loadingFrame.getX();
+        endX = loadingFrame.getWidth() - loadingBarHidden.getWidth();
 
         // The rest of the hidden bar
-        loadingBg.setSize(450, 50);
-        loadingBg.setX(loadingBarHidden.getX() + 30);
-        loadingBg.setY(loadingBarHidden.getY() + 3);
+        loadingBg.setSize(loadingFrame.getWidth(), loadingFrame.getHeight());
+        loadingBg.setX(loadingBarHidden.getX());
+        loadingBg.setY(loadingBarHidden.getY());
     }
 
     @Override
     public void render(float delta) {
         // Clear the screen
-        GdxUtils.clearScreen();
+        GdxUtils.clearScreen(Color.BLACK);
 
         // Interpolate the percentage to make it more smooth
         percent = Interpolation.linear.apply(percent, getAssetManager().getProgress(), 0.05f);
 
         // Update positions (and size) to match the percentage
         loadingBarHidden.setX(startX + endX * percent);
-        loadingBg.setX(loadingBarHidden.getX() + 30);
-        loadingBg.setWidth(450 - 450 * percent);
+        loadingBg.setX(loadingBarHidden.getX() + loadingBarHidden.getWidth());
+        loadingBg.setWidth((loadingFrame.getWidth() - loadingBarHidden.getWidth()) * (1 - percent));
         loadingBg.invalidate();
 
         // Show the loading screen
         stage.act();
         stage.draw();
 
-        if (getAssetManager().update() && percent > 0.99f && !isLoadingFinished) {
+        if (getAssetManager().update() && percent > 0.999f && !isLoadingFinished) {
             isLoadingFinished = true;
             setScreen(new MenuScreen(getGame()));
         }
