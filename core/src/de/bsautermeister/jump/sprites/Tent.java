@@ -38,7 +38,8 @@ public class Tent extends Sprite implements BinarySerializable {
         this.center = new Vector2(goal.getX() + goal.getWidth() / 2,
                 goal.getY() + goal.getHeight() / 2);
         this.atlas = atlas;
-        this.goal = new Rectangle(goal.x - Cfg.BLOCK_SIZE_PPM, goal.y, goal.width + 2 * Cfg.BLOCK_SIZE_PPM, goal.height);
+
+        this.goal = goal;
 
         tentWidth = getRegionWidth() / Cfg.PPM;
         setBounds(goal.getX() + (goal.getWidth() - tentWidth) / 2f, goal.getY(),
@@ -80,8 +81,10 @@ public class Tent extends Sprite implements BinarySerializable {
         return open && Intersector.overlaps(goal, player.getBoundingRectangle()) && player.getBody().getLinearVelocity().len2() < 0.001f;
     }
 
+    private final Vector2 tmpCenterResult = new Vector2();
     public Vector2 getWorldCenter() {
-        return center;
+        tmpCenterResult.set(center);
+        return tmpCenterResult;
     }
 
     public boolean isOpen() {

@@ -3,6 +3,7 @@ package de.bsautermeister.jump.screens.transition;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -10,7 +11,14 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
 
     private boolean scaleOut;
 
+    private final Vector2 startPositionInScreenCoordinates;
+
     public ScaleScreenTransition(float duration, Interpolation interpolation, boolean scaleOut) {
+        this(duration, interpolation, scaleOut, null);
+    }
+
+    public ScaleScreenTransition(float duration, Interpolation interpolation, boolean scaleOut,
+                                 Vector2 startPosition) {
         super(duration, interpolation);
 
         if (interpolation == null) {
@@ -18,6 +26,7 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
         }
 
         this.scaleOut = scaleOut;
+        this.startPositionInScreenCoordinates = startPosition;
     }
 
     @Override
@@ -36,6 +45,16 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
         int bottomTextureWidth = bottomTexture.getWidth();
         int bottomTextureHeight = bottomTexture.getHeight();
 
+        // calculate new center
+        float originX = topTextureWidth / 2f;
+        float originY = topTextureHeight / 2f;
+        if (startPositionInScreenCoordinates != null) {
+            originX = Interpolation.smoother.apply(startPositionInScreenCoordinates.x, topTextureWidth / 2f, progress);
+            originY = Interpolation.smoother.apply(startPositionInScreenCoordinates.y, topTextureHeight / 2f, progress);
+            //originX = startPositionInScreenCoordinates.x + (originX - startPositionInScreenCoordinates.x) * progress;
+            //originY = startPositionInScreenCoordinates.y + (originY - startPositionInScreenCoordinates.y) * progress;
+        }
+
         // drawing
         GdxUtils.clearScreen();
         batch.begin();
@@ -52,7 +71,7 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
 
         batch.draw(topTexture,
                 0, 0,
-                topTextureWidth / 2f, topTextureHeight / 2f,
+                originX, originY,
                 topTextureWidth, topTextureHeight,
                 scale, scale,
                 0,

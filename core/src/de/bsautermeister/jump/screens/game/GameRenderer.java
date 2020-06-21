@@ -155,11 +155,6 @@ public class GameRenderer implements Disposable {
         frameBufferManager.end();
 
         batch.begin();
-        /*if (gameTime < 1f) {
-            float progress = Interpolation.smooth.apply(Math.min(4 * gameTime, 1.0f));
-            batch.setColor(progress, progress, progress, 1f);
-        }*/
-        System.out.println(gameTime);
 
         if (player.isDrunk()) {
             batch.setShader(drunkShader);

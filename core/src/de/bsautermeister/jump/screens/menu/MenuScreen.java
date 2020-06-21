@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -99,10 +100,10 @@ public class MenuScreen extends ScreenBase {
             }
 
             @Override
-            public void levelSelected(int absoluteLevel) {
-                // TODO scale from the center of the clicked level-icon, not from the screen center
+            public void levelSelected(int absoluteLevel, Vector2 clickScreenPosition) {
                 setScreen(new GameScreen(getGame(), absoluteLevel), new ScaleScreenTransition(
-                        Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
+                        Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
+                        clickScreenPosition));
             }
         });
     }

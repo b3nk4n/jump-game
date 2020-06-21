@@ -196,7 +196,6 @@ public class WorldContactListener implements ContactListener {
                         contact.setEnabled(false);
                     }
                 } else if (player.getVelocityRelativeToGround().y > 3f) { // not zero, because there is some positive impulse when landing on the moving platform
-                    System.out.println(player.getVelocityRelativeToGround().y);
                     player.setLastJumpThroughPlatformId(platform.getId());
                     contact.setEnabled(false);
                 }

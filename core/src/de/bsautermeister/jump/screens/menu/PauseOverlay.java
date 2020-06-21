@@ -2,6 +2,7 @@ package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,7 +15,7 @@ import de.bsautermeister.jump.assets.Styles;
 public class PauseOverlay extends Table {
 
     public interface Callback {
-        void quit();
+        void quit(Vector2 clickScreenPosition);
         void resume();
     }
 
@@ -41,7 +42,10 @@ public class PauseOverlay extends Table {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                callback.quit();
+                Vector2 clickScreenPosition = event.getStage()
+                        .getViewport()
+                        .project(new Vector2(event.getStageX(), event.getStageY()));
+                callback.quit(clickScreenPosition);
             }
         });
         buttonTable.add(quitButton);

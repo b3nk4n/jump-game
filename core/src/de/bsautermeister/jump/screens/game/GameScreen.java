@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
@@ -30,18 +31,20 @@ public class GameScreen extends ScreenBase {
 
     private final GameScreenCallbacks callbacks = new GameScreenCallbacks() {
         @Override
-        public void success(int level) {
+        public void success(int level, Vector2 goalCenterPosition) {
             GameStats.INSTANCE.updateHighestFinishedLevel(level);
             GameStats.INSTANCE.updateLevelStars(level, 2); // TODO calculate stars
             //setScreen(new GameScreen(getGame(), level + 1));
             setScreen(new FinishScreen(getGame()), new ScaleScreenTransition(
-                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
+                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
+                    goalCenterPosition));
         }
 
         @Override
-        public void backToMenu() {
+        public void backToMenu(Vector2 clickScreenPosition) {
             setScreen(new MenuScreen(getGame(), true), new ScaleScreenTransition(
-                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
+                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
+                    clickScreenPosition));
         }
     };
 

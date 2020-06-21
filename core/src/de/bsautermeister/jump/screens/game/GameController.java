@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -333,16 +334,18 @@ public class GameController  implements BinarySerializable, Disposable {
         }
     };
 
+    private final Vector2 clickScreenPosition = new Vector2();
     private boolean markBackToMenu;
     private boolean markReset;
 
     private final PauseOverlay.Callback pauseCallback = new PauseOverlay.Callback() {
         @Override
-        public void quit() {
+        public void quit(Vector2 clickScreenPosition) {
             LOG.debug("QUIT pressed");
             backgroundMusic.setVolume(0f, false);
             gameIsCanced = true;
             markBackToMenu = true;
+            GameController.this.clickScreenPosition.set(clickScreenPosition);
         }
 
         @Override
@@ -545,7 +548,8 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         if (player.isVictory() && player.getStateTimer() >= Cfg.GOAL_REACHED_FINISH_DELAY) {
-            screenCallbacks.success(level);
+            Vector2 goalCenterPosition = viewport.project(getTent().getWorldCenter());
+            screenCallbacks.success(level, goalCenterPosition);
         }
 
         for (TextMessage textMessage : textMessages) {
@@ -682,7 +686,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         if (markBackToMenu) {
             markBackToMenu = false;
-            screenCallbacks.backToMenu();
+            screenCallbacks.backToMenu(clickScreenPosition);
         }
     }
 

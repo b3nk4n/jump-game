@@ -2,6 +2,7 @@ package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -27,7 +28,7 @@ public class SelectLevelMenuContent extends Table {
         initialize(assetManager);
     }
 
-    public void initialize(AssetManager assetManager) {
+    private void initialize(AssetManager assetManager) {
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI); // TODO load a background image
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
 
@@ -71,13 +72,16 @@ public class SelectLevelMenuContent extends Table {
         int highestUnlockedLevel = GameStats.INSTANCE.getHighestFinishedLevel() + 1;
         final int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
         String styleName = getLevelButtonStyleName(stage, level);
-        TextButton levelButton = new TextButton(stage + "-" + level, skin, styleName);
+        final TextButton levelButton = new TextButton(stage + "-" + level, skin, styleName);
         levelButton.getLabel().setAlignment(Align.top);
         levelButton.getLabelCell().pad(6);
         levelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                callbacks.levelSelected(absoluteLevel);
+                Vector2 clickScreenPosition = event.getStage()
+                        .getViewport()
+                        .project(new Vector2(event.getStageX(), event.getStageY()));
+                callbacks.levelSelected(absoluteLevel, clickScreenPosition);
             }
         });
         levelButton.setDisabled(absoluteLevel > highestUnlockedLevel);
@@ -106,6 +110,6 @@ public class SelectLevelMenuContent extends Table {
     public interface Callbacks {
         void leftClicked();
         void rightClicked();
-        void levelSelected(int absoluteLevel);
+        void levelSelected(int absoluteLevel, Vector2 clickScreenPosition);
     }
 }

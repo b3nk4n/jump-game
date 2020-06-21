@@ -21,7 +21,7 @@ public class MainMenuContent extends Table {
         initialize(assetManager);
     }
 
-    void initialize(AssetManager assetManager) {
+    private void initialize(AssetManager assetManager) {
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
 
         center();
