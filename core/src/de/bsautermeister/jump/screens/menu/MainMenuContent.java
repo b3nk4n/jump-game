@@ -2,17 +2,22 @@ package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
+import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
 public class MainMenuContent extends Table {
+
+    private static float DELAY_OFFSET = 0.25f;
 
     private final Callbacks callbacks;
 
@@ -27,39 +32,67 @@ public class MainMenuContent extends Table {
         center();
         setFillParent(true);
 
-        Label title = new Label("October Bro", skin, Styles.Label.TITLE);
-        add(title).pad(8f).row();
+        defaults()
+                .padLeft(Cfg.BUTTON_HORIZONTAL_PAD)
+                .padRight(Cfg.BUTTON_HORIZONTAL_PAD)
+                .padTop(Cfg.BUTTON_VERTICAL_PAD)
+                .padBottom(Cfg.BUTTON_VERTICAL_PAD);
 
-        Button playButton = new Button(skin, Styles.Button.PLAY);
+        AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, 11)
+                .typeText("October Bro");
+        add(title)
+                .pad(Cfg.TITLE_PAD)
+                .row();
+
+        float delay = 1.0f;
+        Button playButton = new TextButton("Play", skin);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 callbacks.playClicked();
             }
         });
-        add(playButton).pad(8f);
+        playButton.addAction(Actions.sequence(
+                Actions.hide(),
+                Actions.delay(delay),
+                Actions.show()
+        ));
+        delay += DELAY_OFFSET;
+        add(playButton)
+                .row();
 
         if (JumpGame.hasSavedData()) {
-            Button continueButton = new Button(skin, Styles.Button.CONTINUE);
+            Button continueButton = new TextButton("Resume", skin);
             continueButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     callbacks.continueClicked();
                 }
             });
-            add(continueButton).pad(8f);
+            continueButton.addAction(Actions.sequence(
+                    Actions.hide(),
+                    Actions.delay(delay),
+                    Actions.show()
+            ));
+            delay += DELAY_OFFSET;
+            add(continueButton)
+                    .row();
         }
 
-        row();
-
-        Button aboutButton = new Button(skin, Styles.Button.ABOUT);
+        Button aboutButton = new TextButton("About", skin);
         aboutButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 callbacks.aboutClicked();
             }
         });
-        add(aboutButton).pad(8f);
+        aboutButton.addAction(Actions.sequence(
+                Actions.hide(),
+                Actions.delay(delay),
+                Actions.show()
+        ));
+        add(aboutButton)
+                .row();
 
         pack();
     }

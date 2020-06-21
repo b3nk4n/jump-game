@@ -37,7 +37,7 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Player extends Sprite implements BinarySerializable, Drownable {
 
-    private static final float INITIAL_TTL = 2;
+    private static final float INITIAL_TTL = 180;
 
     private static final float EFFECT_DURATION = 10f;
 

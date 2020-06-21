@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Logger;
 
 public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
-    boolean DEBUG_MODE = true;
+    boolean DEBUG_MODE = false;
 
     float UI_WIDTH = 1280;
     float UI_HEIGHT = 720;
@@ -49,4 +49,8 @@ public interface Cfg {
     float GRAVITY = -4 * 9.81f;
 
     float SCREEN_TRANSITION_TIME = 0.5f;
+
+    float BUTTON_VERTICAL_PAD = 16f;
+    float BUTTON_HORIZONTAL_PAD = 64f;
+    float TITLE_PAD = 32f;
 }

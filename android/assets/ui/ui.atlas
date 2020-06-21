@@ -1,117 +1,75 @@
 
 ui.png
-size: 1024,64
+size: 512,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-about
-  rotate: false
-  xy: 4, 4
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-about_down
-  rotate: false
-  xy: 58, 4
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
 arrow_left
   rotate: false
-  xy: 652, 12
+  xy: 328, 12
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 arrow_left_down
   rotate: false
-  xy: 698, 12
+  xy: 374, 12
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 744, 12
+  xy: 420, 12
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 arrow_right_down
   rotate: false
-  xy: 790, 12
+  xy: 466, 12
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
-continue
-  rotate: false
-  xy: 112, 4
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-continue_down
-  rotate: false
-  xy: 166, 4
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
 level
   rotate: false
-  xy: 220, 4
+  xy: 4, 4
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 level_1star
   rotate: false
-  xy: 274, 4
+  xy: 58, 4
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 level_2stars
   rotate: false
-  xy: 328, 4
+  xy: 112, 4
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 level_3stars
   rotate: false
-  xy: 382, 4
+  xy: 166, 4
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 level_down
   rotate: false
-  xy: 436, 4
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-play
-  rotate: false
-  xy: 490, 4
+  xy: 220, 4
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 play_disabled
   rotate: false
-  xy: 544, 4
-  size: 50, 50
-  orig: 50, 50
-  offset: 0, 0
-  index: -1
-play_down
-  rotate: false
-  xy: 598, 4
+  xy: 274, 4
   size: 50, 50
   orig: 50, 50
   offset: 0, 0

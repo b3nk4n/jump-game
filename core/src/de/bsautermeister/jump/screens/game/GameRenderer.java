@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -75,9 +76,8 @@ public class GameRenderer implements Disposable {
     private final Box2DDebugRenderer box2DDebugRenderer;
     private final ParallaxRenderer parallaxRenderer;
 
+    private final Skin skin;
     private final Stage overlayStage;
-    private final PauseOverlay pauseOverlay;
-    private final GameOverOverlay gameOverOverlay;
     private final TextureRegion backgroundOverlayRegion;
 
     private final FrameBufferManager frameBufferManager;
@@ -116,13 +116,9 @@ public class GameRenderer implements Disposable {
 
         backgroundOverlayRegion = atlas.findRegion(RegionNames.BACKGROUND_OVERLAY);
 
-        Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
+        skin = assetManager.get(AssetDescriptors.Skins.UI);
         overlayStage = new Stage(uiViewport, batch);
         overlayStage.setDebugAll(Cfg.DEBUG_MODE);
-        pauseOverlay = new PauseOverlay(skin, controller.getPauseCallback());
-        overlayStage.addActor(pauseOverlay);
-        gameOverOverlay = new GameOverOverlay(skin, controller.getGameOverCallback());
-        overlayStage.addActor(gameOverOverlay);
 
         Gdx.input.setInputProcessor(overlayStage);
     }
@@ -336,17 +332,45 @@ public class GameRenderer implements Disposable {
             batch.end();
         }
 
-        renderHudOverlay(pauseOverlay, controller.getState().isPaused());
-        renderHudOverlay(gameOverOverlay, controller.getState().isGameOver());
+        if (overlayStage.getActors().isEmpty()) {
+            if (controller.getState().isGameOver()) {
+                overlayStage.addActor(new GameOverOverlay(skin, controller.getGameOverCallback()));
+                skipNextOverlayAct = true;
+            } else if (controller.getState().isPaused()) {
+                overlayStage.addActor(new PauseOverlay(skin, controller.getPauseCallback()));
+                skipNextOverlayAct = true;
+            }
+        } else {
+            if (!controller.getState().isPaused() && !controller.getState().isGameOver()) {
+                overlayStage.clear();
+            }
+        }
+
+
+        renderHudOverlay();
     }
 
-    private void renderHudOverlay(Table overlay, boolean active) {
-        if (active) {
+    // workaround: do not act during the first frame, otherwise button event which triggered
+    // this overlay to show are processed in the overlay, which could immediately close it again
+    private boolean skipNextOverlayAct = false;
+
+    private void renderHudOverlay() {
+        if (!overlayStage.getActors().isEmpty()) {
+            if (skipNextOverlayAct) {
+                skipNextOverlayAct = false;
+                return;
+            }
+            overlayStage.act();
+            batch.begin();
+            batch.draw(backgroundOverlayRegion, 0f, 0f, Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
+            batch.end();
+            overlayStage.draw();
+        }
+
+        /*if (active) {
             if (!overlay.isVisible()) {
-                overlay.setVisible(true);
+                overlay.show();
             } else {
-                // workaround: do not act during the first frame, otherwise button event which triggered
-                // this overlay to show are processed in the overlay, which could immediately close it again
                 overlayStage.act();
             }
             batch.begin();
@@ -354,8 +378,8 @@ public class GameRenderer implements Disposable {
             batch.end();
             overlayStage.draw();
         } else {
-            overlay.setVisible(false);
-        }
+            overlay.hide();
+        }*/
     }
 
     public void renderEffects(SpriteBatch batch) {

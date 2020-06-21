@@ -4,14 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.Styles;
+import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
 public class GameOverOverlay extends Table {
 
@@ -22,24 +25,36 @@ public class GameOverOverlay extends Table {
 
     private Callback callback;
 
+    private AnimatedLabel titleLabel;
+
     public GameOverOverlay(Skin skin, Callback callback) {
         super(skin);
         this.callback = callback;
-        this.setVisible(false);
 
         init();
     }
 
     private void init() {
-        defaults().pad(20);
-
-        Label titleLabel = new Label("GAME OVER", getSkin(), Styles.Label.DEFAULT);
+        titleLabel = new AnimatedLabel(getSkin(), Styles.Label.TITLE, Float.MAX_VALUE, 9)
+                .typeText("Game Over");
+        add(titleLabel)
+                .pad(Cfg.TITLE_PAD)
+                .row();
 
         Table buttonTable = new Table(getSkin());
-        buttonTable.defaults().pad(20);
+        buttonTable.defaults()
+                .padLeft(Cfg.BUTTON_HORIZONTAL_PAD)
+                .padRight(Cfg.BUTTON_HORIZONTAL_PAD)
+                .padTop(Cfg.BUTTON_VERTICAL_PAD)
+                .padBottom(Cfg.BUTTON_VERTICAL_PAD);
         buttonTable.center();
+        buttonTable.addAction(Actions.sequence(
+                Actions.hide(),
+                Actions.delay(1f),
+                Actions.show()
+        ));
 
-        Button quitButton = new Button(getSkin(), Styles.Button.PLAY);
+        Button quitButton = new TextButton("Quit", getSkin());
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -51,7 +66,7 @@ public class GameOverOverlay extends Table {
         });
         buttonTable.add(quitButton);
 
-        Button retryButton = new Button(getSkin(), Styles.Button.PLAY);
+        Button retryButton = new TextButton("Retry", getSkin());
         retryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -59,8 +74,6 @@ public class GameOverOverlay extends Table {
             }
         });
         buttonTable.add(retryButton);
-
-        add(titleLabel).row();
         add(buttonTable);
 
         center();

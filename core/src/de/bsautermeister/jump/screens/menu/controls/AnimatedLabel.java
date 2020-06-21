@@ -10,15 +10,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
 public class AnimatedLabel extends Table {
-    public static final float TEXT_ANIMATION_DURATION = 7.5f;
     private static final float CHAR_ANIMATION_TIME = 1.0f;
+
+    private final float textAnimationDuration;
 
     private final BitmapFont font;
     private final GlyphLayout glyphLayout;
     private Array<Label> charContainers;
 
-    public AnimatedLabel(Skin skin, String labelStyle, int maxTextLength) {
+    public AnimatedLabel(Skin skin, String labelStyle, float textAnimationDuration, int maxTextLength) {
         super();
+        this.textAnimationDuration = textAnimationDuration;
         Label.LabelStyle labelStyleInstance = skin.get(labelStyle, Label.LabelStyle.class);
         this.font = labelStyleInstance.font;
 
@@ -48,6 +50,10 @@ public class AnimatedLabel extends Table {
         return FloatArray.with(positions);
     }
 
+    public AnimatedLabel typeText(String text) {
+        return typeText(text, 0f);
+    }
+
     public AnimatedLabel typeText(String text, float delay) {
         prepareText(text);
 
@@ -60,7 +66,7 @@ public class AnimatedLabel extends Table {
                             Actions.hide(),
                             Actions.delay(delay + characterDelay * i,
                                     Actions.show()),
-                            Actions.delay(TEXT_ANIMATION_DURATION - CHAR_ANIMATION_TIME,
+                            Actions.delay(textAnimationDuration - CHAR_ANIMATION_TIME,
                                     Actions.hide())
                     ));
         }

@@ -11,9 +11,9 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
-import static de.bsautermeister.jump.screens.menu.controls.AnimatedLabel.TEXT_ANIMATION_DURATION;
-
 public class AboutContent extends Table {
+
+    public static final float TEXT_ANIMATION_DURATION = 7.5f;
 
     private final Skin skin;
     private final Table creditContainer = new Table();
@@ -37,7 +37,6 @@ public class AboutContent extends Table {
         center();
         setFillParent(true);
 
-
         addActor(creditContainer);
         creditContainer.center().setFillParent(true);
         updateLabels(CREDITS[currentCreditIndex]);
@@ -45,14 +44,17 @@ public class AboutContent extends Table {
 
     private void updateLabels(CreditEntry entry) {
         creditContainer.clearChildren();
-        creditContainer.add(new AnimatedLabel(skin, Styles.Label.XXLARGE, 64)
-                .typeText(entry.title, 0f))
+        creditContainer.add(
+                new AnimatedLabel(skin, Styles.Label.XXLARGE, TEXT_ANIMATION_DURATION, 64)
+                        .typeText(entry.title))
                 .pad(32f)
                 .row();
         int i = 0;
         for (String line : entry.lines) {
-            creditContainer.add(new AnimatedLabel(skin, Styles.Label.LARGE, 64)
-                    .typeText(line, 0.75f + i++ * 0.25f)).row();
+            creditContainer.add(
+                    new AnimatedLabel(skin, Styles.Label.LARGE, TEXT_ANIMATION_DURATION, 64)
+                            .typeText(line, 0.75f + i++ * 0.25f))
+                    .row();
         }
         creditContainer.pack();
         creditContainer.addAction(

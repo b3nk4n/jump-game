@@ -4,13 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.Styles;
+import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
 public class PauseOverlay extends Table {
 
@@ -19,26 +22,38 @@ public class PauseOverlay extends Table {
         void resume();
     }
 
+    private AnimatedLabel titleLabel;
+    private Table buttonTable;
+
     private Callback callback;
 
     public PauseOverlay(Skin skin, Callback callback) {
         super(skin);
         this.callback = callback;
-        this.setVisible(false);
-
         init();
     }
 
     private void init() {
-        defaults().pad(20);
+        titleLabel = new AnimatedLabel(getSkin(), Styles.Label.TITLE, Float.MAX_VALUE, 6)
+                .typeText("Paused");
+        add(titleLabel)
+                .pad(Cfg.TITLE_PAD)
+                .row();
 
-        Label titleLabel = new Label("PAUSED", getSkin(), Styles.Label.DEFAULT);
-
-        Table buttonTable = new Table(getSkin());
-        buttonTable.defaults().pad(20);
+        buttonTable = new Table(getSkin());
+        buttonTable.defaults()
+                .padLeft(Cfg.BUTTON_HORIZONTAL_PAD)
+                .padRight(Cfg.BUTTON_HORIZONTAL_PAD)
+                .padTop(Cfg.BUTTON_VERTICAL_PAD)
+                .padBottom(Cfg.BUTTON_VERTICAL_PAD);
         buttonTable.center();
+        buttonTable.addAction(Actions.sequence(
+                Actions.hide(),
+                Actions.delay(1f),
+                Actions.show()
+        ));
 
-        Button quitButton = new Button(getSkin(), Styles.Button.PLAY);
+        Button quitButton = new TextButton("Quit", getSkin());
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -50,7 +65,7 @@ public class PauseOverlay extends Table {
         });
         buttonTable.add(quitButton);
 
-        Button resumeButton = new Button(getSkin(), Styles.Button.PLAY);
+        Button resumeButton = new TextButton("Resume", getSkin());
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -58,8 +73,6 @@ public class PauseOverlay extends Table {
             }
         });
         buttonTable.add(resumeButton);
-
-        add(titleLabel).row();
         add(buttonTable);
 
         center();

@@ -43,22 +43,15 @@
       "b": 0,
       "g": 0,
       "r": 0
+    },
+    "light": {
+      "a": 1,
+      "b": 0.8,
+      "g": 0.8,
+      "r": 0.8
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
-    "play": {
-      "up": "play",
-      "down": "play_down",
-      "disabled": "play_disabled"
-    },
-    "continue": {
-      "up": "continue",
-      "down": "continue_down"
-    },
-    "about": {
-      "up": "about",
-      "down": "about_down"
-    },
     "arrow_left": {
       "up": "arrow_left",
       "down": "arrow_left_down"
@@ -93,6 +86,11 @@
         "down": "level_down",
         "font": "font_s",
         "fontColor": "black"
+      },
+      "default": {
+        "font": "font_xl",
+        "fontColor": "white",
+        "downFontColor": "light"
       }
     },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
