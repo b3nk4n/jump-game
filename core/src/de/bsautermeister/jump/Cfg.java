@@ -47,4 +47,6 @@ public interface Cfg {
     float GROUND_FRICTION = 0.1f;
 
     float GRAVITY = -4 * 9.81f;
+
+    float SCREEN_TRANSITION_TIME = 0.5f;
 }

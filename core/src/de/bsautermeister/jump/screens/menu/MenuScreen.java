@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -17,6 +18,11 @@ import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.game.GameScreen;
+import de.bsautermeister.jump.screens.transition.Direction;
+import de.bsautermeister.jump.screens.transition.FadeScreenTransition;
+import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
+import de.bsautermeister.jump.screens.transition.ScreenTransition;
+import de.bsautermeister.jump.screens.transition.SlideScreenTransition;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuScreen extends ScreenBase {
@@ -29,10 +35,13 @@ public class MenuScreen extends ScreenBase {
 
     private Table content;
 
-    public MenuScreen(GameApp game) {
+    public MenuScreen(GameApp game, boolean skipIntroTransition) {
         super(game);
         this.uiViewport = new FitViewport(Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
         backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
+        if (skipIntroTransition) {
+            backgroundRenderer.skipIntroTransition();
+        }
     }
 
     @Override
@@ -91,7 +100,9 @@ public class MenuScreen extends ScreenBase {
 
             @Override
             public void levelSelected(int absoluteLevel) {
-                setScreen(new GameScreen(getGame(), absoluteLevel));
+                // TODO scale from the center of the clicked level-icon, not from the screen center
+                setScreen(new GameScreen(getGame(), absoluteLevel), new ScaleScreenTransition(
+                        Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
             }
         });
     }

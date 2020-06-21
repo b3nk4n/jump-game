@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,6 +22,7 @@ import de.bsautermeister.jump.screens.finish.model.Person;
 import de.bsautermeister.jump.screens.finish.model.PersonFormation;
 import de.bsautermeister.jump.screens.finish.model.PersonFormationFactory;
 import de.bsautermeister.jump.screens.menu.MenuScreen;
+import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class FinishScreen extends ScreenBase {
@@ -105,7 +107,8 @@ public class FinishScreen extends ScreenBase {
 
         if (Gdx.input.isTouched()) {
             getGame().getForegroundMusic().fadeOutStop();
-            setScreen(new MenuScreen(getGame()));
+            setScreen(new MenuScreen(getGame(), true), new ScaleScreenTransition(
+                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
         }
 
         // draw

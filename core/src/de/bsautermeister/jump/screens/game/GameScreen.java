@@ -5,7 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
@@ -13,6 +15,7 @@ import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.finish.FinishScreen;
 import de.bsautermeister.jump.screens.menu.MenuScreen;
+import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
 
 public class GameScreen extends ScreenBase {
 
@@ -31,12 +34,14 @@ public class GameScreen extends ScreenBase {
             GameStats.INSTANCE.updateHighestFinishedLevel(level);
             GameStats.INSTANCE.updateLevelStars(level, 2); // TODO calculate stars
             //setScreen(new GameScreen(getGame(), level + 1));
-            setScreen(new FinishScreen(getGame()));
+            setScreen(new FinishScreen(getGame()), new ScaleScreenTransition(
+                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
         }
 
         @Override
         public void backToMenu() {
-            setScreen(new MenuScreen(getGame()));
+            setScreen(new MenuScreen(getGame(), true), new ScaleScreenTransition(
+                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
         }
     };
 
@@ -66,7 +71,7 @@ public class GameScreen extends ScreenBase {
         soundEffects = new GameSoundEffects(getAssetManager());
         controller = new GameController(callbacks, getGame(), soundEffects,
                 level, gameToResume);
-        renderer = new GameRenderer(getBatch(), getAssetManager(), atlas, controller);
+        renderer = new GameRenderer(getBatch(), getAssetManager(), atlas, controller, getGame().getFrameBufferManager());
 
         JumpGame.deleteSavedData();
 

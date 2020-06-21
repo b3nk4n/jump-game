@@ -34,6 +34,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.commons.FrameBufferManager;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
 import de.bsautermeister.jump.scenes.Hud;
@@ -79,12 +80,15 @@ public class GameRenderer implements Disposable {
     private final GameOverOverlay gameOverOverlay;
     private final TextureRegion backgroundOverlayRegion;
 
+    private final FrameBufferManager frameBufferManager;
+
     public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
-                        GameController controller) {
+                        GameController controller, FrameBufferManager frameBufferManager) {
         this.batch = batch;
         this.controller = controller;
         this.camera = controller.getCamera();
         this.viewport = controller.getViewport();
+        this.frameBufferManager = frameBufferManager;
 
         float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         float screenPixelPerTileY = Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
@@ -134,8 +138,8 @@ public class GameRenderer implements Disposable {
         GdxUtils.clearScreen(Color.BLACK);
         viewport.apply();
 
-        frameBuffer.begin();
-        GdxUtils.clearScreen(Color.BLACK);
+        frameBufferManager.begin(frameBuffer);
+        GdxUtils.clearScreen(Color.GRAY);
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
@@ -148,13 +152,14 @@ public class GameRenderer implements Disposable {
         renderEffects(batch);
         batch.setShader(null);
         batch.end();
-        frameBuffer.end();
+        frameBufferManager.end();
 
         batch.begin();
-        if (gameTime < 0.25f) {
+        /*if (gameTime < 1f) {
             float progress = Interpolation.smooth.apply(Math.min(4 * gameTime, 1.0f));
             batch.setColor(progress, progress, progress, 1f);
-        }
+        }*/
+        System.out.println(gameTime);
 
         if (player.isDrunk()) {
             batch.setShader(drunkShader);

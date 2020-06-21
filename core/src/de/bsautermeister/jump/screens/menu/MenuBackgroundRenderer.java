@@ -44,6 +44,7 @@ public class MenuBackgroundRenderer implements Disposable {
 
     private final Interpolation interpolation = new Interpolation.SwingOut(1.0f);
 
+    private final static float IN_TRANSITION_TIME = 3f;
     private float gameTime;
 
     public MenuBackgroundRenderer(AssetManager assetManager, SpriteBatch batch, TextureAtlas atlas) {
@@ -72,7 +73,7 @@ public class MenuBackgroundRenderer implements Disposable {
 
         camera.position.x = viewport.getWorldWidth() / 2 + Cfg.BLOCK_SIZE_PPM;
         camera.position.y = viewport.getWorldHeight() / 2 + interpolation.apply(
-                32f, 2 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / 3, 0f, 1f));
+                32f, 2 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / IN_TRANSITION_TIME, 0f, 1f));
 
         snorer.update(delta);
     }
@@ -93,6 +94,10 @@ public class MenuBackgroundRenderer implements Disposable {
         renderBackground(batch);
         renderForeground(batch);
         batch.end();
+    }
+
+    public void skipIntroTransition() {
+        gameTime += IN_TRANSITION_TIME;
     }
 
     private void renderBackground(SpriteBatch batch) {

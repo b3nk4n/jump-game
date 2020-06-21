@@ -18,12 +18,15 @@ public abstract class GameApp implements ApplicationListener {
     private MusicPlayer backgroundMusic;
     private MusicPlayer foregroundMusic;
 
+    private FrameBufferManager frameBufferManager;
+
     @Override
     public void create() {
         assetManager = new AssetManager();
         batch = new SpriteBatch();
+        frameBufferManager = new FrameBufferManager();
 
-        transitionContext = new TransitionContext(batch);
+        transitionContext = new TransitionContext(batch, frameBufferManager);
 
         backgroundMusic = new MusicPlayer();
         foregroundMusic = new MusicPlayer();
@@ -95,5 +98,9 @@ public abstract class GameApp implements ApplicationListener {
 
     public MusicPlayer getForegroundMusic() {
         return foregroundMusic;
+    }
+
+    public FrameBufferManager getFrameBufferManager() {
+        return frameBufferManager;
     }
 }
