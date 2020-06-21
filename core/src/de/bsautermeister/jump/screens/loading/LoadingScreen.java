@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -37,6 +38,8 @@ public class LoadingScreen extends ScreenBase {
     private float percent;
 
     private Actor loadingBar;
+
+    private float remainingTimeWhenFullyLoaded = 0.25f;
 
     private boolean isLoadingFinished = false;
 
@@ -122,8 +125,7 @@ public class LoadingScreen extends ScreenBase {
         // Clear the screen
         GdxUtils.clearScreen(Color.BLACK);
 
-        // Interpolate the percentage to make it more smooth
-        percent = Interpolation.linear.apply(percent, getAssetManager().getProgress(), 0.05f);
+        percent = MathUtils.round(getAssetManager().getProgress() * 100) / 100f;
 
         // Update positions (and size) to match the percentage
         loadingBarHidden.setX(startX + endX * percent);
@@ -135,7 +137,11 @@ public class LoadingScreen extends ScreenBase {
         stage.act();
         stage.draw();
 
-        if (getAssetManager().update() && percent > 0.999f && !isLoadingFinished) {
+        if (getAssetManager().isFinished()) {
+            remainingTimeWhenFullyLoaded -= delta;
+        }
+
+        if (getAssetManager().update() && remainingTimeWhenFullyLoaded <= 0 && !isLoadingFinished) {
             isLoadingFinished = true;
             setScreen(new MenuScreen(getGame(), false));
         }
