@@ -59,7 +59,7 @@ public class GameRenderer implements Disposable {
     private final OrthographicCamera camera;
     private final Viewport viewport;
 
-    private final Viewport hudViewport;
+    private final Viewport uiViewport;
     private final Hud hud;
 
     private final FrameBuffer frameBuffer;
@@ -98,8 +98,8 @@ public class GameRenderer implements Disposable {
                 (int)(screenPixelPerTileY * (Cfg.BLOCKS_Y + 4)), // 2 extra block for each top and bottom
                 false);
 
-        hudViewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE), (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE));
-        hud = new Hud(batch, hudViewport, assetManager, controller.getTotalBeers());
+        uiViewport = new StretchViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
+        hud = new Hud(batch, uiViewport, assetManager, controller.getTotalBeers());
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
@@ -117,7 +117,7 @@ public class GameRenderer implements Disposable {
         backgroundOverlayRegion = atlas.findRegion(RegionNames.BACKGROUND_OVERLAY);
 
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
-        overlayStage = new Stage(hudViewport, batch);
+        overlayStage = new Stage(uiViewport, batch);
         overlayStage.setDebugAll(Cfg.DEBUG_MODE);
         pauseOverlay = new PauseOverlay(skin, controller.getPauseCallback());
         overlayStage.addActor(pauseOverlay);
@@ -350,7 +350,7 @@ public class GameRenderer implements Disposable {
                 overlayStage.act();
             }
             batch.begin();
-            batch.draw(backgroundOverlayRegion, 0f, 0f, Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
+            batch.draw(backgroundOverlayRegion, 0f, 0f, Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
             batch.end();
             overlayStage.draw();
         } else {

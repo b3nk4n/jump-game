@@ -46,7 +46,7 @@ public class LoadingScreen extends ScreenBase {
 
     @Override
     public void show() {
-        viewport = new FitViewport(Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
+        viewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
 
         // Tell the manager to load assets for the loading screen
         getAssetManager().load(AssetDescriptors.Atlas.LOADING);

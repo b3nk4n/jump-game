@@ -12,7 +12,7 @@ varying vec2 v_texCoords;
 
 void main() {
     float speed = u_time * 4.0;
-    float amplitude = 0.005;
+    float amplitude = 0.0015;
     float freq = u_width * 6.66;
     float x = v_texCoords.x;
     float y = v_texCoords.y + (sin(x * freq + speed) * amplitude) - (sin((-x * freq + speed) * 0.66) * amplitude * 0.66);

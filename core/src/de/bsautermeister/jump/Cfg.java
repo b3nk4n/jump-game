@@ -4,10 +4,10 @@ import com.badlogic.gdx.utils.Logger;
 
 public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
-    boolean DEBUG_MODE = false;
+    boolean DEBUG_MODE = true;
 
-    float HUD_WIDTH = 1280; // still world units! (only loading screen)
-    float HUD_HEIGHT = 720; // still world units! (only loading screen)
+    float UI_WIDTH = 1280;
+    float UI_HEIGHT = 720;
 
     float PPM = 16f;
 

@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -357,9 +356,10 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private final GameOverOverlay.Callback gameOverCallback = new GameOverOverlay.Callback() {
         @Override
-        public void quit() {
+        public void quit(Vector2 clickScreenPosition) {
             LOG.debug("QUIT pressed");
             markBackToMenu = true;
+            GameController.this.clickScreenPosition.set(clickScreenPosition);
         }
 
         @Override

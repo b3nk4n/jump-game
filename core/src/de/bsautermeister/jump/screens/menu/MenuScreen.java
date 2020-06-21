@@ -19,11 +19,7 @@ import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.game.GameScreen;
-import de.bsautermeister.jump.screens.transition.Direction;
-import de.bsautermeister.jump.screens.transition.FadeScreenTransition;
 import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
-import de.bsautermeister.jump.screens.transition.ScreenTransition;
-import de.bsautermeister.jump.screens.transition.SlideScreenTransition;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class MenuScreen extends ScreenBase {
@@ -38,7 +34,7 @@ public class MenuScreen extends ScreenBase {
 
     public MenuScreen(GameApp game, boolean skipIntroTransition) {
         super(game);
-        this.uiViewport = new FitViewport(Cfg.HUD_WIDTH, Cfg.HUD_HEIGHT);
+        this.uiViewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
         backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
         if (skipIntroTransition) {
             backgroundRenderer.skipIntroTransition();

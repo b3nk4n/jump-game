@@ -52,8 +52,6 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
         if (startPositionInScreenCoordinates != null) {
             originX = Interpolation.smoother.apply(startPositionInScreenCoordinates.x, topTextureWidth / 2f, progress);
             originY = Interpolation.smoother.apply(startPositionInScreenCoordinates.y, topTextureHeight / 2f, progress);
-            //originX = startPositionInScreenCoordinates.x + (originX - startPositionInScreenCoordinates.x) * progress;
-            //originY = startPositionInScreenCoordinates.y + (originY - startPositionInScreenCoordinates.y) * progress;
         }
 
         // drawing

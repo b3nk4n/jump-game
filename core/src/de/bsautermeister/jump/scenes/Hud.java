@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 
 public class Hud implements Disposable {
@@ -21,12 +22,12 @@ public class Hud implements Disposable {
     private int currentBeers;
     private final int totalBeers;
 
-    private Label countDownLabel;
-    private Label scoreLabel;
+    private Label timeValueLabel;
+    private Label scoreValueLabel;
     private Label timeLabel;
+    private Label beersValueLabel;
     private Label beersLabel;
-    private Label worldLabel;
-    private Label playerLabel;
+    private Label scoreLabel;
 
     private Label.LabelStyle labelStyle;
 
@@ -36,6 +37,7 @@ public class Hud implements Disposable {
         labelStyle = new Label.LabelStyle(font, Color.WHITE);
         this.totalBeers = totalBeers;
         this.stage.addActor(buildUi());
+        this.stage.setDebugAll(Cfg.DEBUG_MODE);
     }
 
     private Actor buildUi() {
@@ -44,29 +46,34 @@ public class Hud implements Disposable {
         table.setFillParent(true);
         table.top();
 
-        countDownLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
-        scoreLabel = new Label(getFormattedScore(currentScore), labelStyle);
-        timeLabel = new Label("TIME", labelStyle);
-        beersLabel = new Label(getFormattedBeers(currentBeers, totalBeers), labelStyle);
-        worldLabel = new Label("BEERS", labelStyle);
-        playerLabel = new Label("PLAYER", labelStyle);
+        timeLabel = new Label("Time", labelStyle);
+        timeValueLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
+        scoreLabel = new Label("Score", labelStyle);
+        scoreValueLabel = new Label(getFormattedScore(currentScore), labelStyle);
+        beersLabel = new Label("Beers", labelStyle);
+        beersValueLabel = new Label(getFormattedBeers(currentBeers, totalBeers), labelStyle);
 
-        table.add(playerLabel)
-                .expandX()
-                .padTop(10);
-        table.add(worldLabel)
-                .expandX()
-                .padTop(10);
-        table.add(timeLabel)
-                .expandX()
-                .padTop(10);
-        table.row();
+        final float padding = 8f;
         table.add(scoreLabel)
-                .expandX();
+                .left()
+                .padTop(padding)
+                .padLeft(padding);
         table.add(beersLabel)
+                .expandX()
+                .padTop(padding);
+        table.add(timeLabel)
+                .right()
+                .padTop(padding)
+                .padRight(padding);
+        table.row();
+        table.add(scoreValueLabel)
+                .left()
+                .padLeft(padding);
+        table.add(beersValueLabel)
                 .expandX();
-        table.add(countDownLabel)
-                .expandX();
+        table.add(timeValueLabel)
+                .right()
+                .padRight(padding);
 
         return table;
     }
@@ -80,14 +87,14 @@ public class Hud implements Disposable {
     private void updateBeers(int level) {
         if (currentBeers != level) {
             currentBeers = level;
-            beersLabel.setText(getFormattedBeers(currentBeers, totalBeers));
+            beersValueLabel.setText(getFormattedBeers(currentBeers, totalBeers));
         }
     }
 
     private void updateScore(int score) {
         if (currentScore != score) {
             currentScore = score;
-            scoreLabel.setText(getFormattedScore(currentScore));
+            scoreValueLabel.setText(getFormattedScore(currentScore));
         }
     }
 
@@ -95,7 +102,7 @@ public class Hud implements Disposable {
         int ttl = (int)Math.ceil(timeToLive);
         if (currentTTL != ttl) {
             currentTTL = ttl;
-            countDownLabel.setText(getFormattedCountDown(currentTTL));
+            timeValueLabel.setText(getFormattedCountDown(currentTTL));
         }
     }
 
