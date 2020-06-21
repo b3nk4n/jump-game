@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens.transition;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
@@ -59,6 +60,8 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
         GdxUtils.clearScreen();
         batch.begin();
 
+        float whiteness = 1f - percentage * 0.33f;
+        batch.setColor(whiteness, whiteness, whiteness, 1f);
         batch.draw(bottomTexture,
                 0, 0,
                 0, 0,
@@ -68,6 +71,7 @@ public class ScaleScreenTransition extends ScreenTransitionBase {
                 0, 0,
                 bottomTextureWidth, bottomTextureHeight,
                 false, true);
+        batch.setColor(Color.WHITE);
 
         batch.draw(topTexture,
                 0, 0,
