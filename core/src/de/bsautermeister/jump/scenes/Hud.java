@@ -33,7 +33,7 @@ public class Hud implements Disposable {
 
     public Hud(SpriteBatch batch, Viewport hudViewport, AssetManager assetManager, int totalBeers) {
         this.stage = new Stage(hudViewport, batch);
-        BitmapFont font = assetManager.get(AssetDescriptors.Fonts.S);
+        BitmapFont font = assetManager.get(AssetDescriptors.Fonts.M);
         labelStyle = new Label.LabelStyle(font, Color.WHITE);
         this.totalBeers = totalBeers;
         this.stage.addActor(buildUi());
