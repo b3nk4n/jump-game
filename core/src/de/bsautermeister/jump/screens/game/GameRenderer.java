@@ -20,10 +20,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -71,6 +69,7 @@ public class GameRenderer implements Disposable {
     private final ShaderProgram stonedShader;
 
     private final BitmapFont font;
+    private final GlyphLayout layout = new GlyphLayout();
 
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final Box2DDebugRenderer box2DDebugRenderer;
@@ -184,6 +183,7 @@ public class GameRenderer implements Disposable {
         }
 
         batch.setShader(null);
+
         batch.end();
 
         if (Cfg.DEBUG_MODE) {
@@ -200,9 +200,10 @@ public class GameRenderer implements Disposable {
             camera.update();
         }
 
+        uiViewport.apply();
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.update(collectedBeers, score, player.getTimeToLive());
-        renderHud(batch);
+        renderHud();
     }
 
     private void renderBackground(SpriteBatch batch) {
@@ -318,20 +319,16 @@ public class GameRenderer implements Disposable {
         batch.setShader(prevShader);
     }
 
-    private final GlyphLayout layout = new GlyphLayout();
-    private void renderHud(SpriteBatch batch) {
+
+
+    private void renderHud() {
         hud.getStage().draw();
+        renderTextMessage();
+        updateOverlay();
+        renderHudOverlay();
+    }
 
-        LinkedBlockingQueue<TextMessage> textMessages = controller.getTextMessages();
-        if (!textMessages.isEmpty()) {
-            batch.begin();
-            for (TextMessage textMessage : textMessages) {
-                layout.setText(font, textMessage.getMessage());
-                font.draw(batch, textMessage.getMessage(), textMessage.getX() * Cfg.PPM - layout.width / 2, textMessage.getY() * Cfg.PPM - layout.height / 2);
-            }
-            batch.end();
-        }
-
+    private void updateOverlay() {
         if (overlayStage.getActors().isEmpty()) {
             if (controller.getState().isGameOver()) {
                 overlayStage.addActor(new GameOverOverlay(skin, controller.getGameOverCallback()));
@@ -345,9 +342,22 @@ public class GameRenderer implements Disposable {
                 overlayStage.clear();
             }
         }
+    }
 
+    private void renderTextMessage() {
+        LinkedBlockingQueue<TextMessage> textMessages = controller.getTextMessages();
+        if (!textMessages.isEmpty()) {
+            batch.begin();
+            for (TextMessage textMessage : textMessages) {
+                layout.setText(font, textMessage.getMessage());
 
-        renderHudOverlay();
+                float uiX = textMessage.getNormalizedX() * Cfg.UI_WIDTH;
+                float uiY = textMessage.getNormalizedY() * Cfg.UI_HEIGHT;
+
+                font.draw(batch, textMessage.getMessage(), uiX - layout.width / 2, uiY - layout.height / 2);
+            }
+            batch.end();
+        }
     }
 
     // workaround: do not act during the first frame, otherwise button event which triggered
@@ -366,20 +376,6 @@ public class GameRenderer implements Disposable {
             batch.end();
             overlayStage.draw();
         }
-
-        /*if (active) {
-            if (!overlay.isVisible()) {
-                overlay.show();
-            } else {
-                overlayStage.act();
-            }
-            batch.begin();
-            batch.draw(backgroundOverlayRegion, 0f, 0f, Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
-            batch.end();
-            overlayStage.draw();
-        } else {
-            overlay.hide();
-        }*/
     }
 
     public void renderEffects(SpriteBatch batch) {

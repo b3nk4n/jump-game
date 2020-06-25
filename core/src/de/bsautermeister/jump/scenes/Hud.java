@@ -31,8 +31,8 @@ public class Hud implements Disposable {
 
     private Label.LabelStyle labelStyle;
 
-    public Hud(SpriteBatch batch, Viewport hudViewport, AssetManager assetManager, int totalBeers) {
-        this.stage = new Stage(hudViewport, batch);
+    public Hud(SpriteBatch batch, Viewport uiViewport, AssetManager assetManager, int totalBeers) {
+        this.stage = new Stage(uiViewport, batch);
         BitmapFont font = assetManager.get(AssetDescriptors.Fonts.M);
         labelStyle = new Label.LabelStyle(font, Color.WHITE);
         this.totalBeers = totalBeers;

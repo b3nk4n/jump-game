@@ -709,9 +709,13 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private void showTextMessage(String text, Rectangle rect) {
         float x = rect.getX() + rect.getWidth() / 2;
-        float y = rect.getY() + rect.getHeight() / 2;
-        float cameraLeftX = (camera.position.x - viewport.getWorldWidth() / 2);
-        textMessages.add(new TextMessage(text, x - cameraLeftX, y));
+        float y = rect.getY() + rect.getHeight();
+        float cameraLeft = (camera.position.x - (viewport.getWorldWidth() - 4 * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
+        float cameraBottom = (camera.position.y - (viewport.getWorldHeight() - 4 * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
+
+        float normalizedX = (x - cameraLeft) / Cfg.BLOCKS_X;
+        float normalizedY = (y - cameraBottom) / Cfg.BLOCKS_Y;
+        textMessages.add(new TextMessage(text, normalizedX, normalizedY));
     }
 
     private boolean isVisible(Sprite sprite) {
@@ -864,6 +868,8 @@ public class GameController  implements BinarySerializable, Disposable {
         if (player.isDead()) {
             return;
         }
+
+
 
         boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean downPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
