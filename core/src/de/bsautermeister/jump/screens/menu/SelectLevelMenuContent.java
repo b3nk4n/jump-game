@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -45,6 +46,11 @@ public class SelectLevelMenuContent extends Table {
         leftButton.setVisible(page > 1);
         add(leftButton).center();
 
+        Label title = new Label("Select Level", skin, Styles.Label.XXLARGE);
+        Table container = new Table();
+        container.center();
+        container.add(title).row();
+
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
             for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
@@ -53,7 +59,8 @@ public class SelectLevelMenuContent extends Table {
             levelTable.row();
         }
         levelTable.pack();
-        add(levelTable).expandX();
+        container.add(levelTable).pad(Cfg.TITLE_PAD);
+        add(container).expandX();
 
         Button rightButton = new Button(skin, Styles.Button.ARROW_RIGHT);
         rightButton.addListener(new ClickListener() {
