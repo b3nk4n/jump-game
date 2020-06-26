@@ -54,7 +54,7 @@ public class SelectLevelMenuContent extends Table {
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
             for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
-                levelTable.add(createLevelButton(skin, page,r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
+                levelTable.add(createLevelButton(skin, page,r * Cfg.LEVEL_COLUMNS + c)).pad(16f);
             }
             levelTable.row();
         }
@@ -78,10 +78,12 @@ public class SelectLevelMenuContent extends Table {
     private Button createLevelButton(Skin skin, final int stage, final int level) {
         int highestUnlockedLevel = GameStats.INSTANCE.getHighestFinishedLevel() + 1;
         final int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
+        final boolean disabled = absoluteLevel > highestUnlockedLevel;
         String styleName = getLevelButtonStyleName(stage, level);
-        final TextButton levelButton = new TextButton(stage + "-" + level, skin, styleName);
+        final TextButton levelButton = new TextButton(
+                disabled ? "" : String.valueOf(absoluteLevel), skin, styleName);
         levelButton.getLabel().setAlignment(Align.top);
-        levelButton.getLabelCell().pad(6);
+        levelButton.getLabelCell().pad(8f);
         levelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -91,9 +93,8 @@ public class SelectLevelMenuContent extends Table {
                 callbacks.levelSelected(absoluteLevel, clickScreenPosition);
             }
         });
-        levelButton.setDisabled(absoluteLevel > highestUnlockedLevel);
-        levelButton.setTouchable(absoluteLevel > highestUnlockedLevel ?
-                Touchable.disabled : Touchable.enabled);
+        levelButton.setDisabled(disabled);
+        levelButton.setTouchable(disabled ? Touchable.disabled : Touchable.enabled);
         return levelButton;
     }
 

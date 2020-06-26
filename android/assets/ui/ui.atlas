@@ -1,76 +1,76 @@
 
 ui.png
-size: 512,64
+size: 1024,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 328, 12
+  xy: 4, 50
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 arrow_left_down
   rotate: false
-  xy: 374, 12
+  xy: 664, 182
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 420, 12
+  xy: 4, 4
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
 arrow_right_down
   rotate: false
-  xy: 466, 12
+  xy: 50, 50
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
   index: -1
-level
+button
   rotate: false
-  xy: 4, 4
-  size: 50, 50
-  orig: 50, 50
+  xy: 4, 96
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1
-level_1star
+button_1s
   rotate: false
-  xy: 58, 4
-  size: 50, 50
-  orig: 50, 50
+  xy: 136, 96
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1
-level_2stars
+button_2s
   rotate: false
-  xy: 112, 4
-  size: 50, 50
-  orig: 50, 50
+  xy: 268, 96
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1
-level_3stars
+button_3s
   rotate: false
-  xy: 166, 4
-  size: 50, 50
-  orig: 50, 50
+  xy: 400, 96
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1
-level_down
+button_disabled
   rotate: false
-  xy: 220, 4
-  size: 50, 50
-  orig: 50, 50
+  xy: 664, 146
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
-play_disabled
+button_down
   rotate: false
-  xy: 274, 4
-  size: 50, 50
-  orig: 50, 50
+  xy: 532, 96
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1

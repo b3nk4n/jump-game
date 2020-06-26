@@ -53,27 +53,22 @@ public class Hud implements Disposable {
         beersLabel = new Label("Beers", labelStyle);
         beersValueLabel = new Label(getFormattedBeers(currentBeers, totalBeers), labelStyle);
 
-        final float padding = 8f;
+        final float padTop = 8f;
+        final float padVertical = 16f;
         table.add(scoreLabel)
-                .left()
-                .padTop(padding)
-                .padLeft(padding);
+                .left();
         table.add(beersLabel)
-                .expandX()
-                .padTop(padding);
+                .expandX();
         table.add(timeLabel)
-                .right()
-                .padTop(padding)
-                .padRight(padding);
+                .right();
         table.row();
         table.add(scoreValueLabel)
-                .left()
-                .padLeft(padding);
+                .left();
         table.add(beersValueLabel)
                 .expandX();
         table.add(timeValueLabel)
-                .right()
-                .padRight(padding);
+                .right();
+        table.padTop(8f).padLeft(16f).padRight(16f);
 
         return table;
     }
