@@ -86,6 +86,8 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.SUCCESS, Sound.class);
         AssetDescriptor<Sound> SNORE =
                 new AssetDescriptor<>(AssetPaths.Sounds.SNORE, Sound.class);
+        AssetDescriptor<Sound> BURP =
+                new AssetDescriptor<>(AssetPaths.Sounds.BURP, Sound.class);
     }
 
     AssetDescriptor[] ALL = {
@@ -95,7 +97,7 @@ public interface AssetDescriptors {
             Sounds.COIN_SPAWN, Sounds.EAT_FOOD, Sounds.STOMP, Sounds.COMPLAIN, Sounds.LANDING,
             Sounds.JUMP, Sounds.KICKED, Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING, Sounds.SUCCESS,
             Sounds.SWEARING1, Sounds.SWEARING2, Sounds.SWEARING3, Sounds.SWEARING4,
-            Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7, Sounds.SNORE
+            Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7, Sounds.SNORE, Sounds.BURP
     };
 
 }

@@ -12,8 +12,8 @@ public interface Cfg {
     float PPM = 16f;
 
     int BLOCK_SIZE = 16;
-    int BLOCKS_X = 28;
-    int BLOCKS_Y = 16;
+    int BLOCKS_X = 26;
+    int BLOCKS_Y = 14;
 
     float BLOCK_SIZE_PPM = BLOCK_SIZE / PPM;
 

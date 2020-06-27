@@ -62,33 +62,38 @@
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+      "disabled": {
+        "up": "button_disabled",
+        "down": "button_disabled_down",
+        "font": "font_xxl"
+      },
       "level_stars0": {
         "up": "button",
         "down": "button_down",
         "disabled": "button_disabled",
-        "font": "font_xl",
+        "font": "font_xxl",
         "fontColor": "white"
       },
       "level_stars1": {
         "up": "button_1s",
-        "down": "button_down",
-        "font": "font_xl",
+        "down": "button_1s_down",
+        "font": "font_xxl",
         "fontColor": "white"
       },
       "level_stars2": {
         "up": "button_2s",
-        "down": "button_down",
-        "font": "font_xl",
+        "down": "button_2s_down",
+        "font": "font_xxl",
         "fontColor": "white"
       },
       "level_stars3": {
         "up": "button_3s",
-        "down": "button_down",
-        "font": "font_xl",
+        "down": "button_3s_down",
+        "font": "font_xxl",
         "fontColor": "white"
       },
       "default": {
-        "font": "font_xl",
+        "font": "font_xxl",
         "fontColor": "white",
         "downFontColor": "light"
       }

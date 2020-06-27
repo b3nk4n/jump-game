@@ -1,6 +1,6 @@
 
 ui.png
-size: 1024,256
+size: 1024,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -13,7 +13,7 @@ arrow_left
   index: -1
 arrow_left_down
   rotate: false
-  xy: 664, 182
+  xy: 949, 428
   size: 42, 42
   orig: 42, 42
   offset: 0, 0
@@ -34,43 +34,71 @@ arrow_right_down
   index: -1
 button
   rotate: false
-  xy: 4, 96
-  size: 128, 128
-  orig: 128, 128
+  xy: 4, 285
+  size: 185, 185
+  orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s
   rotate: false
-  xy: 136, 96
-  size: 128, 128
-  orig: 128, 128
+  xy: 4, 96
+  size: 185, 185
+  orig: 185, 185
+  offset: 0, 0
+  index: -1
+button_1s_down
+  rotate: false
+  xy: 193, 285
+  size: 185, 185
+  orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s
   rotate: false
-  xy: 268, 96
-  size: 128, 128
-  orig: 128, 128
+  xy: 193, 96
+  size: 185, 185
+  orig: 185, 185
+  offset: 0, 0
+  index: -1
+button_2s_down
+  rotate: false
+  xy: 382, 285
+  size: 185, 185
+  orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s
   rotate: false
-  xy: 400, 96
-  size: 128, 128
-  orig: 128, 128
+  xy: 382, 96
+  size: 185, 185
+  orig: 185, 185
+  offset: 0, 0
+  index: -1
+button_3s_down
+  rotate: false
+  xy: 571, 285
+  size: 185, 185
+  orig: 185, 185
   offset: 0, 0
   index: -1
 button_disabled
   rotate: false
-  xy: 664, 146
-  size: 32, 32
-  orig: 32, 32
+  xy: 571, 96
+  size: 185, 185
+  orig: 185, 185
+  offset: 0, 0
+  index: -1
+button_disabled_down
+  rotate: false
+  xy: 760, 285
+  size: 185, 185
+  orig: 185, 185
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 532, 96
-  size: 128, 128
-  orig: 128, 128
+  xy: 760, 96
+  size: 185, 185
+  orig: 185, 185
   offset: 0, 0
   index: -1
