@@ -1,103 +1,131 @@
 
 ui.png
-size: 512,1024
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 382, 785
+  xy: 4, 4
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_left_down
   rotate: false
-  xy: 382, 621
+  xy: 193, 193
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 382, 457
+  xy: 382, 382
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_right_down
   rotate: false
-  xy: 382, 293
+  xy: 571, 571
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
+beerometer
+  rotate: false
+  xy: 760, 865
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 0
+beerometer
+  rotate: false
+  xy: 760, 806
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 1
+beerometer
+  rotate: false
+  xy: 760, 747
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 2
+beerometer
+  rotate: false
+  xy: 760, 688
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 3
 button
   rotate: false
-  xy: 4, 760
+  xy: 4, 735
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s
   rotate: false
-  xy: 4, 571
+  xy: 4, 546
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s_down
   rotate: false
-  xy: 193, 760
+  xy: 193, 735
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s
   rotate: false
-  xy: 4, 382
+  xy: 4, 357
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s_down
   rotate: false
-  xy: 193, 571
+  xy: 193, 546
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s
   rotate: false
-  xy: 4, 193
+  xy: 382, 735
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s_down
   rotate: false
-  xy: 193, 382
+  xy: 4, 168
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_disabled
   rotate: false
-  xy: 4, 4
+  xy: 193, 357
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_disabled_down
   rotate: false
-  xy: 193, 193
+  xy: 382, 546
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 193, 4
+  xy: 571, 735
   size: 185, 185
   orig: 185, 185
   offset: 0, 0

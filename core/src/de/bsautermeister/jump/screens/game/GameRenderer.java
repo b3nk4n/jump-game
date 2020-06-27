@@ -201,9 +201,9 @@ public class GameRenderer implements Disposable {
         }
 
         uiViewport.apply();
-        batch.setProjectionMatrix(hud.getStage().getCamera().combined);
+        batch.setProjectionMatrix(hud.getCamera().combined);
         hud.update(collectedBeers, score, player.getTimeToLive());
-        renderHud();
+        renderHud(batch);
     }
 
     private void renderBackground(SpriteBatch batch) {
@@ -321,8 +321,8 @@ public class GameRenderer implements Disposable {
 
 
 
-    private void renderHud() {
-        hud.getStage().draw();
+    private void renderHud(SpriteBatch batch) {
+        hud.draw(batch);
         renderTextMessage();
         updateOverlay();
         renderHudOverlay();

@@ -1,20 +1,29 @@
 package de.bsautermeister.jump.scenes;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.RegionNames;
 
 public class Hud implements Disposable {
+    private final static float PAD_TOP = 8f;
+    private final static float PAD_SIDE = 24f;
+
     private final Stage stage;
 
     private int currentTTL;
@@ -25,50 +34,53 @@ public class Hud implements Disposable {
     private Label timeValueLabel;
     private Label scoreValueLabel;
     private Label timeLabel;
-    private Label beersValueLabel;
-    private Label beersLabel;
     private Label scoreLabel;
 
-    private Label.LabelStyle labelStyle;
+    private final Animation<TextureRegion> beerometer;
+    private final BitmapFont fontS;
 
     public Hud(SpriteBatch batch, Viewport uiViewport, AssetManager assetManager, int totalBeers) {
         this.stage = new Stage(uiViewport, batch);
-        BitmapFont font = assetManager.get(AssetDescriptors.Fonts.M);
-        labelStyle = new Label.LabelStyle(font, Color.WHITE);
+
         this.totalBeers = totalBeers;
-        this.stage.addActor(buildUi());
+        this.stage.addActor(buildUi(assetManager));
         this.stage.setDebugAll(Cfg.DEBUG_MODE);
+
+        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
+
+        fontS = assetManager.get(AssetDescriptors.Fonts.S);
+        this.beerometer = new Animation<TextureRegion>(0, atlas.findRegions(RegionNames.BEEROMETER));
     }
 
-    private Actor buildUi() {
+    private Actor buildUi(AssetManager assetManager) {
+        BitmapFont fontM = assetManager.get(AssetDescriptors.Fonts.M);
+        Label.LabelStyle labelStyleM = new Label.LabelStyle(fontM, Color.WHITE);
+
+        timeLabel = new Label("Time", labelStyleM);
+        timeValueLabel = new Label(getFormattedCountDown(currentTTL), labelStyleM);
+        scoreLabel = new Label("Score", labelStyleM);
+        scoreValueLabel = new Label(getFormattedScore(currentScore), labelStyleM);
+
         Table table = new Table()
                 .top();
         table.setFillParent(true);
         table.top();
 
-        timeLabel = new Label("Time", labelStyle);
-        timeValueLabel = new Label(getFormattedCountDown(currentTTL), labelStyle);
-        scoreLabel = new Label("Score", labelStyle);
-        scoreValueLabel = new Label(getFormattedScore(currentScore), labelStyle);
-        beersLabel = new Label("Beers", labelStyle);
-        beersValueLabel = new Label(getFormattedBeers(currentBeers, totalBeers), labelStyle);
-
-        final float padTop = 8f;
-        final float padVertical = 16f;
         table.add(scoreLabel)
+                .expandX()
                 .left();
-        table.add(beersLabel)
-                .expandX();
         table.add(timeLabel)
+                .expandX()
                 .right();
         table.row();
         table.add(scoreValueLabel)
+                .expandX()
                 .left();
-        table.add(beersValueLabel)
-                .expandX();
         table.add(timeValueLabel)
+                .expandX()
                 .right();
-        table.padTop(8f).padLeft(16f).padRight(16f);
+        table.padTop(PAD_TOP).padLeft(PAD_SIDE).padRight(PAD_SIDE);
+        table.pack();
 
         return table;
     }
@@ -82,7 +94,6 @@ public class Hud implements Disposable {
     private void updateBeers(int level) {
         if (currentBeers != level) {
             currentBeers = level;
-            beersValueLabel.setText(getFormattedBeers(currentBeers, totalBeers));
         }
     }
 
@@ -101,6 +112,23 @@ public class Hud implements Disposable {
         }
     }
 
+    public void draw(SpriteBatch batch) {
+        stage.draw();
+
+        drawBeerometer(batch);
+    }
+
+    private void drawBeerometer(SpriteBatch batch) {
+        TextureRegion frame = beerometer.getKeyFrames()[currentBeers];
+        float x = Cfg.UI_WIDTH / 2f - frame.getRegionWidth() / 2f;
+        float y = Cfg.UI_HEIGHT - frame.getRegionHeight() - 42f;
+
+        batch.begin();
+        batch.draw(frame, x, y);
+        fontS.draw(batch, "Beerometer", x, Cfg.UI_HEIGHT - 12f);
+        batch.end();
+    }
+
     private static String getFormattedCountDown(int worldTimer) {
         return String.format("%03d", worldTimer);
     }
@@ -113,8 +141,8 @@ public class Hud implements Disposable {
         return String.format("%d / %d", beers, totalBeers);
     }
 
-    public Stage getStage() {
-        return stage;
+    public Camera getCamera() {
+        return stage.getCamera();
     }
 
     @Override

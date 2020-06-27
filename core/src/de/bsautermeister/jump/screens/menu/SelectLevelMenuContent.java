@@ -33,7 +33,6 @@ public class SelectLevelMenuContent extends Table {
     }
 
     private void initialize(AssetManager assetManager) {
-        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI); // TODO load a background image
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
 
         center();
