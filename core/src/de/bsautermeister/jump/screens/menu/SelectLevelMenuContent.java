@@ -57,7 +57,7 @@ public class SelectLevelMenuContent extends Table {
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
             for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
-                levelTable.add(createLevelButton(skin, page,r * Cfg.LEVEL_COLUMNS + c)).pad(16f);
+                levelTable.add(createLevelButton(skin, page,r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
             }
             levelTable.row();
         }

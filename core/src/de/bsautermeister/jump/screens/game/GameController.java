@@ -950,8 +950,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private float getTentVolume() {
         Vector2 playerPosition = player.getWorldCenter();
         Vector2 tentPosition = tent.getWorldCenter();
-        float dst2 = Vector2.dst2(playerPosition.x, playerPosition.y, tentPosition.x, tentPosition.y);
-        return MathUtils.clamp(1.11f - (dst2 / 10f), 0f, 1f);
+        float dst = Vector2.dst(playerPosition.x, playerPosition.y, tentPosition.x, tentPosition.y);
+        return MathUtils.clamp(1f - (0.75f * dst / Cfg.BLOCKS_X), 0f, 1f);
     }
 
     public void load(FileHandle handle) {

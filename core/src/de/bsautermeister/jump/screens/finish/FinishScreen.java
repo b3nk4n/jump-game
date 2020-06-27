@@ -126,8 +126,8 @@ public class FinishScreen extends ScreenBase {
     }
 
     private void renderBackground() {
-        batch.draw(tentInsideBackground, 0, 0);
-        batch.draw(tentInsideDecoration, 0, 0);
+        batch.draw(tentInsideBackground, 0, 0, Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
+        batch.draw(tentInsideDecoration, 0, 0, Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
     }
 
     private void renderForeground(float delta) {
