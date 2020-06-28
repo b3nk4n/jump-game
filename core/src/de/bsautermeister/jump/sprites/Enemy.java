@@ -168,6 +168,7 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
+        out.writeBoolean(body.isActive());
         out.writeBoolean(dead);
         out.writeBoolean(removable);
         destroyBody.write(out);
@@ -182,6 +183,9 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         }
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
+        if (in.readBoolean()) {
+            body.setActive(true);
+        }
         dead = in.readBoolean();
         removable = in.readBoolean();
         destroyBody.read(in);
