@@ -2,7 +2,6 @@ package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
@@ -20,7 +19,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
     public static final String TAG_BASE = "base";
 
     /**
-     * Add a tiny y-offset to the spawn postition, because the block-item is moving and would
+     * Add a tiny y-offset to the spawn position, because the block-item is moving and would
      * otherwise expose the bottom of the item as a small visual glitch.
      */
     private static final float SPAWN_ITEM_OFFSET_Y = 0.15f * Cfg.BLOCK_SIZE_PPM;
@@ -42,6 +41,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
     private Body body;
 
     private MarkedAction destroyBody;
+    private boolean collected;
 
     protected final GameObjectState<State> state = new GameObjectState<>(State.SPAWNING);
 
@@ -55,7 +55,6 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         setPosition(centerX - Cfg.BLOCK_SIZE_PPM / 2, spawnY);
         destroyBody = new MarkedAction();
         body = defineBody(centerX, centerY + Cfg.BLOCK_SIZE_PPM);
-        //body.setActive(false);
     }
 
     public abstract Body defineBody(float x, float y);
@@ -85,7 +84,22 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         }
     }
 
+    @Override
+    public void collectBy(Player player) {
+        if (collected) {
+            // ensure items is not collected multiple times, even when a body consists of
+            // multiple fixtures
+            return;
+        }
 
+        collected = true;
+        callbacks.use(player, this);
+        markDestroyBody();
+
+        onCollect(player);
+    }
+
+    protected abstract void onCollect(Player player);
 
     @Override
     public void dispose() {
@@ -127,6 +141,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         out.writeFloat(body.getLinearVelocity().x);
         out.writeFloat(body.getLinearVelocity().y);
         destroyBody.write(out);
+        out.writeBoolean(collected);
     }
 
     @Override
@@ -135,5 +150,6 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         destroyBody.read(in);
+        collected = in.readBoolean();
     }
 }

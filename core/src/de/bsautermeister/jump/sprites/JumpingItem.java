@@ -66,16 +66,6 @@ public abstract class JumpingItem extends Item {
     }
 
     @Override
-    public void collectBy(Player player) {
-        getCallbacks().use(player, this);
-        markDestroyBody();
-
-        onCollect(player);
-    }
-
-    protected abstract void onCollect(Player player);
-
-    @Override
     public void update(float delta) {
         super.update(delta);
 
