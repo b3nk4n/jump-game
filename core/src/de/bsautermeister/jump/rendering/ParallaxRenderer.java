@@ -14,14 +14,17 @@ public class ParallaxRenderer {
     private final Camera globalCamera;
     private final OrthographicCamera parallaxCamera;
 
-    private final TiledMap map;
+    private TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
 
-    public ParallaxRenderer(Camera globalCamera, TiledMap map, OrthogonalTiledMapRenderer mapRenderer) {
+    public ParallaxRenderer(Camera globalCamera, OrthogonalTiledMapRenderer mapRenderer) {
         this.globalCamera = globalCamera;
-        this.map = map;
         this.mapRenderer = mapRenderer;
         this.parallaxCamera = new OrthographicCamera();
+    }
+
+    public void setMap(TiledMap map) {
+        this.map = map;
     }
 
     public void renderLayer(String layer, float factorX, float factorY) {

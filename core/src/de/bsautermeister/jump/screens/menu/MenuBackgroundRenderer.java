@@ -59,7 +59,8 @@ public class MenuBackgroundRenderer implements Disposable {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("maps/menu_background.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
-        parallaxRenderer = new ParallaxRenderer(camera, map, mapRenderer);
+        parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
+        parallaxRenderer.setMap(map);
 
         WorldCreator worldCreator = new WorldCreator(null, null, map, atlas);
         worldCreator.buildFromMap();

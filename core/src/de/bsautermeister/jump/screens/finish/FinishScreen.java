@@ -50,7 +50,7 @@ public class FinishScreen extends ScreenBase {
         camera.setToOrtho(false, Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT);
         viewport = new StretchViewport(Cfg.WORLD_WIDTH, Cfg.WORLD_HEIGHT, camera);
 
-        personFormation = PersonFormationFactory.createDiagonalLaolaCheersFormation();
+        personFormation = PersonFormationFactory.createRandomFormation();
     }
 
     @Override

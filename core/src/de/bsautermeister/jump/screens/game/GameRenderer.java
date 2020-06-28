@@ -109,7 +109,7 @@ public class GameRenderer implements Disposable {
         font = assetManager.get(AssetDescriptors.Fonts.S);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
-        this.parallaxRenderer = new ParallaxRenderer(camera, controller.getMap(), mapRenderer);
+        this.parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
 
         box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);
 
@@ -129,12 +129,12 @@ public class GameRenderer implements Disposable {
         int collectedBeers = controller.getCollectedBeers();
 
         mapRenderer.setMap(controller.getMap());
+        parallaxRenderer.setMap(controller.getMap());
 
         GdxUtils.clearScreen(Color.BLACK);
         viewport.apply();
 
         frameBufferManager.begin(frameBuffer);
-        GdxUtils.clearScreen(Color.GRAY);
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
@@ -211,6 +211,7 @@ public class GameRenderer implements Disposable {
         float munichOffset = Interpolation.smooth.apply(1.5f * 6.25f, 0f, munichRatio);
         float forestOffset = Interpolation.smooth.apply(0f, 1.0f * 6.25f, munichRatio);
         float grassOffset = Interpolation.smooth.apply(0f, -0.25f * 6.25f, munichRatio);
+
 
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);

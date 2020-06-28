@@ -60,6 +60,7 @@ public class Coin extends Sprite implements CollectableItem, BinarySerializable,
             frames.add(atlas.findRegion(RegionNames.COIN, i));
         }
         animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
+        setRegion(animation.getKeyFrame(0f));
     }
 
     private Body defineBody(float centerX, float centerY) {
