@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -49,7 +48,8 @@ public class Hud implements Disposable {
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
 
         fontS = assetManager.get(AssetDescriptors.Fonts.S);
-        this.beerometer = new Animation<TextureRegion>(0, atlas.findRegions(RegionNames.BEEROMETER));
+        this.beerometer = new Animation<TextureRegion>(0,
+                atlas.findRegions(RegionNames.fromTemplate(RegionNames.BEEROMETER_TPL, totalBeers)));
     }
 
     private Actor buildUi(AssetManager assetManager) {
@@ -91,9 +91,9 @@ public class Hud implements Disposable {
         updateTimeToLive(ttl);
     }
 
-    private void updateBeers(int level) {
-        if (currentBeers != level) {
-            currentBeers = level;
+    private void updateBeers(int beers) {
+        if (currentBeers != beers) {
+            currentBeers = Math.min(beers, totalBeers);
         }
     }
 

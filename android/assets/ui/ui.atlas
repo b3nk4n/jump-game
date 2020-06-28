@@ -6,126 +6,161 @@ filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 4, 4
+  xy: 4, 17
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_left_down
   rotate: false
-  xy: 193, 193
+  xy: 193, 206
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 382, 382
+  xy: 382, 395
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_right_down
   rotate: false
-  xy: 571, 571
+  xy: 571, 584
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
-beerometer
+beerometer1
   rotate: false
-  xy: 760, 865
+  xy: 760, 878
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 0
-beerometer
+beerometer1
   rotate: false
-  xy: 760, 806
+  xy: 760, 819
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 1
-beerometer
+beerometer2
   rotate: false
-  xy: 760, 747
+  xy: 760, 760
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 0
+beerometer2
+  rotate: false
+  xy: 760, 701
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 1
+beerometer2
+  rotate: false
+  xy: 98, 122
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 2
-beerometer
+beerometer3
   rotate: false
-  xy: 760, 688
+  xy: 98, 63
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 0
+beerometer3
+  rotate: false
+  xy: 98, 4
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 1
+beerometer3
+  rotate: false
+  xy: 287, 311
+  size: 185, 55
+  orig: 185, 55
+  offset: 0, 0
+  index: 2
+beerometer3
+  rotate: false
+  xy: 287, 252
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 3
 button
   rotate: false
-  xy: 4, 735
+  xy: 4, 748
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s
   rotate: false
-  xy: 4, 546
+  xy: 4, 559
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s_down
   rotate: false
-  xy: 193, 735
+  xy: 193, 748
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s
   rotate: false
-  xy: 4, 357
+  xy: 4, 370
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s_down
   rotate: false
-  xy: 193, 546
+  xy: 193, 559
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s
   rotate: false
-  xy: 382, 735
+  xy: 382, 748
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s_down
   rotate: false
-  xy: 4, 168
+  xy: 4, 181
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_disabled
   rotate: false
-  xy: 193, 357
+  xy: 193, 370
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_disabled_down
   rotate: false
-  xy: 382, 546
+  xy: 382, 559
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 571, 735
+  xy: 571, 748
   size: 185, 185
   orig: 185, 185
   offset: 0, 0

@@ -84,7 +84,7 @@ public class RegionNames {
     public static String LOADING_BAR_HIDDEN = "loading-hidden";
     public static String LOADING_FRAME_BACKGROUND = "frame-bg";
 
-    public static String BEEROMETER = "beerometer";
+    public static String BEEROMETER_TPL = "beerometer*";
 
     private RegionNames() {}
 
