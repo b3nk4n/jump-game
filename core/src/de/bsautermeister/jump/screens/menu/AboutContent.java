@@ -20,7 +20,8 @@ public class AboutContent extends Table {
 
     private static final CreditEntry[] CREDITS = new CreditEntry[] {
             new CreditEntry("Developer", "Benjamin Sautermeister"),
-            new CreditEntry("Graphics", "Benjamin Sautermeister", "Vanessa Kan", "Foo Bar", "Lorem Ipsum"),
+            // https://hdst.itch.io/fox (Copyright/Attribution Notice: HDST or link to this page)
+            new CreditEntry("Graphics", "Benjamin Sautermeister", "Vanessa Kan", "HDST", "Lorem Ipsum"),
             new CreditEntry("SFX", "Benjamin Sautermeister"),
             new CreditEntry("Music", "Dee Yan-Key"),
     };

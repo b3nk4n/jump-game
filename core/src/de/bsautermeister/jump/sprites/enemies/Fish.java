@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.sprites;
+package de.bsautermeister.jump.sprites.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,6 +21,8 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.sprites.GameObjectState;
+import de.bsautermeister.jump.sprites.Player;
 
 public class Fish extends Enemy implements Drownable {
     private static final float WAIT_TIME = 3f;

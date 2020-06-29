@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.sprites;
+package de.bsautermeister.jump.sprites.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -24,46 +25,70 @@ import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
+import de.bsautermeister.jump.sprites.GameObjectState;
+import de.bsautermeister.jump.sprites.Player;
 
-public class Fox extends Enemy implements Drownable {
-    private static final float SPEED = 4.0f;
-
-    private static final int NORMAL_IDX = 0;
-    private static final int ANGRY_IDX = 1;
+public class Hedgehog extends Enemy implements Drownable {
+    private static final float KICK_SPEED = 8f;
+    private static final float ROTATION_SPEED = 540f;
+    private static final float WAIT_FOR_UNROLL_TIME = 5f;
 
     public enum State {
-        WALKING, STANDING, STOMPED
+        WALKING, ROLL, ROLLING, UNROLL
     }
 
     private GameObjectState<State> state;
     private boolean drowning;
     private float speed;
+
+    private final Animation<TextureRegion> walkAnimation;
+    private final Animation<TextureRegion> rollAnimation;
+    private final Animation<TextureRegion> unrollAnimation;
+    private final TextureRegion rollingTexture;
+
+    private static final float SPEED_VALUE = 3.0f;
+
     private boolean previousDirectionLeft;
 
-    private Vector2 playerPosition = new Vector2();
-
-    private final Animation<TextureRegion>[] walkAnimation;
-    private final Animation<TextureRegion>[] standingAnimation;
-    private final Animation<TextureRegion> stompedAnimation;
-
-    @SuppressWarnings("unchecked")
-    public Fox(GameCallbacks callbacks, World world, TextureAtlas atlas,
-               float posX, float posY, boolean rightDirection) {
+    public Hedgehog(GameCallbacks callbacks, World world, TextureAtlas atlas,
+                    float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
-
-        walkAnimation = new Animation[2];
-        walkAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);
-        walkAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_WALK), Animation.PlayMode.LOOP);
-
-        standingAnimation = new Animation[2];
-        standingAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
-        standingAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_STANDING), Animation.PlayMode.LOOP);
-
-        stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STOMP), Animation.PlayMode.NORMAL);
+        walkAnimation = new Animation<TextureRegion>(0.05f,
+                atlas.findRegions(RegionNames.HEDGEHOG_WALK), Animation.PlayMode.LOOP);
+        rollAnimation = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.NORMAL);
+        unrollAnimation = new Animation<TextureRegion>(0.2f,
+                atlas.findRegions(RegionNames.HEDGEHOG_ROLL), Animation.PlayMode.REVERSED);
+        rollingTexture = atlas.findRegion(RegionNames.HEDGEHOG_ROLL, 2);
 
         state = new GameObjectState<>(State.WALKING);
-        speed = rightDirection ? SPEED : -SPEED;
+        state.setStateCallback(new GameObjectState.StateCallback<State>() {
+            @Override
+            public void changed(State previousState, State newState) {
+                if (previousState != State.ROLLING && newState != State.ROLLING) {
+                    return;
+                }
+
+                Fixture leftSideSensor = getBody().getFixtureList().get(2);
+                updateColliderBit(leftSideSensor, previousState, newState);
+
+                Fixture rightSideSensor = getBody().getFixtureList().get(3);
+                updateColliderBit(rightSideSensor, previousState, newState);
+            }
+
+            private void updateColliderBit(Fixture fixture, State previousState, State newState) {
+                Filter filter = fixture.getFilterData();
+                if (previousState == State.ROLLING) {
+                    filter.maskBits |= ~Bits.COLLIDER;
+                } else if (newState == State.ROLLING) {
+                    filter.maskBits &= ~Bits.COLLIDER;
+                }
+                fixture.setFilterData(filter);
+            }
+        });
+        speed = rightDirection ? SPEED_VALUE : -SPEED_VALUE;
         setRegion(getFrame());
+        setOrigin(getWidth() / 2, getHeight() * 5.5f / 16f);
     }
 
     @Override
@@ -71,52 +96,62 @@ public class Fox extends Enemy implements Drownable {
         super.update(delta);
 
         state.upate(delta);
+        if (!isDead() && !isDrowning()) {
+            getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
 
-        if (!state.is(State.STOMPED)) {
-            if (!isDead() && !isDrowning()) {
-                getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
+            if (state.is(State.ROLLING)) {
+                rotate(delta * (speed < 0 ? ROTATION_SPEED : -ROTATION_SPEED));
             }
 
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
-            setRegion(getFrame());
-
-            if (state.is(State.STANDING) && state.timer() > 2f) {
-                state.set(State.WALKING);
-                speed = previousDirectionLeft ? SPEED : - SPEED;
+            if (state.is(State.ROLL) || state.is(State.UNROLL) && speed == 0) {
+                // ensure speed is zero, even after other enemy collision
+                getBody().setLinearVelocity(Vector2.Zero);
             }
 
-            if (isDrowning()) {
-                getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
+            if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
+                state.set(State.UNROLL);
             }
-        } else if (state.is(State.STOMPED)) {
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
-            setRegion(getFrame());
+        }
 
-            if (state.timer() > 0.7f) {
-                markDestroyBody();
-                markRemovable();
-            }
+        if (!state.is(State.ROLLING)) {
+            setRotation(0f);
+        }
+
+        setPosition(getBody().getPosition().x - getWidth() / 2,
+                getBody().getPosition().y - 6 / Cfg.PPM);
+        setRegion(getFrame());
+
+        if (state.is(State.UNROLL) && state.timer() > 0.66f) {
+            state.set(State.WALKING);
+            speed = previousDirectionLeft ? -SPEED_VALUE : SPEED_VALUE;
+        }
+
+        if (isDrowning()) {
+            getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
         }
     }
 
     private TextureRegion getFrame() {
-        int characterIdx = isAngry() ? ANGRY_IDX : NORMAL_IDX;
-
         TextureRegion textureRegion;
+
         switch (state.current()) {
-            case STOMPED:
-                textureRegion = stompedAnimation.getKeyFrame(state.timer());
+            case ROLLING:
+                textureRegion = rollingTexture;
                 break;
-            case STANDING:
-                textureRegion = standingAnimation[characterIdx].getKeyFrame(state.timer());
+            case ROLL:
+                textureRegion = rollAnimation.getKeyFrame(state.timer());
+                break;
+            case UNROLL:
+                textureRegion = unrollAnimation.getKeyFrame(state.timer());
                 break;
             case WALKING:
             default:
-                textureRegion = walkAnimation[characterIdx].getKeyFrame(state.timer());
+                textureRegion = walkAnimation.getKeyFrame(state.timer());
                 break;
         }
 
-        boolean isLeft = isLeft();
+        boolean isLeft = isLeftDirection();
+
         if (!isLeft && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
         } else if (isLeft && textureRegion.isFlipX()) {
@@ -130,16 +165,8 @@ public class Fox extends Enemy implements Drownable {
         return textureRegion;
     }
 
-    private boolean isLeft() {
+    private boolean isLeftDirection() {
         return speed < 0 || speed == 0 && previousDirectionLeft;
-    }
-
-    private boolean isAngry() {
-        boolean isLeft = isLeft();
-        float x = getBody().getPosition().x;
-        float y = getBody().getPosition().y;
-        return (isLeft && playerPosition.x < x || !isLeft && playerPosition.x > x) &&
-                Vector2.len2(playerPosition.x - x, playerPosition.y - y) < 1.0f;
     }
 
     @Override
@@ -178,6 +205,7 @@ public class Fox extends Enemy implements Drownable {
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
         fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
+        fixtureDef.isSensor = true;
         body.createFixture(fixtureDef).setUserData(this);
 
         EdgeShape sideShape = new EdgeShape();
@@ -197,6 +225,7 @@ public class Fox extends Enemy implements Drownable {
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
+
         return body;
     }
 
@@ -205,27 +234,52 @@ public class Fox extends Enemy implements Drownable {
         if (player.isDead() || player.isInvincible()) {
             return;
         }
-        Vector2 velocity = getBody().getLinearVelocity();
-        getBody().setLinearVelocity(velocity.x * 0.5f, velocity.y);
-        stomp();
+
+        if (!state.is(State.ROLL)) {
+            stomp();
+        } else {
+            kick(player.getX() <= getX());
+        }
+    }
+
+    private void stomp() {
+        boolean wasWalking = state.is(State.WALKING);
+        state.set(State.ROLL);
+
+        if (!wasWalking) {
+            // skip roll animation, when rolling hedgehog is stopped
+            state.setTimer(1f);
+        }
+
+        previousDirectionLeft = speed <= 0;
+        speed = 0;
+        getCallbacks().stomp(this);
     }
 
     @Override
     public void onEnemyHit(Enemy enemy) {
+        boolean updateDirection = false;
         if (enemy instanceof Hedgehog) {
-            Hedgehog hedgehog = (Hedgehog) enemy;
-            if (hedgehog.getState() == Hedgehog.State.ROLLING) {
+            Hedgehog otherHedgehog = (Hedgehog) enemy;
+            if (!state.is(State.ROLLING) && otherHedgehog.getState() == State.ROLLING) {
                 kill(true);
                 return;
             }
         }
-        runAwayFrom(enemy);
-        getCallbacks().hitWall(this);
+
+        if (state.is(State.WALKING)) {
+            updateDirection = true;
+        }
+
+        if (updateDirection) {
+            runAwayFrom(enemy);
+            getCallbacks().hitWall(this);
+        }
     }
 
     private void runAwayFrom(Enemy otherEnemy) {
         speed = (getBody().getPosition().x < otherEnemy.getBody().getPosition().x)
-                ? -SPEED : SPEED;
+                ? -SPEED_VALUE : SPEED_VALUE;
     }
 
     public void changeDirectionBySideSensorTag(String sideSensorTag) {
@@ -239,17 +293,14 @@ public class Fox extends Enemy implements Drownable {
         getCallbacks().hitWall(this);
     }
 
-    public void waitAndThenChangeDirectionBySideSensorTag(String sideSensorTag) {
-        state.set(State.STANDING);
-        previousDirectionLeft = speed <= 0;
-        speed = 0;
+    public void kick(boolean directionRight) {
+        state.set(State.ROLLING);
+        speed = directionRight ? KICK_SPEED : -KICK_SPEED;
+        getCallbacks().kicked(this);
     }
 
-    private void stomp() {
-        getCallbacks().stomp(this);
-
-        state.set(State.STOMPED);
-        updateMaskFilter(Bits.ENVIRONMENT_ONLY);
+    public State getState() {
+        return state.current();
     }
 
     @Override
@@ -264,6 +315,7 @@ public class Fox extends Enemy implements Drownable {
     }
 
     private final Vector2 outCenter = new Vector2();
+
     @Override
     public Vector2 getWorldCenter() {
         Rectangle rect = getBoundingRectangle();
@@ -276,18 +328,12 @@ public class Fox extends Enemy implements Drownable {
         return getBody().getLinearVelocity();
     }
 
-    public void setPlayerPosition(Vector2 playerPosition) {
-        this.playerPosition.set(playerPosition);
-    }
-
     @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);
         out.writeFloat(speed);
         out.writeBoolean(previousDirectionLeft);
-        out.writeFloat(playerPosition.x);
-        out.writeFloat(playerPosition.y);
     }
 
     @Override
@@ -296,6 +342,5 @@ public class Fox extends Enemy implements Drownable {
         state.read(in);
         speed = in.readFloat();
         previousDirectionLeft = in.readBoolean();
-        playerPosition.set(in.readFloat(), in.readFloat());
     }
 }

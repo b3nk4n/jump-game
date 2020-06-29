@@ -8,10 +8,11 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import de.bsautermeister.jump.sprites.CollectableItem;
-import de.bsautermeister.jump.sprites.DrunkenGuy;
-import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Fox;
-import de.bsautermeister.jump.sprites.Hedgehog;
+import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Fox;
+import de.bsautermeister.jump.sprites.enemies.Frog;
+import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
@@ -67,6 +68,8 @@ public class WorldContactListener implements ContactListener {
                     ((Fox) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Frog) {
+                    ((Frog) taggedEnemy.getUserData()).reactOnSideSensor(taggedEnemy.getTag());
                 }
                 break;
             case Bits.PLAYER | Bits.ENEMY:

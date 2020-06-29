@@ -45,12 +45,13 @@ import de.bsautermeister.jump.sprites.BeerItem;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
-import de.bsautermeister.jump.sprites.DrunkenGuy;
-import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Fish;
-import de.bsautermeister.jump.sprites.Fox;
+import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Fish;
+import de.bsautermeister.jump.sprites.enemies.Fox;
 import de.bsautermeister.jump.sprites.GrilledChickenItem;
-import de.bsautermeister.jump.sprites.Hedgehog;
+import de.bsautermeister.jump.sprites.enemies.Frog;
+import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
@@ -1047,6 +1048,8 @@ public class GameController  implements BinarySerializable, Disposable {
                 enemy = new DrunkenGuy(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Fish.class.getName())) {
                 enemy = new Fish(callbacks, world, atlas, 0, 0);
+            } else if (enemyType.equals(Frog.class.getName())) {
+                enemy = new Frog(callbacks, world, atlas, 0, 0, false);
             } else {
                 throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
             }

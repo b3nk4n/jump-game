@@ -6,7 +6,7 @@ import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.ItemBox;
-import de.bsautermeister.jump.sprites.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Player;

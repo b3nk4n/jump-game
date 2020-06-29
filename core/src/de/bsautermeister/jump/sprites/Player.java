@@ -33,6 +33,8 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.serializer.BinarySerializable;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.tools.GameTimer;
 
 public class Player extends Sprite implements BinarySerializable, Drownable {
@@ -741,8 +743,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void hit(Enemy enemy) {
-        if (enemy instanceof Hedgehog) {
-            Hedgehog hedgehog = (Hedgehog) enemy;
+        if (enemy instanceof de.bsautermeister.jump.sprites.enemies.Hedgehog) {
+            de.bsautermeister.jump.sprites.enemies.Hedgehog hedgehog = (de.bsautermeister.jump.sprites.enemies.Hedgehog) enemy;
             if (hedgehog.getState() == Hedgehog.State.ROLL) {
                 hedgehog.kick(getX() <= enemy.getX());
                 return;

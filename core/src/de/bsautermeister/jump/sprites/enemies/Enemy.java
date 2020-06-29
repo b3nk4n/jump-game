@@ -1,4 +1,4 @@
-package de.bsautermeister.jump.sprites;
+package de.bsautermeister.jump.sprites.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -17,11 +17,14 @@ import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
+import de.bsautermeister.jump.sprites.MarkedAction;
+import de.bsautermeister.jump.sprites.Player;
 
 public abstract class Enemy extends Sprite implements BinarySerializable, Disposable {
     protected static final String TAG_LEFT = "left";
     protected static final String TAG_RIGHT = "right";
     protected static final String TAG_TOP = "top";
+    protected static final String TAG_BOTTOM = "bottom";
 
     private String id;
 

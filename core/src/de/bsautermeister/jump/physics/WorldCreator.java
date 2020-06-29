@@ -21,11 +21,12 @@ import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
-import de.bsautermeister.jump.sprites.Enemy;
-import de.bsautermeister.jump.sprites.Fish;
-import de.bsautermeister.jump.sprites.DrunkenGuy;
-import de.bsautermeister.jump.sprites.Fox;
-import de.bsautermeister.jump.sprites.Hedgehog;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Fish;
+import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
+import de.bsautermeister.jump.sprites.enemies.Fox;
+import de.bsautermeister.jump.sprites.enemies.Frog;
+import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Platform;
@@ -62,6 +63,7 @@ public class WorldCreator {
     private static final String SPIKES_KEY = "spikes";
     private static final String POLES_KEY = "poles";
     private static final String SNORER_KEY = "snorer";
+    private static final String FROGS_KEY = "frogs";
 
     private final World world;
     private final TiledMap map;
@@ -188,6 +190,17 @@ public class WorldCreator {
                 fish.setVelocityFactor(velocityFactor != null ? velocityFactor : 1f);
                 fish.setGroup(group);
                 enemies.add(fish);
+            }
+        }
+        if (hasLayer(map, FROGS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(FROGS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                String group = (String) mapObject.getProperties().get("group");
+                boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
+                Frog frog = new Frog(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
+                frog.setGroup(group);
+                enemies.add(frog);
             }
         }
         return enemies;

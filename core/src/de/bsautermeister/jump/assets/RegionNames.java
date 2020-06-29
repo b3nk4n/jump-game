@@ -36,6 +36,9 @@ public class RegionNames {
     public static String HEDGEHOG_ROLL = "hedgehog_roll";
     public static String DRUNKEN_GUY = "drunken_guy";
     public static String FISH = "fish";
+    public static String FROG_STANDING = "frog_stand";
+    public static String FROG_JUMPING = "frog_jump";
+    public static String FROG_STOMPED = "frog_stomp";
     public static String COIN = "coin";
     public static String BRICK_FRAGMENT_TPL = "brick_fragment*";
     public static String BOX_FRAGMENT_TPL = "box_fragment*";
