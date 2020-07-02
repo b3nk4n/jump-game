@@ -30,6 +30,7 @@ import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.enemies.Raven;
 
 public class WorldCreator {
 
@@ -53,6 +54,8 @@ public class WorldCreator {
     private static final String HEDGEHOGS_KEY = "hedgehogs";
     private static final String DRUNKEN_GUYS_KEY = "drunkenGuys";
     private static final String FISHES_KEY = "fishes";
+    private static final String FROGS_KEY = "frogs";
+    private static final String RAVENS_KEY = "ravens";
     private static final String COLLIDER_KEY = "collider";
     private static final String WATER_KEY = "water";
     private static final String GOAL_KEY = "goal";
@@ -63,7 +66,6 @@ public class WorldCreator {
     private static final String SPIKES_KEY = "spikes";
     private static final String POLES_KEY = "poles";
     private static final String SNORER_KEY = "snorer";
-    private static final String FROGS_KEY = "frogs";
 
     private final World world;
     private final TiledMap map;
@@ -201,6 +203,18 @@ public class WorldCreator {
                         rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection);
                 frog.setGroup(group);
                 enemies.add(frog);
+            }
+        }
+        if (hasLayer(map, RAVENS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(RAVENS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                String group = (String) mapObject.getProperties().get("group");
+                boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
+                boolean swinging = mapObject.getProperties().get("swinging", false, Boolean.class);
+                Raven raven = new Raven(callbacks, world, atlas,
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection, swinging);
+                raven.setGroup(group);
+                enemies.add(raven);
             }
         }
         return enemies;

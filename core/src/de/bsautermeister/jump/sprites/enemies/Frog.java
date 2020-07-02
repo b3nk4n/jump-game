@@ -63,10 +63,10 @@ public class Frog extends Enemy implements Drownable {
 
         state.upate(delta);
 
-        if (!state.is(State.STOMPED)) {
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
-            setRegion(getFrame());
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
+        setRegion(getFrame());
 
+        if (!state.is(State.STOMPED)) {
             if (state.is(State.STANDING)) {
                 getBody().setLinearVelocity(0, getBody().getLinearVelocity().y);
 
@@ -81,9 +81,6 @@ public class Frog extends Enemy implements Drownable {
                 getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
             }
         } else if (state.is(State.STOMPED)) {
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
-            setRegion(getFrame());
-
             if (state.timer() > 0.7f) {
                 markDestroyBody();
                 markRemovable();
@@ -179,6 +176,7 @@ public class Frog extends Enemy implements Drownable {
                 new Vector2(4 / Cfg.PPM, -6.5f / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_BOTTOM));
+        shape.dispose();
         return body;
     }
 

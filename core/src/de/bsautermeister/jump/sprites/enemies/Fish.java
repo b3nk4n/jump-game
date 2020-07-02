@@ -117,7 +117,7 @@ public class Fish extends Enemy implements Drownable {
         fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
-
+        shape.dispose();
         return body;
     }
 

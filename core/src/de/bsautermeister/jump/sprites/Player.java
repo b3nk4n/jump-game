@@ -551,6 +551,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         createFeetFixture(fixtureDef, 6f, -6.0f);
         createHeadSensorFixture(fixtureDef, 4f, 8.6f);
         createGroundSensorFixture(fixtureDef, 9f, -6.5f);
+        shape.dispose();
     }
 
     private void defineBigBody(Vector2 position, boolean normalFilterMask) {
@@ -569,6 +570,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         createFeetFixture(fixtureDef, 6f, -6f);
         createHeadSensorFixture(fixtureDef, 4f, 15.6f);
         createGroundSensorFixture(fixtureDef, 9.0f, -6.5f);
+        shape.dispose();
     }
 
     private void createBodyFixture(FixtureDef fixtureDef, Shape shape, boolean normalFilterMask) {

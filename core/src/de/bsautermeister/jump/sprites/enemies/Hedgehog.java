@@ -225,7 +225,7 @@ public class Hedgehog extends Enemy implements Drownable {
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
-
+        shape.dispose();
         return body;
     }
 

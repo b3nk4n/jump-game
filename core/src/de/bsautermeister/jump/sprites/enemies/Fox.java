@@ -42,7 +42,7 @@ public class Fox extends Enemy implements Drownable {
     private float speed;
     private boolean previousDirectionLeft;
 
-    private Vector2 playerPosition = new Vector2();
+    private final Vector2 playerPosition = new Vector2();
 
     private final Animation<TextureRegion>[] walkAnimation;
     private final Animation<TextureRegion>[] standingAnimation;
@@ -199,6 +199,7 @@ public class Fox extends Enemy implements Drownable {
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
+        shape.dispose();
         return body;
     }
 

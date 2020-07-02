@@ -116,7 +116,7 @@ public class DrunkenGuy extends Enemy {
                 new Vector2(Cfg.BLOCK_SIZE_PPM, 14f / Cfg.PPM + hiddenOffsetY));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_TOP));
-
+        shape.dispose();
         return body;
     }
 

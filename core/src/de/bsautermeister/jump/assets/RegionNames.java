@@ -39,6 +39,10 @@ public class RegionNames {
     public static String FROG_STANDING = "frog_stand";
     public static String FROG_JUMPING = "frog_jump";
     public static String FROG_STOMPED = "frog_stomp";
+    public static String RAVEN_FLYING = "raven_fly";
+    public static String RAVEN_ATTACKING = "raven_attack";
+    public static String RAVEN_SPOTTED = "raven_spotted";
+    public static String RAVEN_CRASHING = "raven_dead";
     public static String COIN = "coin";
     public static String BRICK_FRAGMENT_TPL = "brick_fragment*";
     public static String BOX_FRAGMENT_TPL = "box_fragment*";

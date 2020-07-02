@@ -62,6 +62,7 @@ import de.bsautermeister.jump.sprites.Pole;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.PretzelItem;
 import de.bsautermeister.jump.sprites.Tent;
+import de.bsautermeister.jump.sprites.enemies.Raven;
 import de.bsautermeister.jump.text.TextMessage;
 
 public class GameController  implements BinarySerializable, Disposable {
@@ -753,6 +754,9 @@ public class GameController  implements BinarySerializable, Disposable {
             if (enemy instanceof Fox) {
                 ((Fox) enemy).setPlayerPosition(player.getBody().getPosition());
             }
+            if (enemy instanceof Raven) {
+                ((Raven) enemy).setPlayerPosition(player.getBody().getPosition());
+            }
         }
     }
 
@@ -1050,6 +1054,8 @@ public class GameController  implements BinarySerializable, Disposable {
                 enemy = new Fish(callbacks, world, atlas, 0, 0);
             } else if (enemyType.equals(Frog.class.getName())) {
                 enemy = new Frog(callbacks, world, atlas, 0, 0, false);
+            } else if (enemyType.equals(Raven.class.getName())) {
+                enemy = new Raven(callbacks, world, atlas, 0, 0, false, false);
             } else {
                 throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
             }
