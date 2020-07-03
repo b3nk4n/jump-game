@@ -154,6 +154,13 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
+        public void attack(Enemy enemy) {
+            if (enemy instanceof Raven) {
+                soundEffects.ravenSound.play();
+            }
+        }
+
+        @Override
         public void use(Player player, Item item) {
             String msg;
             if (item instanceof BeerItem) {

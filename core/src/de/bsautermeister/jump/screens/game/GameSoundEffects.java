@@ -26,6 +26,7 @@ public class GameSoundEffects implements Disposable {
     public Sound drinkingSound;
     public Sound successSound;
     public Sound burpSound;
+    public Sound ravenSound;
 
     public GameSoundEffects(AssetManager assetManager) {
         bumpSound = assetManager.get(AssetDescriptors.Sounds.BUMP);
@@ -54,6 +55,7 @@ public class GameSoundEffects implements Disposable {
         drinkingSound = assetManager.get(AssetDescriptors.Sounds.DRINKING);
         successSound = assetManager.get(AssetDescriptors.Sounds.SUCCESS);
         burpSound = assetManager.get(AssetDescriptors.Sounds.BURP);
+        ravenSound = assetManager.get(AssetDescriptors.Sounds.RAVEN);
     }
 
     public Sound randomSwearingSound() {

@@ -126,6 +126,7 @@ public class Raven extends Enemy implements Drownable {
             if (state.is(State.SPOTTED)) {
                 getBody().setLinearVelocity(Vector2.Zero);
                 if (state.timer() > 0.2f) {
+                    getCallbacks().attack(this);
                     state.set(State.ATTACKING);
                 }
             }

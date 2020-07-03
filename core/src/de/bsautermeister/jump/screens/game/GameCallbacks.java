@@ -15,6 +15,7 @@ public interface GameCallbacks {
     void jump();
     void landed(float landingHeight);
     void stomp(Enemy enemy);
+    void attack(Enemy enemy);
     void hit(Player player);
     void use(Player player, Item item);
     void hit(Player player, Brick brick, boolean closeEnough);
