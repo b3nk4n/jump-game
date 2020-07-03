@@ -351,11 +351,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
 
         if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
-            body.applyLinearImpulse(new Vector2(0, 19.5f), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, 15.0f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.05f;
             callbacks.jump();
             return;
+        }
+        if (up && state.is(State.JUMPING) && state.timer() < 0.66f) {
+            body.applyForceToCenter(new Vector2(0f, 16.0f), true);
         }
         if (right && body.getLinearVelocity().x <= Cfg.MAX_HORIZONTAL_SPEED && !down) {
             body.applyForceToCenter(new Vector2(25f, 0), true);
