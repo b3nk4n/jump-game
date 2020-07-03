@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -19,16 +21,19 @@ import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.physics.TaggedUserData;
 import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.GameObjectState;
 import de.bsautermeister.jump.sprites.Player;
 
-public class Raven extends Enemy {
+public class Raven extends Enemy implements Drownable {
     private static final float SWING_DISTANCE = Cfg.BLOCK_SIZE_PPM / 4;
     private static final float SWING_VELOCITY = 0.5f;
     private static final float CRASH_VELOCITY = 4f;
-    private static final float ATTACK_VELOCITY = 4f;
+    private static final float ATTACK_VELOCITY = 5f;
+    private static final float LEAVE_VELOCITY = 2f;
 
     public enum State {
         WAITING, SWINGING, SPOTTED, ATTACKING, LEAVING, CRASHING
@@ -77,8 +82,11 @@ public class Raven extends Enemy {
         state.upate(delta);
         setRegion(getFrame());
 
+        if (isDrowning()) {
+            getBody().setGravityScale(0.066f);
+        }
+
         if (isDead() || state.is(State.CRASHING)) {
-            // TODO implement
             Vector2 currentVelocity = getBody().getLinearVelocity();
             currentVelocity.y = -CRASH_VELOCITY;
             currentVelocity.x = isLeft ? -CRASH_VELOCITY / 2f : CRASH_VELOCITY / 2f;
@@ -101,10 +109,17 @@ public class Raven extends Enemy {
                     currentVelocity.y -= SWING_VELOCITY * delta;
                 }
                 currentVelocity.y = MathUtils.clamp(currentVelocity.y, -SWING_VELOCITY, SWING_VELOCITY);
+                currentVelocity.x = 0f;
                 getBody().setLinearVelocity(currentVelocity);
+            } else if (state.is(State.WAITING)) {
+                getBody().setLinearVelocity(0f, 0f);
             }
 
-            if (state.is(State.ATTACKING)) {
+            if (state.is(State.LEAVING)) {
+                getBody().setLinearVelocity(isLeft ? -LEAVE_VELOCITY : LEAVE_VELOCITY, LEAVE_VELOCITY);
+            }
+
+            if (state.is(State.ATTACKING) && !isDrowning()) {
                 getBody().setLinearVelocity(isLeft ? -ATTACK_VELOCITY : ATTACK_VELOCITY, -ATTACK_VELOCITY);
             }
 
@@ -120,10 +135,7 @@ public class Raven extends Enemy {
                         playerPosition.y - getBody().getPosition().y,
                         playerPosition.x - getBody().getPosition().x
                 ) * 180.0f / MathUtils.PI;
-                if (state.is(State.SWINGING)) {
-                    System.out.println("Angle: " + angle);
-                }
-                if (angle < -130 && angle > -140) {
+                if (angle < -140 && angle > -150) {
                     state.set(State.SPOTTED);
                 }
             }
@@ -134,21 +146,26 @@ public class Raven extends Enemy {
 
     private TextureRegion getFrame() {
         TextureRegion textureRegion;
-        switch (state.current()) {
-            case CRASHING:
-                textureRegion = crashingAnimation.getKeyFrame(state.timer());
-                break;
-            case SPOTTED:
-                textureRegion = spottedAnimation.getKeyFrame(state.timer());
-                break;
-            case ATTACKING:
-                textureRegion = attackingAnimation.getKeyFrame(state.timer());
-                break;
-            case WAITING:
-            case LEAVING:
-            default:
-                textureRegion = flyingAnimation.getKeyFrame(state.timer());
-                break;
+
+        if (isDrowning()) {
+            textureRegion = crashingAnimation.getKeyFrame(state.timer());
+        } else {
+            switch (state.current()) {
+                case CRASHING:
+                    textureRegion = crashingAnimation.getKeyFrame(state.timer());
+                    break;
+                case SPOTTED:
+                    textureRegion = spottedAnimation.getKeyFrame(state.timer());
+                    break;
+                case ATTACKING:
+                    textureRegion = attackingAnimation.getKeyFrame(state.timer());
+                    break;
+                case WAITING:
+                case LEAVING:
+                default:
+                    textureRegion = flyingAnimation.getKeyFrame(state.timer());
+                    break;
+            }
         }
 
         if (!isLeft && textureRegion.isFlipX()) {
@@ -167,8 +184,9 @@ public class Raven extends Enemy {
     @Override
     protected Body defineBody() {
         BodyDef bodyDef = new BodyDef();
+        bodyDef.gravityScale = 0f;
         bodyDef.position.set(getX() + getWidth() / 2, getY() + getHeight() / 2);
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         Body body = getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
@@ -187,6 +205,7 @@ public class Raven extends Enemy {
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+        shape.dispose();
 
         // head
         PolygonShape headShape = new PolygonShape();
@@ -201,8 +220,21 @@ public class Raven extends Enemy {
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
         fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
         body.createFixture(fixtureDef).setUserData(this);
+        headShape.dispose();
 
-        shape.dispose();
+        EdgeShape sideShape = new EdgeShape();
+        fixtureDef.shape = sideShape;
+        fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
+        fixtureDef.filter.maskBits = Bits.GROUND
+                | Bits.ITEM_BOX
+                | Bits.BRICK
+                | Bits.PLATFORM;
+        fixtureDef.isSensor = true;
+        sideShape.set(new Vector2(-6 / Cfg.PPM, -8f / Cfg.PPM),
+                new Vector2(6 / Cfg.PPM, -8f / Cfg.PPM));
+        body.createFixture(fixtureDef).setUserData(
+                new TaggedUserData<Enemy>(this, TAG_BOTTOM));
+        sideShape.dispose();
         return body;
     }
 
@@ -216,11 +248,30 @@ public class Raven extends Enemy {
         stomp();
     }
 
+    @Override
+    public void kill(boolean applyPush) {
+        getCallbacks().killed(this);
+
+        state.set(State.CRASHING);
+        updateMaskFilter(Bits.NOTHING);
+    }
+
+    @Override
+    public boolean renderInForeground() {
+        return super.renderInForeground() || state.is(State.CRASHING);
+    }
+
+    public void touchGround() {
+        if (state.is(State.ATTACKING)) {
+            state.set(State.LEAVING);
+        }
+    }
+
     private void stomp() {
         getCallbacks().stomp(this);
 
         state.set(State.CRASHING);
-        updateMaskFilter(Bits.ENVIRONMENT_ONLY);
+        updateMaskFilter(Bits.NOTHING);
     }
     public void setPlayerPosition(Vector2 playerPosition) {
         this.playerPosition.set(playerPosition);
@@ -230,6 +281,30 @@ public class Raven extends Enemy {
     @Override
     public void onEnemyHit(Enemy enemy) {
         // NOOP
+    }
+
+    @Override
+    public void drown() {
+        drowning = true;
+        getBody().setLinearVelocity(getBody().getLinearVelocity().x / 10, getBody().getLinearVelocity().y / 10);
+    }
+
+    @Override
+    public boolean isDrowning() {
+        return drowning;
+    }
+
+    private final Vector2 outCenter = new Vector2();
+    @Override
+    public Vector2 getWorldCenter() {
+        Rectangle rect = getBoundingRectangle();
+        outCenter.set(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        return outCenter;
+    }
+
+    @Override
+    public Vector2 getLinearVelocity() {
+        return getBody().getLinearVelocity();
     }
 
     @Override

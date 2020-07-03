@@ -137,6 +137,11 @@ public class DrunkenGuy extends Enemy {
     }
 
     @Override
+    public boolean renderInForeground() {
+        return false;
+    }
+
+    @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);

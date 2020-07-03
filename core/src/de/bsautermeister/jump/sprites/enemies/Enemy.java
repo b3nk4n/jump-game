@@ -53,6 +53,10 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
 
     protected abstract Body defineBody();
 
+    public boolean renderInForeground() {
+        return isDead();
+    }
+
     public void update(float delta) {
         if (isOutOfBounds()) {
             markRemovable();

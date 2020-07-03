@@ -70,7 +70,7 @@ public class Frog extends Enemy implements Drownable {
             if (state.is(State.STANDING)) {
                 getBody().setLinearVelocity(0, getBody().getLinearVelocity().y);
 
-                if (state.timer() > 1f && !isDrowning()) {
+                if (state.timer() > 1f && !isDrowning() && !isDead()) {
                     state.set(State.JUMPING);
                     getBody().applyLinearImpulse(isLeft ? -5f : 5f, 6f, 0f, 0f, true);
                 }
@@ -140,6 +140,7 @@ public class Frog extends Enemy implements Drownable {
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+        shape.dispose();
 
         // head
         PolygonShape headShape = new PolygonShape();
@@ -154,6 +155,7 @@ public class Frog extends Enemy implements Drownable {
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
         fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
         body.createFixture(fixtureDef).setUserData(this);
+        headShape.dispose();
 
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
@@ -176,7 +178,7 @@ public class Frog extends Enemy implements Drownable {
                 new Vector2(4 / Cfg.PPM, -6.5f / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_BOTTOM));
-        shape.dispose();
+        sideShape.dispose();
         return body;
     }
 

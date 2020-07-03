@@ -18,6 +18,7 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.PretzelBullet;
+import de.bsautermeister.jump.sprites.enemies.Raven;
 
 public class WorldContactListener implements ContactListener {
 
@@ -70,6 +71,8 @@ public class WorldContactListener implements ContactListener {
                     ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Frog) {
                     ((Frog) taggedEnemy.getUserData()).reactOnSideSensor(taggedEnemy.getTag());
+                } else if (taggedEnemy.getUserData() instanceof Raven) {
+                    ((Raven) taggedEnemy.getUserData()).touchGround();
                 }
                 break;
             case Bits.PLAYER | Bits.ENEMY:

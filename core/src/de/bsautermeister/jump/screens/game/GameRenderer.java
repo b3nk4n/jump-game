@@ -266,7 +266,7 @@ public class GameRenderer implements Disposable {
         }
 
         for (Enemy enemy : enemies.values()) {
-            if (!(enemy instanceof DrunkenGuy) && !enemy.isDead()) {
+            if (!enemy.renderInForeground()) {
                 enemy.draw(batch);
             }
         }
@@ -282,12 +282,12 @@ public class GameRenderer implements Disposable {
         mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) controller.getMap().getLayers().get(WorldCreator.FG_TILES_KEY));
 
-        // render dead living objects in the very front
         for (Enemy enemy : enemies.values()) {
-            if (!(enemy instanceof DrunkenGuy) && enemy.isDead()) {
+            if (enemy.renderInForeground()) {
                 enemy.draw(batch);
             }
         }
+
         if (player.isDead()) {
             player.draw(batch);
         }
