@@ -15,6 +15,6 @@ public class PretzelItem extends JumpingItem {
     @Override
     protected void onCollect(Player player) {
         player.grow();
-        player.addPretzels(3);
+        player.addPretzels(99);
     }
 }

@@ -82,6 +82,10 @@ public class Fish extends Enemy implements Drownable {
             return;
         }
 
+        if (isDead()) {
+            return;
+        }
+
         if (state.is(State.WAITING)) {
             getBody().setTransform(startCenterX, startCenterY, 0);
 
@@ -112,13 +116,18 @@ public class Fish extends Enemy implements Drownable {
         CircleShape shape = new CircleShape();
         shape.setRadius(6f / Cfg.PPM);
         fixtureDef.shape = shape;
-        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         shape.dispose();
         return body;
+    }
+
+    @Override
+    public void kill(boolean applyPush) {
+        getBody().setGravityScale(1.0f);
+        super.kill(applyPush);
     }
 
     @Override

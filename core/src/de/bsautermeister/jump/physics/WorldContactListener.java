@@ -214,6 +214,7 @@ public class WorldContactListener implements ContactListener {
                 pretzelBullet.explode(pretzelBullet.getBody().getPosition());
                 enemy.kill(true);
                 contact.setEnabled(false);
+                System.out.println("Hit: " + enemy);
                 break;
             case Bits.ENEMY: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());
