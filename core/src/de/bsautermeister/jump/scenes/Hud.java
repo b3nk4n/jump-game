@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -29,14 +31,16 @@ public class Hud implements Disposable {
     private int currentScore;
     private int currentBeers;
     private final int totalBeers;
+    private int currentPretzels = -1;
 
     private Label timeValueLabel;
     private Label scoreValueLabel;
-    private Label timeLabel;
-    private Label scoreLabel;
+    private Label pretzelValueLabel;
 
-    private final Animation<TextureRegion> beerometer;
-    private final BitmapFont fontS;
+    private Image pretzelImage;
+
+    private Animation<TextureRegion> beerometer;
+    private BitmapFont fontS;
 
     public Hud(SpriteBatch batch, Viewport uiViewport, AssetManager assetManager, int totalBeers) {
         this.stage = new Stage(uiViewport, batch);
@@ -44,50 +48,61 @@ public class Hud implements Disposable {
         this.totalBeers = totalBeers;
         this.stage.addActor(buildUi(assetManager));
         this.stage.setDebugAll(Cfg.DEBUG_MODE);
-
-        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
-
-        fontS = assetManager.get(AssetDescriptors.Fonts.S);
-        this.beerometer = new Animation<TextureRegion>(0,
-                atlas.findRegions(RegionNames.fromTemplate(RegionNames.BEEROMETER_TPL, totalBeers)));
     }
 
     private Actor buildUi(AssetManager assetManager) {
+        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
+
+        fontS = assetManager.get(AssetDescriptors.Fonts.S);
+        beerometer = new Animation<TextureRegion>(0,
+                atlas.findRegions(RegionNames.fromTemplate(RegionNames.UI_BEEROMETER_TPL, totalBeers)));
+
+        TextureRegion timeRegion = atlas.findRegion(RegionNames.UI_TIME);
+        TextureRegion pretzelRegion = atlas.findRegion(RegionNames.UI_PRETZEL);
+
         BitmapFont fontM = assetManager.get(AssetDescriptors.Fonts.M);
         Label.LabelStyle labelStyleM = new Label.LabelStyle(fontM, Color.WHITE);
 
-        timeLabel = new Label("Time", labelStyleM);
         timeValueLabel = new Label(getFormattedCountDown(currentTTL), labelStyleM);
-        scoreLabel = new Label("Score", labelStyleM);
+        timeValueLabel.setAlignment(Align.right);
         scoreValueLabel = new Label(getFormattedScore(currentScore), labelStyleM);
+        pretzelValueLabel = new Label(getFormattedPretzels(currentPretzels), labelStyleM);
+        pretzelValueLabel.setAlignment(Align.right);
+
+        Image timeImage = new Image(timeRegion);
+        pretzelImage = new Image(pretzelRegion);
 
         Table table = new Table()
                 .top();
         table.setFillParent(true);
-        table.top();
 
-        table.add(scoreLabel)
-                .expandX()
-                .left();
-        table.add(timeLabel)
-                .expandX()
-                .right();
-        table.row();
         table.add(scoreValueLabel)
                 .expandX()
                 .left();
+        table.add(timeImage)
+                .padTop(12f)
+                .padRight(8f);
         table.add(timeValueLabel)
-                .expandX()
+                .width(80f)
                 .right();
         table.padTop(PAD_TOP).padLeft(PAD_SIDE).padRight(PAD_SIDE);
+        table.row();
+        table.add();
+        table.add(pretzelImage)
+                .padTop(12f)
+                .padRight(8f);
+        table.add(pretzelValueLabel)
+                .width(80f)
+                .right();
         table.pack();
 
         return table;
     }
 
-    public void update(int beers, int score, float ttl) {
+    public void update(int beers, int score, int pretzels, float ttl) {
         updateBeers(beers);
         updateScore(score);
+        updatePretzels(pretzels);
         updateTimeToLive(ttl);
     }
 
@@ -101,6 +116,17 @@ public class Hud implements Disposable {
         if (currentScore != score) {
             currentScore = score;
             scoreValueLabel.setText(getFormattedScore(currentScore));
+        }
+    }
+
+    private void updatePretzels(int pretzels) {
+        if (currentPretzels != pretzels) {
+            currentPretzels = pretzels;
+            pretzelValueLabel.setText(getFormattedPretzels(currentPretzels));
+
+            boolean visible = currentPretzels > 0;
+            pretzelImage.setVisible(visible);
+            pretzelValueLabel.setVisible(visible);
         }
     }
 
@@ -137,8 +163,8 @@ public class Hud implements Disposable {
         return String.format("%06d", score);
     }
 
-    private static String getFormattedBeers(int beers, int totalBeers) {
-        return String.format("%d / %d", beers, totalBeers);
+    private static String getFormattedPretzels(int pretzels) {
+        return String.format("%02d", pretzels);
     }
 
     public Camera getCamera() {

@@ -165,3 +165,17 @@ button_down
   orig: 185, 185
   offset: 0, 0
   index: -1
+pretzel
+  rotate: false
+  xy: 476, 525
+  size: 36, 30
+  orig: 36, 30
+  offset: 0, 0
+  index: -1
+time
+  rotate: false
+  xy: 949, 903
+  size: 36, 30
+  orig: 36, 30
+  offset: 0, 0
+  index: -1

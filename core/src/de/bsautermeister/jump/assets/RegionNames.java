@@ -91,7 +91,9 @@ public class RegionNames {
     public static String LOADING_BAR_HIDDEN = "loading-hidden";
     public static String LOADING_FRAME_BACKGROUND = "frame-bg";
 
-    public static String BEEROMETER_TPL = "beerometer*";
+    public static String UI_BEEROMETER_TPL = "beerometer*";
+    public static String UI_TIME = "time";
+    public static String UI_PRETZEL = "pretzel";
 
     private RegionNames() {}
 

@@ -202,7 +202,7 @@ public class GameRenderer implements Disposable {
 
         uiViewport.apply();
         batch.setProjectionMatrix(hud.getCamera().combined);
-        hud.update(collectedBeers, score, player.getTimeToLive());
+        hud.update(collectedBeers, score, player.getRemainingPretzels(), player.getTimeToLive());
         renderHud(batch);
     }
 

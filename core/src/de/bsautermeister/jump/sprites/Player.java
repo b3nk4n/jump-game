@@ -103,7 +103,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     private final GameTimer changeSizeTimer;
 
-    private boolean pretzelized;
+    private int remainingPretzels;
     private GameTimer throwPretzelTimer;
     private PretzelBullet pretzelBullet;
     private TextureRegion pretzelizedTexture;
@@ -405,11 +405,12 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             pretzelBullet.fire(getX() + offsetX, getY() + getHeight() / 2 - crouchOffset, runningRight);
             callbacks.fire();
             throwPretzelTimer.restart();
+            remainingPretzels--;
         }
     }
 
     private boolean canThrowPretzel() {
-        return pretzelized && !pretzelBullet.isActive() && throwPretzelTimer.isFinished();
+        return hasPretzels() && !pretzelBullet.isActive() && throwPretzelTimer.isFinished();
     }
 
     public Vector2 getVelocityRelativeToGround() {
@@ -521,7 +522,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void draw(Batch batch) {
         super.draw(batch);
 
-        if (canThrowPretzel()) {
+        if (canThrowPretzel() && !isDrowning() && !isDead()) {
             float origU = getU();
             float origU2 = getU2();
             float origV = getV();
@@ -684,20 +685,24 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             blockJumpTimer = 0.33f;
             markRedefineBody = true;
 
-            if (isPretzelized()) {
-                pretzelized = false;
+            if (hasPretzels()) {
+                remainingPretzels = 0;
             }
         } else {
             kill();
         }
     }
 
-    public void pretzelize() {
-        pretzelized = true;
+    public void addPretzels(int value) {
+        remainingPretzels += value;
     }
 
-    private boolean isPretzelized() {
-        return pretzelized;
+    public boolean hasPretzels() {
+        return remainingPretzels > 0;
+    }
+
+    public int getRemainingPretzels() {
+        return remainingPretzels;
     }
 
     public void drunk() {
@@ -878,7 +883,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         out.writeBoolean(runningRight);
         out.writeBoolean(isTurning);
         changeSizeTimer.write(out);
-        out.writeBoolean(pretzelized);
+        out.writeInt(remainingPretzels);
         throwPretzelTimer.write(out);
         pretzelBullet.write(out);
         out.writeBoolean(isBig);
@@ -901,7 +906,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         runningRight = in.readBoolean();
         isTurning = in.readBoolean();
         changeSizeTimer.read(in);
-        pretzelized = in.readBoolean();
+        remainingPretzels = in.readInt();
         throwPretzelTimer.read(in);
         pretzelBullet.read(in);
         isBig = in.readBoolean();
