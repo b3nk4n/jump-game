@@ -922,12 +922,10 @@ public class GameController  implements BinarySerializable, Disposable {
                 }
             } else if (x < 0.995) { // save last 0.5% for Android immersive mode hidden soft buttons
                 // right region: actions
-                if (Gdx.input.justTouched()) {
-                    if (y >= 0.5) {
-                        upPressed = true;
-                    } else {
-                        firePressed = true;
-                    }
+                if (y >= 0.5) {
+                    upPressed = true;
+                } else {
+                    firePressed = true;
                 }
             }
             pointer++;

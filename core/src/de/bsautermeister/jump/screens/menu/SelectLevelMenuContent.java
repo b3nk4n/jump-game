@@ -46,7 +46,7 @@ public class SelectLevelMenuContent extends Table {
             }
         });
         leftButton.setVisible(page > 1);
-        add(leftButton).center();
+        add(leftButton).pad(16f).center();
 
         Label title = new Label("Select Level", skin, Styles.Label.XXLARGE);
         Table container = new Table();
@@ -72,7 +72,7 @@ public class SelectLevelMenuContent extends Table {
             }
         });
         rightButton.setVisible(page < Cfg.LEVEL_PAGES);
-        add(rightButton).center();
+        add(rightButton).pad(16f).center();
 
         pack();
     }
