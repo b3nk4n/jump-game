@@ -94,6 +94,8 @@ public class RegionNames {
     public static String UI_BEEROMETER_TPL = "beerometer*";
     public static String UI_TIME = "time";
     public static String UI_PRETZEL = "pretzel";
+    public static String UI_STAR_FULL = "star_full";
+    public static String UI_STAR_EMPTY = "star_empty";
 
     private RegionNames() {}
 
