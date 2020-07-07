@@ -47,6 +47,7 @@ public interface AssetPaths {
         String SNORE = "audio/sounds/snore.wav";
         String BURP = "audio/sounds/burp.wav";
         String RAVEN = "audio/sounds/raven.wav";
+        String PLOPP = "audio/sounds/plopp.wav";
     }
 
     interface Music {
