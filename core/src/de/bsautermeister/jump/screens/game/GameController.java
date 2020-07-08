@@ -569,8 +569,8 @@ public class GameController  implements BinarySerializable, Disposable {
         upateCameraPosition();
         camera.update();
 
-        if (player.getTimeToLive() <= Cfg.HURRY_WARNING_TIME) {
-            callbacks.hurry(); // TODO call only once?
+        if (getTimeToLive() == Cfg.HURRY_WARNING_TIME) {
+            callbacks.hurry();
         }
 
         if (player.isVictory() && player.getStateTimer() >= Cfg.GOAL_REACHED_FINISH_DELAY) {

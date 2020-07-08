@@ -14,7 +14,7 @@ public class SimplePooledEffect {
 
     public SimplePooledEffect(String effectPath , TextureAtlas atlas, float scaleFactor) {
         ParticleEffect effect = new ParticleEffect();
-        effect.load(Gdx.files.internal(effectPath), atlas); // TODO: https://stackoverflow.com/questions/12261439/assetmanager-particleeffectloader-of-libgdx-android
+        effect.load(Gdx.files.internal(effectPath), atlas);
         effect.scaleEffect(scaleFactor);
         effectPool = new ParticleEffectPool(effect, 8, 16);
     }

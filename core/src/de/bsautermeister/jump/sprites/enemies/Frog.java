@@ -74,7 +74,6 @@ public class Frog extends Enemy implements Drownable {
                     state.set(State.JUMPING);
                     getBody().applyLinearImpulse(isLeft ? -5f : 5f, 6f, 0f, 0f, true);
                 }
-
             }
 
             if (isDrowning()) {

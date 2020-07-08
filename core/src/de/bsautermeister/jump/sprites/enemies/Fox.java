@@ -74,13 +74,13 @@ public class Fox extends Enemy implements Drownable {
 
         state.upate(delta);
 
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
+        setRegion(getFrame());
+
         if (!state.is(State.STOMPED)) {
             if (!isDead() && !isDrowning()) {
                 getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
             }
-
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM); // TODO: why is here +2f, and below when stomped +1f? (also in Frog)
-            setRegion(getFrame());
 
             if (state.is(State.STANDING) && state.timer() > 2f) {
                 state.set(State.WALKING);
@@ -91,9 +91,6 @@ public class Fox extends Enemy implements Drownable {
                 getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
             }
         } else if (state.is(State.STOMPED)) {
-            setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1f / Cfg.PPM);
-            setRegion(getFrame());
-
             if (state.timer() > 0.7f) {
                 markDestroyBody();
                 markRemovable();

@@ -37,7 +37,7 @@ public interface Cfg {
     float MAX_FALLING_SPEED = -20f;
     float MAX_HORIZONTAL_SPEED = 8f;
 
-    float HURRY_WARNING_TIME = 60f;
+    float HURRY_WARNING_TIME = 30f;
 
     float MIN_LANDING_HEIGHT = (BLOCK_SIZE / 2) / PPM;
 
