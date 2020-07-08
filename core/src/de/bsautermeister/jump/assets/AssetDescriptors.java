@@ -92,6 +92,10 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.RAVEN, Sound.class);
         AssetDescriptor<Sound> PLOPP =
                 new AssetDescriptor<>(AssetPaths.Sounds.PLOPP, Sound.class);
+        AssetDescriptor<Sound> FROG =
+                new AssetDescriptor<>(AssetPaths.Sounds.FROG, Sound.class);
+        AssetDescriptor<Sound> WHINE =
+                new AssetDescriptor<>(AssetPaths.Sounds.WHINE, Sound.class);
     }
 
     AssetDescriptor[] ALL = {
@@ -102,7 +106,7 @@ public interface AssetDescriptors {
             Sounds.JUMP, Sounds.KICKED, Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING, Sounds.SUCCESS,
             Sounds.SWEARING1, Sounds.SWEARING2, Sounds.SWEARING3, Sounds.SWEARING4,
             Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7, Sounds.SNORE, Sounds.BURP,
-            Sounds.RAVEN, Sounds.PLOPP
+            Sounds.RAVEN, Sounds.PLOPP, Sounds.FROG, Sounds.WHINE
     };
 
 }

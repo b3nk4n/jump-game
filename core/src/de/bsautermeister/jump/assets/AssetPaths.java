@@ -48,6 +48,8 @@ public interface AssetPaths {
         String BURP = "audio/sounds/burp.wav";
         String RAVEN = "audio/sounds/raven.wav";
         String PLOPP = "audio/sounds/plopp.wav";
+        String FROG = "audio/sounds/frog.wav";
+        String WHINE = "audio/sounds/whine.wav";
     }
 
     interface Music {

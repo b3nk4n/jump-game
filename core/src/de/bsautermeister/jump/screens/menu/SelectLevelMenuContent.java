@@ -90,7 +90,7 @@ public class SelectLevelMenuContent extends Table {
             levelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    gameSoundEffects.playRandomBurpSound();
+                    gameSoundEffects.playRandomBurpSound(1.0f);
                 }
             });
         } else {

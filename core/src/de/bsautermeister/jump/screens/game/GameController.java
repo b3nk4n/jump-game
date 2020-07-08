@@ -143,7 +143,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void stomp(Enemy enemy) {
-            soundEffects.stompSound.play();
+            playEnemyKillSound(enemy, 1f);
 
             if (!(enemy instanceof Hedgehog)) {
                 KillSequelManager killSequelManager = getKillSequelManager();
@@ -260,10 +260,27 @@ public class GameController  implements BinarySerializable, Disposable {
             if (volume > 0) {
                 soundEffects.kickedSound.play(volume);
             }
+            playEnemyKillSound(enemy, volume);
             KillSequelManager killSequelManager = getKillSequelManager();
             killSequelManager.notifyKill();
             score += killSequelManager.getKillScore();
             showTextMessage(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
+        }
+
+        private void playEnemyKillSound(Enemy enemy, float volume) {
+            if (volume > 0) {
+                if (enemy instanceof Hedgehog) {
+                    soundEffects.stompSound.play(volume);
+                } else if (enemy instanceof Fox) {
+                    soundEffects.whineSound.play(volume);
+                } else if (enemy instanceof Frog) {
+                    soundEffects.frogSound.play(volume);
+                } else if (enemy instanceof Raven) {
+                    soundEffects.ravenSound.play(volume);
+                } else if (enemy instanceof DrunkenGuy) {
+                    soundEffects.playRandomBurpSound(volume);
+                }
+            }
         }
 
         @Override
@@ -758,11 +775,13 @@ public class GameController  implements BinarySerializable, Disposable {
                 }
             }
 
-            if (enemy instanceof Fox) {
-                ((Fox) enemy).setPlayerPosition(player.getBody().getPosition());
-            }
-            if (enemy instanceof Raven) {
-                ((Raven) enemy).setPlayerPosition(player.getBody().getPosition());
+            if (!player.isDead() && !player.isDrowning()) {
+                if (enemy instanceof Fox) {
+                    ((Fox) enemy).setPlayerPosition(player.getBody().getPosition());
+                }
+                if (enemy instanceof Raven) {
+                    ((Raven) enemy).setPlayerPosition(player.getBody().getPosition());
+                }
             }
         }
     }
