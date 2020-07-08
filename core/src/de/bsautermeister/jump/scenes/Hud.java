@@ -99,7 +99,7 @@ public class Hud implements Disposable {
         return table;
     }
 
-    public void update(int beers, int score, int pretzels, float ttl) {
+    public void update(int beers, int score, int pretzels, int ttl) {
         updateBeers(beers);
         updateScore(score);
         updatePretzels(pretzels);
@@ -130,8 +130,7 @@ public class Hud implements Disposable {
         }
     }
 
-    private void updateTimeToLive(float timeToLive) {
-        int ttl = (int)Math.ceil(timeToLive);
+    private void updateTimeToLive(int ttl) {
         if (currentTTL != ttl) {
             currentTTL = ttl;
             timeValueLabel.setText(getFormattedCountDown(currentTTL));

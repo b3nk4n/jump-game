@@ -1122,6 +1122,10 @@ public class GameController  implements BinarySerializable, Disposable {
         return score;
     }
 
+    public int getTimeToLive() {
+        return (int)Math.ceil(getPlayer().getTimeToLive());
+    }
+
     public int getCollectedBeers() {
         return collectedBeers;
     }

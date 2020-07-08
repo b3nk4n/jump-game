@@ -35,9 +35,12 @@ public class GameScreen extends ScreenBase {
             GameStats.INSTANCE.updateHighestFinishedLevel(level);
             GameStats.INSTANCE.updateLevelStars(level, 2); // TODO calculate stars
             //setScreen(new GameScreen(getGame(), level + 1));
-            setScreen(new FinishScreen(getGame()), new ScaleScreenTransition(
-                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
-                    goalCenterPosition));
+            int score = controller.getScore();
+            int ttl = controller.getTimeToLive();
+            int totalScore = score + ttl * 25;
+            setScreen(new FinishScreen(getGame(), score, ttl, totalScore),
+                    new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth,
+                            true, goalCenterPosition));
         }
 
         @Override

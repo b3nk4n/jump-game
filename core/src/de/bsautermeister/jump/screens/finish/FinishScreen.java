@@ -39,14 +39,22 @@ public class FinishScreen extends ScreenBase {
     private final Viewport uiViewport;
     private InsideTentRenderer insideTentRenderer;
 
+    private final int score;
+    private final int time;
+    private final int totalScore;
+
     private Sound ploppSound;
 
     private Stage stage;
 
-    public FinishScreen(GameApp game) {
+    public FinishScreen(GameApp game, int score, int time, int totalScore) {
         super(game);
         batch = game.getBatch();
         this.uiViewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
+
+        this.score = score;
+        this.time = time;
+        this.totalScore = totalScore;
     }
 
     @Override
@@ -85,7 +93,7 @@ public class FinishScreen extends ScreenBase {
         ));
         content.add(scoreLabel).left().padLeft(sidePad*2).padBottom(topBottom);
 
-        Label scoreValueLabel = new Label("001234", skin, Styles.Label.LARGE);
+        Label scoreValueLabel = new Label(String.format("%06d", score), skin, Styles.Label.LARGE);
         scoreValueLabel.addAction(Actions.sequence(
                 Actions.hide(),
                 Actions.delay(1f),
@@ -101,7 +109,7 @@ public class FinishScreen extends ScreenBase {
         ));
         content.add(timeLabel).left().padLeft(sidePad*2).padBottom(topBottom);
 
-        Label timeValueLabel = new Label("012", skin, Styles.Label.LARGE);
+        Label timeValueLabel = new Label(String.format("%03d", time), skin, Styles.Label.LARGE);
         timeValueLabel.addAction(Actions.sequence(
                 Actions.hide(),
                 Actions.delay(1.5f),
@@ -119,7 +127,7 @@ public class FinishScreen extends ScreenBase {
         ));
         content.add(totalLabelContainer).left().padLeft(sidePad).padBottom(topBottom);
 
-        Label totalValueLabel = new Label("123456", skin, Styles.Label.XXLARGE);
+        Label totalValueLabel = new Label(String.format("%06d", totalScore), skin, Styles.Label.XXLARGE);
         Container<Label> totalValueLabelContainer = wrapTransformContainer(totalValueLabel);
         totalValueLabelContainer.addAction(Actions.sequence(
                 Actions.hide(),

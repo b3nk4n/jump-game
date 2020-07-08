@@ -126,6 +126,7 @@ public class GameRenderer implements Disposable {
         float gameTime = controller.getGameTime();
         Player player = controller.getPlayer();
         int score = controller.getScore();
+        int ttl = controller.getTimeToLive();
         int collectedBeers = controller.getCollectedBeers();
 
         mapRenderer.setMap(controller.getMap());
@@ -202,7 +203,7 @@ public class GameRenderer implements Disposable {
 
         uiViewport.apply();
         batch.setProjectionMatrix(hud.getCamera().combined);
-        hud.update(collectedBeers, score, player.getRemainingPretzels(), player.getTimeToLive());
+        hud.update(collectedBeers, score, player.getRemainingPretzels(), ttl);
         renderHud(batch);
     }
 
