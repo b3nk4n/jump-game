@@ -156,10 +156,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
             @Override
             public void onFinish() {
-                Filter filter = new Filter();
-                filter.categoryBits = Bits.PLAYER;
-                filter.maskBits = NORMAL_FILTER_BITS;
-                getBody().getFixtureList().get(0).setFilterData(filter);
+                setMainBodyFilterMask(NORMAL_FILTER_BITS);
             }
         });
 
@@ -172,6 +169,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         randomVictoryIdx = MathUtils.random(VICTORY_VARIATIONS - 1);
 
         recentHighestYForLanding = -Float.MAX_VALUE;
+    }
+
+    private void setMainBodyFilterMask(short maskBits) {
+        Filter filter = new Filter();
+        filter.categoryBits = Bits.PLAYER;
+        filter.maskBits = maskBits;
+        getBody().getFixtureList().get(0).setFilterData(filter);
+        getBody().getFixtureList().get(1).setFilterData(filter);
     }
 
     private TextureRegion[] createTextureArray(String templateName, int count) {
@@ -842,7 +847,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public boolean isInvincible() {
-        return isChangingSize();
+        return isChangingSize() || state.is(State.VICTORY);
     }
 
     private boolean isOutOfGame() {
@@ -851,6 +856,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     public void victory() {
         state.set(State.VICTORY);
+        setMainBodyFilterMask(NO_ENEMY_FILTER_BITS);
     }
 
     public String getLastJumpThroughPlatformId() {
@@ -932,6 +938,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             Vector2 currentPosition = body.getPosition();
             world.destroyBody(getBody());
             defineBigBody(currentPosition, !changeSizeTimer.isRunning());
+        }
+
+        if (isVictory()) {
+            setMainBodyFilterMask(NO_ENEMY_FILTER_BITS);
         }
     }
 }
