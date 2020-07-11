@@ -164,6 +164,7 @@ public class Fox extends Enemy implements Drownable {
         fixtureDef.shape = shape;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+        shape.dispose();
 
         // head
         PolygonShape headShape = new PolygonShape();
@@ -178,6 +179,7 @@ public class Fox extends Enemy implements Drownable {
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
         fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
         body.createFixture(fixtureDef).setUserData(this);
+        headShape.dispose();
 
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
@@ -196,7 +198,7 @@ public class Fox extends Enemy implements Drownable {
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
-        shape.dispose();
+        sideShape.dispose();
         return body;
     }
 

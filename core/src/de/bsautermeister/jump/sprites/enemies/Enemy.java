@@ -147,6 +147,10 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         return dead;
     }
 
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
     public void markRemovable() {
         this.removable = true;
     }

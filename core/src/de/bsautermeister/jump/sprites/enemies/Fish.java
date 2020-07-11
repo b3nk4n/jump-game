@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.io.DataInputStream;
@@ -17,10 +18,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.GameObjectState;
 import de.bsautermeister.jump.sprites.Player;
 
@@ -44,7 +45,7 @@ public class Fish extends Enemy implements Drownable {
     public Fish(GameCallbacks callbacks, World world, TextureAtlas atlas,
                 float posX, float posY) {
         super(callbacks, world, posX, 0f, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
-        animation = new Animation(0.25f, atlas.findRegions(RegionNames.FISH), Animation.PlayMode.LOOP);
+        animation = new Animation<TextureRegion>(0.25f, atlas.findRegions(RegionNames.FISH), Animation.PlayMode.LOOP);
         state = new GameObjectState<>(State.WAITING);
         setRegion(animation.getKeyFrame(state.timer()));
         setOriginCenter();
@@ -100,7 +101,7 @@ public class Fish extends Enemy implements Drownable {
         }
     }
 
-    protected boolean isAlmostOutOfBounds() {
+    private boolean isAlmostOutOfBounds() {
         return getBody().getPosition().y < - Cfg.BLOCK_SIZE_PPM;
     }
 
@@ -121,6 +122,22 @@ public class Fish extends Enemy implements Drownable {
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         shape.dispose();
+
+        // head
+        PolygonShape headShape = new PolygonShape();
+        Vector2[] vertices = new Vector2[4];
+        vertices[0] = new Vector2(-5f, 10).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(5f, 10).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-2.5f, 4).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(2.5f, 4).scl(1 / Cfg.PPM);
+        headShape.set(vertices);
+
+        fixtureDef.shape = headShape;
+        fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
+        fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
+        body.createFixture(fixtureDef).setUserData(this);
+        headShape.dispose();
+
         return body;
     }
 
@@ -132,7 +149,21 @@ public class Fish extends Enemy implements Drownable {
 
     @Override
     public void onHeadHit(Player player) {
-        // NOOP
+        if (player.isDead() || player.isInvincible()) {
+            return;
+        }
+        Vector2 velocity = getBody().getLinearVelocity();
+        getBody().setLinearVelocity(velocity.x * 0.5f, velocity.y);
+
+        stomp();
+    }
+
+    private void stomp() {
+        getCallbacks().stomp(this);
+
+        getBody().setGravityScale(1.0f);
+        setDead(true);
+        updateMaskFilter(Bits.NOTHING);
     }
 
     @Override

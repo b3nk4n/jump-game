@@ -274,6 +274,7 @@ public class Raven extends Enemy implements Drownable {
         state.set(State.CRASHING);
         updateMaskFilter(Bits.NOTHING);
     }
+
     public void setPlayerPosition(Vector2 playerPosition) {
         this.playerPosition.set(playerPosition);
     }

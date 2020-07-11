@@ -105,18 +105,19 @@ public class DrunkenGuy extends Enemy {
         fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+        shape.dispose();
 
         // top sensor
-        EdgeShape topSensor = new EdgeShape();
-        fixtureDef.shape = topSensor;
+        EdgeShape topSensorShape = new EdgeShape();
+        fixtureDef.shape = topSensorShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
         fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
         fixtureDef.isSensor = true;
-        topSensor.set(new Vector2(-Cfg.BLOCK_SIZE_PPM, 14f / Cfg.PPM + hiddenOffsetY),
+        topSensorShape.set(new Vector2(-Cfg.BLOCK_SIZE_PPM, 14f / Cfg.PPM + hiddenOffsetY),
                 new Vector2(Cfg.BLOCK_SIZE_PPM, 14f / Cfg.PPM + hiddenOffsetY));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_TOP));
-        shape.dispose();
+        topSensorShape.dispose();
         return body;
     }
 
