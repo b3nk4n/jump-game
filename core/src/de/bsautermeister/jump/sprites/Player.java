@@ -753,10 +753,15 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void hit(Enemy enemy) {
-        if (enemy instanceof de.bsautermeister.jump.sprites.enemies.Hedgehog) {
-            de.bsautermeister.jump.sprites.enemies.Hedgehog hedgehog = (de.bsautermeister.jump.sprites.enemies.Hedgehog) enemy;
+        if (enemy instanceof Hedgehog) {
+            Hedgehog hedgehog = (Hedgehog) enemy;
             if (hedgehog.getState() == Hedgehog.State.ROLL) {
                 hedgehog.kick(getX() <= enemy.getX());
+                return;
+            }
+            if (hedgehog.getState() == Hedgehog.State.UNROLL) {
+                // don't do anything when the hedgehog is just about to unroll, otherwise the player
+                // might be a lil surprised why he is dying, because the hedgehog was just still rolled
                 return;
             }
         }
