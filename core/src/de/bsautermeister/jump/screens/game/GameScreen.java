@@ -15,6 +15,8 @@ import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.GameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.finish.FinishScreen;
+import de.bsautermeister.jump.screens.game.level.LevelInfo;
+import de.bsautermeister.jump.screens.game.level.LevelMetadata;
 import de.bsautermeister.jump.screens.menu.MenuScreen;
 import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
 
@@ -32,13 +34,16 @@ public class GameScreen extends ScreenBase {
     private final GameScreenCallbacks callbacks = new GameScreenCallbacks() {
         @Override
         public void success(int level, Vector2 goalCenterPosition) {
-            GameStats.INSTANCE.updateHighestFinishedLevel(level);
-            GameStats.INSTANCE.updateLevelStars(level, 2); // TODO calculate stars
-            //setScreen(new GameScreen(getGame(), level + 1));
             int score = controller.getScore();
             int ttl = controller.getTimeToLive();
             int totalScore = score + ttl * 25;
-            setScreen(new FinishScreen(getGame(), score, ttl, totalScore),
+            LevelInfo levelInfo = LevelMetadata.getLevelInfo(level);
+            int stars = levelInfo.getStarsForScore(totalScore);
+
+            GameStats.INSTANCE.updateHighestFinishedLevel(level); // TODO unlock levels based on total stars collected. And indicate when selecting an unlocked level, how much is still missing.
+            GameStats.INSTANCE.updateLevelStars(level, stars);
+
+            setScreen(new FinishScreen(getGame(), score, ttl, totalScore, stars),
                     new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth,
                             true, goalCenterPosition));
         }

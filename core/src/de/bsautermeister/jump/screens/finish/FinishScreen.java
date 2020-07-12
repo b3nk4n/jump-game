@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -42,12 +41,13 @@ public class FinishScreen extends ScreenBase {
     private final int score;
     private final int time;
     private final int totalScore;
+    private final int stars;
 
     private Sound ploppSound;
 
     private Stage stage;
 
-    public FinishScreen(GameApp game, int score, int time, int totalScore) {
+    public FinishScreen(GameApp game, int score, int time, int totalScore, int stars) {
         super(game);
         batch = game.getBatch();
         this.uiViewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
@@ -55,6 +55,7 @@ public class FinishScreen extends ScreenBase {
         this.score = score;
         this.time = time;
         this.totalScore = totalScore;
+        this.stars = stars;
     }
 
     @Override
@@ -137,12 +138,11 @@ public class FinishScreen extends ScreenBase {
         ));
         content.add(totalValueLabelContainer).right().padRight(sidePad).padBottom(topBottom).row();
 
-        final int numStars = MathUtils.random(1, 3);
         final float starPad = 8f;
         TextureRegion fullStartRegion = atlas.findRegion(RegionNames.UI_STAR_FULL);
         TextureRegion emptyStartRegion = atlas.findRegion(RegionNames.UI_STAR_EMPTY);
         Table starTable = new Table();
-        Image star1 = new Image(numStars >= 1 ? fullStartRegion : emptyStartRegion);
+        Image star1 = new Image(stars >= 1 ? fullStartRegion : emptyStartRegion);
         Container<Image> star1Container = wrapTransformContainer(star1);
         star1Container.addAction(Actions.sequence(
                 Actions.hide(),
@@ -150,7 +150,7 @@ public class FinishScreen extends ScreenBase {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        if (numStars >= 1) {
+                        if (stars >= 1) {
                             ploppSound.play(0.66f, 0.8f, 0f);
                         }
                     }
@@ -159,7 +159,7 @@ public class FinishScreen extends ScreenBase {
                 Actions.scaleTo(1f, 1f, 0.5f, Interpolation.swingOut)
         ));
         starTable.add(star1Container).padRight(starPad);
-        Image star2 = new Image(numStars >= 2 ? fullStartRegion : emptyStartRegion);
+        Image star2 = new Image(stars >= 2 ? fullStartRegion : emptyStartRegion);
         Container<Image> star2Container = wrapTransformContainer(star2);
         star2Container.addAction(Actions.sequence(
                 Actions.hide(),
@@ -167,7 +167,7 @@ public class FinishScreen extends ScreenBase {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        if (numStars >= 2) {
+                        if (stars >= 2) {
                             ploppSound.play(0.66f, 0.9f, 0f);
                         }
                     }
@@ -176,7 +176,7 @@ public class FinishScreen extends ScreenBase {
                 Actions.scaleTo(1f, 1f, 0.5f, Interpolation.swingOut)
         ));
         starTable.add(star2Container).padTop(2 * starPad).padLeft(starPad).padRight(starPad);
-        Image star3 = new Image(numStars >= 3 ? fullStartRegion : emptyStartRegion);
+        Image star3 = new Image(stars >= 3 ? fullStartRegion : emptyStartRegion);
         Container<Image> star3Container = wrapTransformContainer(star3);
         star3Container.addAction(Actions.sequence(
                 Actions.hide(),
@@ -184,7 +184,7 @@ public class FinishScreen extends ScreenBase {
                 Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        if (numStars >= 3) {
+                        if (stars >= 3) {
                             ploppSound.play(0.66f, 1.0f, 0f);
                         }
                     }

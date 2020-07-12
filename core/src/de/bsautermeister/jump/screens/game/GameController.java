@@ -37,6 +37,8 @@ import de.bsautermeister.jump.managers.KillSequelManager;
 import de.bsautermeister.jump.managers.WaterInteractionManager;
 import de.bsautermeister.jump.physics.WorldContactListener;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.screens.game.level.LevelInfo;
+import de.bsautermeister.jump.screens.game.level.LevelMetadata;
 import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
 import de.bsautermeister.jump.serializer.BinarySerializable;
@@ -45,13 +47,7 @@ import de.bsautermeister.jump.sprites.BeerItem;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
-import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
-import de.bsautermeister.jump.sprites.enemies.Enemy;
-import de.bsautermeister.jump.sprites.enemies.Fish;
-import de.bsautermeister.jump.sprites.enemies.Fox;
 import de.bsautermeister.jump.sprites.GrilledChickenItem;
-import de.bsautermeister.jump.sprites.enemies.Frog;
-import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.ItemBox;
@@ -62,6 +58,12 @@ import de.bsautermeister.jump.sprites.Pole;
 import de.bsautermeister.jump.sprites.PretzelBullet;
 import de.bsautermeister.jump.sprites.PretzelItem;
 import de.bsautermeister.jump.sprites.Tent;
+import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Fish;
+import de.bsautermeister.jump.sprites.enemies.Fox;
+import de.bsautermeister.jump.sprites.enemies.Frog;
+import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.enemies.Raven;
 import de.bsautermeister.jump.text.TextMessage;
 
@@ -458,7 +460,9 @@ public class GameController  implements BinarySerializable, Disposable {
 
         WorldCreator.StartParams start = worldCreator.getStart();
         Rectangle goal = worldCreator.getGoal();
-        player = new Player(callbacks, world, atlas, start);
+
+        LevelInfo levelInfo = LevelMetadata.getLevelInfo(level);
+        player = new Player(callbacks, world, atlas, start, levelInfo.getTime());
 
         tent = new Tent(atlas, goal);
 

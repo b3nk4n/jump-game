@@ -39,8 +39,6 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Player extends Sprite implements BinarySerializable, Drownable {
 
-    private static final float INITIAL_TTL = 120;
-
     private static final float EFFECT_DURATION = 10f;
 
     private static final short NO_ENEMY_FILTER_BITS = Bits.ENVIRONMENT_ONLY |
@@ -127,7 +125,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
      */
     private float recentHighestYForLanding;
 
-    public Player(GameCallbacks callbacks, World world, TextureAtlas atlas, WorldCreator.StartParams start) {
+    public Player(GameCallbacks callbacks, World world, TextureAtlas atlas,
+                  WorldCreator.StartParams start, int initialTimeToLive) {
         this.callbacks = callbacks;
         this.world = world;
         this.atlas = atlas;
@@ -142,7 +141,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         setRegion(smallPlayerStand[0]);
 
-        timeToLive = INITIAL_TTL;
+        timeToLive = initialTimeToLive;
 
         slideEffect.load(Gdx.files.internal(AssetPaths.Pfx.SLIDE_SMOKE), atlas);
         slideEffect.scaleEffect(0.1f / Cfg.PPM);
