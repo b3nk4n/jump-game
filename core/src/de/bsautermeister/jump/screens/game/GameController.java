@@ -71,6 +71,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private static final Logger LOG = new Logger(GameController.class.getSimpleName(), Cfg.LOG_LEVEL);
 
+    private static final float ANDROID_IMMERSIVE_MODE_SAFE_ZONE = 0.995f;
+
     private final static String[] TENT_SONGS = {
             AssetPaths.Music.PROSIT_AUDIO,
             AssetPaths.Music.PROSIT2_AUDIO
@@ -896,6 +898,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private Vector2 tmpPosition = new Vector2(0, 0);
     private Vector2 startSteerPosition = new Vector2(0, 0);
+    private Vector2 startJumpPosition = new Vector2(0, 0);
 
     private void handleInput() {
         checkPauseInput();
@@ -903,8 +906,6 @@ public class GameController  implements BinarySerializable, Disposable {
         if (player.isDead()) {
             return;
         }
-
-
 
         boolean upPressed = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean downPressed = Gdx.input.isKeyPressed(Input.Keys.DOWN);
@@ -914,6 +915,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         int pointer = 0;
         boolean leftSideTouched = false;
+        boolean rightSideTouched = false;
         while (Gdx.input.isTouched(pointer)) {
             float x = Gdx.input.getX(pointer);
             float y = Gdx.input.getY(pointer);
@@ -943,13 +945,21 @@ public class GameController  implements BinarySerializable, Disposable {
                 } else if (x > 0.2 && x < 0.375) {
                     rightPressed = true;
                 }
-            } else if (x < 0.995) { // save last 0.5% for Android immersive mode hidden soft buttons
-                float xFromRight = 1f - x;
-                // right region: actions
-                if (xFromRight < 0.175) {
-                    upPressed = true;
-                } else if (xFromRight > 0.2 && xFromRight < 0.375) {
-                    firePressed = true;
+            } else {
+                rightSideTouched = true;
+
+                if (startJumpPosition.isZero()) {
+                    startJumpPosition.set(x, y);
+                }
+
+                if (x < ANDROID_IMMERSIVE_MODE_SAFE_ZONE && startJumpPosition.x < ANDROID_IMMERSIVE_MODE_SAFE_ZONE ) {
+                    float xFromRight = 1f - x;
+                    // right region: actions
+                    if (xFromRight < 0.175) {
+                        upPressed = true;
+                    } else if (xFromRight > 0.2 && xFromRight < 0.375) {
+                        firePressed = true;
+                    }
                 }
             }
             pointer++;
@@ -958,6 +968,10 @@ public class GameController  implements BinarySerializable, Disposable {
         if (!leftSideTouched) {
             startSteerPosition.set(0, 0);
         }
+        if (!rightSideTouched) {
+            startJumpPosition.set(0, 0);
+        }
+
 
         player.control(upPressed, downPressed, leftPressed, rightPressed, firePressed);
     }
