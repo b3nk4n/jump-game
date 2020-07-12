@@ -3,18 +3,25 @@ package de.bsautermeister.jump.commons;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-public class GameStats {
+public class JumpGameStats {
+    /**
+     * The preferences under Linux are stored under the ~/.prefs/JumpGameStats directory
+     */
     private final Preferences prefs;
 
-    private static final String KEY_HIGHEST_FINISHED_LEVEL = "highestFinishedLevel";
-    private static final String KEY_LAST_STARTED_LEVEL = "lastStartedLevel";
-    private static final String KEY_LEVEL_STARTS_PREFIX = "levelStars";
+    private static final String KEY_PREFIX = "de.bsautermeister.jump.";
+
+    private static final String KEY_HIGHEST_FINISHED_LEVEL = KEY_PREFIX + "highestFinishedLevel";
+    private static final String KEY_LAST_STARTED_LEVEL = KEY_PREFIX + "lastStartedLevel";
+    private static final String KEY_LEVEL_STARS_PREFIX = KEY_PREFIX + "levelStars";
+    private static final String KEY_TOTAL_STARS_PREFIX = KEY_PREFIX + "totalStars";
 
     private Integer cachedHighestLevel;
+    private Integer cachedTotalStars;
 
-    public static final GameStats INSTANCE = new GameStats();
+    public static final JumpGameStats INSTANCE = new JumpGameStats();
 
-    private GameStats() {
+    private JumpGameStats() {
         this.prefs = Gdx.app.getPreferences(getClass().getSimpleName());
     }
 
@@ -46,12 +53,22 @@ public class GameStats {
     public void updateLevelStars(int level, int stars) {
         int currentStars = getLevelStars(level);
         if (stars > currentStars) {
-            prefs.putInteger(KEY_LEVEL_STARTS_PREFIX + level, stars);
+            prefs.putInteger(KEY_LEVEL_STARS_PREFIX + level, stars);
+            int oldTotalStars = getTotalStars();
+            cachedTotalStars = oldTotalStars + stars - currentStars;
+            prefs.putInteger(KEY_TOTAL_STARS_PREFIX, cachedTotalStars);
             prefs.flush();
         }
     }
 
     public int getLevelStars(int level) {
-        return prefs.getInteger(KEY_LEVEL_STARTS_PREFIX + level, 0);
+        return prefs.getInteger(KEY_LEVEL_STARS_PREFIX + level, 0);
+    }
+
+    public int getTotalStars() {
+        if (cachedTotalStars == null) {
+            cachedTotalStars = prefs.getInteger(KEY_TOTAL_STARS_PREFIX);
+        }
+        return cachedTotalStars;
     }
 }

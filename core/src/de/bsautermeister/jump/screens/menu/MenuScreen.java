@@ -96,8 +96,8 @@ public class MenuScreen extends ScreenBase {
             }
 
             @Override
-            public void levelSelected(int absoluteLevel, Vector2 clickScreenPosition) {
-                setScreen(new GameScreen(getGame(), absoluteLevel), new ScaleScreenTransition(
+            public void levelSelected(int level, Vector2 clickScreenPosition) {
+                setScreen(new GameScreen(getGame(), level), new ScaleScreenTransition(
                         Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
                         clickScreenPosition));
             }

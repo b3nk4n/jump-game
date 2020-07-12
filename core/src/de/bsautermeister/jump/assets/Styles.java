@@ -3,7 +3,8 @@ package de.bsautermeister.jump.assets;
 public interface Styles {
 
     interface TextButton {
-        String DISABLED = "disabled";
+        String LOCKED = "locked";
+        String STILL_LOCKED = "still_locked";
         String LEVEL_STARS0 = "level_stars0";
         String LEVEL_STARS1 = "level_stars1";
         String LEVEL_STARS2 = "level_stars2";

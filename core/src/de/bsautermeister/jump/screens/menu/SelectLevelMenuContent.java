@@ -1,10 +1,9 @@
 package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,15 +12,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import java.util.Locale;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Styles;
-import de.bsautermeister.jump.commons.GameStats;
+import de.bsautermeister.jump.commons.JumpGameStats;
 import de.bsautermeister.jump.screens.game.GameSoundEffects;
+import de.bsautermeister.jump.screens.game.level.LevelInfo;
+import de.bsautermeister.jump.screens.game.level.LevelMetadata;
 
 public class SelectLevelMenuContent extends Table {
     private final Callbacks callbacks;
     private final GameSoundEffects gameSoundEffects;
+
+    private Label infoLabel;
 
     private final int page;
 
@@ -56,10 +61,15 @@ public class SelectLevelMenuContent extends Table {
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
             for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
-                levelTable.add(createLevelButton(skin, page,r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
+                levelTable.add(createLevelButton(skin, (page - 1) * Cfg.LEVELS_PER_STAGE + r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
             }
             levelTable.row();
         }
+
+        infoLabel = new Label("", skin, Styles.Label.DEFAULT);
+        infoLabel.setVisible(false);
+        levelTable.add(infoLabel).colspan(3);
+
         levelTable.pack();
         container.add(levelTable).pad(Cfg.TITLE_PAD);
         add(container).expandX();
@@ -77,16 +87,19 @@ public class SelectLevelMenuContent extends Table {
         pack();
     }
 
-    private Button createLevelButton(Skin skin, final int stage, final int level) {
-        int highestUnlockedLevel = GameStats.INSTANCE.getHighestFinishedLevel() + 1;
-        final int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
-        final boolean disabled = absoluteLevel > highestUnlockedLevel;
-        String styleName = getLevelButtonStyleName(stage, level, disabled);
+    private Button createLevelButton(Skin skin, final int level) {
+        int highestUnlockedLevel = JumpGameStats.INSTANCE.getHighestFinishedLevel() + 1;
+        final boolean locked = level > highestUnlockedLevel;
+        final int totalStars = JumpGameStats.INSTANCE.getTotalStars();
+        LevelInfo levelInfo = LevelMetadata.getLevelInfo(level);
+        final int requiredStarsToUnlock = levelInfo.getRequiredStarsToUnlock();
+        boolean stillLocked = level == highestUnlockedLevel && totalStars < requiredStarsToUnlock;
+        String styleName = locked ? Styles.TextButton.LOCKED : getUnlockedLevelButtonStyleName(level, stillLocked);
         final TextButton levelButton = new TextButton(
-                disabled ? "" : String.valueOf(absoluteLevel), skin, styleName);
+                locked || stillLocked ? "" : String.valueOf(level), skin, styleName);
         levelButton.getLabel().setAlignment(Align.top);
         levelButton.getLabelCell().padTop(30f);
-        if (disabled) {
+        if (locked) {
             levelButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -94,27 +107,46 @@ public class SelectLevelMenuContent extends Table {
                 }
             });
         } else {
-            levelButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    Vector2 clickScreenPosition = event.getStage()
-                            .getViewport()
-                            .project(new Vector2(event.getStageX(), event.getStageY()));
-                    callbacks.levelSelected(absoluteLevel, clickScreenPosition);
-                }
-            });
+            if (stillLocked) {
+                levelButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        gameSoundEffects.playRandomBurpSound(1.0f);
+                        int missingStars = requiredStarsToUnlock - totalStars;
+                        infoLabel.setText(String.format(Locale.ROOT,
+                                "%d star%s missing to unlock",
+                                missingStars, missingStars != 1 ? "s" : ""));
+                        infoLabel.clearActions();
+                        infoLabel.addAction(Actions.sequence(
+                                Actions.show(),
+                                Actions.delay(3f),
+                                Actions.hide()
+                        ));
+                    }
+                });
+                System.out.println("Required: " + requiredStarsToUnlock + " but only: " + totalStars);
+            } else {
+                levelButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        Vector2 clickScreenPosition = event.getStage()
+                                .getViewport()
+                                .project(new Vector2(event.getStageX(), event.getStageY()));
+                        callbacks.levelSelected(level, clickScreenPosition);
+                    }
+                });
+            }
         }
 
         return levelButton;
     }
 
-    private String getLevelButtonStyleName(int stage, int level, boolean disabled) {
-        if (disabled) {
-            return Styles.TextButton.DISABLED;
+    private String getUnlockedLevelButtonStyleName(int level, boolean stillLocked) {
+        if (stillLocked) {
+            return Styles.TextButton.STILL_LOCKED;
         }
 
-        int absoluteLevel = (stage - 1) * Cfg.LEVELS_PER_STAGE + level;
-        int stars = GameStats.INSTANCE.getLevelStars(absoluteLevel);
+        int stars = JumpGameStats.INSTANCE.getLevelStars(level);
         switch (stars) {
             case 0:
                 return Styles.TextButton.LEVEL_STARS0;
@@ -132,6 +164,6 @@ public class SelectLevelMenuContent extends Table {
     public interface Callbacks {
         void leftClicked();
         void rightClicked();
-        void levelSelected(int absoluteLevel, Vector2 clickScreenPosition);
+        void levelSelected(int level, Vector2 clickScreenPosition);
     }
 }

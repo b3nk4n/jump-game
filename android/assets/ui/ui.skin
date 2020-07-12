@@ -62,15 +62,19 @@
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
-      "disabled": {
-        "up": "button_disabled",
-        "down": "button_disabled_down",
+      "still_locked": {
+        "up": "button_still_locked",
+        "down": "button_still_locked_down",
+        "font": "font_xxl"
+      },
+      "locked": {
+        "up": "button_locked",
+        "down": "button_locked_down",
         "font": "font_xxl"
       },
       "level_stars0": {
         "up": "button",
         "down": "button_down",
-        "disabled": "button_disabled",
         "font": "font_xxl",
         "fontColor": "white"
       },

@@ -12,7 +12,7 @@ import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
-import de.bsautermeister.jump.commons.GameStats;
+import de.bsautermeister.jump.commons.JumpGameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.finish.FinishScreen;
 import de.bsautermeister.jump.screens.game.level.LevelInfo;
@@ -40,8 +40,8 @@ public class GameScreen extends ScreenBase {
             LevelInfo levelInfo = LevelMetadata.getLevelInfo(level);
             int stars = levelInfo.getStarsForScore(totalScore);
 
-            GameStats.INSTANCE.updateHighestFinishedLevel(level); // TODO unlock levels based on total stars collected. And indicate when selecting an unlocked level, how much is still missing.
-            GameStats.INSTANCE.updateLevelStars(level, stars);
+            JumpGameStats.INSTANCE.updateHighestFinishedLevel(level); // TODO unlock levels based on total stars collected. And indicate when selecting an unlocked level, how much is still missing.
+            JumpGameStats.INSTANCE.updateLevelStars(level, stars);
 
             setScreen(new FinishScreen(getGame(), score, ttl, totalScore, stars),
                     new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth,
@@ -63,7 +63,7 @@ public class GameScreen extends ScreenBase {
         super(game);
         this.level = level;
         this.gameToResume = null;
-        GameStats.INSTANCE.updateLastStartedLevel(level);
+        JumpGameStats.INSTANCE.updateLastStartedLevel(level);
     }
 
     /**
@@ -71,7 +71,7 @@ public class GameScreen extends ScreenBase {
      */
     public GameScreen(GameApp game) {
         super(game);
-        this.level = GameStats.INSTANCE.getLastStartedLevel();
+        this.level = JumpGameStats.INSTANCE.getLastStartedLevel();
         this.gameToResume = JumpGame.getSavedDataHandle();
     }
 
