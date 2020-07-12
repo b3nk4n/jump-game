@@ -938,16 +938,17 @@ public class GameController  implements BinarySerializable, Disposable {
                     }
                 }
 
-                if (x < 0.125) {
+                if (x < 0.175) {
                     leftPressed = true;
-                } else if (x > 0.2 && x < 0.45) {
+                } else if (x > 0.2 && x < 0.375) {
                     rightPressed = true;
                 }
             } else if (x < 0.995) { // save last 0.5% for Android immersive mode hidden soft buttons
+                float xFromRight = 1f - x;
                 // right region: actions
-                if (y >= 0.5) {
+                if (xFromRight < 0.175) {
                     upPressed = true;
-                } else {
+                } else if (xFromRight > 0.2 && xFromRight < 0.375) {
                     firePressed = true;
                 }
             }

@@ -97,6 +97,11 @@ public class RegionNames {
     public static String UI_STAR_FULL = "star_full";
     public static String UI_STAR_EMPTY = "star_empty";
 
+    public static String UI_CONTROL_LEFT = "control_left";
+    public static String UI_CONTROL_RIGHT = "control_right";
+    public static String UI_CONTROL_UP = "control_up";
+    public static String UI_CONTROL_FIRE ="control_fire";
+
     private RegionNames() {}
 
     public static String fromTemplate(String template, int value) {

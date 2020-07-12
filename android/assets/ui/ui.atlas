@@ -6,203 +6,231 @@ filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 382, 466
+  xy: 382, 482
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_left_down
   rotate: false
-  xy: 571, 655
+  xy: 571, 671
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 760, 844
+  xy: 760, 860
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 arrow_right_down
   rotate: false
-  xy: 193, 88
+  xy: 193, 104
   size: 90, 160
   orig: 90, 160
   offset: 0, 0
   index: -1
 beerometer1
   rotate: false
-  xy: 4, 4
+  xy: 4, 20
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 0
 beerometer1
   rotate: false
-  xy: 476, 455
+  xy: 665, 676
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 1
 beerometer2
   rotate: false
-  xy: 665, 760
+  xy: 665, 617
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 0
 beerometer2
   rotate: false
-  xy: 665, 701
+  xy: 592, 558
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 1
 beerometer2
   rotate: false
-  xy: 665, 642
+  xy: 592, 499
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 2
 beerometer3
   rotate: false
-  xy: 665, 583
+  xy: 287, 109
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 0
 beerometer3
   rotate: false
-  xy: 665, 524
+  xy: 293, 50
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 1
 beerometer3
   rotate: false
-  xy: 665, 465
+  xy: 382, 323
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 2
 beerometer3
   rotate: false
-  xy: 665, 406
+  xy: 387, 264
   size: 185, 55
   orig: 185, 55
   offset: 0, 0
   index: 3
 button
   rotate: false
-  xy: 4, 819
+  xy: 4, 835
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s
   rotate: false
-  xy: 4, 630
+  xy: 4, 646
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_1s_down
   rotate: false
-  xy: 193, 819
+  xy: 193, 835
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s
   rotate: false
-  xy: 4, 441
+  xy: 4, 457
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_2s_down
   rotate: false
-  xy: 193, 630
+  xy: 193, 646
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s
   rotate: false
-  xy: 382, 819
+  xy: 382, 835
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_3s_down
   rotate: false
-  xy: 4, 252
+  xy: 4, 268
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 193, 441
+  xy: 193, 457
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_locked
   rotate: false
-  xy: 382, 630
+  xy: 382, 646
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_locked_down
   rotate: false
-  xy: 571, 819
+  xy: 571, 835
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_still_locked
   rotate: false
-  xy: 4, 63
+  xy: 4, 79
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
 button_still_locked_down
   rotate: false
-  xy: 193, 252
+  xy: 193, 268
   size: 185, 185
   orig: 185, 185
   offset: 0, 0
   index: -1
+control_fire
+  rotate: false
+  xy: 193, 4
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+control_left
+  rotate: false
+  xy: 665, 735
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+control_right
+  rotate: false
+  xy: 287, 168
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+control_up
+  rotate: false
+  xy: 382, 382
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
 pretzel
   rotate: false
-  xy: 193, 54
+  xy: 854, 874
   size: 36, 30
   orig: 36, 30
   offset: 0, 0
   index: -1
 star_empty
   rotate: false
-  xy: 854, 892
+  xy: 854, 908
   size: 112, 112
   orig: 112, 112
   offset: 0, 0
   index: -1
 star_full
   rotate: false
-  xy: 476, 514
+  xy: 476, 530
   size: 112, 112
   orig: 112, 112
   offset: 0, 0
   index: -1
 time
   rotate: false
-  xy: 287, 218
+  xy: 970, 990
   size: 36, 30
   orig: 36, 30
   offset: 0, 0

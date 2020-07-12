@@ -42,6 +42,11 @@ public class Hud implements Disposable {
     private Animation<TextureRegion> beerometer;
     private BitmapFont fontS;
 
+    private TextureRegion controlLeft;
+    private TextureRegion controlRight;
+    private TextureRegion controlUp;
+    private TextureRegion controlFire;
+
     public Hud(SpriteBatch batch, Viewport uiViewport, AssetManager assetManager, int totalBeers) {
         this.stage = new Stage(uiViewport, batch);
 
@@ -56,6 +61,11 @@ public class Hud implements Disposable {
         fontS = assetManager.get(AssetDescriptors.Fonts.S);
         beerometer = new Animation<TextureRegion>(0,
                 atlas.findRegions(RegionNames.fromTemplate(RegionNames.UI_BEEROMETER_TPL, totalBeers)));
+
+        controlLeft = atlas.findRegion(RegionNames.UI_CONTROL_LEFT);
+        controlRight = atlas.findRegion(RegionNames.UI_CONTROL_RIGHT);
+        controlUp = atlas.findRegion(RegionNames.UI_CONTROL_UP);
+        controlFire = atlas.findRegion(RegionNames.UI_CONTROL_FIRE);
 
         TextureRegion timeRegion = atlas.findRegion(RegionNames.UI_TIME);
         TextureRegion pretzelRegion = atlas.findRegion(RegionNames.UI_PRETZEL);
@@ -140,7 +150,10 @@ public class Hud implements Disposable {
     public void draw(SpriteBatch batch) {
         stage.draw();
 
+        batch.begin();
         drawBeerometer(batch);
+        drawControls(batch);
+        batch.end();
     }
 
     private void drawBeerometer(SpriteBatch batch) {
@@ -148,10 +161,19 @@ public class Hud implements Disposable {
         float x = Cfg.UI_WIDTH / 2f - frame.getRegionWidth() / 2f;
         float y = Cfg.UI_HEIGHT - frame.getRegionHeight() - 42f;
 
-        batch.begin();
         batch.draw(frame, x, y);
         fontS.draw(batch, "Beerometer", x, Cfg.UI_HEIGHT - 12f);
-        batch.end();
+    }
+
+    private void drawControls(SpriteBatch batch) {
+        batch.setColor(1.0f, 1.0f, 1.0f, 0.33f);
+        batch.draw(controlLeft, 64, 32);
+        batch.draw(controlRight, 320, 32);
+        batch.draw(controlUp, Cfg.UI_WIDTH - 64 - controlUp.getRegionWidth(), 32);
+        if (currentPretzels > 0) {
+            batch.draw(controlFire, Cfg.UI_WIDTH - 320 - controlFire.getRegionWidth(), 32);
+        }
+        batch.setColor(Color.WHITE);
     }
 
     private static String getFormattedCountDown(int worldTimer) {
