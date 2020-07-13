@@ -269,7 +269,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         // set texture bounds always at the bottom of the body
         float leftX = body.getPosition().x - getWidth() / 2;
-        float bottomY = body.getPosition().y - 6.25f / Cfg.PPM;
+        float bottomY = body.getPosition().y - 5.75f / Cfg.PPM;
         float textureWidth = getRegionWidth() / Cfg.PPM;
         float textureHeight = getRegionHeight() / Cfg.PPM;
         setBounds(leftX, bottomY, textureWidth, textureHeight);
@@ -550,15 +550,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
-        createBodyFixture(fixtureDef, shape, normalFilterMask);
+        createBodyFixture(shape, normalFilterMask);
         shape.setPosition(new Vector2(0, 3f / Cfg.PPM));
-        createBodyFixture(fixtureDef, shape, normalFilterMask);
-        createFeetFixture(fixtureDef, 6f, -6.0f);
-        createHeadSensorFixture(fixtureDef, 4f, 8.6f);
-        createGroundSensorFixture(fixtureDef, 9f, -6.5f);
+        createBodyFixture(shape, normalFilterMask);
+        createFeetFixture(1f, 11.0f, -5.5f);
+        createHeadSensorFixture(4f, 8.6f);
+        createGroundSensorFixture(9f, -6.5f);
         shape.dispose();
     }
 
@@ -569,19 +568,19 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
 
-        FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
-        createBodyFixture(fixtureDef, shape, normalFilterMask);
+        createBodyFixture(shape, normalFilterMask);
         shape.setPosition(new Vector2(0, 10f / Cfg.PPM));
-        createBodyFixture(fixtureDef, shape, normalFilterMask);
-        createFeetFixture(fixtureDef, 6f, -6f);
-        createHeadSensorFixture(fixtureDef, 4f, 15.6f);
-        createGroundSensorFixture(fixtureDef, 9.0f, -6.5f);
+        createBodyFixture(shape, normalFilterMask);
+        createFeetFixture(1f, 11f, -5.5f);
+        createHeadSensorFixture(4f, 15.6f);
+        createGroundSensorFixture(9.0f, -6.5f);
         shape.dispose();
     }
 
-    private void createBodyFixture(FixtureDef fixtureDef, Shape shape, boolean normalFilterMask) {
+    private void createBodyFixture(Shape shape, boolean normalFilterMask) {
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.filter.categoryBits = Bits.PLAYER;
         fixtureDef.filter.maskBits = normalFilterMask ?
                 NORMAL_FILTER_BITS : NO_ENEMY_FILTER_BITS;
@@ -594,7 +593,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     /**
      * Feet as edge shape to circumvent edge-to-edge collision.
      */
-    private void createFeetFixture(FixtureDef fixtureDef, float width, float bottomY) {
+    private void createFeetFixture(float width, float bodyWidth, float bottomY) {
+        FixtureDef fixtureDef = new FixtureDef();
+
+        // narrow fixture to circumvent edge-to-edge collision
         EdgeShape feetShape = new EdgeShape();
         feetShape.set(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM,
                 width / 2 / Cfg.PPM, bottomY / Cfg.PPM);
@@ -603,27 +605,47 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.PLATFORM |
                 Bits.ITEM_BOX |
-                Bits.ENEMY_HEAD |
                 Bits.BRICK;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+
+        // wider sensor for enemy-head-collision
+        EdgeShape feetSensorShape = new EdgeShape();
+        feetSensorShape.set(-bodyWidth / 2 / Cfg.PPM, bottomY / Cfg.PPM,
+                bodyWidth / 2 / Cfg.PPM, bottomY / Cfg.PPM);
+        fixtureDef.shape = feetSensorShape;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Bits.PLAYER_FEET;
+        fixtureDef.filter.maskBits =
+                Bits.ENEMY_HEAD;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
+
+        feetShape.dispose();
     }
 
-    private void createHeadSensorFixture(FixtureDef fixtureDef, float width, float topY) {
+    private void createHeadSensorFixture(float width, float topY) {
+        FixtureDef fixtureDef = new FixtureDef();
         EdgeShape headShape = new EdgeShape();
         headShape.set(new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
         fixtureDef.filter.categoryBits = Bits.PLAYER_HEAD;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.PLATFORM |
+                Bits.ITEM_BOX |
+                Bits.BRICK;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
+        headShape.dispose();
     }
 
     /**
      * Sensor to indicate we are standing on ground.
      */
-    private void createGroundSensorFixture(FixtureDef fixtureDef, float width, float bottomY) {
+    private void createGroundSensorFixture(float width, float bottomY) {
+        FixtureDef fixtureDef = new FixtureDef();
         EdgeShape groundSensorShape = new EdgeShape();
         groundSensorShape.set(new Vector2(-width / 2 / Cfg.PPM, bottomY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, bottomY / Cfg.PPM));
@@ -631,6 +653,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         fixtureDef.shape = groundSensorShape;
         fixtureDef.isSensor = true; // does not collide in the physics simulation
         body.createFixture(fixtureDef).setUserData(this);
+        groundSensorShape.dispose();
     }
 
     public Body getBody() {

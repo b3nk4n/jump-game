@@ -952,7 +952,8 @@ public class GameController  implements BinarySerializable, Disposable {
                     startJumpPosition.set(x, y);
                 }
 
-                if (x < ANDROID_IMMERSIVE_MODE_SAFE_ZONE && startJumpPosition.x < ANDROID_IMMERSIVE_MODE_SAFE_ZONE ) {
+                if (x < ANDROID_IMMERSIVE_MODE_SAFE_ZONE &&
+                        startJumpPosition.x < ANDROID_IMMERSIVE_MODE_SAFE_ZONE ) {
                     float xFromRight = 1f - x;
                     // right region: actions
                     if (xFromRight < 0.175) {

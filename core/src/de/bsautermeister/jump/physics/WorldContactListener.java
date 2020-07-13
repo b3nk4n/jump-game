@@ -43,9 +43,8 @@ public class WorldContactListener implements ContactListener {
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.ITEM_BOX | Bits.BRICK);
                 tileObject.onHeadHit(player);
                 break;
-            case Bits.ENEMY_HEAD | Bits.PLAYER:
             case Bits.ENEMY_HEAD | Bits.PLAYER_FEET:
-                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET | Bits.PLAYER);
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
                 if (player.getBody().getLinearVelocity().y < 0.1) {
                     enemy.onHeadHit(player);
