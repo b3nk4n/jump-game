@@ -273,9 +273,6 @@ public class GameRenderer implements Disposable {
         }
 
         Player player = controller.getPlayer();
-        if (!player.isDead()) {
-            player.draw(batch);
-        }
         player.getPretzelBullet().draw(batch);
 
         renderWater(batch, waterTexture, 0.5f);
@@ -289,9 +286,7 @@ public class GameRenderer implements Disposable {
             }
         }
 
-        if (player.isDead()) {
-            player.draw(batch);
-        }
+        player.draw(batch);
 
         for (InteractiveTileObject tileObject : controller.getTileObjects()) {
             // tile-objects itself are drawn in the GRAPHICS layer, while this draw-call renders the

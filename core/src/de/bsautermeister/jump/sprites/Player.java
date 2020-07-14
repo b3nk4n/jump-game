@@ -370,7 +370,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (left && body.getLinearVelocity().x >= -Cfg.MAX_HORIZONTAL_SPEED && !down) {
             body.applyForceToCenter(new Vector2(-25f, 0), true);
         }
-        if ((!left && !right/* && state.is(State.JUMPING)*/)) {
+        if ((!left && !right)) {
             // horizontally decelerate fast, but don't stop immediately
             body.applyForceToCenter(new Vector2(-6 * relativeBodyVelocity.x, 0), true);
         }
@@ -525,6 +525,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     @Override
     public void draw(Batch batch) {
+        if (isDrowning()) {
+            // Because we want to render the enemy in front of the foreground map-layer, to
+            // e.g.not have the hands/feets behind the bricks/blocks, there is a circular z-index
+            // dependency between the player, the foreground map-layer and the front-water layer.
+            // Thus, we generally render the player in front, but we render him semi-transparent
+            // when he is drowning as a workaround.
+            setColor(1f, 1f, 1f, 0.85f);
+        }
         super.draw(batch);
 
         if (canThrowPretzel() && !isDrowning() && !isDead()) {
