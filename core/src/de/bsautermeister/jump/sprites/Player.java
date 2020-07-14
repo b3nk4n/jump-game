@@ -352,7 +352,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         Vector2 relativeBodyVelocity = getVelocityRelativeToGround();
 
         state.unfreeze();
-        isTurning = right && relativeBodyVelocity.x < 0 || left && relativeBodyVelocity.x > 0;
+        isTurning = right && relativeBodyVelocity.x < -1 || left && relativeBodyVelocity.x > 1;
 
         if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
             body.applyLinearImpulse(new Vector2(0, 15.0f), body.getWorldCenter(), true);
@@ -401,6 +401,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             runningRight = false;
         }
     }
+
 
     private void tryThrowPretzel() {
         if (canThrowPretzel()) {

@@ -177,8 +177,14 @@ public class Hedgehog extends Enemy implements Drownable {
         Body body = getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(6f / Cfg.PPM);
+        PolygonShape bodyShape = new PolygonShape();
+        Vector2[] bodyVertices = new Vector2[4];
+        bodyVertices[0] = new Vector2(-6f, 0f).scl(1 / Cfg.PPM);
+        bodyVertices[1] = new Vector2(6f, 0f).scl(1 / Cfg.PPM);
+        bodyVertices[2] = new Vector2(-2.5f, -5.5f).scl(1 / Cfg.PPM);
+        bodyVertices[3] = new Vector2(2.5f, -5.5f).scl(1 / Cfg.PPM);
+        bodyShape.set(bodyVertices);
+        fixtureDef.shape = bodyShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.GROUND |
                 Bits.PLATFORM |
@@ -188,25 +194,38 @@ public class Hedgehog extends Enemy implements Drownable {
                 Bits.ENEMY |
                 Bits.BLOCK_TOP |
                 Bits.BULLET;
+        body.createFixture(fixtureDef).setUserData(this);
+        bodyShape.dispose();
 
-        fixtureDef.shape = shape;
-        Fixture fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
+        EdgeShape feetShape = new EdgeShape();
+        feetShape.set(-3f / Cfg.PPM, -6f / Cfg.PPM,
+                3f / Cfg.PPM, -6f / Cfg.PPM);
+        fixtureDef.shape = feetShape;
+        fixtureDef.filter.categoryBits = Bits.ENEMY;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.PLATFORM |
+                Bits.ITEM_BOX |
+                Bits.BRICK |
+                Bits.PLAYER |
+                Bits.ENEMY |
+                Bits.BLOCK_TOP |
+                Bits.BULLET;
+        body.createFixture(fixtureDef).setUserData(this);
+        feetShape.dispose();
 
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5f, 8).scl(1 / Cfg.PPM);
-        vertices[1] = new Vector2(5f, 8).scl(1 / Cfg.PPM);
-        vertices[2] = new Vector2(-2.5f, 0).scl(1 / Cfg.PPM);
-        vertices[3] = new Vector2(2.5f, 0).scl(1 / Cfg.PPM);
+        vertices[0] = new Vector2(-4f, 6).scl(1 / Cfg.PPM);
+        vertices[1] = new Vector2(4f, 6).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-5.5f, 0).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(5.5f, 0).scl(1 / Cfg.PPM);
         headShape.set(vertices);
-
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
         fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
-        fixtureDef.isSensor = true;
         body.createFixture(fixtureDef).setUserData(this);
+        headShape.dispose();
 
         EdgeShape sideShape = new EdgeShape();
         fixtureDef.shape = sideShape;
@@ -225,7 +244,7 @@ public class Hedgehog extends Enemy implements Drownable {
                 new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
-        shape.dispose();
+        sideShape.dispose();
         return body;
     }
 

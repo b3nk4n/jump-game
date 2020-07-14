@@ -46,7 +46,7 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_HEAD | Bits.PLAYER_FEET:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_HEAD);
-                if (player.getBody().getLinearVelocity().y < 0.1) {
+                if (player.getBody().getLinearVelocity().y < 1) {
                     enemy.onHeadHit(player);
                     player.pumpUp();
                 }

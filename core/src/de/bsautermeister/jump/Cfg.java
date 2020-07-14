@@ -20,8 +20,8 @@ public interface Cfg {
     int WORLD_WIDTH = BLOCKS_X * BLOCK_SIZE;
     int WORLD_HEIGHT = BLOCKS_Y * BLOCK_SIZE;
 
-    int WINDOW_WIDTH = Cfg.WORLD_WIDTH * 2;
-    int WINDOW_HEIGHT = Cfg.WORLD_HEIGHT * 2;
+    int WINDOW_WIDTH = Cfg.WORLD_WIDTH * 4;
+    int WINDOW_HEIGHT = Cfg.WORLD_HEIGHT * 4;
 
     int LEVEL_PAGES = 2;
     int LEVEL_ROWS = 2;
