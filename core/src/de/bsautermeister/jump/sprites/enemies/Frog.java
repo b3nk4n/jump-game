@@ -171,7 +171,8 @@ public class Frog extends Enemy implements Drownable {
 
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
-        fixtureDef.filter.maskBits = Bits.PLAYER_FEET;
+        fixtureDef.filter.maskBits = Bits.PLAYER_FEET
+                | Bits.BULLET;
         body.createFixture(fixtureDef).setUserData(this);
         headShape.dispose();
 

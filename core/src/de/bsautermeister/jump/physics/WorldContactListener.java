@@ -208,13 +208,13 @@ public class WorldContactListener implements ContactListener {
                 break;
 
             case Bits.ENEMY | Bits.BULLET:
+            case Bits.ENEMY_HEAD | Bits.BULLET:
                 // done in pre-solve to don't have an impulse from the pretzelBullet to the other object
                 pretzelBullet = (PretzelBullet) resolveUserData(fixtureA, fixtureB, Bits.BULLET);
-                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY);
+                enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY | Bits.ENEMY_HEAD);
                 pretzelBullet.explode(pretzelBullet.getBody().getPosition());
                 enemy.kill(true);
                 contact.setEnabled(false);
-                System.out.println("Hit: " + enemy);
                 break;
             case Bits.ENEMY: // enemy with enemy
                 ((Enemy) fixtureA.getUserData()).onEnemyHit((Enemy) fixtureB.getUserData());

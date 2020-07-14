@@ -101,6 +101,7 @@ public class PretzelBullet extends Sprite implements BinarySerializable {
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Bits.BULLET;
         fixtureDef.filter.maskBits = Bits.ENEMY |
+                Bits.ENEMY_HEAD |
                 Bits.GROUND |
                 Bits.BRICK |
                 Bits.ITEM_BOX |
