@@ -103,11 +103,6 @@ public class Hedgehog extends Enemy implements Drownable {
                 rotate(delta * (speed < 0 ? ROTATION_SPEED : -ROTATION_SPEED));
             }
 
-            if (state.is(State.ROLL) || state.is(State.UNROLL) && speed == 0) {
-                // ensure speed is zero, even after other enemy collision
-                getBody().setLinearVelocity(Vector2.Zero);
-            }
-
             if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
                 state.set(State.UNROLL);
             }
