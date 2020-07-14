@@ -63,7 +63,7 @@ public class Frog extends Enemy implements Drownable {
 
         state.upate(delta);
 
-        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1.75f / Cfg.PPM);
         setRegion(getFrame());
 
         if (!state.is(State.STOMPED)) {
@@ -139,7 +139,8 @@ public class Frog extends Enemy implements Drownable {
                 Bits.PLAYER |
                 Bits.ENEMY |
                 Bits.BLOCK_TOP |
-                Bits.BULLET;
+                Bits.BULLET |
+                Bits.ENEMY_SIDE;
         body.createFixture(fixtureDef).setUserData(this);
         bodyShape.dispose();
 
@@ -183,12 +184,12 @@ public class Frog extends Enemy implements Drownable {
                 | Bits.BRICK
                 | Bits.PLATFORM;
         fixtureDef.isSensor = true;
-        sideShape.set(new Vector2(-6.5f / Cfg.PPM, -1 / Cfg.PPM),
-                new Vector2(-6.5f / Cfg.PPM, 1 / Cfg.PPM));
+        sideShape.set(new Vector2(-8f / Cfg.PPM, -2 / Cfg.PPM),
+                new Vector2(-8f / Cfg.PPM, 2 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_LEFT));
-        sideShape.set(new Vector2(6.5f / Cfg.PPM, -1 / Cfg.PPM),
-                new Vector2(6.5f / Cfg.PPM, 1 / Cfg.PPM));
+        sideShape.set(new Vector2(8f / Cfg.PPM, -2 / Cfg.PPM),
+                new Vector2(8f / Cfg.PPM, 2 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
         sideShape.set(new Vector2(-4 / Cfg.PPM, -6.5f / Cfg.PPM),

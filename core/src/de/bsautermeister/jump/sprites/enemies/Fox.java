@@ -74,7 +74,7 @@ public class Fox extends Enemy implements Drownable {
 
         state.upate(delta);
 
-        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 2f / Cfg.PPM);
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1.75f / Cfg.PPM);
         setRegion(getFrame());
 
         if (!state.is(State.STOMPED)) {
@@ -165,7 +165,8 @@ public class Fox extends Enemy implements Drownable {
                 Bits.PLAYER |
                 Bits.ENEMY |
                 Bits.BLOCK_TOP |
-                Bits.BULLET;
+                Bits.BULLET |
+                Bits.ENEMY_SIDE;
         body.createFixture(fixtureDef).setUserData(this);
         bodyShape.dispose();
 
@@ -206,14 +207,15 @@ public class Fox extends Enemy implements Drownable {
                 | Bits.COLLIDER
                 | Bits.ITEM_BOX
                 | Bits.BRICK
-                | Bits.PLATFORM;
+                | Bits.PLATFORM
+                | Bits.ENEMY;
         fixtureDef.isSensor = true;
-        sideShape.set(new Vector2(-6 / Cfg.PPM, -1 / Cfg.PPM),
-                new Vector2(-6 / Cfg.PPM, 1 / Cfg.PPM));
+        sideShape.set(new Vector2(-8f / Cfg.PPM, -2 / Cfg.PPM),
+                new Vector2(-8f / Cfg.PPM, 2 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_LEFT));
-        sideShape.set(new Vector2(6 / Cfg.PPM, -1 / Cfg.PPM),
-                new Vector2(6 / Cfg.PPM, 1 / Cfg.PPM));
+        sideShape.set(new Vector2(8f / Cfg.PPM, -2 / Cfg.PPM),
+                new Vector2(8f / Cfg.PPM, 2 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
         sideShape.dispose();

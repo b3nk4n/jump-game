@@ -63,6 +63,7 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.PLATFORM:
             case Bits.ENEMY_SIDE | Bits.BRICK:
             case Bits.ENEMY_SIDE | Bits.ITEM_BOX:
+            case Bits.ENEMY_SIDE | Bits.ENEMY:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
