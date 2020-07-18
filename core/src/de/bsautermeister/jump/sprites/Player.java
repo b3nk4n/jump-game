@@ -125,6 +125,12 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
      */
     private float recentHighestYForLanding;
 
+    /**
+     * When the player landed after jumping, wait until the player released the up-button, until he
+     * can jump again.
+     */
+    private boolean upWaitForRelease;
+
     public Player(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   WorldCreator.StartParams start, int initialTimeToLive) {
         this.callbacks = callbacks;
@@ -354,7 +360,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         state.unfreeze();
         isTurning = right && relativeBodyVelocity.x < -1 || left && relativeBodyVelocity.x > 1;
 
-        if (up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
+        if (!upWaitForRelease && up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
             body.applyLinearImpulse(new Vector2(0, 15.0f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.05f;
@@ -378,6 +384,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             body.applyForceToCenter(new Vector2(0f, -3f), true);
         }
 
+        if (upWaitForRelease && !up) {
+            upWaitForRelease = false;
+        }
+
         if (!touchesGround()) {
             if (blockJumpTimer > 0 || state.is(State.JUMPING)) {
                 // keep jumping
@@ -386,6 +396,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 state.freeze();
             }
         } else if (blockJumpTimer < 0) {
+            if (state.is(State.JUMPING)) {
+                upWaitForRelease = true;
+            }
             if (down) {
                 state.set(State.CROUCHING);
             } else if (Math.abs(relativeBodyVelocity.x) > 1e-4) {
