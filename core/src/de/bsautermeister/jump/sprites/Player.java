@@ -346,6 +346,16 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
     }
 
+    /**
+     * Flag indicating whether the player released the jump button after jumping, which is required
+     * to unlock the second jump.
+     */
+    private boolean canDoubleJump;
+    /**
+     * Flag indicating whether the player did the second jump of the double jump already.
+     */
+    private boolean didDoubleJump;
+
     public void control(boolean up, boolean down, boolean left, boolean right, boolean fire) {
         if (isDead() || isDrowning()) {
             return;
@@ -361,14 +371,21 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         isTurning = right && relativeBodyVelocity.x < -1 || left && relativeBodyVelocity.x > 1;
 
         if (!upWaitForRelease && up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
-            body.applyLinearImpulse(new Vector2(0, 15.0f), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, 12.5f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.05f;
             callbacks.jump();
             return;
         }
+        if (canDoubleJump && !didDoubleJump && state.is(State.JUMPING) && up) {
+            body.setLinearVelocity(getLinearVelocity().x, 0f);
+            body.applyLinearImpulse(new Vector2(0, 11.5f), body.getWorldCenter(), true);
+            blockJumpTimer = 0.05f;
+            callbacks.jump();
+            didDoubleJump = true;
+        }
         if (up && state.is(State.JUMPING) && state.timer() < 0.5f) {
-            body.applyForceToCenter(new Vector2(0f, 17.5f), true);
+            body.applyForceToCenter(new Vector2(0f, 15.0f), true);
         }
         if (right && body.getLinearVelocity().x <= Cfg.MAX_HORIZONTAL_SPEED && !down) {
             body.applyForceToCenter(new Vector2(25f, 0), true);
@@ -382,6 +399,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
         if (down) {
             body.applyForceToCenter(new Vector2(0f, -3f), true);
+        }
+
+        if (state.is(State.JUMPING) && !didDoubleJump && !canDoubleJump && !up) {
+            canDoubleJump = true;
         }
 
         if (upWaitForRelease && !up) {
@@ -398,6 +419,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         } else if (blockJumpTimer < 0) {
             if (state.is(State.JUMPING)) {
                 upWaitForRelease = true;
+                didDoubleJump = false;
+                canDoubleJump = false;
             }
             if (down) {
                 state.set(State.CROUCHING);
