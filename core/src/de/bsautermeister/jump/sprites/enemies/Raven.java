@@ -8,9 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -136,7 +134,10 @@ public class Raven extends Enemy implements Drownable {
                         playerPosition.y - getBody().getPosition().y,
                         playerPosition.x - getBody().getPosition().x
                 ) * 180.0f / MathUtils.PI;
-                if (angle < -140 && angle > -150) {
+                if (isLeft && angle < -140 && angle > -150) {
+                    state.set(State.SPOTTED);
+                }
+                if (!isLeft && angle < -30 && angle > -40) {
                     state.set(State.SPOTTED);
                 }
             }
@@ -218,8 +219,8 @@ public class Raven extends Enemy implements Drownable {
         Vector2[] vertices = new Vector2[4];
         vertices[0] = new Vector2(-4f, 6).scl(1 / Cfg.PPM);
         vertices[1] = new Vector2(4f, 6).scl(1 / Cfg.PPM);
-        vertices[2] = new Vector2(-5.5f, 0).scl(1 / Cfg.PPM);
-        vertices[3] = new Vector2(5.5f, 0).scl(1 / Cfg.PPM);
+        vertices[2] = new Vector2(-6f, 0).scl(1 / Cfg.PPM);
+        vertices[3] = new Vector2(6f, 0).scl(1 / Cfg.PPM);
         headShape.set(vertices);
         fixtureDef.shape = headShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY_HEAD;
