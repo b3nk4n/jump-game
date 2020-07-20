@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -20,11 +19,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.managers.Drownable;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.GameObjectState;
 import de.bsautermeister.jump.sprites.Player;
 
@@ -151,10 +150,6 @@ public class Hedgehog extends Enemy implements Drownable {
             textureRegion.flip(true, false);
         } else if (isLeft && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-        }
-
-        if (isDead() && !textureRegion.isFlipY()) {
-            textureRegion.flip(false, true);
         }
 
         return textureRegion;

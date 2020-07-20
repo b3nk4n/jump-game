@@ -62,10 +62,6 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
             markRemovable();
         }
 
-        if (isDead()) {
-            setFlip(isFlipX(), true);
-        }
-
         // limit falling speed
         if (body != null && body.getLinearVelocity().y < Cfg.MAX_FALLING_SPEED) {
             body.setLinearVelocity(body.getLinearVelocity().x, Cfg.MAX_FALLING_SPEED);
