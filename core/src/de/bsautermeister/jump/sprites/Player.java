@@ -598,7 +598,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(shape, normalFilterMask);
-        shape.setPosition(new Vector2(0, 3f / Cfg.PPM));
+        shape.setPosition(new Vector2(0, 4f / Cfg.PPM));
+        shape.setRadius(4.5f / Cfg.PPM);
         createBodyFixture(shape, normalFilterMask);
         createFeetFixture(1f, 11.0f, -5.5f);
         createHeadSensorFixture(4f, 8.6f);
@@ -616,7 +617,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         CircleShape shape = new CircleShape();
         shape.setRadius(5.5f / Cfg.PPM);
         createBodyFixture(shape, normalFilterMask);
-        shape.setPosition(new Vector2(0, 10f / Cfg.PPM));
+        shape.setPosition(new Vector2(0, 11f / Cfg.PPM));
+        shape.setRadius(4.5f / Cfg.PPM);
         createBodyFixture(shape, normalFilterMask);
         createFeetFixture(1f, 11f, -5.5f);
         createHeadSensorFixture(4f, 15.6f);
