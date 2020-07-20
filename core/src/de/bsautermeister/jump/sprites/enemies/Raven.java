@@ -134,11 +134,13 @@ public class Raven extends Enemy implements Drownable {
                         playerPosition.y - getBody().getPosition().y,
                         playerPosition.x - getBody().getPosition().x
                 ) * 180.0f / MathUtils.PI;
-                if (isLeft && angle < -140 && angle > -150) {
-                    state.set(State.SPOTTED);
-                }
-                if (!isLeft && angle < -30 && angle > -40) {
-                    state.set(State.SPOTTED);
+                if (isLeft && angle < -140 && angle > -150 || !isLeft && angle < -30 && angle > -40) {
+                    float distance = Vector2.len(
+                            playerPosition.x - getBody().getPosition().x,
+                            playerPosition.y - getBody().getPosition().y);
+                    if (distance < 15f) {
+                        state.set(State.SPOTTED);
+                    }
                 }
             }
         }
