@@ -58,7 +58,7 @@ public class WorldContactListener implements ContactListener {
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).waitAndThenChangeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
-                    ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                    ((Hedgehog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag());
                 }
                 break;
             case Bits.ENEMY_SIDE | Bits.GROUND:
@@ -70,7 +70,7 @@ public class WorldContactListener implements ContactListener {
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
-                    ((Hedgehog) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                    ((Hedgehog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Frog) {
                     ((Frog) taggedEnemy.getUserData()).reactOnSideSensor(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Raven) {
@@ -174,6 +174,18 @@ public class WorldContactListener implements ContactListener {
                     DrunkenGuy drunkenGuy = (DrunkenGuy) taggedEnemy.getUserData();
                     drunkenGuy.setBlocked(false);
                 }
+
+            case Bits.ENEMY_SIDE | Bits.COLLIDER:
+            case Bits.ENEMY_SIDE | Bits.GROUND:
+            case Bits.ENEMY_SIDE | Bits.PLATFORM:
+            case Bits.ENEMY_SIDE | Bits.BRICK:
+            case Bits.ENEMY_SIDE | Bits.ITEM_BOX:
+            case Bits.ENEMY_SIDE | Bits.ENEMY:
+                taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
+                if (taggedEnemy.getUserData() instanceof Hedgehog) {
+                    ((Hedgehog) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag());
+                }
+                break;
         }
     }
 

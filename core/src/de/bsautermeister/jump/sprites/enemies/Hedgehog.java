@@ -47,6 +47,9 @@ public class Hedgehog extends Enemy implements Drownable {
 
     private static final float SPEED_VALUE = 3.0f;
 
+    private int leftSensorContacts;
+    private int rightSensorContacts;
+
     private boolean previousDirectionLeft;
 
     public Hedgehog(GameCallbacks callbacks, World world, TextureAtlas atlas,
@@ -105,6 +108,8 @@ public class Hedgehog extends Enemy implements Drownable {
             if (state.is(State.ROLL) && state.timer() > WAIT_FOR_UNROLL_TIME) {
                 state.set(State.UNROLL);
             }
+
+            updateDirection();
         }
 
         if (!state.is(State.ROLLING)) {
@@ -122,6 +127,15 @@ public class Hedgehog extends Enemy implements Drownable {
 
         if (isDrowning()) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
+        }
+    }
+
+    private void updateDirection() {
+        float absSpeed = Math.abs(speed);
+        if (leftSensorContacts > 0 && rightSensorContacts == 0) {
+            speed = absSpeed;
+        } else if (leftSensorContacts == 0 && rightSensorContacts > 0) {
+            speed = -absSpeed;
         }
     }
 
@@ -150,6 +164,12 @@ public class Hedgehog extends Enemy implements Drownable {
             textureRegion.flip(true, false);
         } else if (isLeft && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
+        }
+
+        if (isDead() && !textureRegion.isFlipY()) {
+            textureRegion.flip(false, true);
+        } else if (!isDead() && textureRegion.isFlipY()) {
+            textureRegion.flip(false, true);
         }
 
         return textureRegion;
@@ -293,15 +313,22 @@ public class Hedgehog extends Enemy implements Drownable {
                 ? -SPEED_VALUE : SPEED_VALUE;
     }
 
-    public void changeDirectionBySideSensorTag(String sideSensorTag) {
-        float absoluteSpeed = Math.abs(speed);
-        if (sideSensorTag.equals(TAG_LEFT)) {
-            speed = absoluteSpeed;
-        } else {
-            speed = -absoluteSpeed;
+    public void beginContactSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorContacts += 1;
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorContacts += 1;
         }
 
         getCallbacks().hitWall(this);
+    }
+
+    public void endContactSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorContacts = Math.max(0, leftSensorContacts - 1);
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorContacts = Math.max(0, rightSensorContacts -1 );
+        }
     }
 
     public void kick(boolean directionRight) {

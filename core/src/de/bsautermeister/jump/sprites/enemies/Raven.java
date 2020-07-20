@@ -177,6 +177,8 @@ public class Raven extends Enemy implements Drownable {
 
         if (isDead() && !textureRegion.isFlipY()) {
             textureRegion.flip(false, true);
+        } else if (!isDead() && textureRegion.isFlipY()) {
+            textureRegion.flip(false, true);
         }
 
         return textureRegion;
