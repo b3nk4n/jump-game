@@ -39,8 +39,6 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Player extends Sprite implements BinarySerializable, Drownable {
 
-    private static final float EFFECT_DURATION = 10f;
-
     private static final short NO_ENEMY_FILTER_BITS = Bits.ENVIRONMENT_ONLY |
             Bits.ENEMY_SIDE | // to still block the DrunkenGuy
             Bits.ITEM;
@@ -115,8 +113,13 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     private String lastJumpThroughPlatformId;
 
-    private GameTimer drunkTimer;
-    private GameTimer hammeredTimer;
+    private static final float BEER_EFFECT_TRANSITION_DURATION = 5f;
+
+    private int beers;
+    private float currentDrunkEffect;
+    private float targetDrunkEffect;
+    private float currentHammeredEffect;
+    private float targetHammeredEffect;
 
     private final int randomVictoryIdx;
 
@@ -167,9 +170,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         pretzelBullet = new PretzelBullet(callbacks, world, atlas);
         throwPretzelTimer = new GameTimer(1.0f, true);
-
-        drunkTimer = new GameTimer(EFFECT_DURATION);
-        hammeredTimer = new GameTimer(EFFECT_DURATION);
 
         randomVictoryIdx = MathUtils.random(VICTORY_VARIATIONS - 1);
 
@@ -268,8 +268,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
 
         throwPretzelTimer.update(delta);
-        drunkTimer.update(delta);
-        hammeredTimer.update(delta);
+
+        updateDrunkEffect(delta);
 
         updateTextureRegions();
 
@@ -337,6 +337,24 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         if (body.getPosition().y > recentHighestYForLanding) {
             recentHighestYForLanding = body.getPosition().y;
+        }
+    }
+
+    private void updateDrunkEffect(float delta) {
+        if (currentDrunkEffect != targetDrunkEffect) {
+            float signum = Math.signum(targetDrunkEffect - currentDrunkEffect);
+            currentDrunkEffect += Math.signum(targetDrunkEffect - currentDrunkEffect) * delta / BEER_EFFECT_TRANSITION_DURATION;
+            if (signum > 0 && currentDrunkEffect > targetDrunkEffect) {
+                currentDrunkEffect = targetDrunkEffect;
+            }
+        }
+
+        if (currentHammeredEffect != targetHammeredEffect) {
+            float signum = Math.signum(targetHammeredEffect - currentHammeredEffect);
+            currentHammeredEffect += Math.signum(targetHammeredEffect - currentHammeredEffect) * delta / BEER_EFFECT_TRANSITION_DURATION;
+            if (signum > 0 && currentHammeredEffect > targetHammeredEffect) {
+                currentHammeredEffect = targetHammeredEffect;
+            }
         }
     }
 
@@ -780,50 +798,33 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void drunk() {
-        boolean useNormalDrunk;
-        if (isDrunk()) {
-            useNormalDrunk = false;
-        } else if (isHammered()) {
-            useNormalDrunk = true;
-        } else {
-            useNormalDrunk = MathUtils.random(1) == 0;
-        }
+        beers++;
 
-        if (useNormalDrunk) {
-            float skip = isDrunk() ? 0.1f * EFFECT_DURATION : 0f;
-            drunkTimer.restart(skip);
-        } else {
-            float skip = isHammered() ? 0.05f * EFFECT_DURATION : 0f;
-            hammeredTimer.restart(skip);
+        if (beers == 1) {
+            targetDrunkEffect = 0.5f;
+        }
+        if (beers == 2) {
+            targetHammeredEffect = 0.5f;
+        }
+        if (beers == 3) {
+            targetDrunkEffect = 1.0f;
         }
     }
 
     public boolean isDrunk() {
-        return drunkTimer.isRunning();
+        return currentDrunkEffect > 0f;
     }
 
     public float getDrunkRatio() {
-        if (drunkTimer.getProgress() < 0.1) {
-            return drunkTimer.getProgress() * 10f;
-        }
-        if (drunkTimer.getProgress() >= 0.9) {
-            return (1f - drunkTimer.getProgress()) * 10f;
-        }
-        return 1f;
+        return currentDrunkEffect;
     }
 
     public boolean isHammered() {
-        return hammeredTimer.isRunning();
+        return currentHammeredEffect > 0f;
     }
 
     public float getHammeredRatio() {
-        if (hammeredTimer.getProgress() < 0.1) {
-            return hammeredTimer.getProgress() * 5f;
-        }
-        if (hammeredTimer.getProgress() >= 0.9) {
-            return (1f - hammeredTimer.getProgress()) * 5f;
-        }
-        return 0.5f;
+        return currentHammeredEffect;
     }
 
     public void hit(Enemy enemy) {
@@ -867,11 +868,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         // stop player effects
         if (isHammered()) {
-            hammeredTimer.restart(0.9f * EFFECT_DURATION);
+            targetHammeredEffect = 0f;
         }
 
         if (isDrunk()) {
-            drunkTimer.restart(0.9f * EFFECT_DURATION);
+            targetDrunkEffect = 0f;
         }
     }
 
@@ -925,6 +926,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     public void victory() {
         state.set(State.VICTORY);
+        targetDrunkEffect /= 4f;
+        targetHammeredEffect /= 4f;
         setMainBodyFilterMask(NO_ENEMY_FILTER_BITS);
     }
 
@@ -967,8 +970,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         throwPretzelTimer.write(out);
         pretzelBullet.write(out);
         out.writeBoolean(isBig);
-        drunkTimer.write(out);
-        hammeredTimer.write(out);
+        out.writeInt(beers);
+        out.writeFloat(currentDrunkEffect);
+        out.writeFloat(targetDrunkEffect);
+        out.writeFloat(currentHammeredEffect);
+        out.writeFloat(targetHammeredEffect);
         out.writeBoolean(markRedefineBody);
         out.writeBoolean(deadAnimationStarted);
         out.writeFloat(timeToLive);
@@ -990,8 +996,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         throwPretzelTimer.read(in);
         pretzelBullet.read(in);
         isBig = in.readBoolean();
-        drunkTimer.read(in);
-        hammeredTimer.read(in);
+        beers = in.readInt();
+        currentDrunkEffect = in.readFloat();
+        targetDrunkEffect = in.readFloat();
+        currentHammeredEffect = in .readFloat();
+        targetHammeredEffect = in.readFloat();
         markRedefineBody = in.readBoolean();
         deadAnimationStarted = in.readBoolean();
         timeToLive = in.readFloat();
