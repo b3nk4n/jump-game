@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -216,6 +217,18 @@ public class Raven extends Enemy implements Drownable {
         body.createFixture(fixtureDef).setUserData(this);
         bodyShape.dispose();
 
+        // body bounds, to no scratch all the walls
+        CircleShape boundsShape = new CircleShape();
+        boundsShape.setRadius(11f / Cfg.PPM);
+        fixtureDef.shape = boundsShape;
+        fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
+        fixtureDef.filter.maskBits = Bits.GROUND |
+                Bits.PLATFORM |
+                Bits.ITEM_BOX |
+                Bits.BRICK;
+        body.createFixture(fixtureDef).setUserData(new TaggedUserData<Enemy>(this, TAG_BOTTOM));
+        boundsShape.dispose();
+
         // head
         PolygonShape headShape = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
@@ -235,19 +248,6 @@ public class Raven extends Enemy implements Drownable {
         body.createFixture(fixtureDef).setUserData(this);
         headShape.dispose();
 
-        EdgeShape sideShape = new EdgeShape();
-        fixtureDef.shape = sideShape;
-        fixtureDef.filter.categoryBits = Bits.ENEMY_SIDE;
-        fixtureDef.filter.maskBits = Bits.GROUND
-                | Bits.ITEM_BOX
-                | Bits.BRICK
-                | Bits.PLATFORM;
-        fixtureDef.isSensor = true;
-        sideShape.set(new Vector2(-6 / Cfg.PPM, -8f / Cfg.PPM),
-                new Vector2(6 / Cfg.PPM, -8f / Cfg.PPM));
-        body.createFixture(fixtureDef).setUserData(
-                new TaggedUserData<Enemy>(this, TAG_BOTTOM));
-        sideShape.dispose();
         return body;
     }
 
