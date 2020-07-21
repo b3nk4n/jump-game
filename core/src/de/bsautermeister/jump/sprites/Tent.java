@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Disposable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
-import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.effects.SimplePooledEffect;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
