@@ -386,24 +386,21 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         Vector2 relativeBodyVelocity = getVelocityRelativeToGround();
 
         state.unfreeze();
-        isTurning = right && relativeBodyVelocity.x < -1 || left && relativeBodyVelocity.x > 1;
+        isTurning = right && relativeBodyVelocity.x < -2 && !left || left && relativeBodyVelocity.x > 2 && !right;
 
         if (!upWaitForRelease && up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
-            body.applyLinearImpulse(new Vector2(0, 12.5f), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, 15.25f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
-            blockJumpTimer = 0.05f;
+            blockJumpTimer = 0.1f;
             callbacks.jump();
             return;
         }
         if (canDoubleJump && !didDoubleJump && state.is(State.JUMPING) && up) {
             body.setLinearVelocity(getLinearVelocity().x, 0f);
-            body.applyLinearImpulse(new Vector2(0, 11.5f), body.getWorldCenter(), true);
-            blockJumpTimer = 0.05f;
+            body.applyLinearImpulse(new Vector2(0, 12.66f), body.getWorldCenter(), true);
+            blockJumpTimer = 0.1f;
             callbacks.jump();
             didDoubleJump = true;
-        }
-        if (up && state.is(State.JUMPING) && state.timer() < 0.5f) {
-            body.applyForceToCenter(new Vector2(0f, 15.0f), true);
         }
         if (right && body.getLinearVelocity().x <= Cfg.MAX_HORIZONTAL_SPEED && !down) {
             body.applyForceToCenter(new Vector2(25f, 0), true);
@@ -416,7 +413,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             body.applyForceToCenter(new Vector2(-6 * relativeBodyVelocity.x, 0), true);
         }
         if (down) {
-            body.applyForceToCenter(new Vector2(0f, -3f), true);
+            body.applyForceToCenter(new Vector2(-6 * relativeBodyVelocity.x, -3f), true);
         }
 
         if (state.is(State.JUMPING) && !didDoubleJump && !canDoubleJump && !up) {

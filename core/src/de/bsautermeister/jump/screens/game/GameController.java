@@ -913,10 +913,13 @@ public class GameController  implements BinarySerializable, Disposable {
         boolean leftPressed = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean firePressed = Gdx.input.isKeyPressed(Input.Keys.SPACE);
 
-        int pointer = 0;
         boolean leftSideTouched = false;
         boolean rightSideTouched = false;
-        while (Gdx.input.isTouched(pointer)) {
+
+        for (int pointer = 0; pointer < Gdx.input.getMaxPointers(); ++pointer) {
+            if (!Gdx.input.isTouched(pointer)) {
+                continue;
+            }
             float x = Gdx.input.getX(pointer);
             float y = Gdx.input.getY(pointer);
 
@@ -963,7 +966,6 @@ public class GameController  implements BinarySerializable, Disposable {
                     }
                 }
             }
-            pointer++;
         }
 
         if (!leftSideTouched) {
@@ -972,7 +974,6 @@ public class GameController  implements BinarySerializable, Disposable {
         if (!rightSideTouched) {
             startJumpPosition.set(0, 0);
         }
-
 
         player.control(upPressed, downPressed, leftPressed, rightPressed, firePressed);
     }
