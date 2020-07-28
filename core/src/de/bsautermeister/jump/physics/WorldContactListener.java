@@ -44,6 +44,11 @@ public class WorldContactListener implements ContactListener {
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_HEAD);
                 tileObject = (InteractiveTileObject) resolveUserData(fixtureA, fixtureB, Bits.ITEM_BOX | Bits.BRICK);
                 tileObject.onHeadHit(player);
+                player.onHeadHit();
+                break;
+            case Bits.PLAYER_HEAD | Bits.GROUND:
+                player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_HEAD);
+                player.onHeadHit();
                 break;
             case Bits.ENEMY_HEAD | Bits.PLAYER_FEET:
                 player = (Player) resolveUserData(fixtureA, fixtureB, Bits.PLAYER_FEET);

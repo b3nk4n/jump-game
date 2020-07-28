@@ -57,6 +57,13 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     private float blockJumpTimer;
 
+    public void onHeadHit() {
+        if (state.is(State.JUMPING)) {
+            // don't allow double jump, when the player just hit his head
+            didDoubleJump = true;
+        }
+    }
+
     public enum State {
         STANDING, CROUCHING, JUMPING, WALKING, VICTORY, DROWNING, DEAD
     }
@@ -693,7 +700,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
         fixtureDef.filter.categoryBits = Bits.PLAYER_HEAD;
         fixtureDef.filter.maskBits = Bits.GROUND |
-                Bits.PLATFORM |
                 Bits.ITEM_BOX |
                 Bits.BRICK;
         fixtureDef.shape = headShape;
@@ -801,9 +807,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             targetDrunkEffect = 0.5f;
         }
         if (beers == 2) {
-            targetHammeredEffect = 0.5f;
+            targetHammeredEffect = 0.33f;
         }
         if (beers == 3) {
+            targetHammeredEffect = 0.5f;
             targetDrunkEffect = 1.0f;
         }
     }
