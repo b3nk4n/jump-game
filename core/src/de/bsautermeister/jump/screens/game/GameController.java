@@ -279,7 +279,7 @@ public class GameController  implements BinarySerializable, Disposable {
                 } else if (enemy instanceof Fox) {
                     soundEffects.whineSound.play(volume);
                 } else if (enemy instanceof Frog) {
-                    soundEffects.frogSound.play(volume);
+                    soundEffects.frogSound.play(volume * 0.5f);
                 } else if (enemy instanceof Raven) {
                     soundEffects.ravenSound.play(volume);
                 } else if (enemy instanceof DrunkenGuy) {
