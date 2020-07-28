@@ -147,6 +147,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void stomp(Enemy enemy) {
+            soundEffects.stompSound.play(0.66f);
             playEnemyKillSound(enemy, 1f);
 
             if (!(enemy instanceof Hedgehog)) {
@@ -274,7 +275,7 @@ public class GameController  implements BinarySerializable, Disposable {
         private void playEnemyKillSound(Enemy enemy, float volume) {
             if (volume > 0) {
                 if (enemy instanceof Hedgehog || enemy instanceof Fish) {
-                    soundEffects.stompSound.play(volume);
+                    // no sound
                 } else if (enemy instanceof Fox) {
                     soundEffects.whineSound.play(volume);
                 } else if (enemy instanceof Frog) {

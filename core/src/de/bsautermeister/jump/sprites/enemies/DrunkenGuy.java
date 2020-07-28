@@ -17,10 +17,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.physics.TaggedUserData;
+import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.GameObjectState;
 import de.bsautermeister.jump.sprites.Player;
 
@@ -39,7 +39,7 @@ public class DrunkenGuy extends Enemy {
 
     private float hiddenTargetY;
     private float waitingTargetY;
-    private final static float hiddenOffsetY = Cfg.BLOCK_SIZE / 4 / Cfg.PPM;
+    private final static float hiddenOffsetY = Cfg.BLOCK_SIZE / 4f / Cfg.PPM;
 
     private boolean blocked;
     private float peekTime;
@@ -47,7 +47,8 @@ public class DrunkenGuy extends Enemy {
     public DrunkenGuy(GameCallbacks callbacks, World world, TextureAtlas atlas,
                       float posX, float posY) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, (int)(1.5f * Cfg.BLOCK_SIZE) / Cfg.PPM);
-        animation = new Animation(0.1f, atlas.findRegions(RegionNames.DRUNKEN_GUY), Animation.PlayMode.LOOP);
+        animation = new Animation<TextureRegion>(0.1f,
+                atlas.findRegions(RegionNames.DRUNKEN_GUY), Animation.PlayMode.LOOP);
         state = new GameObjectState<>(State.HIDDEN);
         hiddenTargetY = getBody().getPosition().y - hiddenOffsetY;
         waitingTargetY = getBody().getPosition().y + getHeight();
@@ -74,7 +75,7 @@ public class DrunkenGuy extends Enemy {
             } else {
                 getBody().setLinearVelocity(Vector2.Zero);
             }
-        } else if (state.is(State.HIDDEN) && state.timer() > HIDDEN_TIME && !isBlocked()) {
+        } else if (state.is(State.HIDDEN) && state.timer() > HIDDEN_TIME && !blocked) {
             getBody().setLinearVelocity(0, MOVE_SPEED);
             peekTime = 0f;
             state.set(State.MOVE_UP);
@@ -98,14 +99,21 @@ public class DrunkenGuy extends Enemy {
         Body body = getWorld().createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(7f / Cfg.PPM, 12f / Cfg.PPM);
-        fixtureDef.shape = shape;
+        PolygonShape bodyShape = new PolygonShape();
+        Vector2[] bodyVertices = new Vector2[6];
+        bodyVertices[0] = new Vector2(-7f, 6f).scl(1 / Cfg.PPM);
+        bodyVertices[1] = new Vector2(-3f, 12f).scl(1 / Cfg.PPM);
+        bodyVertices[2] = new Vector2(3f, 12f).scl(1 / Cfg.PPM);
+        bodyVertices[3] = new Vector2(7f, 6f).scl(1 / Cfg.PPM);
+        bodyVertices[4] = new Vector2(7f, -12f).scl(1 / Cfg.PPM);
+        bodyVertices[5] = new Vector2(-7f, -12f).scl(1 / Cfg.PPM);
+        bodyShape.set(bodyVertices);
+        fixtureDef.shape = bodyShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
-        shape.dispose();
+        bodyShape.dispose();
 
         // top sensor
         EdgeShape topSensorShape = new EdgeShape();
@@ -160,10 +168,6 @@ public class DrunkenGuy extends Enemy {
         waitingTargetY = in.readFloat();
         blocked = in.readBoolean();
         peekTime = in.readFloat();
-    }
-
-    public boolean isBlocked() {
-        return blocked;
     }
 
     public void setBlocked(boolean blocked) {

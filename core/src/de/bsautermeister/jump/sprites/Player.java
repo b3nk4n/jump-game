@@ -391,14 +391,14 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (!upWaitForRelease && up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
             body.applyLinearImpulse(new Vector2(0, 15.25f), body.getWorldCenter(), true);
             state.set(State.JUMPING);
-            blockJumpTimer = 0.1f;
+            blockJumpTimer = 0.01f;
             callbacks.jump();
             return;
         }
         if (canDoubleJump && !didDoubleJump && state.is(State.JUMPING) && up) {
             body.setLinearVelocity(getLinearVelocity().x, 0f);
             body.applyLinearImpulse(new Vector2(0, 12.66f), body.getWorldCenter(), true);
-            blockJumpTimer = 0.1f;
+            blockJumpTimer = 0.01f;
             callbacks.jump();
             didDoubleJump = true;
         }
