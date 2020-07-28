@@ -312,7 +312,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             } else if (!deadAnimationStarted) {
                 getBody().setActive(true);
                 if (!isOutOfGame()) {
-                    getBody().applyLinearImpulse(new Vector2(0, 10f), getBody().getWorldCenter(), true);
+                    Vector2 bodyCenter = getBody().getWorldCenter();
+                    getBody().applyLinearImpulse(0, 10f, bodyCenter.x, bodyCenter.y, true);
                 }
                 deadAnimationStarted = true;
             }
@@ -396,7 +397,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         isTurning = right && relativeBodyVelocity.x < -2 && !left || left && relativeBodyVelocity.x > 2 && !right;
 
         if (!upWaitForRelease && up && touchesGround() && !state.is(State.JUMPING) && blockJumpTimer <= 0) {
-            body.applyLinearImpulse(new Vector2(0, 15.25f), body.getWorldCenter(), true);
+            body.applyLinearImpulse(0f, 15.25f, body.getWorldCenter().x, body.getWorldCenter().y, true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.01f;
             callbacks.jump();
@@ -404,24 +405,24 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
         if (canDoubleJump && !didDoubleJump && state.is(State.JUMPING) && up) {
             body.setLinearVelocity(getLinearVelocity().x, 0f);
-            body.applyLinearImpulse(new Vector2(0, 12.66f), body.getWorldCenter(), true);
+            body.applyLinearImpulse(0, 12.66f, body.getWorldCenter().x, body.getWorldCenter().y, true);
             state.setTimer(isBig ? 0.05f : 0f);
             blockJumpTimer = 0.01f;
             callbacks.jump();
             didDoubleJump = true;
         }
         if (right && body.getLinearVelocity().x <= Cfg.MAX_HORIZONTAL_SPEED && !down) {
-            body.applyForceToCenter(new Vector2(25f, 0), true);
+            body.applyForceToCenter(25f, 0, true);
         }
         if (left && body.getLinearVelocity().x >= -Cfg.MAX_HORIZONTAL_SPEED && !down) {
-            body.applyForceToCenter(new Vector2(-25f, 0), true);
+            body.applyForceToCenter(-25f, 0, true);
         }
         if ((!left && !right)) {
             // horizontally decelerate fast, but don't stop immediately
-            body.applyForceToCenter(new Vector2(-6 * relativeBodyVelocity.x, 0), true);
+            body.applyForceToCenter(-6 * relativeBodyVelocity.x, 0, true);
         }
         if (down) {
-            body.applyForceToCenter(new Vector2(-6 * relativeBodyVelocity.x, -3f), true);
+            body.applyForceToCenter(-6 * relativeBodyVelocity.x, -3f, true);
         }
 
         if (state.is(State.JUMPING) && !didDoubleJump && !canDoubleJump && !up) {
