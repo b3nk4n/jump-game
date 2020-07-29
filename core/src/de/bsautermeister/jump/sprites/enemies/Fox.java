@@ -28,9 +28,6 @@ import de.bsautermeister.jump.sprites.Player;
 public class Fox extends Enemy implements Drownable {
     private static final float SPEED = 4.0f;
 
-    private static final int NORMAL_IDX = 0;
-    private static final int ANGRY_IDX = 1;
-
     public enum State {
         WALKING, STANDING, STOMPED
     }
@@ -42,23 +39,16 @@ public class Fox extends Enemy implements Drownable {
 
     private final Vector2 playerPosition = new Vector2();
 
-    private final Animation<TextureRegion>[] walkAnimation;
-    private final Animation<TextureRegion>[] standingAnimation;
+    private final Animation<TextureRegion> walkAnimation;
+    private final Animation<TextureRegion> standingAnimation;
     private final Animation<TextureRegion> stompedAnimation;
 
-    @SuppressWarnings("unchecked")
     public Fox(GameCallbacks callbacks, World world, TextureAtlas atlas,
                float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
 
-        walkAnimation = new Animation[2];
-        walkAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);
-        walkAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_WALK), Animation.PlayMode.LOOP);
-
-        standingAnimation = new Animation[2];
-        standingAnimation[NORMAL_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
-        standingAnimation[ANGRY_IDX] = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_ANGRY_STANDING), Animation.PlayMode.LOOP);
-
+        walkAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_WALK), Animation.PlayMode.LOOP);
+        standingAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STANDING), Animation.PlayMode.LOOP);
         stompedAnimation = new Animation<TextureRegion>(0.05f, atlas.findRegions(RegionNames.FOX_STOMP), Animation.PlayMode.NORMAL);
 
         state = new GameObjectState<>(State.WALKING);
@@ -97,19 +87,17 @@ public class Fox extends Enemy implements Drownable {
     }
 
     private TextureRegion getFrame() {
-        int characterIdx = isAngry() ? ANGRY_IDX : NORMAL_IDX;
-
         TextureRegion textureRegion;
         switch (state.current()) {
             case STOMPED:
                 textureRegion = stompedAnimation.getKeyFrame(state.timer());
                 break;
             case STANDING:
-                textureRegion = standingAnimation[characterIdx].getKeyFrame(state.timer());
+                textureRegion = standingAnimation.getKeyFrame(state.timer());
                 break;
             case WALKING:
             default:
-                textureRegion = walkAnimation[characterIdx].getKeyFrame(state.timer());
+                textureRegion = walkAnimation.getKeyFrame(state.timer());
                 break;
         }
 
@@ -131,14 +119,6 @@ public class Fox extends Enemy implements Drownable {
 
     private boolean isLeft() {
         return speed < 0 || speed == 0 && previousDirectionLeft;
-    }
-
-    private boolean isAngry() {
-        boolean isLeft = isLeft();
-        float x = getBody().getPosition().x;
-        float y = getBody().getPosition().y;
-        return (isLeft && playerPosition.x < x || !isLeft && playerPosition.x > x) &&
-                Vector2.len2(playerPosition.x - x, playerPosition.y - y) < 16.0f;
     }
 
     @Override
