@@ -313,7 +313,12 @@ public class Hedgehog extends Enemy implements Drownable {
                 ? -SPEED_VALUE : SPEED_VALUE;
     }
 
-    public void beginContactSensor(String sideSensorTag) {
+    public void beginContactSensor(String sideSensorTag, boolean hitWall) {
+        if (state.is(State.ROLLING) && !hitWall) {
+            // ignore collider when rolling
+            return;
+        }
+
         if (TAG_LEFT.equals(sideSensorTag)) {
             leftSensorContacts += 1;
         } else if (TAG_RIGHT.equals(sideSensorTag)) {
