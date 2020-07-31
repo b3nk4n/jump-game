@@ -50,6 +50,7 @@ public class GameScreen extends ScreenBase {
 
         @Override
         public void backToMenu(Vector2 clickScreenPosition) {
+            getGame().getForegroundMusic().fadeOutStop();
             setScreen(new MenuScreen(getGame(), true), new ScaleScreenTransition(
                     Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
                     clickScreenPosition));
