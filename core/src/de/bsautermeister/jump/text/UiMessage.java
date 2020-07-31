@@ -1,19 +1,22 @@
 package de.bsautermeister.jump.text;
 
-public class TextMessage {
+public abstract class UiMessage<T> {
     private static final float SPEED_Y = 0.1f;
     private static final float INITIAL_TTL = 1f;
 
-    private final String message;
+    private final T message;
     private float normalizedX;
     private float normalizedY;
     private float ttl;
 
-    public TextMessage(String message, float normalizedX, float normalizedY) {
+    public UiMessage(T message) {
         this.message = message;
+        this.ttl = INITIAL_TTL;
+    }
+
+    public void setPosition(float normalizedX, float normalizedY) {
         this.normalizedX = normalizedX;
         this.normalizedY = normalizedY;
-        this.ttl = INITIAL_TTL;
     }
 
     public void update(float delta) {
@@ -21,7 +24,7 @@ public class TextMessage {
         this.normalizedY += SPEED_Y * delta;
     }
 
-    public String getMessage() {
+    public T getMessage() {
         return message;
     }
 

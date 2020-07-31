@@ -15,10 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.RegionNames;
 
 public class Hud implements Disposable {
@@ -42,6 +44,8 @@ public class Hud implements Disposable {
     private Animation<TextureRegion> beerometer;
     private BitmapFont fontS;
 
+    private final I18NBundle i18n;
+
     private TextureRegion controlLeft;
     private TextureRegion controlRight;
     private TextureRegion controlUp;
@@ -49,6 +53,7 @@ public class Hud implements Disposable {
 
     public Hud(SpriteBatch batch, Viewport uiViewport, AssetManager assetManager, int totalBeers) {
         this.stage = new Stage(uiViewport, batch);
+        this.i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
 
         this.totalBeers = totalBeers;
         this.stage.addActor(buildUi(assetManager));
@@ -162,7 +167,7 @@ public class Hud implements Disposable {
         float y = Cfg.UI_HEIGHT - frame.getRegionHeight() - 42f;
 
         batch.draw(frame, x, y);
-        fontS.draw(batch, "Beerometer", x, Cfg.UI_HEIGHT - 12f);
+        fontS.draw(batch, i18n.get(Language.BEEROMETER), x, Cfg.UI_HEIGHT - 12f);
     }
 
     private void drawControls(SpriteBatch batch) {

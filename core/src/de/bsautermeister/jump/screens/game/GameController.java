@@ -30,6 +30,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.managers.Drownable;
@@ -65,7 +66,9 @@ import de.bsautermeister.jump.sprites.enemies.Fox;
 import de.bsautermeister.jump.sprites.enemies.Frog;
 import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.enemies.Raven;
-import de.bsautermeister.jump.text.TextMessage;
+import de.bsautermeister.jump.text.LanguageUiMessage;
+import de.bsautermeister.jump.text.StringUiMessage;
+import de.bsautermeister.jump.text.UiMessage;
 
 public class GameController  implements BinarySerializable, Disposable {
 
@@ -119,7 +122,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private final int level;
     private final FileHandle gameToResume;
 
-    private final LinkedBlockingQueue<TextMessage> textMessages;
+    private final LinkedBlockingQueue<UiMessage> uiMessages;
 
     private final KillSequelManager killSequelManager;
 
@@ -154,7 +157,8 @@ public class GameController  implements BinarySerializable, Disposable {
                 KillSequelManager killSequelManager = getKillSequelManager();
                 killSequelManager.notifyKill();
                 score += killSequelManager.getKillScore();
-                showTextMessage(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
+                showMessage(new StringUiMessage(
+                        killSequelManager.getKillScoreText()), enemy.getBoundingRectangle());
             }
         }
 
@@ -167,24 +171,26 @@ public class GameController  implements BinarySerializable, Disposable {
 
         @Override
         public void use(Player player, Item item) {
-            String msg;
+            String language;
             if (item instanceof BeerItem) {
                 updateCollectedBeers(collectedBeers + 1);
                 soundEffects.drinkingSound.play();
                 if (collectedBeers >= totalBeers) {
                     unlockGoal();
                 }
-                msg = "PROST";
+                language = Language.COLLECT_BEER;
+                score += 100;
             } else if (item instanceof GrilledChickenItem) {
                 soundEffects.eatFoodSound.play();
-                msg = "TASTY";
+                language = Language.COLLECT_FOOD;
+                score += 50;
             } else { // prezel
                 soundEffects.eatFoodSound.play();
-                msg = "YUMMY";
+                language = Language.COLLECT_PRETZEL;
+                score += 50;
             }
 
-            score += 100;
-            showTextMessage(msg, item.getBoundingRectangle());
+            showMessage(new LanguageUiMessage(language), item.getBoundingRectangle());
         }
 
         @Override
@@ -236,7 +242,8 @@ public class GameController  implements BinarySerializable, Disposable {
                 KillSequelManager killSequelManager = getKillSequelManager();
                 killSequelManager.notifyKill();
                 score += killSequelManager.getKillScore();
-                showTextMessage(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
+                showMessage(new StringUiMessage(killSequelManager.getKillScoreText()),
+                        enemy.getBoundingRectangle());
             }
         }
 
@@ -269,7 +276,8 @@ public class GameController  implements BinarySerializable, Disposable {
             KillSequelManager killSequelManager = getKillSequelManager();
             killSequelManager.notifyKill();
             score += killSequelManager.getKillScore();
-            showTextMessage(killSequelManager.getKillScoreText(), enemy.getBoundingRectangle());
+            showMessage(new StringUiMessage(killSequelManager.getKillScoreText()),
+                    enemy.getBoundingRectangle());
         }
 
         private void playEnemyKillSound(Enemy enemy, float volume) {
@@ -420,7 +428,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         activeBoxCoins = new Array<>();
 
-        textMessages = new LinkedBlockingQueue<>();
+        uiMessages = new LinkedBlockingQueue<>();
 
         killSequelManager = new KillSequelManager();
 
@@ -459,7 +467,7 @@ public class GameController  implements BinarySerializable, Disposable {
         items.clear();
         itemsToSpawn.clear();
         activeBoxCoins.clear();
-        textMessages.clear();
+        uiMessages.clear();
 
         WorldCreator.StartParams start = worldCreator.getStart();
         Rectangle goal = worldCreator.getGoal();
@@ -566,7 +574,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
         for(BoxCoin boxCoin : activeBoxCoins) {
             if (boxCoin.isFinished()) {
-                showTextMessage(Cfg.COIN_SCORE_STRING, boxCoin.getBoundingRectangle());
+                showMessage(new StringUiMessage(Cfg.COIN_SCORE_STRING),
+                        boxCoin.getBoundingRectangle());
                 activeBoxCoins.removeValue(boxCoin, true);
             } else {
                 boxCoin.update(delta);
@@ -585,8 +594,8 @@ public class GameController  implements BinarySerializable, Disposable {
             screenCallbacks.success(level, goalCenterPosition);
         }
 
-        for (TextMessage textMessage : textMessages) {
-            textMessage.update(delta);
+        for (UiMessage uiMessage : uiMessages) {
+            uiMessage.update(delta);
         }
 
         // touch for platform contacts
@@ -691,8 +700,8 @@ public class GameController  implements BinarySerializable, Disposable {
             completeLevel();
         }
 
-        if (!textMessages.isEmpty() && !textMessages.peek().isAlive()) {
-            textMessages.poll();
+        if (!uiMessages.isEmpty() && !uiMessages.peek().isAlive()) {
+            uiMessages.poll();
         }
 
         PretzelBullet pretzelBullet = player.getPretzelBullet();
@@ -740,7 +749,7 @@ public class GameController  implements BinarySerializable, Disposable {
         items.put(item.getId(), item);
     }
 
-    private void showTextMessage(String text, Rectangle rect) {
+    private void showMessage(UiMessage message, Rectangle rect) {
         float x = rect.getX() + rect.getWidth() / 2;
         float y = rect.getY() + rect.getHeight();
         float cameraLeft = (camera.position.x - (viewport.getWorldWidth() - 4 * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
@@ -748,7 +757,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
         float normalizedX = (x - cameraLeft) / Cfg.BLOCKS_X;
         float normalizedY = (y - cameraBottom) / Cfg.BLOCKS_Y;
-        textMessages.add(new TextMessage(text, normalizedX, normalizedY));
+        message.setPosition(normalizedX, normalizedY);
+        uiMessages.add(message);
     }
 
     private boolean isVisible(Sprite sprite) {
@@ -1171,8 +1181,8 @@ public class GameController  implements BinarySerializable, Disposable {
         return collectedBeers;
     }
 
-    public LinkedBlockingQueue<TextMessage> getTextMessages() {
-        return textMessages;
+    public LinkedBlockingQueue<UiMessage> getUiMessages() {
+        return uiMessages;
     }
 
     public ObjectMap<String, Item> getItems() {

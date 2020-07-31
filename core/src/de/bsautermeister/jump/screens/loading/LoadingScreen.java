@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -53,6 +54,7 @@ public class LoadingScreen extends ScreenBase {
 
         // Tell the manager to load assets for the loading screen
         getAssetManager().load(AssetDescriptors.Atlas.LOADING);
+        getAssetManager().load(AssetDescriptors.I18n.LOADING_LANGUAGE);
         // Wait until they are finished loading
         getAssetManager().finishLoading();
 
@@ -61,9 +63,12 @@ public class LoadingScreen extends ScreenBase {
 
         // Get our texture atlas from the manager
         TextureAtlas atlas = getAsset(AssetDescriptors.Atlas.LOADING);
+        I18NBundle i18n = getAsset(AssetDescriptors.I18n.LOADING_LANGUAGE);
+
+        boolean isGerman = i18n.get("language").equals("de");
 
         // Grab the regions from the atlas and create some images
-        logo = new Image(atlas.findRegion(RegionNames.LOADING_TEXT));
+        logo = new Image(atlas.findRegion(isGerman ? RegionNames.LOADING_TEXT_DE : RegionNames.LOADING_TEXT));
         loadingFrame = new Image(atlas.findRegion(RegionNames.LOADING_FRAME));
         loadingBarHidden = new Image(atlas.findRegion(RegionNames.LOADING_BAR_HIDDEN));
         loadingBg = new Image(atlas.findRegion(RegionNames.LOADING_FRAME_BACKGROUND));

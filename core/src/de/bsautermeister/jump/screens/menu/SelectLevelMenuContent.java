@@ -11,11 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import java.util.Locale;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.JumpGameStats;
 import de.bsautermeister.jump.screens.game.GameSoundEffects;
@@ -25,6 +27,7 @@ import de.bsautermeister.jump.screens.game.level.LevelMetadata;
 public class SelectLevelMenuContent extends Table {
     private final Callbacks callbacks;
     private final GameSoundEffects gameSoundEffects;
+    private final I18NBundle i18n;
 
     private Label infoLabel;
 
@@ -34,6 +37,7 @@ public class SelectLevelMenuContent extends Table {
         this.page = page;
         this.callbacks = callbacks;
         this.gameSoundEffects = new GameSoundEffects(assetManager);
+        i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
         initialize(assetManager);
     }
 
@@ -53,7 +57,7 @@ public class SelectLevelMenuContent extends Table {
         leftButton.setVisible(page > 1);
         add(leftButton).pad(16f).center();
 
-        Label title = new Label("Select Level", skin, Styles.Label.XXLARGE);
+        Label title = new Label(i18n.get(Language.SELECT_LEVEL), skin, Styles.Label.XXLARGE);
         Table container = new Table();
         container.center();
         container.add(title).row();
@@ -113,9 +117,7 @@ public class SelectLevelMenuContent extends Table {
                     public void clicked(InputEvent event, float x, float y) {
                         gameSoundEffects.playRandomBurpSound(1.0f);
                         int missingStars = requiredStarsToUnlock - totalStars;
-                        infoLabel.setText(String.format(Locale.ROOT,
-                                "%d star%s missing to unlock",
-                                missingStars, missingStars != 1 ? "s" : ""));
+                        infoLabel.setText(i18n.format(Language.MISSING_FOR_UNLOCK, missingStars));
                         infoLabel.clearActions();
                         infoLabel.addAction(Actions.sequence(
                                 Actions.show(),
@@ -124,7 +126,7 @@ public class SelectLevelMenuContent extends Table {
                         ));
                     }
                 });
-                System.out.println("Required: " + requiredStarsToUnlock + " but only: " + totalStars);
+
             } else {
                 levelButton.addListener(new ClickListener() {
                     @Override

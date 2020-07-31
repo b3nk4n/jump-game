@@ -11,8 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
@@ -27,16 +29,17 @@ public class GameOverOverlay extends Table {
 
     private AnimatedLabel titleLabel;
 
-    public GameOverOverlay(Skin skin, Callback callback) {
+    public GameOverOverlay(Skin skin, I18NBundle i18n, Callback callback) {
         super(skin);
         this.callback = callback;
 
-        init();
+        init(i18n);
     }
 
-    private void init() {
-        titleLabel = new AnimatedLabel(getSkin(), Styles.Label.TITLE, Float.MAX_VALUE, 9)
-                .typeText("Game Over");
+    private void init(I18NBundle i18n) {
+        String title = i18n.get(Language.GAME_OVER);
+        titleLabel = new AnimatedLabel(getSkin(), Styles.Label.TITLE, Float.MAX_VALUE, title.length())
+                .typeText(title);
         add(titleLabel)
                 .pad(Cfg.TITLE_PAD)
                 .row();
@@ -54,7 +57,7 @@ public class GameOverOverlay extends Table {
                 Actions.show()
         ));
 
-        Button quitButton = new TextButton("Quit", getSkin());
+        Button quitButton = new TextButton(i18n.get(Language.QUIT), getSkin());
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -66,7 +69,7 @@ public class GameOverOverlay extends Table {
         });
         buttonTable.add(quitButton);
 
-        Button retryButton = new TextButton("Retry", getSkin());
+        Button retryButton = new TextButton(i18n.get(Language.RETRY), getSkin());
         retryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -41,14 +42,16 @@ import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
 import de.bsautermeister.jump.sprites.BoxCoin;
 import de.bsautermeister.jump.sprites.Coin;
-import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
-import de.bsautermeister.jump.sprites.enemies.Enemy;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Platform;
 import de.bsautermeister.jump.sprites.Player;
 import de.bsautermeister.jump.sprites.Pole;
-import de.bsautermeister.jump.text.TextMessage;
+import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.text.LanguageUiMessage;
+import de.bsautermeister.jump.text.StringUiMessage;
+import de.bsautermeister.jump.text.UiMessage;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class GameRenderer implements Disposable {
@@ -68,6 +71,7 @@ public class GameRenderer implements Disposable {
     private final ShaderProgram drunkShader;
     private final ShaderProgram stonedShader;
 
+    private final I18NBundle i18n;
     private final BitmapFont font;
     private final GlyphLayout layout = new GlyphLayout();
 
@@ -106,6 +110,7 @@ public class GameRenderer implements Disposable {
 
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
+        i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
         font = assetManager.get(AssetDescriptors.Fonts.S);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
@@ -328,10 +333,10 @@ public class GameRenderer implements Disposable {
     private void updateOverlay() {
         if (overlayStage.getActors().isEmpty()) {
             if (controller.getState().isGameOver()) {
-                overlayStage.addActor(new GameOverOverlay(skin, controller.getGameOverCallback()));
+                overlayStage.addActor(new GameOverOverlay(skin, i18n, controller.getGameOverCallback()));
                 skipNextOverlayAct = true;
             } else if (controller.getState().isPaused()) {
-                overlayStage.addActor(new PauseOverlay(skin, controller.getPauseCallback()));
+                overlayStage.addActor(new PauseOverlay(skin, i18n, controller.getPauseCallback()));
                 skipNextOverlayAct = true;
             }
         } else {
@@ -342,16 +347,25 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderTextMessage() {
-        LinkedBlockingQueue<TextMessage> textMessages = controller.getTextMessages();
-        if (!textMessages.isEmpty()) {
+        LinkedBlockingQueue<UiMessage> uiMessages = controller.getUiMessages();
+        if (!uiMessages.isEmpty()) {
             batch.begin();
-            for (TextMessage textMessage : textMessages) {
-                layout.setText(font, textMessage.getMessage());
+            for (UiMessage uiMessage : uiMessages) {
+                String message;
 
-                float uiX = textMessage.getNormalizedX() * Cfg.UI_WIDTH;
-                float uiY = textMessage.getNormalizedY() * Cfg.UI_HEIGHT;
+                if (uiMessage instanceof LanguageUiMessage) {
+                    String languageKey = ((LanguageUiMessage) uiMessage).getMessage();
+                    message = i18n.get(languageKey);
+                } else {
+                    message = ((StringUiMessage) uiMessage).getMessage();
+                }
 
-                font.draw(batch, textMessage.getMessage(), uiX - layout.width / 2, uiY - layout.height / 2);
+                layout.setText(font, message);
+
+                float uiX = uiMessage.getNormalizedX() * Cfg.UI_WIDTH;
+                float uiY = uiMessage.getNormalizedY() * Cfg.UI_HEIGHT;
+
+                font.draw(batch, message, uiX - layout.width / 2, uiY - layout.height / 2);
             }
             batch.end();
         }

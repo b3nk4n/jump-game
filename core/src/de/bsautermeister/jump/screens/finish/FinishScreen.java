@@ -18,11 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
@@ -71,13 +73,15 @@ public class FinishScreen extends ScreenBase {
     private Table builtId(AssetManager assetManager) {
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
+        I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
 
         Table content = new Table();
         content.center();
         content.setFillParent(true);
 
-        AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, 11)
-                .typeText("O'zapft is!");
+        String titleText = i18n.get(Language.CONGRATS);
+        AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, titleText.length())
+                .typeText(titleText);
         content.add(title)
                 .colspan(2)
                 .pad(Cfg.TITLE_PAD)
@@ -86,7 +90,7 @@ public class FinishScreen extends ScreenBase {
 
         final float sidePad = 64f;
         final float topBottom = 8f;
-        Label scoreLabel = new Label("Score", skin, Styles.Label.LARGE);
+        Label scoreLabel = new Label(i18n.get(Language.SCORE), skin, Styles.Label.LARGE);
         scoreLabel.addAction(Actions.sequence(
                 Actions.hide(),
                 Actions.delay(1f),
@@ -102,7 +106,7 @@ public class FinishScreen extends ScreenBase {
         ));
         content.add(scoreValueLabel).right().padRight(sidePad*2).padBottom(topBottom).row();
 
-        Label timeLabel = new Label("Time", skin, Styles.Label.LARGE);
+        Label timeLabel = new Label(i18n.get(Language.TIME), skin, Styles.Label.LARGE);
         timeLabel.addAction(Actions.sequence(
                 Actions.hide(),
                 Actions.delay(1.5f),
@@ -118,7 +122,7 @@ public class FinishScreen extends ScreenBase {
         ));
         content.add(timeValueLabel).right().padRight(sidePad*2).padBottom(topBottom).row();
 
-        Label totalLabel = new Label("Total", skin, Styles.Label.XXLARGE);
+        Label totalLabel = new Label(i18n.get(Language.TOTAL), skin, Styles.Label.XXLARGE);
         Container<Label> totalLabelContainer = wrapTransformContainer(totalLabel);
         totalLabelContainer.addAction(Actions.sequence(
                 Actions.hide(),
@@ -195,7 +199,7 @@ public class FinishScreen extends ScreenBase {
         starTable.add(star3Container).padLeft(starPad);
         content.add(starTable).colspan(2).row();
 
-        Label pushLabel = new Label("Tap to continue", skin, Styles.Label.DEFAULT);
+        Label pushLabel = new Label(i18n.get(Language.TAP_TO_CONTINUE), skin, Styles.Label.DEFAULT);
         pushLabel.addAction(Actions.sequence(
                 Actions.hide(),
                 Actions.delay(4.0f),

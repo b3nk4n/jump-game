@@ -69,4 +69,9 @@ public interface AssetPaths {
         String MUSIC = "pfx/music.pfx";
         String SNORE = "pfx/snore.pfx";
     }
+
+    interface I18n {
+        String LANGUAGE = "i18n/Language";
+        String LOADING_LANGUAGE = "i18n/LoadingLanguage";
+    }
 }

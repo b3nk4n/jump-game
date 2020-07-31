@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
@@ -27,15 +29,16 @@ public class PauseOverlay extends Table {
 
     private Callback callback;
 
-    public PauseOverlay(Skin skin, Callback callback) {
+    public PauseOverlay(Skin skin, I18NBundle i18n, Callback callback) {
         super(skin);
         this.callback = callback;
-        init();
+        init(i18n);
     }
 
-    private void init() {
-        titleLabel = new AnimatedLabel(getSkin(), Styles.Label.TITLE, Float.MAX_VALUE, 6)
-                .typeText("Paused");
+    private void init(I18NBundle i18n) {
+        String title = i18n.get(Language.PAUSED);
+        titleLabel = new AnimatedLabel(getSkin(), Styles.Label.TITLE, Float.MAX_VALUE, title.length())
+                .typeText(title);
         add(titleLabel)
                 .pad(Cfg.TITLE_PAD)
                 .row();
@@ -53,7 +56,7 @@ public class PauseOverlay extends Table {
                 Actions.show()
         ));
 
-        Button quitButton = new TextButton("Quit", getSkin());
+        Button quitButton = new TextButton(i18n.get(Language.QUIT), getSkin());
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -65,7 +68,7 @@ public class PauseOverlay extends Table {
         });
         buttonTable.add(quitButton);
 
-        Button resumeButton = new TextButton("Resume", getSkin());
+        Button resumeButton = new TextButton(i18n.get(Language.RESUME), getSkin());
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

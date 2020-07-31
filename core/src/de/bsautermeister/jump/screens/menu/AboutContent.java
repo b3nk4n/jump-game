@@ -1,13 +1,13 @@
 package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
@@ -18,19 +18,24 @@ public class AboutContent extends Table {
     private final Skin skin;
     private final Table creditContainer = new Table();
 
-    private static final CreditEntry[] CREDITS = new CreditEntry[] {
-            new CreditEntry("Developer", "Benjamin Sautermeister"),
-            // https://hdst.itch.io/fox (Copyright/Attribution Notice: HDST or link to this page)
-            new CreditEntry("Graphics", "Benjamin Sautermeister", "Vanessa Kan", "HDST", "Lorem Ipsum"),
-            new CreditEntry("SFX", "Benjamin Sautermeister"),
-            new CreditEntry("Music", "Dee Yan-Key"),
-    };
+    private final CreditEntry[] credits;
 
     private int currentCreditIndex = 0;
 
 
     public AboutContent(AssetManager assetManager) {
         skin = assetManager.get(AssetDescriptors.Skins.UI);
+        I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
+
+        credits = new CreditEntry[] {
+                new CreditEntry(i18n.get(Language.DEVELOPER), "Benjamin Sautermeister"),
+                // https://hdst.itch.io/fox (Copyright/Attribution Notice: HDST or link to this page)
+                new CreditEntry(i18n.get(Language.GRAPHICS), "Benjamin Sautermeister", "Vanessa Kan", "HDST", "Lorem Ipsum"),
+                new CreditEntry(i18n.get(Language.ANIMATIONS), "Benjamin Sautermeister"),
+                new CreditEntry(i18n.get(Language.SFX), "Benjamin Sautermeister"),
+                new CreditEntry(i18n.get(Language.MUSIC), "Dee Yan-Key"),
+        };
+
         initialize();
     }
 
@@ -40,7 +45,7 @@ public class AboutContent extends Table {
 
         addActor(creditContainer);
         creditContainer.center().setFillParent(true);
-        updateLabels(CREDITS[currentCreditIndex]);
+        updateLabels(credits[currentCreditIndex]);
     }
 
     private void updateLabels(CreditEntry entry) {
@@ -66,8 +71,8 @@ public class AboutContent extends Table {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                currentCreditIndex = ++currentCreditIndex % CREDITS.length;
-                                updateLabels(CREDITS[currentCreditIndex]);
+                                currentCreditIndex = ++currentCreditIndex % credits.length;
+                                updateLabels(credits[currentCreditIndex]);
                             }
                         })
                 )

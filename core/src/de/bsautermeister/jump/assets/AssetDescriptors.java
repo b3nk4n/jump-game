@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.I18NBundle;
 
 public interface AssetDescriptors {
 
@@ -98,6 +99,13 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.WHINE, Sound.class);
     }
 
+    interface I18n {
+        AssetDescriptor<I18NBundle> LANGUAGE =
+                new AssetDescriptor<>(AssetPaths.I18n.LANGUAGE, I18NBundle.class);
+        AssetDescriptor<I18NBundle> LOADING_LANGUAGE =
+                new AssetDescriptor<>(AssetPaths.I18n.LOADING_LANGUAGE, I18NBundle.class);
+    }
+
     AssetDescriptor[] ALL = {
             Fonts.S, Fonts.M, Fonts.L, Fonts.XL, Fonts.XXL, Fonts.TITLE,
             Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
@@ -106,7 +114,8 @@ public interface AssetDescriptors {
             Sounds.JUMP, Sounds.KICKED, Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING, Sounds.SUCCESS,
             Sounds.SWEARING1, Sounds.SWEARING2, Sounds.SWEARING3, Sounds.SWEARING4,
             Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7, Sounds.SNORE, Sounds.BURP,
-            Sounds.RAVEN, Sounds.PLOPP, Sounds.FROG, Sounds.WHINE
+            Sounds.RAVEN, Sounds.PLOPP, Sounds.FROG, Sounds.WHINE,
+            I18n.LANGUAGE
     };
 
 }

@@ -86,6 +86,7 @@ public class RegionNames {
     public static String TENT_DECORATION_BACKGROUND = "tent_inside_decoration";
 
     public static String LOADING_TEXT = "loading_text";
+    public static String LOADING_TEXT_DE = "loading_text_de";
     public static String LOADING_ANIMATION = "loading";
     public static String LOADING_FRAME = "frame";
     public static String LOADING_BAR_HIDDEN = "loading-hidden";

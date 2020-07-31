@@ -8,10 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
+import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
@@ -28,6 +30,7 @@ public class MainMenuContent extends Table {
 
     private void initialize(AssetManager assetManager) {
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
+        I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
 
         center();
         setFillParent(true);
@@ -38,14 +41,15 @@ public class MainMenuContent extends Table {
                 .padTop(Cfg.BUTTON_VERTICAL_PAD)
                 .padBottom(Cfg.BUTTON_VERTICAL_PAD);
 
-        AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, 11)
-                .typeText("October Bro");
+        String gameTitle = i18n.get(Language.GAME);
+        AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, gameTitle.length())
+                .typeText(gameTitle);
         add(title)
                 .pad(Cfg.TITLE_PAD)
                 .row();
 
         float delay = 1.0f;
-        Button playButton = new TextButton("Play", skin);
+        Button playButton = new TextButton(i18n.get(Language.PLAY), skin);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -62,7 +66,7 @@ public class MainMenuContent extends Table {
                 .row();
 
         if (JumpGame.hasSavedData()) {
-            Button continueButton = new TextButton("Resume", skin);
+            Button continueButton = new TextButton(i18n.get(Language.RESUME), skin);
             continueButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -79,7 +83,7 @@ public class MainMenuContent extends Table {
                     .row();
         }
 
-        Button aboutButton = new TextButton("About", skin);
+        Button aboutButton = new TextButton(i18n.get(Language.ABOUT), skin);
         aboutButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
