@@ -383,7 +383,7 @@
   </object>
  </objectgroup>
  <objectgroup id="18" name="goal">
-  <object id="36" x="2064" y="448" width="16" height="16"/>
+  <object id="36" x="2032" y="448" width="64" height="16"/>
  </objectgroup>
  <objectgroup id="19" name="start">
   <object id="34" x="64" y="528" width="16" height="16">

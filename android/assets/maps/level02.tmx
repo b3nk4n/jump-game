@@ -183,7 +183,7 @@
  <objectgroup id="15" name="bouncers"/>
  <objectgroup id="16" name="platforms"/>
  <objectgroup id="18" name="goal">
-  <object id="190" x="600" y="480" width="16" height="16"/>
+  <object id="190" x="576" y="480" width="64" height="16"/>
  </objectgroup>
  <objectgroup id="19" name="start">
   <object id="189" x="48" y="576" width="16" height="16"/>
