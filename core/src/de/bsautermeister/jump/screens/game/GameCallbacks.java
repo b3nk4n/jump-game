@@ -12,6 +12,7 @@ import de.bsautermeister.jump.sprites.Item;
 import de.bsautermeister.jump.sprites.Player;
 
 public interface GameCallbacks {
+    void started();
     void jump();
     void landed(float landingHeight);
     void stomp(Enemy enemy);
@@ -24,6 +25,7 @@ public interface GameCallbacks {
     void indirectObjectHit(InteractiveTileObject tileObject, String objectId);
     void hitWall(Enemy enemy);
     void hitWall(PretzelBullet pretzelBullet);
+    void spotted(ItemBox itemBox);
     void killed(Enemy enemy);
     void kicked(Enemy enemy);
     void touchedWater(Drownable drownable);
@@ -33,4 +35,6 @@ public interface GameCallbacks {
     void unlockGoalBrick(Brick brick);
     void goalReached();
     void playerDied();
+    void startDrowning();
+    void endDrowning();
 }

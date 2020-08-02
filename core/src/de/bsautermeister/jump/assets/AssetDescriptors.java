@@ -45,8 +45,6 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.BUMP, Sound.class);
         AssetDescriptor<Sound> BREAK_BLOCK =
                 new AssetDescriptor<>(AssetPaths.Sounds.BREAK_BLOCK, Sound.class);
-        AssetDescriptor<Sound> FOOD_SPAWN =
-                new AssetDescriptor<>(AssetPaths.Sounds.FOOD_SPAWN, Sound.class);
         AssetDescriptor<Sound> BEER_SPAWN =
                 new AssetDescriptor<>(AssetPaths.Sounds.BEER_SPAWN, Sound.class);
         AssetDescriptor<Sound> COIN_SPAWN =
@@ -55,8 +53,14 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.EAT_FOOD, Sound.class);
         AssetDescriptor<Sound> STOMP =
                 new AssetDescriptor<>(AssetPaths.Sounds.STOMP, Sound.class);
-        AssetDescriptor<Sound> COMPLAIN =
-                new AssetDescriptor<>(AssetPaths.Sounds.COMPLAIN, Sound.class);
+        AssetDescriptor<Sound> COMPLAIN1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.COMPLAIN1, Sound.class);
+        AssetDescriptor<Sound> COMPLAIN2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.COMPLAIN2, Sound.class);
+        AssetDescriptor<Sound> COMPLAIN3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.COMPLAIN3, Sound.class);
+        AssetDescriptor<Sound> COMPLAIN4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.COMPLAIN4, Sound.class);
         AssetDescriptor<Sound> SWEARING1 =
                 new AssetDescriptor<>(AssetPaths.Sounds.SWEARING1, Sound.class);
         AssetDescriptor<Sound> SWEARING2 =
@@ -71,6 +75,70 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.SWEARING6, Sound.class);
         AssetDescriptor<Sound> SWEARING7 =
                 new AssetDescriptor<>(AssetPaths.Sounds.SWEARING7, Sound.class);
+        AssetDescriptor<Sound> DROWN1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.DROWN1, Sound.class);
+        AssetDescriptor<Sound> DROWN2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.DROWN2, Sound.class);
+        AssetDescriptor<Sound> DROWN3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.DROWN3, Sound.class);
+        AssetDescriptor<Sound> DROWN4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.DROWN4, Sound.class);
+        AssetDescriptor<Sound> SHOUT1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SHOUT1, Sound.class);
+        AssetDescriptor<Sound> SHOUT2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SHOUT2, Sound.class);
+        AssetDescriptor<Sound> SHOUT3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SHOUT3, Sound.class);
+        AssetDescriptor<Sound> SHOUT4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SHOUT4, Sound.class);
+        AssetDescriptor<Sound> BEER1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BEER1, Sound.class);
+        AssetDescriptor<Sound> BEER2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BEER2, Sound.class);
+        AssetDescriptor<Sound> BEER3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BEER3, Sound.class);
+        AssetDescriptor<Sound> BEER4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BEER4, Sound.class);
+        AssetDescriptor<Sound> OZAPFT1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.OZAPFT1, Sound.class);
+        AssetDescriptor<Sound> OZAPFT2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.OZAPFT2, Sound.class);
+        AssetDescriptor<Sound> BOOST1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BOOST1, Sound.class);
+        AssetDescriptor<Sound> BOOST2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BOOST2, Sound.class);
+        AssetDescriptor<Sound> BOOST3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BOOST3, Sound.class);
+        AssetDescriptor<Sound> BOOST4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BOOST4, Sound.class);
+        AssetDescriptor<Sound> NEED_BEER1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.NEED_BEER1, Sound.class);
+        AssetDescriptor<Sound> NEED_BEER2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.NEED_BEER2, Sound.class);
+        AssetDescriptor<Sound> NEED_BEER3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.NEED_BEER3, Sound.class);
+        AssetDescriptor<Sound> SPOT_BEER1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SPOT_BEER1, Sound.class);
+        AssetDescriptor<Sound> SPOT_BEER2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SPOT_BEER2, Sound.class);
+        AssetDescriptor<Sound> SPOT_BEER3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SPOT_BEER3, Sound.class);
+        AssetDescriptor<Sound> START1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.START1, Sound.class);
+        AssetDescriptor<Sound> START2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.START2, Sound.class);
+        AssetDescriptor<Sound> START3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.START3, Sound.class);
+        AssetDescriptor<Sound> START4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.START4, Sound.class);
+        AssetDescriptor<Sound> VICTORY1 =
+                new AssetDescriptor<>(AssetPaths.Sounds.VICTORY1, Sound.class);
+        AssetDescriptor<Sound> VICTORY2 =
+                new AssetDescriptor<>(AssetPaths.Sounds.VICTORY2, Sound.class);
+        AssetDescriptor<Sound> VICTORY3 =
+                new AssetDescriptor<>(AssetPaths.Sounds.VICTORY3, Sound.class);
+        AssetDescriptor<Sound> VICTORY4 =
+                new AssetDescriptor<>(AssetPaths.Sounds.VICTORY4, Sound.class);
         AssetDescriptor<Sound> JUMP =
                 new AssetDescriptor<>(AssetPaths.Sounds.JUMP, Sound.class);
         AssetDescriptor<Sound> LANDING =
@@ -109,12 +177,22 @@ public interface AssetDescriptors {
     AssetDescriptor[] ALL = {
             Fonts.S, Fonts.M, Fonts.L, Fonts.XL, Fonts.XXL, Fonts.TITLE,
             Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
-            Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.FOOD_SPAWN, Sounds.BEER_SPAWN,
-            Sounds.COIN_SPAWN, Sounds.EAT_FOOD, Sounds.STOMP, Sounds.COMPLAIN, Sounds.LANDING,
+            Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.BEER_SPAWN,
+            Sounds.COIN_SPAWN, Sounds.EAT_FOOD, Sounds.STOMP, Sounds.LANDING,
             Sounds.JUMP, Sounds.KICKED, Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING, Sounds.SUCCESS,
+            Sounds.COMPLAIN1, Sounds.COMPLAIN2, Sounds.COMPLAIN3, Sounds.COMPLAIN4,
             Sounds.SWEARING1, Sounds.SWEARING2, Sounds.SWEARING3, Sounds.SWEARING4,
-            Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7, Sounds.SNORE, Sounds.BURP,
-            Sounds.RAVEN, Sounds.PLOPP, Sounds.FROG, Sounds.WHINE,
+            Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7,
+            Sounds.DROWN1, Sounds.DROWN2, Sounds.DROWN3, Sounds.DROWN4,
+            Sounds.SHOUT1, Sounds.SHOUT2, Sounds.SHOUT3, Sounds.SHOUT4,
+            Sounds.BEER1, Sounds.BEER2, Sounds.BEER3, Sounds.BEER4,
+            Sounds.OZAPFT1, Sounds.OZAPFT2,
+            Sounds.BOOST1, Sounds.BOOST2, Sounds.BOOST3, Sounds.BOOST4,
+            Sounds.NEED_BEER1, Sounds.NEED_BEER2, Sounds.NEED_BEER3,
+            Sounds.SPOT_BEER1, Sounds.SPOT_BEER2, Sounds.SPOT_BEER3,
+            Sounds.START1, Sounds.START2, Sounds.START3, Sounds.START4,
+            Sounds.VICTORY1, Sounds.VICTORY2, Sounds.VICTORY3, Sounds.VICTORY4,
+            Sounds.SNORE, Sounds.BURP, Sounds.RAVEN, Sounds.PLOPP, Sounds.FROG, Sounds.WHINE,
             I18n.LANGUAGE
     };
 

@@ -2,10 +2,10 @@ package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -126,7 +127,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private final KillSequelManager killSequelManager;
 
-    private boolean gameIsCanced;
+    private boolean gameIsCanceled;
 
     private Array<Rectangle> spikesList;
 
@@ -137,8 +138,18 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
+        public void started() {
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    soundEffects.randomStartSound().play();
+                }
+            }, 0.33f);
+        }
+
+        @Override
         public void jump() {
-            soundEffects.jumpSound.play(1f);
+            soundEffects.playRandomJumpSound(0.66f);
         }
 
         @Override
@@ -175,9 +186,21 @@ public class GameController  implements BinarySerializable, Disposable {
             if (item instanceof BeerItem) {
                 updateCollectedBeers(collectedBeers + 1);
                 soundEffects.drinkingSound.play();
+                final Sound postBeerDrinkSound;
                 if (collectedBeers >= totalBeers) {
                     unlockGoal();
+                    postBeerDrinkSound = soundEffects.randomOzapftSound();
+                } else {
+                    postBeerDrinkSound = soundEffects.randomBeerSound();
                 }
+
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        postBeerDrinkSound.play();
+                    }
+                }, 1.0f);
+
                 language = Language.COLLECT_BEER;
                 score += 100;
             } else if (item instanceof GrilledChickenItem) {
@@ -196,7 +219,7 @@ public class GameController  implements BinarySerializable, Disposable {
         @Override
         public void hit(Player player) {
             if (player.isBig()) {
-                soundEffects.complainSound.play();
+                soundEffects.randomComplainSound().play();
             }
         }
 
@@ -221,10 +244,16 @@ public class GameController  implements BinarySerializable, Disposable {
                 } else {
                     spawnItem(new ItemDef(position, GrilledChickenItem.class));
                 }
-                soundEffects.foodSpawnSound.play();
+                soundEffects.bumpSound.play();
             } else if (itemBox.isBeerBox()) {
                 spawnItem(new ItemDef(position, BeerItem.class));
                 soundEffects.beerSpawnSound.play();
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        soundEffects.randomSpotBeerSound().play();
+                    }
+                }, 0.75f);
             } else {
                 soundEffects.coinSpawnSound.play();
                 BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
@@ -244,6 +273,13 @@ public class GameController  implements BinarySerializable, Disposable {
                 score += killSequelManager.getKillScore();
                 showMessage(new StringUiMessage(killSequelManager.getKillScoreText()),
                         enemy.getBoundingRectangle());
+            }
+        }
+
+        @Override
+        public void spotted(ItemBox itemBox) {
+            if (itemBox.isBeerBox()) {
+                soundEffects.randomNeedBeerSound().play();
             }
         }
 
@@ -347,12 +383,41 @@ public class GameController  implements BinarySerializable, Disposable {
         public void goalReached() {
             backgroundMusic.setVolume(0f, false);
             soundEffects.successSound.play();
+
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    soundEffects.randomVictorySound().play();
+                }
+            }, 1f);
         }
 
         @Override
         public void playerDied() {
             backgroundMusic.setVolume(0.1f, false);
-            soundEffects.randomSwearingSound().play();
+            soundEffects.randomShoutSound().play();
+
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    soundEffects.randomSwearingSound().play();
+                }
+            }, 0.75f);
+        }
+
+        @Override
+        public void startDrowning() {
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    soundEffects.randomDrownSound().play();
+                }
+            }, 0.5f);
+        }
+
+        @Override
+        public void endDrowning() {
+            soundEffects.randomShoutSound().play();
         }
 
         private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2f / Cfg.PPM;
@@ -381,7 +446,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void quit(Vector2 clickScreenPosition) {
             LOG.debug("QUIT pressed");
             backgroundMusic.setVolume(0f, false);
-            gameIsCanced = true;
+            gameIsCanceled = true;
             markBackToMenu = true;
             GameController.this.clickScreenPosition.set(clickScreenPosition);
         }
@@ -410,7 +475,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private final GameScreenCallbacks screenCallbacks;
 
-    public GameController(GameScreenCallbacks screenCallbacks, GameApp game, GameSoundEffects soundEffects,
+    public GameController(GameScreenCallbacks screenCallbacks, GameApp game, final GameSoundEffects soundEffects,
                           int level, FileHandle gameToResume) {
         this.level = level;
         this.gameToResume = gameToResume;
@@ -430,13 +495,23 @@ public class GameController  implements BinarySerializable, Disposable {
 
         uiMessages = new LinkedBlockingQueue<>();
 
-        killSequelManager = new KillSequelManager();
+        killSequelManager = new KillSequelManager(new KillSequelManager.Callbacks() {
+            @Override
+            public void completed(int count) {
+                if (count > 1) {
+                    soundEffects.randomBoostSound().play();
+                }
+            }
+        });
 
         this.backgroundMusic = game.getBackgroundMusic();
         this.foregroundMusic = game.getForegroundMusic();
 
         camera = new OrthographicCamera();
-        viewport = new StretchViewport((Cfg.WORLD_WIDTH + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, (Cfg.WORLD_HEIGHT + 4 * Cfg.BLOCK_SIZE) / Cfg.PPM, camera);
+        viewport = new StretchViewport(
+                (Cfg.WORLD_WIDTH + 2 * Cfg.BLOCKS_PAD * Cfg.BLOCK_SIZE) / Cfg.PPM,
+                (Cfg.WORLD_HEIGHT + 2 * Cfg.BLOCKS_PAD * Cfg.BLOCK_SIZE) / Cfg.PPM,
+                camera);
 
         waterInteractionManager = new WaterInteractionManager(atlas, callbacks);
 
@@ -570,7 +645,17 @@ public class GameController  implements BinarySerializable, Disposable {
 
         for (InteractiveTileObject tileObject : tileObjects) {
             tileObject.update(delta);
+
+            if (tileObject instanceof ItemBox) {
+                ItemBox itemBox = (ItemBox) tileObject;
+
+                if (!itemBox.isSpotted() && isVisibleInView(itemBox.getBounds())) {
+                    itemBox.isInCameraView();
+                }
+            }
         }
+
+
 
         for(BoxCoin boxCoin : activeBoxCoins) {
             if (boxCoin.isFinished()) {
@@ -705,7 +790,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         PretzelBullet pretzelBullet = player.getPretzelBullet();
-        if (pretzelBullet.isActive() && !isVisible(pretzelBullet)) {
+        if (pretzelBullet.isActive() && !isVisibleInRenderArea(pretzelBullet.getBoundingRectangle())) {
             pretzelBullet.reset();
         } else {
             pretzelBullet.postUpdate();
@@ -752,8 +837,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private void showMessage(UiMessage message, Rectangle rect) {
         float x = rect.getX() + rect.getWidth() / 2;
         float y = rect.getY() + rect.getHeight();
-        float cameraLeft = (camera.position.x - (viewport.getWorldWidth() - 4 * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
-        float cameraBottom = (camera.position.y - (viewport.getWorldHeight() - 4 * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
+        float cameraLeft = (camera.position.x - (viewport.getWorldWidth() - 2 * Cfg.BLOCKS_PAD * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
+        float cameraBottom = (camera.position.y - (viewport.getWorldHeight() - 2 * Cfg.BLOCKS_PAD * Cfg.BLOCK_SIZE / Cfg.PPM) / 2);
 
         float normalizedX = (x - cameraLeft) / Cfg.BLOCKS_X;
         float normalizedY = (y - cameraBottom) / Cfg.BLOCKS_Y;
@@ -761,12 +846,21 @@ public class GameController  implements BinarySerializable, Disposable {
         uiMessages.add(message);
     }
 
-    private boolean isVisible(Sprite sprite) {
+    private boolean isVisibleInRenderArea(Rectangle rect) {
         Frustum camFrustum = camera.frustum;
-        return camFrustum.pointInFrustum(sprite.getX(), sprite.getY(), 0)
-                || camFrustum.pointInFrustum(sprite.getX() + sprite.getWidth(), sprite.getY(), 0)
-                || camFrustum.pointInFrustum(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight(), 0)
-                || camFrustum.pointInFrustum(sprite.getX(), sprite.getY() + sprite.getHeight(), 0);
+        return camFrustum.pointInFrustum(rect.getX(), rect.getY(), 0)
+                || camFrustum.pointInFrustum(rect.getX() + rect.getWidth(), rect.getY(), 0)
+                || camFrustum.pointInFrustum(rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), 0)
+                || camFrustum.pointInFrustum(rect.getX(), rect.getY() + rect.getHeight(), 0);
+    }
+
+    private boolean isVisibleInView(Rectangle rect) {
+        float pad = Cfg.BLOCKS_PAD * Cfg.BLOCK_SIZE_PPM;
+        Frustum camFrustum = camera.frustum;
+        return camFrustum.pointInFrustum(rect.getX() - pad, rect.getY() - pad, 0)
+                && camFrustum.pointInFrustum(rect.getX() + rect.getWidth() + pad, rect.getY() - pad, 0)
+                && camFrustum.pointInFrustum(rect.getX() + rect.getWidth() + pad, rect.getY() + rect.getHeight() + pad, 0)
+                && camFrustum.pointInFrustum(rect.getX() - pad, rect.getY() + rect.getHeight() + pad, 0);
     }
 
     private void updateItems(float delta) {
@@ -1025,7 +1119,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public void save() {
         // don't do anything in case player is dead, kind of dead or level is finished
-        if (player.isDead() || player.isDrowning() || player.isVictory() || gameIsCanced) {
+        if (player.isDead() || player.isDrowning() || player.isVictory() || gameIsCanceled) {
             LOG.error("Did NOT save game state");
             JumpGame.deleteSavedData();
             return;
@@ -1048,7 +1142,7 @@ public class GameController  implements BinarySerializable, Disposable {
         } else {
             out.writeUTF(state.name());
         }
-        out.writeBoolean(gameIsCanced);
+        out.writeBoolean(gameIsCanceled);
         out.writeInt(score);
         out.writeInt(collectedBeers);
         out.writeFloat(gameTime);
@@ -1087,7 +1181,7 @@ public class GameController  implements BinarySerializable, Disposable {
     @Override
     public void read(DataInputStream in) throws IOException {
         state = Enum.valueOf(GameState.class, in.readUTF());
-        gameIsCanced = in.readBoolean();
+        gameIsCanceled = in.readBoolean();
         score = in.readInt();
         collectedBeers = in.readInt();
         gameTime = in.readFloat();

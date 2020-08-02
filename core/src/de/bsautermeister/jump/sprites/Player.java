@@ -141,6 +141,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
      */
     private boolean upWaitForRelease;
 
+    private MarkedAction started;
+
     public Player(GameCallbacks callbacks, World world, TextureAtlas atlas,
                   WorldCreator.StartParams start, int initialTimeToLive) {
         this.callbacks = callbacks;
@@ -181,6 +183,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         randomVictoryIdx = MathUtils.random(VICTORY_VARIATIONS - 1);
 
         recentHighestYForLanding = -Float.MAX_VALUE;
+
+        started = new MarkedAction();
     }
 
     private void setMainBodyFilterMask(short maskBits) {
@@ -256,8 +260,12 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void update(float delta) {
         state.upate(delta);
 
-        if (!isVictory() && !isDead()) {
-            timeToLive -= delta;
+        if (!started.isDone()) {
+            started.mark();
+            if (started.needsAction()) {
+                callbacks.started();
+                started.done();
+            }
         }
 
         if (Math.abs(getVelocityRelativeToGround().y) < 0.1) {
@@ -370,6 +378,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     public void drown() {
         state.set(State.DROWNING);
         body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
+
+        callbacks.startDrowning();
     }
 
     /**
@@ -862,7 +872,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (state.is(State.DEAD))
             return;
 
-        callbacks.playerDied();
+        if (state.is(State.DROWNING)) {
+            callbacks.endDrowning();
+        } else {
+            callbacks.playerDied();
+        }
 
         state.set(State.DEAD);
 
@@ -963,6 +977,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     @Override
     public void write(DataOutputStream out) throws IOException {
+        started.write(out);
         out.writeFloat(body.getPosition().x);
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
@@ -991,6 +1006,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     @Override
     public void read(DataInputStream in) throws IOException {
+        started.read(in);
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         blockJumpTimer = in.readFloat();

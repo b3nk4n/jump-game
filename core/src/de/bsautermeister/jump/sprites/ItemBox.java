@@ -39,6 +39,8 @@ public class ItemBox extends InteractiveTileObject {
     private Array<ItemBoxFragment> activeFragments = new Array<>(16);
     private static Pool<ItemBoxFragment> fragmentPool = Pools.get(ItemBoxFragment.class);
 
+    private boolean spotted;
+
     public ItemBox(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
         super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
         this.atlas = atlas;
@@ -73,6 +75,13 @@ public class ItemBox extends InteractiveTileObject {
         super.draw(batch);
 
         drawFragments(batch);
+    }
+
+    public void isInCameraView() {
+        if (!spotted) {
+            spotted = true;
+            getCallbacks().spotted(this);
+        }
     }
 
     private void drawFragments(SpriteBatch batch) {
@@ -173,6 +182,10 @@ public class ItemBox extends InteractiveTileObject {
         activeFragments.add(fragment3);
     }
 
+    public boolean isSpotted() {
+        return spotted;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
@@ -182,6 +195,7 @@ public class ItemBox extends InteractiveTileObject {
         for (ItemBoxFragment fragment : activeFragments) {
             fragment.write(out);
         }
+        out.writeBoolean(spotted);
     }
 
     @Override
@@ -197,6 +211,7 @@ public class ItemBox extends InteractiveTileObject {
             brickFragment.read(in);
             activeFragments.add(brickFragment);
         }
+        spotted = in.readBoolean();
 
         updateCellBlankState();
     }

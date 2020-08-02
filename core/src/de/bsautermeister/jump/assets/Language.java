@@ -15,6 +15,7 @@ public interface Language {
     String DEVELOPER = "developer";
     String GRAPHICS = "graphics";
     String ANIMATIONS = "animations";
+    String VOICE = "voice";
     String SFX = "sfx";
     String MUSIC = "music";
 

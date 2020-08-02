@@ -15,6 +15,8 @@ public interface Cfg {
     int BLOCKS_X = 26;
     int BLOCKS_Y = 14;
 
+    int BLOCKS_PAD = 2;
+
     float BLOCK_SIZE_PPM = BLOCK_SIZE / PPM;
 
     int WORLD_WIDTH = BLOCKS_X * BLOCK_SIZE;

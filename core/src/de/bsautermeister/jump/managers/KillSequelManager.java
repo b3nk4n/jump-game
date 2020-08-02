@@ -8,14 +8,14 @@ import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
 public class KillSequelManager implements BinarySerializable {
-    private final long SIMPLE_KILL_SCORE = 100;
+    private static final long SIMPLE_KILL_SCORE = 100;
     private final int MAX_KILL_SEQUEL = 5;
     private final String[] scoreStrings = new String[MAX_KILL_SEQUEL];
 
     private final GameTimer killSequelTimer;
     private int killSequelCount;
 
-    public KillSequelManager() {
+    public KillSequelManager(final Callbacks callbacks) {
         for (int i = 0; i < MAX_KILL_SEQUEL; ++i) {
             scoreStrings[i] = String.valueOf(calScore(i + 1));
         }
@@ -28,6 +28,7 @@ public class KillSequelManager implements BinarySerializable {
 
             @Override
             public void onFinish() {
+                callbacks.completed(killSequelCount);
                 killSequelCount = 0;
             }
         });
@@ -76,5 +77,9 @@ public class KillSequelManager implements BinarySerializable {
     public void read(DataInputStream in) throws IOException {
         killSequelCount = in.readInt();
         killSequelTimer.read(in);
+    }
+
+    public interface Callbacks {
+        void completed(int count);
     }
 }

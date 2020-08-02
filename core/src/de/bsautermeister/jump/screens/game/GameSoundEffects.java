@@ -9,16 +9,24 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 
 public class GameSoundEffects implements Disposable {
     public Sound bumpSound;
-    public Sound foodSpawnSound;
     public Sound beerSpawnSound;
     public Sound coinSpawnSound;
     public Sound eatFoodSound;
     public Sound coinSound;
     public Sound breakBlockSound;
     public Sound stompSound;
-    public Sound complainSound;
+    public Sound[] complainSounds;
     private Sound[] swearingSounds;
-    public Sound jumpSound;
+    private Sound[] drownSounds;
+    private Sound[] shoutSounds;
+    private Sound[] beerSounds;
+    private Sound[] ozapftSounds;
+    private Sound[] boostSounds;
+    private Sound[] needBeerSounds;
+    private Sound[] spotBeerSounds;
+    private Sound[] startSounds;
+    private Sound[] victorySounds;
+    private Sound jumpSound;
     public Sound landingSound;
     public Sound kickedSound;
     public Sound splashSound;
@@ -32,14 +40,12 @@ public class GameSoundEffects implements Disposable {
 
     public GameSoundEffects(AssetManager assetManager) {
         bumpSound = assetManager.get(AssetDescriptors.Sounds.BUMP);
-        foodSpawnSound = assetManager.get(AssetDescriptors.Sounds.FOOD_SPAWN);
         beerSpawnSound = assetManager.get(AssetDescriptors.Sounds.BEER_SPAWN);
         coinSpawnSound = assetManager.get(AssetDescriptors.Sounds.COIN_SPAWN);
         eatFoodSound = assetManager.get(AssetDescriptors.Sounds.EAT_FOOD);
         coinSound = assetManager.get(AssetDescriptors.Sounds.COIN);
         breakBlockSound = assetManager.get(AssetDescriptors.Sounds.BREAK_BLOCK);
         stompSound = assetManager.get(AssetDescriptors.Sounds.STOMP);
-        complainSound = assetManager.get(AssetDescriptors.Sounds.COMPLAIN);
         swearingSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.SWEARING1),
                 assetManager.get(AssetDescriptors.Sounds.SWEARING2),
@@ -48,6 +54,62 @@ public class GameSoundEffects implements Disposable {
                 assetManager.get(AssetDescriptors.Sounds.SWEARING5),
                 assetManager.get(AssetDescriptors.Sounds.SWEARING6),
                 assetManager.get(AssetDescriptors.Sounds.SWEARING7)
+        };
+        drownSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.DROWN1),
+                assetManager.get(AssetDescriptors.Sounds.DROWN2),
+                assetManager.get(AssetDescriptors.Sounds.DROWN3),
+                assetManager.get(AssetDescriptors.Sounds.DROWN4)
+        };
+        shoutSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.SHOUT1),
+                assetManager.get(AssetDescriptors.Sounds.SHOUT2),
+                assetManager.get(AssetDescriptors.Sounds.SHOUT3),
+                assetManager.get(AssetDescriptors.Sounds.SHOUT4)
+        };
+        beerSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.BEER1),
+                assetManager.get(AssetDescriptors.Sounds.BEER2),
+                assetManager.get(AssetDescriptors.Sounds.BEER3),
+                assetManager.get(AssetDescriptors.Sounds.BEER4)
+        };
+        ozapftSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.OZAPFT1),
+                assetManager.get(AssetDescriptors.Sounds.OZAPFT2)
+        };
+        boostSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.BOOST1),
+                assetManager.get(AssetDescriptors.Sounds.BOOST2),
+                assetManager.get(AssetDescriptors.Sounds.BOOST3),
+                assetManager.get(AssetDescriptors.Sounds.BOOST4)
+        };
+        needBeerSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.NEED_BEER1),
+                assetManager.get(AssetDescriptors.Sounds.NEED_BEER2),
+                assetManager.get(AssetDescriptors.Sounds.NEED_BEER3)
+        };
+        spotBeerSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.SPOT_BEER1),
+                assetManager.get(AssetDescriptors.Sounds.SPOT_BEER2),
+                assetManager.get(AssetDescriptors.Sounds.SPOT_BEER3)
+        };
+        startSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.START1),
+                assetManager.get(AssetDescriptors.Sounds.START2),
+                assetManager.get(AssetDescriptors.Sounds.START3),
+                assetManager.get(AssetDescriptors.Sounds.START4)
+        };
+        victorySounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.VICTORY1),
+                assetManager.get(AssetDescriptors.Sounds.VICTORY2),
+                assetManager.get(AssetDescriptors.Sounds.VICTORY3),
+                assetManager.get(AssetDescriptors.Sounds.VICTORY4)
+        };
+        complainSounds = new Sound[] {
+                assetManager.get(AssetDescriptors.Sounds.COMPLAIN1),
+                assetManager.get(AssetDescriptors.Sounds.COMPLAIN2),
+                assetManager.get(AssetDescriptors.Sounds.COMPLAIN3),
+                assetManager.get(AssetDescriptors.Sounds.COMPLAIN4)
         };
         jumpSound = assetManager.get(AssetDescriptors.Sounds.JUMP);
         landingSound = assetManager.get(AssetDescriptors.Sounds.LANDING);
@@ -66,10 +128,55 @@ public class GameSoundEffects implements Disposable {
         return swearingSounds[MathUtils.random(swearingSounds.length - 1)];
     }
 
+    public Sound randomDrownSound() {
+        return drownSounds[MathUtils.random(drownSounds.length - 1)];
+    }
+
+    public Sound randomShoutSound() {
+        return shoutSounds[MathUtils.random(shoutSounds.length - 1)];
+    }
+
+    public Sound randomBeerSound() {
+        return beerSounds[MathUtils.random(beerSounds.length - 1)];
+    }
+
+    public Sound randomOzapftSound() {
+        return ozapftSounds[MathUtils.random(ozapftSounds.length - 1)];
+    }
+
+    public Sound randomBoostSound() {
+        return boostSounds[MathUtils.random(boostSounds.length - 1)];
+    }
+
+    public Sound randomNeedBeerSound() {
+        return needBeerSounds[MathUtils.random(needBeerSounds.length - 1)];
+    }
+
+    public Sound randomSpotBeerSound() {
+        return spotBeerSounds[MathUtils.random(spotBeerSounds.length - 1)];
+    }
+
+    public Sound randomStartSound() {
+        return startSounds[MathUtils.random(startSounds.length - 1)];
+    }
+
+    public Sound randomVictorySound() {
+        return victorySounds[MathUtils.random(victorySounds.length - 1)];
+    }
+
+    public Sound randomComplainSound() {
+        return complainSounds[MathUtils.random(complainSounds.length - 1)];
+    }
+
     public void playRandomBurpSound(float volume) {
         float randomVolume = MathUtils.random(0.9f * volume, 1.0f * volume);
         float randomPitch = MathUtils.random(0.85f, 1.15f);
         burpSound.play(randomVolume, randomPitch, 1.0f);
+    }
+
+    public void playRandomJumpSound(float volume) {
+        float randomPitch = MathUtils.random(0.9f, 1.0f);
+        jumpSound.play(volume, randomPitch, 1.0f);
     }
 
     @Override

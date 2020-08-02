@@ -97,8 +97,8 @@ public class GameRenderer implements Disposable {
         float screenPixelPerTileY = Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
         frameBuffer = new FrameBuffer(
                 Pixmap.Format.RGBA8888,
-                (int)(screenPixelPerTileX * (Cfg.BLOCKS_X + 4)), // 2 extra block for each left and right
-                (int)(screenPixelPerTileY * (Cfg.BLOCKS_Y + 4)), // 2 extra block for each top and bottom
+                (int)(screenPixelPerTileX * (Cfg.BLOCKS_X + 2 * Cfg.BLOCKS_PAD)),
+                (int)(screenPixelPerTileY * (Cfg.BLOCKS_Y + 2 * Cfg.BLOCKS_PAD)),
                 false);
 
         uiViewport = new StretchViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
