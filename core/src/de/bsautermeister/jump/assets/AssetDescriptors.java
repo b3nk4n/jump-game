@@ -111,6 +111,8 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.BOOST3, Sound.class);
         AssetDescriptor<Sound> BOOST4 =
                 new AssetDescriptor<>(AssetPaths.Sounds.BOOST4, Sound.class);
+        AssetDescriptor<Sound> BOOST5 =
+                new AssetDescriptor<>(AssetPaths.Sounds.BOOST5, Sound.class);
         AssetDescriptor<Sound> NEED_BEER1 =
                 new AssetDescriptor<>(AssetPaths.Sounds.NEED_BEER1, Sound.class);
         AssetDescriptor<Sound> NEED_BEER2 =
@@ -187,7 +189,7 @@ public interface AssetDescriptors {
             Sounds.SHOUT1, Sounds.SHOUT2, Sounds.SHOUT3, Sounds.SHOUT4,
             Sounds.BEER1, Sounds.BEER2, Sounds.BEER3, Sounds.BEER4,
             Sounds.OZAPFT1, Sounds.OZAPFT2,
-            Sounds.BOOST1, Sounds.BOOST2, Sounds.BOOST3, Sounds.BOOST4,
+            Sounds.BOOST1, Sounds.BOOST2, Sounds.BOOST3, Sounds.BOOST4, Sounds.BOOST5,
             Sounds.NEED_BEER1, Sounds.NEED_BEER2, Sounds.NEED_BEER3,
             Sounds.SPOT_BEER1, Sounds.SPOT_BEER2, Sounds.SPOT_BEER3,
             Sounds.START1, Sounds.START2, Sounds.START3, Sounds.START4,

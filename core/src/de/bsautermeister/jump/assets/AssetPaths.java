@@ -1,5 +1,7 @@
 package de.bsautermeister.jump.assets;
 
+import com.badlogic.gdx.math.MathUtils;
+
 public interface AssetPaths {
     interface Atlas {
         String LOADING = "loading/loading.atlas";
@@ -20,70 +22,75 @@ public interface AssetPaths {
         String UI = "ui/ui.skin";
     }
 
-    interface Sounds {
-        String BUMP = "audio/sounds/bump.wav";
-        String BREAK_BLOCK = "audio/sounds/breakblock.wav";
-        String BEER_SPAWN = "audio/sounds/bump_glasses.wav";
-        String COIN_SPAWN = "audio/sounds/bump_coin.wav";
-        String COIN = "audio/sounds/coin.wav";
-        String STOMP = "audio/sounds/stomp.wav";
-        String EAT_FOOD = "audio/sounds/eat_food.wav";
-        String COMPLAIN1 = "audio/sounds/complain01.wav";
-        String COMPLAIN2 = "audio/sounds/complain02.wav";
-        String COMPLAIN3 = "audio/sounds/complain03.wav";
-        String COMPLAIN4 = "audio/sounds/complain04.wav";
-        String SWEARING1 = "audio/sounds/swearing01.wav";
-        String SWEARING2 = "audio/sounds/swearing02.wav";
-        String SWEARING3 = "audio/sounds/swearing03.wav";
-        String SWEARING4 = "audio/sounds/swearing04.wav";
-        String SWEARING5 = "audio/sounds/swearing05.wav";
-        String SWEARING6 = "audio/sounds/swearing06.wav";
-        String SWEARING7 = "audio/sounds/swearing07.wav";
-        String DROWN1 = "audio/sounds/drown01.wav";
-        String DROWN2 = "audio/sounds/drown02.wav";
-        String DROWN3 = "audio/sounds/drown03.wav";
-        String DROWN4 = "audio/sounds/drown04.wav";
-        String SHOUT1 = "audio/sounds/shout01.wav";
-        String SHOUT2 = "audio/sounds/shout02.wav";
-        String SHOUT3 = "audio/sounds/shout03.wav";
-        String SHOUT4 = "audio/sounds/shout04.wav";
-        String BEER1 = "audio/sounds/beer01.wav";
-        String BEER2 = "audio/sounds/beer02.wav";
-        String BEER3 = "audio/sounds/beer03.wav";
-        String BEER4 = "audio/sounds/beer04.wav";
-        String OZAPFT1 = "audio/sounds/ozapft01.wav";
-        String OZAPFT2 = "audio/sounds/ozapft02.wav";
-        String BOOST1 = "audio/sounds/boost01.wav";
-        String BOOST2 = "audio/sounds/boost02.wav";
-        String BOOST3 = "audio/sounds/boost03.wav";
-        String BOOST4 = "audio/sounds/boost04.wav";
-        String NEED_BEER1 = "audio/sounds/need-beer01.wav";
-        String NEED_BEER2 = "audio/sounds/need-beer02.wav";
-        String NEED_BEER3 = "audio/sounds/need-beer03.wav";
-        String SPOT_BEER1 = "audio/sounds/spot-beer01.wav";
-        String SPOT_BEER2 = "audio/sounds/spot-beer02.wav";
-        String SPOT_BEER3 = "audio/sounds/spot-beer03.wav";
-        String START1 = "audio/sounds/start01.wav";
-        String START2 = "audio/sounds/start02.wav";
-        String START3 = "audio/sounds/start03.wav";
-        String START4 = "audio/sounds/start04.wav";
-        String VICTORY1 = "audio/sounds/victory01.wav";
-        String VICTORY2 = "audio/sounds/victory02.wav";
-        String VICTORY3 = "audio/sounds/victory03.wav";
-        String VICTORY4 = "audio/sounds/victory04.wav";
-        String JUMP = "audio/sounds/jump.wav";
-        String LANDING = "audio/sounds/landing.wav";
-        String KICKED = "audio/sounds/kicked.wav";
-        String SPLASH = "audio/sounds/splash.wav";
-        String FIRE = "audio/sounds/fire.wav";
-        String DRINKING = "audio/sounds/drinking.wav";
-        String SUCCESS = "audio/sounds/success.wav";
-        String SNORE = "audio/sounds/snore.wav";
-        String BURP = "audio/sounds/burp.wav";
-        String RAVEN = "audio/sounds/raven.wav";
-        String PLOPP = "audio/sounds/plopp.wav";
-        String FROG = "audio/sounds/frog.wav";
-        String WHINE = "audio/sounds/whine.wav";
+    abstract class Sounds {
+        static String BUMP = "audio/sounds/bump.wav";
+        static String BREAK_BLOCK = "audio/sounds/breakblock.wav";
+        static String BEER_SPAWN = "audio/sounds/bump_glasses.wav";
+        static String COIN_SPAWN = "audio/sounds/bump_coin.wav";
+        static String COIN = "audio/sounds/coin.wav";
+        static String STOMP = "audio/sounds/stomp.wav";
+        static String EAT_FOOD = "audio/sounds/eat_food.wav";
+        static String COMPLAIN1 = sample("audio/sounds/complain*.wav", 1, 12);
+        static String COMPLAIN2 = sample("audio/sounds/complain*.wav", 1, 12);
+        static String COMPLAIN3 = sample("audio/sounds/complain*.wav", 1, 12);
+        static String COMPLAIN4 = sample("audio/sounds/complain*.wav", 1, 12);
+        static String SWEARING1 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String SWEARING2 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String SWEARING3 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String SWEARING4 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String SWEARING5 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String SWEARING6 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String SWEARING7 = sample("audio/sounds/swearing*.wav", 1, 37);
+        static String DROWN1 = sample("audio/sounds/drown*.wav", 1, 7);
+        static String DROWN2 = sample("audio/sounds/drown*.wav", 1, 7);
+        static String DROWN3 = sample("audio/sounds/drown*.wav", 1, 7);
+        static String DROWN4 = sample("audio/sounds/drown*.wav", 1, 7);
+        static String SHOUT1 = sample("audio/sounds/shout*.wav", 1, 18);
+        static String SHOUT2 = sample("audio/sounds/shout*.wav", 1, 18);
+        static String SHOUT3 = sample("audio/sounds/shout*.wav", 1, 18);
+        static String SHOUT4 = sample("audio/sounds/shout*.wav", 1, 18);
+        static String BEER1 = sample("audio/sounds/beer*.wav", 1, 6);
+        static String BEER2 = sample("audio/sounds/beer*.wav", 1, 6);
+        static String BEER3 = sample("audio/sounds/beer*.wav", 1, 6);
+        static String BEER4 = sample("audio/sounds/beer*.wav", 1, 6);
+        static String OZAPFT1 = "audio/sounds/ozapft01.wav";
+        static String OZAPFT2 = "audio/sounds/ozapft02.wav";
+        static String BOOST1 = "audio/sounds/boost01.wav";
+        static String BOOST2 = "audio/sounds/boost02.wav";
+        static String BOOST3 = "audio/sounds/boost03.wav";
+        static String BOOST4 = "audio/sounds/boost04.wav";
+        static String BOOST5 = "audio/sounds/boost05.wav";
+        static String NEED_BEER1 = "audio/sounds/need-beer01.wav";
+        static String NEED_BEER2 = "audio/sounds/need-beer02.wav";
+        static String NEED_BEER3 = "audio/sounds/need-beer03.wav";
+        static String SPOT_BEER1 = "audio/sounds/spot-beer01.wav";
+        static String SPOT_BEER2 = "audio/sounds/spot-beer02.wav";
+        static String SPOT_BEER3 = "audio/sounds/spot-beer03.wav";
+        static String START1 = sample("audio/sounds/start*.wav", 1, 16);
+        static String START2 = sample("audio/sounds/start*.wav", 1, 16);
+        static String START3 = sample("audio/sounds/start*.wav", 1, 16);
+        static String START4 = sample("audio/sounds/start*.wav", 1, 16);
+        static String VICTORY1 = sample("audio/sounds/victory*.wav", 1, 9);
+        static String VICTORY2 = sample("audio/sounds/victory*.wav", 1, 9);
+        static String VICTORY3 = sample("audio/sounds/victory*.wav", 1, 9);
+        static String VICTORY4 = sample("audio/sounds/victory*.wav", 1, 9);
+        static String JUMP = "audio/sounds/jump.wav";
+        static String LANDING = "audio/sounds/landing.wav";
+        static String KICKED = "audio/sounds/kicked.wav";
+        static String SPLASH = "audio/sounds/splash.wav";
+        static String FIRE = "audio/sounds/fire.wav";
+        static String DRINKING = "audio/sounds/drinking.wav";
+        static String SUCCESS = "audio/sounds/success.wav";
+        static String SNORE = "audio/sounds/snore.wav";
+        static String BURP = "audio/sounds/burp.wav";
+        static String RAVEN = "audio/sounds/raven.wav";
+        static String PLOPP = "audio/sounds/plopp.wav";
+        static String FROG = "audio/sounds/frog.wav";
+        static String WHINE = "audio/sounds/whine.wav";
+
+        private static String sample(String template, int min, int max) {
+            return template.replace("*", String.format("%02d", MathUtils.random(min, max)));
+        }
     }
 
     interface Music {

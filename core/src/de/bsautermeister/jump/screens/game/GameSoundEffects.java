@@ -81,7 +81,8 @@ public class GameSoundEffects implements Disposable {
                 assetManager.get(AssetDescriptors.Sounds.BOOST1),
                 assetManager.get(AssetDescriptors.Sounds.BOOST2),
                 assetManager.get(AssetDescriptors.Sounds.BOOST3),
-                assetManager.get(AssetDescriptors.Sounds.BOOST4)
+                assetManager.get(AssetDescriptors.Sounds.BOOST4),
+                assetManager.get(AssetDescriptors.Sounds.BOOST5)
         };
         needBeerSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.NEED_BEER1),
