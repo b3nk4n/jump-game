@@ -396,6 +396,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void playerDied() {
             backgroundMusic.setVolume(0.1f, false);
             soundEffects.randomShoutSound().play();
+            Gdx.input.vibrate(250);
 
             Timer.schedule(new Timer.Task() {
                 @Override

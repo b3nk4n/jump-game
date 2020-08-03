@@ -28,6 +28,14 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+
+        android_compile_version = 22
+        android_version = '22.0.1'
+        android_min_sdk_version = 9
+
+        appcompat_library_version = '22.2.0'
+        support_library_version = '22.2.0'
+        gms_library_version = '7.8.0'
     }
 
     repositories {
@@ -51,7 +59,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        
+        implementation project(path: ":libraries:BaseGameUtils", configuration: "default")
     }
 }
 
