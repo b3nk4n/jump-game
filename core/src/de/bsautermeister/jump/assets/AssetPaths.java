@@ -2,6 +2,9 @@ package de.bsautermeister.jump.assets;
 
 import com.badlogic.gdx.math.MathUtils;
 
+import de.bsautermeister.jump.math.Permutation;
+import de.bsautermeister.jump.tools.Supplier;
+
 public interface AssetPaths {
     interface Atlas {
         String LOADING = "loading/loading.atlas";
@@ -30,29 +33,6 @@ public interface AssetPaths {
         static String COIN = "audio/sounds/coin.wav";
         static String STOMP = "audio/sounds/stomp.wav";
         static String EAT_FOOD = "audio/sounds/eat_food.wav";
-        static String COMPLAIN1 = sample("audio/sounds/complain*.wav", 1, 12);
-        static String COMPLAIN2 = sample("audio/sounds/complain*.wav", 1, 12);
-        static String COMPLAIN3 = sample("audio/sounds/complain*.wav", 1, 12);
-        static String COMPLAIN4 = sample("audio/sounds/complain*.wav", 1, 12);
-        static String SWEARING1 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String SWEARING2 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String SWEARING3 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String SWEARING4 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String SWEARING5 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String SWEARING6 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String SWEARING7 = sample("audio/sounds/swearing*.wav", 1, 37);
-        static String DROWN1 = sample("audio/sounds/drown*.wav", 1, 7);
-        static String DROWN2 = sample("audio/sounds/drown*.wav", 1, 7);
-        static String DROWN3 = sample("audio/sounds/drown*.wav", 1, 7);
-        static String DROWN4 = sample("audio/sounds/drown*.wav", 1, 7);
-        static String SHOUT1 = sample("audio/sounds/shout*.wav", 1, 18);
-        static String SHOUT2 = sample("audio/sounds/shout*.wav", 1, 18);
-        static String SHOUT3 = sample("audio/sounds/shout*.wav", 1, 18);
-        static String SHOUT4 = sample("audio/sounds/shout*.wav", 1, 18);
-        static String BEER1 = sample("audio/sounds/beer*.wav", 1, 6);
-        static String BEER2 = sample("audio/sounds/beer*.wav", 1, 6);
-        static String BEER3 = sample("audio/sounds/beer*.wav", 1, 6);
-        static String BEER4 = sample("audio/sounds/beer*.wav", 1, 6);
         static String OZAPFT1 = "audio/sounds/ozapft01.wav";
         static String OZAPFT2 = "audio/sounds/ozapft02.wav";
         static String BOOST1 = "audio/sounds/boost01.wav";
@@ -66,14 +46,6 @@ public interface AssetPaths {
         static String SPOT_BEER1 = "audio/sounds/spot-beer01.wav";
         static String SPOT_BEER2 = "audio/sounds/spot-beer02.wav";
         static String SPOT_BEER3 = "audio/sounds/spot-beer03.wav";
-        static String START1 = sample("audio/sounds/start*.wav", 1, 16);
-        static String START2 = sample("audio/sounds/start*.wav", 1, 16);
-        static String START3 = sample("audio/sounds/start*.wav", 1, 16);
-        static String START4 = sample("audio/sounds/start*.wav", 1, 16);
-        static String VICTORY1 = sample("audio/sounds/victory*.wav", 1, 9);
-        static String VICTORY2 = sample("audio/sounds/victory*.wav", 1, 9);
-        static String VICTORY3 = sample("audio/sounds/victory*.wav", 1, 9);
-        static String VICTORY4 = sample("audio/sounds/victory*.wav", 1, 9);
         static String JUMP = "audio/sounds/jump.wav";
         static String LANDING = "audio/sounds/landing.wav";
         static String KICKED = "audio/sounds/kicked.wav";
@@ -88,8 +60,68 @@ public interface AssetPaths {
         static String FROG = "audio/sounds/frog.wav";
         static String WHINE = "audio/sounds/whine.wav";
 
+        static final Supplier<String> COMPLAIN_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 12);
+            @Override
+            public String get() {
+                return template("audio/sounds/complain*.wav", perm.next());
+            }
+        };
+
+        static final Supplier<String> SWEARING_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 37);
+            @Override
+            public String get() {
+                return template("audio/sounds/swearing*.wav", perm.next());
+            }
+        };
+
+        static final Supplier<String> DRWON_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 7);
+            @Override
+            public String get() {
+                return template("audio/sounds/drown*.wav", perm.next());
+            }
+        };
+
+        static final Supplier<String> SHOUT_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 18);
+            @Override
+            public String get() {
+                return template("audio/sounds/shout*.wav", perm.next());
+            }
+        };
+
+        static final Supplier<String> VICTORY_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 9);
+            @Override
+            public String get() {
+                return template("audio/sounds/victory*.wav", perm.next());
+            }
+        };
+
+        static final Supplier<String> START_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 16);
+            @Override
+            public String get() {
+                return template("audio/sounds/start*.wav", perm.next());
+            }
+        };
+
+        static final Supplier<String> BEER_GENERATOR = new Supplier<String>() {
+            Permutation perm = new Permutation(1, 6);
+            @Override
+            public String get() {
+                return template("audio/sounds/beer*.wav", perm.next());
+            }
+        };
+
         private static String sample(String template, int min, int max) {
             return template.replace("*", String.format("%02d", MathUtils.random(min, max)));
+        }
+
+        private static String template(String template, int value) {
+            return template.replace("*", String.format("%02d", value));
         }
     }
 
