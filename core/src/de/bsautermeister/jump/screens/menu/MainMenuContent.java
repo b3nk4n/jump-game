@@ -83,6 +83,24 @@ public class MainMenuContent extends Table {
                     .row();
         }
 
+        if (JumpGame.getGameServiceManager().isSupported()) {
+            Button aboutButton = new TextButton(i18n.get(Language.ACHIEVEMENTS), skin);
+            aboutButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    callbacks.achievementsClicked();
+                }
+            });
+            aboutButton.addAction(Actions.sequence(
+                    Actions.hide(),
+                    Actions.delay(delay),
+                    Actions.show()
+            ));
+            delay += DELAY_OFFSET;
+            add(aboutButton)
+                    .row();
+        }
+
         Button aboutButton = new TextButton(i18n.get(Language.ABOUT), skin);
         aboutButton.addListener(new ClickListener() {
             @Override
@@ -104,6 +122,7 @@ public class MainMenuContent extends Table {
     public interface Callbacks {
         void playClicked();
         void continueClicked();
+        void achievementsClicked();
         void aboutClicked();
     }
 }

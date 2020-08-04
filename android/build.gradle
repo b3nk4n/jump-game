@@ -11,8 +11,9 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
         }
-
     }
+
+
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
@@ -87,6 +88,10 @@ task run(type: Exec) {
 
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.game/com.mygdx.game.AndroidLauncher'
+}
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-games:7.8.0'
 }
 
 eclipse.project.name = appName + "-android"

@@ -184,6 +184,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void use(Player player, Item item) {
             String language;
             if (item instanceof BeerItem) {
+                screenCallbacks.reportDrunkBeer();
                 updateCollectedBeers(collectedBeers + 1);
                 soundEffects.drinkingSound.play();
                 final Sound postBeerDrinkSound;
@@ -476,7 +477,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private final GameScreenCallbacks screenCallbacks;
 
-    public GameController(GameScreenCallbacks screenCallbacks, GameApp game, final GameSoundEffects soundEffects,
+    public GameController(final GameScreenCallbacks screenCallbacks, GameApp game, final GameSoundEffects soundEffects,
                           int level, FileHandle gameToResume) {
         this.level = level;
         this.gameToResume = gameToResume;
@@ -500,6 +501,7 @@ public class GameController  implements BinarySerializable, Disposable {
             @Override
             public void completed(int count) {
                 if (count > 1) {
+                    screenCallbacks.reportKillSequelFinished(count);
                     soundEffects.randomBoostSound().play();
                 }
             }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
@@ -74,6 +75,11 @@ public class MenuScreen extends ScreenBase {
             @Override
             public void continueClicked() {
                 setScreen(new GameScreen(getGame()));
+            }
+
+            @Override
+            public void achievementsClicked() {
+                JumpGame.getGameServiceManager().showAchievements();
             }
 
             @Override

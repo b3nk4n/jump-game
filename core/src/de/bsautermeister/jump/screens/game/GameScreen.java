@@ -55,6 +55,17 @@ public class GameScreen extends ScreenBase {
                     Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true,
                     clickScreenPosition));
         }
+
+        @Override
+        public void reportKillSequelFinished(int count) {
+            JumpGame.getGameServiceManager().checkAndUnlockKillSequelAchievement(count);
+        }
+
+        @Override
+        public void reportDrunkBeer() {
+            int count = JumpGameStats.INSTANCE.incrementTotalBeers();
+            JumpGame.getGameServiceManager().checkAndUnlockBeerAchievement(count);
+        }
     };
 
     /**

@@ -16,8 +16,13 @@ public class JumpGameStats {
     private static final String KEY_LEVEL_STARS_PREFIX = KEY_PREFIX + "levelStars";
     private static final String KEY_TOTAL_STARS_PREFIX = KEY_PREFIX + "totalStars";
 
+    // achievement related
+    private static final String KEY_TOTAL_BEERS = KEY_PREFIX + "totalBeers";
+
     private Integer cachedHighestLevel;
     private Integer cachedTotalStars;
+
+    private Integer cachedTotalBeers;
 
     public static final JumpGameStats INSTANCE = new JumpGameStats();
 
@@ -70,5 +75,21 @@ public class JumpGameStats {
             cachedTotalStars = prefs.getInteger(KEY_TOTAL_STARS_PREFIX);
         }
         return cachedTotalStars;
+    }
+
+    public int incrementTotalBeers() {
+        int count = getTotalBeers();
+        int newCount = count + 1;
+        cachedTotalBeers = newCount;
+        prefs.putInteger(KEY_TOTAL_BEERS, newCount);
+        prefs.flush();
+        return newCount;
+    }
+
+    public int getTotalBeers() {
+        if (cachedTotalBeers == null) {
+            cachedTotalBeers = prefs.getInteger(KEY_TOTAL_BEERS, 0);
+        }
+        return cachedTotalBeers;
     }
 }

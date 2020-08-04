@@ -4,7 +4,6 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,12 +15,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.commons.GameApp;
-import de.bsautermeister.jump.screens.menu.MenuScreen;
 import de.bsautermeister.jump.screens.ScreenBase;
+import de.bsautermeister.jump.screens.menu.MenuScreen;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class LoadingScreen extends ScreenBase {
@@ -148,6 +148,11 @@ public class LoadingScreen extends ScreenBase {
 
         if (getAssetManager().update() && remainingTimeWhenFullyLoaded <= 0 && !isLoadingFinished) {
             isLoadingFinished = true;
+
+            // loading game service content, as soon as the asses have been loaded, and the user is
+            // logged in
+            JumpGame.getGameServiceManager().refresh();
+
             setScreen(new MenuScreen(getGame(), false));
         }
     }

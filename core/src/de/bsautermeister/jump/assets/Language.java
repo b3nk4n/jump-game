@@ -7,6 +7,7 @@ public interface Language {
 
     String PLAY = "play";
     String RESUME = "resume";
+    String ACHIEVEMENTS = "achievements";
     String ABOUT = "about";
 
     String SELECT_LEVEL = "selectLevel";
