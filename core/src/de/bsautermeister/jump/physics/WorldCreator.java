@@ -21,15 +21,15 @@ import de.bsautermeister.jump.models.PlatformBouncer;
 import de.bsautermeister.jump.screens.game.GameCallbacks;
 import de.bsautermeister.jump.sprites.Brick;
 import de.bsautermeister.jump.sprites.Coin;
-import de.bsautermeister.jump.sprites.enemies.Enemy;
-import de.bsautermeister.jump.sprites.enemies.Fish;
-import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
-import de.bsautermeister.jump.sprites.enemies.Fox;
-import de.bsautermeister.jump.sprites.enemies.Frog;
-import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.InteractiveTileObject;
 import de.bsautermeister.jump.sprites.ItemBox;
 import de.bsautermeister.jump.sprites.Platform;
+import de.bsautermeister.jump.sprites.enemies.DrunkenGuy;
+import de.bsautermeister.jump.sprites.enemies.Enemy;
+import de.bsautermeister.jump.sprites.enemies.Fish;
+import de.bsautermeister.jump.sprites.enemies.Fox;
+import de.bsautermeister.jump.sprites.enemies.Frog;
+import de.bsautermeister.jump.sprites.enemies.Hedgehog;
 import de.bsautermeister.jump.sprites.enemies.Raven;
 
 public class WorldCreator {
@@ -66,6 +66,7 @@ public class WorldCreator {
     private static final String SPIKES_KEY = "spikes";
     private static final String POLES_KEY = "poles";
     private static final String SNORER_KEY = "snorer";
+    private static final String ENEMY_SIGNAL_TRIGGERS_KEY = "enemySignalTriggers";
 
     private final World world;
     private final TiledMap map;
@@ -335,6 +336,18 @@ public class WorldCreator {
         return new StartParams(rect);
     }
 
+    public Array<EnemySignalTrigger> getEnemySignalTriggers() {
+        Array<EnemySignalTrigger> signalTriggers = new Array<>();
+        if (hasLayer(map, ENEMY_SIGNAL_TRIGGERS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(ENEMY_SIGNAL_TRIGGERS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                String group = (String) mapObject.getProperties().get("group");
+                signalTriggers.add(new EnemySignalTrigger(toPPM(rect), group));
+            }
+        }
+        return signalTriggers;
+    }
+
     private boolean hasLayer(Map map, String layer) {
         return map.getLayers().get(layer) != null;
     }
@@ -347,6 +360,16 @@ public class WorldCreator {
             Rectangle rect = mapObject.getRectangle();
             centerPosition = new Vector2((rect.x + rect.width / 2) / Cfg.PPM, (rect.y + rect.height / 2) / Cfg.PPM);
             leftDirection = mapObject.getProperties().get("leftDirection", false, Boolean.class);
+        }
+    }
+
+    public static class EnemySignalTrigger {
+        public final Rectangle rect;
+        public final String group;
+
+        public EnemySignalTrigger(Rectangle rect, String group) {
+            this.rect = rect;
+            this.group = group;
         }
     }
 }

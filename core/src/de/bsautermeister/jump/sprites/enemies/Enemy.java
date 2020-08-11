@@ -95,6 +95,8 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         }
     }
 
+    public void notifySignal() { }
+
     protected void updateMaskFilter(short filterBit) {
         Filter filter = new Filter();
         filter.maskBits = filterBit;

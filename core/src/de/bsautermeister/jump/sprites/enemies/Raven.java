@@ -321,6 +321,17 @@ public class Raven extends Enemy implements Drownable {
     }
 
     @Override
+    public void notifySignal() {
+        if (state.is(State.WAITING) || state.is(State.SWINGING)) {
+            if (!isActive()) {
+                setActive(true);
+            }
+
+            state.set(State.SPOTTED);
+        }
+    }
+
+    @Override
     public void write(DataOutputStream out) throws IOException {
         super.write(out);
         state.write(out);

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -135,6 +136,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private Array<Pole> poles = new Array<>();
 
     private float munichRatio = 0f;
+
+    private Array<WorldCreator.EnemySignalTrigger> enemySignalTriggers;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -576,6 +579,8 @@ public class GameController  implements BinarySerializable, Disposable {
             backgroundMusic.playFromBeginning();
         }
 
+        enemySignalTriggers = worldCreator.getEnemySignalTriggers();
+
         camera.position.set(player.getBody().getPosition(), 0);
 
         waterList = worldCreator.getWaterRegions();
@@ -876,6 +881,8 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void updateEnemies(float delta) {
+        String groupToTrigger = getEnemyGroupToTrigger();
+
         for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
 
@@ -897,7 +904,20 @@ public class GameController  implements BinarySerializable, Disposable {
                     ((Raven) enemy).setPlayerPosition(player.getBody().getPosition());
                 }
             }
+
+            if (groupToTrigger != null && groupToTrigger.equals(enemy.getGroup())) {
+                enemy.notifySignal();
+            }
         }
+    }
+
+    private String getEnemyGroupToTrigger() {
+        for (WorldCreator.EnemySignalTrigger signalTrigger : enemySignalTriggers) {
+            if (signalTrigger.rect.contains(player.getWorldCenter())) {
+                return signalTrigger.group;
+            }
+        }
+        return null;
     }
 
     private void wakeUp(String enemyGroup) {
