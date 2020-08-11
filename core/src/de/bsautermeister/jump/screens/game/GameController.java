@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Frustum;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -145,7 +144,7 @@ public class GameController  implements BinarySerializable, Disposable {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    soundEffects.randomStartSound().play();
+                    soundEffects.playRandomStartSound();
                 }
             }, 0.33f);
         }
@@ -255,7 +254,7 @@ public class GameController  implements BinarySerializable, Disposable {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        soundEffects.randomSpotBeerSound().play();
+                        soundEffects.playRandomSpotBeerSound();
                     }
                 }, 0.75f);
             } else {
@@ -283,7 +282,7 @@ public class GameController  implements BinarySerializable, Disposable {
         @Override
         public void spotted(ItemBox itemBox) {
             if (itemBox.isBeerBox()) {
-                soundEffects.randomNeedBeerSound().play();
+                soundEffects.playRandomNeedBeerSound();
             }
         }
 
@@ -505,7 +504,7 @@ public class GameController  implements BinarySerializable, Disposable {
             public void completed(int count) {
                 if (count > 1) {
                     screenCallbacks.reportKillSequelFinished(count);
-                    soundEffects.randomBoostSound().play();
+                    soundEffects.playRandomBoostSound();
                 }
             }
         });

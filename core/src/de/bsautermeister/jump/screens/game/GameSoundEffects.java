@@ -8,6 +8,10 @@ import com.badlogic.gdx.utils.Disposable;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 
 public class GameSoundEffects implements Disposable {
+
+    private static final long VOICE_DEDUPLICATION_GRACE_PERIOD = 500L;
+    private long lastVoiceStart;
+
     public Sound bumpSound;
     public Sound beerSpawnSound;
     public Sound coinSpawnSound;
@@ -126,46 +130,65 @@ public class GameSoundEffects implements Disposable {
     }
 
     public Sound randomSwearingSound() {
+        deduplicateVoice();
         return swearingSounds[MathUtils.random(swearingSounds.length - 1)];
     }
 
     public Sound randomDrownSound() {
+        deduplicateVoice();
         return drownSounds[MathUtils.random(drownSounds.length - 1)];
     }
 
     public Sound randomShoutSound() {
+        deduplicateVoice();
         return shoutSounds[MathUtils.random(shoutSounds.length - 1)];
     }
 
     public Sound randomBeerSound() {
+        deduplicateVoice();
         return beerSounds[MathUtils.random(beerSounds.length - 1)];
     }
 
     public Sound randomOzapftSound() {
+        deduplicateVoice();
         return ozapftSounds[MathUtils.random(ozapftSounds.length - 1)];
     }
 
-    public Sound randomBoostSound() {
-        return boostSounds[MathUtils.random(boostSounds.length - 1)];
+    public void playRandomBoostSound() {
+        if (canPlayVoice()) {
+            boostSounds[MathUtils.random(boostSounds.length - 1)].play();
+            deduplicateVoice();
+        }
     }
 
-    public Sound randomNeedBeerSound() {
-        return needBeerSounds[MathUtils.random(needBeerSounds.length - 1)];
+    public void playRandomNeedBeerSound() {
+        if (canPlayVoice()) {
+            needBeerSounds[MathUtils.random(needBeerSounds.length - 1)].play();
+            deduplicateVoice();
+        }
     }
 
-    public Sound randomSpotBeerSound() {
-        return spotBeerSounds[MathUtils.random(spotBeerSounds.length - 1)];
+    public void playRandomSpotBeerSound() {
+        if (canPlayVoice()) {
+            spotBeerSounds[MathUtils.random(spotBeerSounds.length - 1)].play();
+            deduplicateVoice();
+        }
     }
 
-    public Sound randomStartSound() {
-        return startSounds[MathUtils.random(startSounds.length - 1)];
+    public void playRandomStartSound() {
+        if (canPlayVoice()) {
+            startSounds[MathUtils.random(startSounds.length - 1)].play();
+            deduplicateVoice();
+        }
     }
 
     public Sound randomVictorySound() {
+        deduplicateVoice();
         return victorySounds[MathUtils.random(victorySounds.length - 1)];
     }
 
     public Sound randomComplainSound() {
+        deduplicateVoice();
         return complainSounds[MathUtils.random(complainSounds.length - 1)];
     }
 
@@ -178,6 +201,14 @@ public class GameSoundEffects implements Disposable {
     public void playRandomJumpSound(float volume) {
         float randomPitch = MathUtils.random(0.9f, 1.0f);
         jumpSound.play(volume, randomPitch, 1.0f);
+    }
+
+    private boolean canPlayVoice() {
+        return lastVoiceStart + VOICE_DEDUPLICATION_GRACE_PERIOD < System.currentTimeMillis();
+    }
+
+    private void deduplicateVoice() {
+        lastVoiceStart = System.currentTimeMillis();
     }
 
     @Override
