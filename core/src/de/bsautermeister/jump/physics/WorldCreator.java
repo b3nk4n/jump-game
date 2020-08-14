@@ -67,6 +67,7 @@ public class WorldCreator {
     private static final String POLES_KEY = "poles";
     private static final String SNORER_KEY = "snorer";
     private static final String ENEMY_SIGNAL_TRIGGERS_KEY = "enemySignalTriggers";
+    private static final String INFOS_KEY = "infos";
 
     private final World world;
     private final TiledMap map;
@@ -348,6 +349,18 @@ public class WorldCreator {
         return signalTriggers;
     }
 
+    public Array<InfoSign> getInfoSigns() {
+        Array<InfoSign> infos = new Array<>();
+        if (hasLayer(map, INFOS_KEY)) {
+            for (MapObject mapObject : map.getLayers().get(INFOS_KEY).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = ((RectangleMapObject) mapObject).getRectangle();
+                String languageKey = (String) mapObject.getProperties().get("languageKey");
+                infos.add(new InfoSign(toPPM(rect), languageKey));
+            }
+        }
+        return infos;
+    }
+
     private boolean hasLayer(Map map, String layer) {
         return map.getLayers().get(layer) != null;
     }
@@ -370,6 +383,16 @@ public class WorldCreator {
         public EnemySignalTrigger(Rectangle rect, String group) {
             this.rect = rect;
             this.group = group;
+        }
+    }
+
+    public static class InfoSign {
+        public final Rectangle rect;
+        public final String languageKey;
+
+        public InfoSign(Rectangle rect, String languageKey) {
+            this.rect = rect;
+            this.languageKey = languageKey;
         }
     }
 }

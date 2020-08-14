@@ -498,6 +498,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         return relativeBodyVelocity;
     }
 
+    public boolean isResting() {
+        return getVelocityRelativeToGround().len2() < 0.01f;
+    }
+
     private void updateTextureRegions() {
         TextureRegion textureRegion;
 

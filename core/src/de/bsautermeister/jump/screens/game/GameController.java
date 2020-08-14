@@ -137,6 +137,10 @@ public class GameController  implements BinarySerializable, Disposable {
     private float munichRatio = 0f;
 
     private Array<WorldCreator.EnemySignalTrigger> enemySignalTriggers;
+    private Array<WorldCreator.InfoSign> infoSings;
+
+    private float infoSignMessageTtl;
+    private String infoSignMessageKey;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -580,6 +584,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
         enemySignalTriggers = worldCreator.getEnemySignalTriggers();
 
+        infoSings = worldCreator.getInfoSigns();
+
         camera.position.set(player.getBody().getPosition(), 0);
 
         waterList = worldCreator.getWaterRegions();
@@ -634,6 +640,7 @@ public class GameController  implements BinarySerializable, Disposable {
         player.update(delta);
         updateMunichRation(delta);
         checkPlayerInBounds();
+        updateInfoSignMessage(delta);
 
         killSequelManager.update(delta);
 
@@ -702,6 +709,34 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         postUpdate();
+    }
+
+    private void updateInfoSignMessage(float delta) {
+        if (player.isResting()) {
+            for (WorldCreator.InfoSign infoSign : infoSings) {
+                if (infoSign.rect.contains(player.getWorldCenter())) {
+                    showInfoSignMessage(infoSign.languageKey);
+                    break;
+                }
+            }
+        }
+
+        if (infoSignMessageTtl > 0) {
+            infoSignMessageTtl -= delta;
+        }
+    }
+
+    private void showInfoSignMessage(String languageKey) {
+        infoSignMessageKey = languageKey;
+        infoSignMessageTtl = 1f;
+    }
+
+    public boolean hasInfoSignMessage() {
+        return infoSignMessageTtl > 0;
+    }
+
+    public String getInfoSignMessageKey() {
+        return infoSignMessageKey;
     }
 
     private void updateTent(float delta) {
@@ -1198,6 +1233,8 @@ public class GameController  implements BinarySerializable, Disposable {
             platform.write(out);
         }
         tent.write(out);
+        out.writeFloat(infoSignMessageTtl);
+        out.writeUTF(infoSignMessageKey != null ? infoSignMessageKey : "null");
     }
 
     @Override
@@ -1269,6 +1306,11 @@ public class GameController  implements BinarySerializable, Disposable {
             platform.read(in);
         }
         tent.read(in);
+        infoSignMessageTtl = in.readFloat();
+        infoSignMessageKey = in.readUTF();
+        if (infoSignMessageKey.equals("null")) {
+            infoSignMessageKey = null;
+        }
     }
 
     @Override

@@ -73,6 +73,7 @@ public class GameRenderer implements Disposable {
 
     private final I18NBundle i18n;
     private final BitmapFont font;
+    private final BitmapFont infoFont;
     private final GlyphLayout layout = new GlyphLayout();
 
     private final OrthogonalTiledMapRenderer mapRenderer;
@@ -112,6 +113,7 @@ public class GameRenderer implements Disposable {
 
         i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
         font = assetManager.get(AssetDescriptors.Fonts.S);
+        infoFont = assetManager.get(AssetDescriptors.Fonts.M);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
         this.parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
@@ -210,6 +212,7 @@ public class GameRenderer implements Disposable {
         batch.setProjectionMatrix(hud.getCamera().combined);
         hud.update(collectedBeers, score, player.getRemainingPretzels(), ttl);
         renderHud(batch);
+        renderInfoSignMessage(batch);
     }
 
     private void renderBackground(SpriteBatch batch) {
@@ -321,7 +324,17 @@ public class GameRenderer implements Disposable {
         batch.setShader(prevShader);
     }
 
+    private void renderInfoSignMessage(SpriteBatch batch) {
+        if (controller.hasInfoSignMessage()) {
+            String message = i18n.get(controller.getInfoSignMessageKey());
 
+            layout.setText(infoFont, message);
+
+            batch.begin();
+            infoFont.draw(batch, message, (Cfg.UI_WIDTH - layout.width) / 2, (Cfg.UI_HEIGHT - layout.height) / 2);
+            batch.end();
+        }
+    }
 
     private void renderHud(SpriteBatch batch) {
         hud.draw(batch);
@@ -410,6 +423,7 @@ public class GameRenderer implements Disposable {
         stonedShader.dispose();
         frameBuffer.dispose();
         font.dispose();
+        infoFont.dispose();
         hud.dispose();
     }
 
