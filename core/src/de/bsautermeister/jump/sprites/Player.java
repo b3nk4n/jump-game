@@ -379,7 +379,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         state.set(State.DROWNING);
         body.setLinearVelocity(body.getLinearVelocity().x / 10, body.getLinearVelocity().y / 10);
 
-        callbacks.startDrowning();
+        callbacks.startPlayerDrowning();
     }
 
     /**
@@ -877,7 +877,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             return;
 
         if (state.is(State.DROWNING)) {
-            callbacks.endDrowning();
+            callbacks.endPlayerDrowning();
         } else {
             callbacks.playerDied();
         }

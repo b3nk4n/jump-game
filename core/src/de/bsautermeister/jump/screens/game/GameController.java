@@ -171,11 +171,7 @@ public class GameController  implements BinarySerializable, Disposable {
             playEnemyKillSound(enemy, 1f);
 
             if (!(enemy instanceof Hedgehog)) {
-                KillSequelManager killSequelManager = getKillSequelManager();
-                killSequelManager.notifyKill();
-                score += killSequelManager.getKillScore();
-                showMessage(new StringUiMessage(
-                        killSequelManager.getKillScoreText()), enemy.getBoundingRectangle());
+                notifyAndShowKill(enemy);
             }
         }
 
@@ -275,11 +271,7 @@ public class GameController  implements BinarySerializable, Disposable {
             Enemy enemy = enemies.get(objectId);
             if (enemy != null) {
                 enemy.kill(true);
-                KillSequelManager killSequelManager = getKillSequelManager();
-                killSequelManager.notifyKill();
-                score += killSequelManager.getKillScore();
-                showMessage(new StringUiMessage(killSequelManager.getKillScoreText()),
-                        enemy.getBoundingRectangle());
+                notifyAndShowKill(enemy);
             }
         }
 
@@ -291,8 +283,14 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void kicked(Enemy enemy) {
+        public void kicked(Enemy enemy, boolean firstKick) {
             soundEffects.kickedSound.play();
+
+            if (firstKick) {
+                score += Cfg.FIRST_KICK_SCORE;
+                showMessage(new StringUiMessage(Cfg.FIRST_KICK_SCORE_STRING),
+                        enemy.getBoundingRectangle());
+            }
         }
 
         @Override
@@ -316,6 +314,10 @@ public class GameController  implements BinarySerializable, Disposable {
                 soundEffects.kickedSound.play(volume);
             }
             playEnemyKillSound(enemy, volume);
+            notifyAndShowKill(enemy);
+        }
+
+        private void notifyAndShowKill(Enemy enemy) {
             KillSequelManager killSequelManager = getKillSequelManager();
             killSequelManager.notifyKill();
             score += killSequelManager.getKillScore();
@@ -414,7 +416,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void startDrowning() {
+        public void startPlayerDrowning() {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
@@ -424,8 +426,13 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void endDrowning() {
+        public void endPlayerDrowning() {
             soundEffects.randomShoutSound().play();
+        }
+
+        @Override
+        public void playerCausedDrown(Enemy enemy) {
+            notifyAndShowKill(enemy);
         }
 
         private static final float HALF_SCREEN_WIDTH = Cfg.WORLD_WIDTH / 2f / Cfg.PPM;
