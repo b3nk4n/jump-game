@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -113,7 +114,7 @@ public class GameRenderer implements Disposable {
 
         i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
         font = assetManager.get(AssetDescriptors.Fonts.S);
-        infoFont = assetManager.get(AssetDescriptors.Fonts.M);
+        infoFont = assetManager.get(AssetDescriptors.Fonts.L);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
         this.parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
@@ -328,10 +329,9 @@ public class GameRenderer implements Disposable {
         if (controller.hasInfoSignMessage()) {
             String message = i18n.get(controller.getInfoSignMessageKey());
 
-            layout.setText(infoFont, message);
-
             batch.begin();
-            infoFont.draw(batch, message, (Cfg.UI_WIDTH - layout.width) / 2, (Cfg.UI_HEIGHT - layout.height) / 2);
+            infoFont.draw(batch, message, 0, Cfg.UI_HEIGHT / 2,
+                    Cfg.UI_WIDTH, Align.center, true);
             batch.end();
         }
     }
