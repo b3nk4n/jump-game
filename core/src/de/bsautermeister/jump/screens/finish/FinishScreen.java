@@ -70,10 +70,61 @@ public class FinishScreen extends ScreenBase {
 
         stage = new Stage(uiViewport, batch);
         stage.setDebugAll(Cfg.DEBUG_MODE);
-        stage.addActor(builtId(getAssetManager()));
+        Table ui;
+        if (level == 0) {
+            ui = buildTutorialUi(getAssetManager());
+        } else {
+            ui = buildUi(getAssetManager());
+        }
+        stage.addActor(ui);
     }
 
-    private Table builtId(AssetManager assetManager) {
+    private Table buildTutorialUi(AssetManager assetManager) {
+        Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
+        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
+        I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
+
+        Table content = new Table();
+        content.center();
+        content.setFillParent(true);
+
+        String titleText = i18n.get(Language.CONGRATS);
+        AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, titleText.length())
+                .typeText(titleText);
+        content.add(title)
+                .colspan(2)
+                .pad(Cfg.TITLE_PAD)
+                .padBottom(Cfg.TITLE_PAD / 2)
+                .row();
+
+        Label textLabel = new Label(i18n.get(Language.WELL_DONE), skin, Styles.Label.LARGE);
+        textLabel.setWrap(false);
+        textLabel.setAlignment(Align.center, Align.center);
+        textLabel.addAction(Actions.sequence(
+                Actions.hide(),
+                Actions.delay(1.0f),
+                Actions.show()
+        ));
+        content.add(textLabel).center().pad(64f).row();
+
+        Label pushLabel = new Label(i18n.get(Language.TAP_TO_CONTINUE), skin, Styles.Label.DEFAULT);
+        pushLabel.addAction(Actions.sequence(
+                Actions.hide(),
+                Actions.delay(2.0f),
+                Actions.repeat(Integer.MAX_VALUE, Actions.sequence(
+                        Actions.show(),
+                        Actions.delay(1.0f),
+                        Actions.hide(),
+                        Actions.delay(1.0f)
+                ))
+        ));
+        content.add(pushLabel).center().colspan(2).padTop(36f).padBottom(36f);
+
+        content.pack();
+        return content;
+    }
+
+    private Table buildUi(AssetManager assetManager) {
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
         I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);

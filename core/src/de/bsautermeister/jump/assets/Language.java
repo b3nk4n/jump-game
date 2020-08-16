@@ -32,6 +32,7 @@ public interface Language {
     String TIME = "time";
     String TOTAL = "total";
     String TAP_TO_CONTINUE = "tapToContinue";
+    String WELL_DONE = "wellDone";
 
     String COLLECT_BEER = "collectBeer";
     String COLLECT_FOOD = "collectFood";
