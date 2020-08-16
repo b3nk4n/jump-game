@@ -1,7 +1,7 @@
 package de.bsautermeister.jump.sprites;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
@@ -10,23 +10,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import de.bsautermeister.jump.Cfg;
-import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
-public abstract class Fragment extends Sprite implements Pool.Poolable, BinarySerializable {
+public class Fragment extends Sprite implements Pool.Poolable, BinarySerializable {
 
     private final Vector2 velocity = new Vector2();
     private boolean alive;
     private float rotationSpeed;
-    private final String templateName;
 
-    public Fragment(String templateName) {
-        this.templateName = templateName;
-    }
-
-    public void init(TextureAtlas atlas, int templateIndex, Vector2 centerPosition, Vector2 velocity,
+    public void init(TextureRegion textureRegion, Vector2 centerPosition, Vector2 velocity,
                      float rotationSpeed) {
-        setRegion(atlas.findRegion(RegionNames.fromTemplate(templateName, templateIndex)));
+        setRegion(textureRegion);
         setSize(8f / Cfg.PPM, 8f / Cfg.PPM);
         setCenter(centerPosition.x, centerPosition.y);
         setOrigin(getWidth() / 2f, getHeight() / 2f);
