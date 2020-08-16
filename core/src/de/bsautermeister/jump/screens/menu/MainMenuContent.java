@@ -19,6 +19,8 @@ import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 
 public class MainMenuContent extends Table {
 
+    public static final String TYPE = MainMenuContent.class.getSimpleName();
+
     private static float DELAY_OFFSET = 0.25f;
 
     private final Callbacks callbacks;

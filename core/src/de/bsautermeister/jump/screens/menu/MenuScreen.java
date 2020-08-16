@@ -33,20 +33,30 @@ public class MenuScreen extends ScreenBase {
 
     private Table content;
 
+    private final String initialContentType;
+    private final int lastLevel;
+
     public MenuScreen(GameApp game, boolean skipIntroTransition) {
+        this(game, skipIntroTransition, MainMenuContent.TYPE, 1); // TODO: select highest unlocked level by default?
+    }
+
+    public MenuScreen(GameApp game, boolean skipIntroTransition, String contentType, int lastLevel) {
         super(game);
         this.uiViewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
         backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
         if (skipIntroTransition) {
             backgroundRenderer.skipIntroTransition();
         }
+        this.initialContentType = contentType;
+        this.lastLevel = lastLevel;
     }
 
     @Override
     public void show() {
         stage = new Stage(uiViewport, getGame().getBatch());
         stage.setDebugAll(Cfg.DEBUG_MODE);
-        setContent(createMainContent());
+
+        setContent(createContent(initialContentType, lastLevel));
 
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
@@ -63,6 +73,20 @@ public class MenuScreen extends ScreenBase {
         }
         content = newContent;
         stage.addActor(newContent);
+    }
+
+    private final Table createContent(String contentType, int lastLevel) {
+        if (MainMenuContent.TYPE.equals(contentType)) {
+            return createMainContent();
+        } else if (SelectLevelMenuContent.TYPE.equals(contentType)) {
+            int page = lastLevel / Cfg.LEVELS_PER_PAGE + 1;
+            page = Math.min(page, Cfg.LEVEL_PAGES);
+            return createSelectLevelContent(page);
+        } else if (AboutContent.TYPE.equals(contentType)) {
+            return createAboutContent();
+        }
+
+        throw new IllegalArgumentException("Unknown content type");
     }
 
     private Table createMainContent() {
@@ -84,7 +108,7 @@ public class MenuScreen extends ScreenBase {
 
             @Override
             public void aboutClicked() {
-                setContent(new AboutContent(getAssetManager()));
+                setContent(createAboutContent());
             }
         });
     }
@@ -108,6 +132,10 @@ public class MenuScreen extends ScreenBase {
                         clickScreenPosition));
             }
         });
+    }
+
+    private Table createAboutContent() {
+        return new AboutContent(getAssetManager());
     }
 
     @Override

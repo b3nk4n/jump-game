@@ -30,6 +30,7 @@ import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.menu.MenuScreen;
+import de.bsautermeister.jump.screens.menu.SelectLevelMenuContent;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
 import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
 import de.bsautermeister.jump.utils.GdxUtils;
@@ -40,6 +41,7 @@ public class FinishScreen extends ScreenBase {
     private final Viewport uiViewport;
     private InsideTentRenderer insideTentRenderer;
 
+    private final int level;
     private final int score;
     private final int time;
     private final int totalScore;
@@ -49,11 +51,12 @@ public class FinishScreen extends ScreenBase {
 
     private Stage stage;
 
-    public FinishScreen(GameApp game, int score, int time, int totalScore, int stars) {
+    public FinishScreen(GameApp game, int level, int score, int time, int totalScore, int stars) {
         super(game);
         batch = game.getBatch();
         this.uiViewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
 
+        this.level = level;
         this.score = score;
         this.time = time;
         this.totalScore = totalScore;
@@ -231,8 +234,8 @@ public class FinishScreen extends ScreenBase {
 
         if (Gdx.input.isTouched()) {
             getGame().getForegroundMusic().fadeOutStop();
-            setScreen(new MenuScreen(getGame(), true), new ScaleScreenTransition(
-                    Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
+            setScreen(new MenuScreen(getGame(), true, SelectLevelMenuContent.TYPE, level),
+                    new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, true));
         }
 
         GdxUtils.clearScreen(Color.BLACK);

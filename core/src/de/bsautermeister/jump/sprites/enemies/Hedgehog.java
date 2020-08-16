@@ -252,12 +252,12 @@ public class Hedgehog extends Enemy implements Drownable {
                 | Bits.BRICK
                 | Bits.PLATFORM;
         fixtureDef.isSensor = true;
-        sideShape.set(new Vector2(-8 / Cfg.PPM, -2 / Cfg.PPM),
-                new Vector2(-8 / Cfg.PPM, 2 / Cfg.PPM));
+        sideShape.set(new Vector2(-7 / Cfg.PPM, -2 / Cfg.PPM),
+                new Vector2(-7 / Cfg.PPM, 2 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_LEFT));
-        sideShape.set(new Vector2(8 / Cfg.PPM, -2 / Cfg.PPM),
-                new Vector2(8 / Cfg.PPM, 2 / Cfg.PPM));
+        sideShape.set(new Vector2(7 / Cfg.PPM, -2 / Cfg.PPM),
+                new Vector2(7 / Cfg.PPM, 2 / Cfg.PPM));
         body.createFixture(fixtureDef).setUserData(
                 new TaggedUserData<Enemy>(this, TAG_RIGHT));
         sideShape.dispose();

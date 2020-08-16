@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.I18NBundle;
 
-import java.util.Locale;
-
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Language;
@@ -25,6 +23,9 @@ import de.bsautermeister.jump.screens.game.level.LevelInfo;
 import de.bsautermeister.jump.screens.game.level.LevelMetadata;
 
 public class SelectLevelMenuContent extends Table {
+
+    public static final String TYPE = SelectLevelMenuContent.class.getSimpleName();
+
     private final Callbacks callbacks;
     private final GameSoundEffects gameSoundEffects;
     private final I18NBundle i18n;
@@ -65,7 +66,7 @@ public class SelectLevelMenuContent extends Table {
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
             for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
-                levelTable.add(createLevelButton(skin, (page - 1) * Cfg.LEVELS_PER_STAGE + r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
+                levelTable.add(createLevelButton(skin, (page - 1) * Cfg.LEVELS_PER_PAGE + r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
             }
             levelTable.row();
         }

@@ -43,7 +43,7 @@ public class GameScreen extends ScreenBase {
             JumpGameStats.INSTANCE.updateHighestFinishedLevel(level); // TODO unlock levels based on total stars collected. And indicate when selecting an unlocked level, how much is still missing.
             JumpGameStats.INSTANCE.updateLevelStars(level, stars);
 
-            setScreen(new FinishScreen(getGame(), score, ttl, totalScore, stars),
+            setScreen(new FinishScreen(getGame(), level, score, ttl, totalScore, stars),
                     new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth,
                             true, goalCenterPosition));
         }
