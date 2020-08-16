@@ -65,7 +65,7 @@ public class SelectLevelMenuContent extends Table {
 
         Table levelTable = new Table();
         for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
-            for (int c = 1; c <= Cfg.LEVEL_COLUMNS; ++c) {
+            for (int c = 0; c < Cfg.LEVEL_COLUMNS; ++c) {
                 levelTable.add(createLevelButton(skin, (page - 1) * Cfg.LEVELS_PER_PAGE + r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
             }
             levelTable.row();
@@ -100,8 +100,9 @@ public class SelectLevelMenuContent extends Table {
         final int requiredStarsToUnlock = levelInfo.getRequiredStarsToUnlock();
         boolean stillLocked = level == highestUnlockedLevel && totalStars < requiredStarsToUnlock;
         String styleName = locked ? Styles.TextButton.LOCKED : getUnlockedLevelButtonStyleName(level, stillLocked);
+        String buttonText = level == 0 ? "?" : String.valueOf(level);
         final TextButton levelButton = new TextButton(
-                locked || stillLocked ? "" : String.valueOf(level), skin, styleName);
+                locked || stillLocked ? "" : buttonText, skin, styleName);
         levelButton.getLabel().setAlignment(Align.top);
         levelButton.getLabelCell().padTop(30f);
         if (locked) {

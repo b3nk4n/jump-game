@@ -26,6 +26,7 @@ public class ItemBox extends InteractiveTileObject {
     public enum Type {
         COIN,
         FOOD,
+        FORCED_PRETZEL,
         BEER
     }
 
@@ -47,12 +48,16 @@ public class ItemBox extends InteractiveTileObject {
         tileSet = map.getTileSets().getTileSet("OctoberBro");
         Boolean multiCoin = (Boolean) mapObject.getProperties().get("multiCoin");
         Boolean food = (Boolean) mapObject.getProperties().get("food");
+        Boolean pretzel = (Boolean) mapObject.getProperties().get("pretzel");
         Boolean beer = (Boolean) mapObject.getProperties().get("beer");
         if (multiCoin != null && multiCoin) {
             type = Type.COIN;
             remainingItems = 5;
         } else if (Boolean.TRUE.equals(food)) {
             type = Type.FOOD;
+            remainingItems = 1;
+        } else if (Boolean.TRUE.equals(pretzel)) {
+            type = Type.FORCED_PRETZEL;
             remainingItems = 1;
         } else if (Boolean.TRUE.equals(beer)) {
             type = Type.BEER;
@@ -134,6 +139,10 @@ public class ItemBox extends InteractiveTileObject {
 
     public boolean isFoodBox() {
         return type == Type.FOOD;
+    }
+
+    public boolean isForcedPretzelBox() {
+        return type == Type.FORCED_PRETZEL;
     }
 
     public boolean isBeerBox() {

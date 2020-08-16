@@ -268,6 +268,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             }
         }
 
+        if (!isVictory() && !isDead()) {
+            timeToLive -= delta;
+        }
+
         if (Math.abs(getVelocityRelativeToGround().y) < 0.1) {
             // unblock jump if standing still for a while
             blockJumpTimer -= delta;

@@ -114,7 +114,7 @@ public class GameRenderer implements Disposable {
 
         i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
         font = assetManager.get(AssetDescriptors.Fonts.S);
-        infoFont = assetManager.get(AssetDescriptors.Fonts.L);
+        infoFont = assetManager.get(AssetDescriptors.Fonts.M);
 
         mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
         this.parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
@@ -219,9 +219,8 @@ public class GameRenderer implements Disposable {
     private void renderBackground(SpriteBatch batch) {
         float munichRatio = controller.getMunichRatio();
         float munichOffset = Interpolation.smooth.apply(1.5f * 6.25f, 0f, munichRatio);
-        float forestOffset = Interpolation.smooth.apply(0f, 1.0f * 6.25f, munichRatio);
-        float grassOffset = Interpolation.smooth.apply(0f, -0.25f * 6.25f, munichRatio);
-
+        float forestOffset = Interpolation.smooth.apply(0f, 1.25f * 6.25f, munichRatio);
+        float grassOffset = Interpolation.smooth.apply(0f, 0.25f * 6.25f, munichRatio);
 
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_STATIC_KEY, 1.0f, 1.0f);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_CLOUDS2_KEY, 0.1f, 0.075f);
@@ -230,7 +229,7 @@ public class GameRenderer implements Disposable {
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MUNICH2_KEY, 0.5f, 0.3f, munichOffset);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_MUNICH1_KEY, 0.625f, 0.35f, munichOffset);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST2_KEY, 0.65f, 0.4f, forestOffset);
-        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST1_KEY, 0.80f, 0.45f, forestOffset);
+        parallaxRenderer.renderLayer(WorldCreator.BG_IMG_FORREST1_KEY, 0.75f, 0.45f, forestOffset);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.45f, grassOffset);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.6f, grassOffset);
 

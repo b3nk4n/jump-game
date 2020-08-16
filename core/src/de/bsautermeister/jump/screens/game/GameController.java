@@ -248,6 +248,9 @@ public class GameController  implements BinarySerializable, Disposable {
                     spawnItem(new ItemDef(position, GrilledChickenItem.class));
                 }
                 soundEffects.bumpSound.play();
+            } else if (itemBox.isForcedPretzelBox()) {
+                spawnItem(new ItemDef(position, PretzelItem.class));
+                soundEffects.bumpSound.play();
             } else if (itemBox.isBeerBox()) {
                 spawnItem(new ItemDef(position, BeerItem.class));
                 soundEffects.beerSpawnSound.play();

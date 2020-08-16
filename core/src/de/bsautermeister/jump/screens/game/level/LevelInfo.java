@@ -8,12 +8,23 @@ public class LevelInfo {
 
     private final int requiredStarsToUnlock;
 
+    private final boolean tutorial;
+
     public LevelInfo(int time, int requiredScoreOneStar, int requiredScoreTwoStars, int requiredScoreThreeStars, int requiredStarsToUnlock) {
+        this(time, requiredScoreOneStar, requiredScoreTwoStars, requiredScoreThreeStars, requiredStarsToUnlock, false);
+    }
+
+    public LevelInfo(int time, int requiredScoreOneStar, int requiredScoreTwoStars, int requiredScoreThreeStars, int requiredStarsToUnlock, boolean tutorial) {
         this.time = time;
         this.requiredScoreOneStar = requiredScoreOneStar;
         this.requiredScoreTwoStars = requiredScoreTwoStars;
         this.requiredScoreThreeStars = requiredScoreThreeStars;
         this.requiredStarsToUnlock = requiredStarsToUnlock;
+        this.tutorial = tutorial;
+    }
+
+    public static LevelInfo tutorial() {
+        return new LevelInfo(999, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, 0, true);
     }
 
     public int getTime() {
@@ -44,6 +55,10 @@ public class LevelInfo {
             default:
                 return getRequiredScoreThreeStars();
         }
+    }
+
+    public boolean isTutorial() {
+        return tutorial;
     }
 
     public int getStarsForScore(int score) {
