@@ -134,7 +134,7 @@ public class GameController  implements BinarySerializable, Disposable {
     private Tent tent;
     private Array<Pole> poles = new Array<>();
 
-    private float munichRatio = 0f;
+    private float munichRatio;
 
     private Array<WorldCreator.EnemySignalTrigger> enemySignalTriggers;
     private Array<WorldCreator.InfoSign> infoSings;
@@ -614,6 +614,8 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Rectangle poleRect : worldCreator.getPoleRegions()) {
             poles.add(new Pole(atlas, poleRect));
         }
+
+        munichRatio = 0f;
     }
 
     private void initMap(int level) {
