@@ -36,11 +36,11 @@ public class GameScreen extends ScreenBase {
         public void success(int level, Vector2 goalCenterPosition) {
             int score = controller.getScore();
             int ttl = controller.getTimeToLive();
-            int totalScore = score + ttl * 25;
+            int totalScore = score + ttl * 20;
             LevelInfo levelInfo = LevelMetadata.getLevelInfo(level);
             int stars = levelInfo.getStarsForScore(totalScore);
 
-            JumpGameStats.INSTANCE.updateHighestFinishedLevel(level); // TODO unlock levels based on total stars collected. And indicate when selecting an unlocked level, how much is still missing.
+            JumpGameStats.INSTANCE.updateHighestFinishedLevel(level);
             JumpGameStats.INSTANCE.updateLevelStars(level, stars);
 
             setScreen(new FinishScreen(getGame(), level, score, ttl, totalScore, stars),
@@ -58,11 +58,21 @@ public class GameScreen extends ScreenBase {
 
         @Override
         public void reportKillSequelFinished(int count) {
+            if (level == 0) {
+                // ignore stats in tutorial
+                return;
+            }
+
             JumpGame.getGameServiceManager().checkAndUnlockKillSequelAchievement(count);
         }
 
         @Override
         public void reportDrunkBeer() {
+            if (level == 0) {
+                // ignore stats in tutorial
+                return;
+            }
+
             int count = JumpGameStats.INSTANCE.incrementTotalBeers();
             JumpGame.getGameServiceManager().checkAndUnlockBeerAchievement(count);
         }
