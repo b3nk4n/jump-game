@@ -329,10 +329,16 @@ public class GameRenderer implements Disposable {
             String message = i18n.get(controller.getInfoSignMessageKey());
 
             batch.begin();
-            infoFont.draw(batch, message, 0, Cfg.UI_HEIGHT / 2,
-                    Cfg.UI_WIDTH, Align.center, true);
+            drawCentered(infoFont, batch, message, 0f, 0f, Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
             batch.end();
         }
+    }
+
+    private void drawCentered(BitmapFont font, SpriteBatch spriteBatch, String text,
+                              float x, float y, float width, float height) {
+        layout.setText(font, text, Color.WHITE, width, Align.center, true);
+        font.draw(spriteBatch, text, x, y + height / 2f + layout.height / 2f, width,
+                Align.center, true);
     }
 
     private void renderHud(SpriteBatch batch) {
