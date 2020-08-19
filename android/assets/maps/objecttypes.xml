@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="bouncer" color="#550000">
+  <property name="bounceAngle" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="box" color="#b8a250">
+  <property name="beer" type="bool" default="false"/>
+  <property name="food" type="bool" default="false"/>
+  <property name="multiCoin" type="bool" default="false"/>
+  <property name="pretzel" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="brick" color="#bebec2">
+  <property name="unlockGoal" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="coin" color="#ffff00"/>
+ <objecttype name="collider" color="#a0a0a4"/>
+ <objecttype name="drunkenGuy" color="#a45e07">
+  <property name="group" type="string"/>
+ </objecttype>
+ <objecttype name="enemySignalTrigger" color="#a4748a">
+  <property name="group" type="string"/>
+ </objecttype>
+ <objecttype name="fish" color="#8d8d90">
+  <property name="group" type="string"/>
+  <property name="startAngle" type="int" default="0"/>
+  <property name="startDelay" type="float" default="0"/>
+  <property name="velocityFactor" type="float" default="1"/>
+ </objecttype>
+ <objecttype name="fox" color="#ffaa00">
+  <property name="group" type="string"/>
+  <property name="rightDirection" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="frog" color="#00ab00">
+  <property name="group" type="string"/>
+  <property name="rightDirection" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="goal" color="#04ff00"/>
+ <objecttype name="ground" color="#a0a0a4"/>
+ <objecttype name="hedgehog" color="#6d5121">
+  <property name="group" type="string"/>
+  <property name="rightDirection" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="info" color="#aa00ff">
+  <property name="languageKey" type="string"/>
+ </objecttype>
+ <objecttype name="platform" color="#550000">
+  <property name="breakable" type="bool" default="false"/>
+  <property name="startAngle" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="pole" color="#0bb6ff"/>
+ <objecttype name="raven" color="#313131">
+  <property name="group" type="string"/>
+  <property name="rightDirection" type="bool" default="false"/>
+  <property name="swinging" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="snorer" color="#ffaaff"/>
+ <objecttype name="spike" color="#ff0000"/>
+ <objecttype name="start" color="#8d8d00">
+  <property name="leftDirection" type="bool" default="false"/>
+ </objecttype>
+ <objecttype name="water" color="#0055ff"/>
+</objecttypes>

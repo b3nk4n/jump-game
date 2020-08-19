@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="40" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="37" nextobjectid="164">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="40" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="38" nextobjectid="166">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
-  <image source="sky1.png" width="3840" height="640"/>
+  <image source="sky1.png" width="256" height="640"/>
  </imagelayer>
  <imagelayer id="21" name="bgImageClouds2">
-  <image source="sky2.png" width="3840" height="640"/>
+  <image source="sky2.png" width="256" height="640"/>
  </imagelayer>
  <imagelayer id="27" name="bgImageMountains" offsetx="0" offsety="320">
-  <image source="mountains.png" width="1152" height="320"/>
+  <image source="mountains.png" width="384" height="320"/>
  </imagelayer>
  <imagelayer id="20" name="bgImageClouds1" opacity="0.9" offsetx="0" offsety="30">
-  <image source="clouds.png" width="3840" height="640"/>
+  <image source="clouds.png" width="256" height="640"/>
  </imagelayer>
  <imagelayer id="23" name="bgImageForrest2" offsetx="0" offsety="400">
-  <image source="pine2.png" width="2064" height="264"/>
+  <image source="pine2.png" width="688" height="264"/>
  </imagelayer>
  <imagelayer id="24" name="bgImageForrest1" offsetx="0" offsety="440">
-  <image source="pine1.png" width="2064" height="200"/>
+  <image source="pine1.png" width="688" height="200"/>
  </imagelayer>
  <imagelayer id="36" name="bgImageGrass2" offsetx="0" offsety="400">
-  <image source="grass2.png" width="1600" height="232"/>
+  <image source="grass2.png" width="400" height="232"/>
  </imagelayer>
  <imagelayer id="35" name="bgImageGrass1" offsetx="0" offsety="400">
-  <image source="grass1.png" width="1600" height="240"/>
+  <image source="grass1.png" width="400" height="240"/>
  </imagelayer>
  <layer id="4" name="bgTiles" width="40" height="40">
   <data encoding="csv">
@@ -113,10 +113,8 @@
 12,13,13,13,13,13,13,13,13,13,13,13,14,0,0,0,0,12,13,13,13,27,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,15,13,14
 </data>
  </layer>
- <objectgroup id="33" name="water">
-  <object id="162" x="192" y="592" width="96" height="48"/>
- </objectgroup>
- <objectgroup id="34" name="snorer">
-  <object id="163" x="96" y="560" width="16" height="16"/>
+ <objectgroup id="37" name="objects">
+  <object id="164" type="water" x="192" y="592" width="96" height="48"/>
+  <object id="165" type="snorer" x="96" y="560" width="16" height="16"/>
  </objectgroup>
 </map>
