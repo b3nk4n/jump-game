@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -353,7 +354,13 @@ public class WorldCreator {
     }
 
     private static boolean isType(MapObject mapObject, String type) {
-        return mapObject.getProperties().get("type").equals(type);
+        String objType = (String) mapObject.getProperties().get("type");
+        if (objType == null) {
+            Gdx.app.log("WorldCreator", String.format("Missing object type in x: %f, y: %f",
+                    mapObject.getProperties().get("x"),
+                    mapObject.getProperties().get("y")));
+        }
+        return objType.equals(type);
     }
 
     private static Array<RectangleMapObject> getRectObjects(TiledMap map) {

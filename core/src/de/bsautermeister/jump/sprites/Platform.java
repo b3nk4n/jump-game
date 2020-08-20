@@ -86,12 +86,20 @@ public class Platform extends Sprite implements BinarySerializable {
     private Vector2 getDirectionOfSimpleAngle(int angle) {
         if (angle == 0) {
             return new Vector2(1, 0);
+        } else if (angle == 45) {
+            return new Vector2(1, 1).setLength(1f);
         } else if (angle == 90) {
             return new Vector2(0, 1);
+        } else if (angle == 135) {
+            return new Vector2(-1, 1).setLength(1f);
         } else if (angle == 180) {
             return new Vector2(-1, 0);
+        } else if (angle == 225) {
+            return new Vector2(-1, -1).setLength(1f);
         } else if (angle == 270) {
             return new Vector2(0, -1);
+        } else if (angle == 315) {
+            return new Vector2(1, -1).setLength(1f);
         } else {
             throw new IllegalArgumentException("Unsupported angle: " + angle);
         }
