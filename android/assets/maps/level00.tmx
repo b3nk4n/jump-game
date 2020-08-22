@@ -134,7 +134,8 @@
   </object>
   <object id="303" type="box" x="3712" y="352" width="16" height="16">
    <properties>
-    <property name="multiCoin" type="bool" value="true"/>
+    <property name="coin" type="bool" value="true"/>
+    <property name="multiCoin" type="bool" value="false"/>
    </properties>
   </object>
   <object id="304" type="box" x="2352" y="272" width="16" height="16">

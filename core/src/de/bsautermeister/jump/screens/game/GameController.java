@@ -241,16 +241,28 @@ public class GameController  implements BinarySerializable, Disposable {
         public void hit(Player player, ItemBox itemBox, Vector2 position, boolean closeEnough) {
             if (itemBox.isBlank() || !closeEnough) {
                 soundEffects.bumpSound.play();
-            } else if (itemBox.isFoodBox()) {
+                return;
+            }
+
+            if (itemBox.isFoodBox()) {
                 if (player.isBig()) {
                     spawnItem(new ItemDef(position, PretzelItem.class));
                 } else {
                     spawnItem(new ItemDef(position, GrilledChickenItem.class));
                 }
                 soundEffects.bumpSound.play();
+                return;
+            } else if (itemBox.isFoodIfSmallBox()) {
+                if (!player.isBig()) {
+                    spawnItem(new ItemDef(position, GrilledChickenItem.class));
+                    soundEffects.bumpSound.play();
+                    return;
+                }
+                // else: coin
             } else if (itemBox.isForcedPretzelBox()) {
                 spawnItem(new ItemDef(position, PretzelItem.class));
                 soundEffects.bumpSound.play();
+                return;
             } else if (itemBox.isBeerBox()) {
                 spawnItem(new ItemDef(position, BeerItem.class));
                 soundEffects.beerSpawnSound.play();
@@ -260,13 +272,14 @@ public class GameController  implements BinarySerializable, Disposable {
                         soundEffects.playRandomSpotBeerSound();
                     }
                 }, 0.75f);
-            } else {
-                soundEffects.coinSpawnSound.play();
-                BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
-                activeBoxCoins.add(boxCoin);
-                score += Cfg.COIN_SCORE;
-                // score is shown later when the itemBox disappears
+                return;
             }
+
+            soundEffects.coinSpawnSound.play();
+            BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
+            activeBoxCoins.add(boxCoin);
+            score += Cfg.COIN_SCORE;
+            // score is shown later when the itemBox disappears
         }
 
         @Override
@@ -932,9 +945,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Enemy enemy : enemies.values()) {
             enemy.update(delta);
 
-            float len2 = Vector2.len2(enemy.getX() - player.getX(), enemy.getY() - player.getY());
-
-            if (!enemy.isActive() && len2 < Cfg.ENEMY_WAKE_UP_DISTANCE2) {
+            if (!enemy.isActive() && isVisibleInRenderArea(enemy.getBoundingRectangle())) {
                 enemy.setActive(true);
 
                 if (enemy.hasGroup()) {

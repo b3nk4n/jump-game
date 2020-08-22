@@ -166,7 +166,11 @@
     <property name="food" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="265" type="box" x="1424" y="416" width="16" height="16"/>
+  <object id="265" type="box" x="1424" y="416" width="16" height="16">
+   <properties>
+    <property name="coin" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="266" type="brick" x="512" y="464" width="16" height="16"/>
   <object id="267" type="coin" x="4160" y="464" width="16" height="16"/>
   <object id="268" type="coin" x="4160" y="448" width="16" height="16"/>
@@ -180,7 +184,11 @@
   <object id="276" type="water" x="848" y="592" width="96" height="48"/>
   <object id="277" type="water" x="2256" y="592" width="512" height="48"/>
   <object id="278" type="brick" x="480" y="464" width="16" height="16"/>
-  <object id="279" type="box" x="496" y="464" width="16" height="16"/>
+  <object id="279" type="box" x="496" y="464" width="16" height="16">
+   <properties>
+    <property name="coin" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="280" type="box" x="528" y="464" width="16" height="16">
    <properties>
     <property name="food" type="bool" value="true"/>

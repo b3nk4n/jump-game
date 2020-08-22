@@ -38,7 +38,6 @@ public interface Cfg {
     int FIRST_KICK_SCORE = 25;
     String FIRST_KICK_SCORE_STRING = String.valueOf(FIRST_KICK_SCORE);
 
-    float ENEMY_WAKE_UP_DISTANCE2 = (float)Math.pow(Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM, 2);
     float MAX_FALLING_SPEED = -20f;
     float MAX_HORIZONTAL_SPEED = 8f;
 

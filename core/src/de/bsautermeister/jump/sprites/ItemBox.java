@@ -26,13 +26,12 @@ public class ItemBox extends InteractiveTileObject {
         COIN,
         FOOD,
         FORCED_PRETZEL,
-        BEER
+        BEER,
+        FOOD_IF_SMALL
     }
 
     private Type type;
     private int remainingItems;
-
-    private final TextureAtlas atlas;
 
     private static TiledMapTileSet tileSet;
 
@@ -42,10 +41,12 @@ public class ItemBox extends InteractiveTileObject {
 
     public ItemBox(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas, MapObject mapObject) {
         super(callbacks, Bits.ITEM_BOX, world, map, mapObject);
-        this.atlas = atlas;
+
         tileSet = map.getTileSets().getTileSet("OctoberBro");
+        Boolean coin = (Boolean) mapObject.getProperties().get("coin");
         Boolean multiCoin = (Boolean) mapObject.getProperties().get("multiCoin");
         Boolean food = (Boolean) mapObject.getProperties().get("food");
+        Boolean foodIfSmall = (Boolean) mapObject.getProperties().get("foodIfSmall");
         Boolean pretzel = (Boolean) mapObject.getProperties().get("pretzel");
         Boolean beer = (Boolean) mapObject.getProperties().get("beer");
         if (multiCoin != null && multiCoin) {
@@ -54,15 +55,22 @@ public class ItemBox extends InteractiveTileObject {
         } else if (Boolean.TRUE.equals(food)) {
             type = Type.FOOD;
             remainingItems = 1;
+        } else if (Boolean.TRUE.equals(foodIfSmall)) {
+            type = Type.FOOD_IF_SMALL;
+            remainingItems = 1;
         } else if (Boolean.TRUE.equals(pretzel)) {
             type = Type.FORCED_PRETZEL;
             remainingItems = 1;
         } else if (Boolean.TRUE.equals(beer)) {
             type = Type.BEER;
             remainingItems = 1;
-        } else {
+        } else if (Boolean.TRUE.equals(coin)) {
             type = Type.COIN;
             remainingItems = 1;
+        } else {
+            type = Type.COIN;
+            remainingItems = 0;
+            updateCellBlankState();
         }
 
         simpleFragmentEffect = new SimpleFragmentEffect(atlas, RegionNames.BOX_FRAGMENT_TPL);
@@ -92,7 +100,7 @@ public class ItemBox extends InteractiveTileObject {
     @Override
     public void onHeadHit(Player player) {
         float xDistance = Math.abs(player.getBody().getWorldCenter().x - getBody().getWorldCenter().x);
-        boolean closeEnough = xDistance < Cfg.BLOCK_SIZE / 2 / Cfg.PPM;
+        boolean closeEnough = xDistance < Cfg.BLOCK_SIZE / 2f / Cfg.PPM;
         getCallbacks().hit(
                 player,
                 this,
@@ -120,6 +128,10 @@ public class ItemBox extends InteractiveTileObject {
 
     public boolean isFoodBox() {
         return type == Type.FOOD;
+    }
+
+    public boolean isFoodIfSmallBox() {
+        return type == Type.FOOD_IF_SMALL;
     }
 
     public boolean isForcedPretzelBox() {
