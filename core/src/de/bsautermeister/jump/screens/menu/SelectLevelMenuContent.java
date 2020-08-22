@@ -26,6 +26,8 @@ public class SelectLevelMenuContent extends Table {
 
     public static final String TYPE = SelectLevelMenuContent.class.getSimpleName();
 
+    private static final int EXTRA_PAGE = Cfg.LEVEL_PAGES + 1;
+
     private final Callbacks callbacks;
     private final GameSoundEffects gameSoundEffects;
     private final I18NBundle i18n;
@@ -63,21 +65,28 @@ public class SelectLevelMenuContent extends Table {
         container.center();
         container.add(title).row();
 
-        Table levelTable = new Table();
-        for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
-            for (int c = 0; c < Cfg.LEVEL_COLUMNS; ++c) {
-                levelTable.add(createLevelButton(skin, (page - 1) * Cfg.LEVELS_PER_PAGE + r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
+        if (page == EXTRA_PAGE) {
+            Label extraLabel = new Label(i18n.get(Language.TO_BE_CONTINUED), skin, Styles.Label.LARGE);
+            container.add(extraLabel).padTop(182f).padBottom(270f);
+            add(container).expandX();
+        } else {
+            Table levelTable = new Table();
+            for (int r = 0; r < Cfg.LEVEL_ROWS; ++r) {
+                for (int c = 0; c < Cfg.LEVEL_COLUMNS; ++c) {
+                    levelTable.add(createLevelButton(skin, (page - 1) * Cfg.LEVELS_PER_PAGE + r * Cfg.LEVEL_COLUMNS + c)).pad(8f);
+                }
+                levelTable.row();
             }
-            levelTable.row();
+
+            infoLabel = new Label("", skin, Styles.Label.DEFAULT);
+            infoLabel.setVisible(false);
+            levelTable.add(infoLabel).colspan(3);
+
+            levelTable.pack();
+            container.add(levelTable).pad(Cfg.TITLE_PAD);
+            add(container).expandX();
         }
 
-        infoLabel = new Label("", skin, Styles.Label.DEFAULT);
-        infoLabel.setVisible(false);
-        levelTable.add(infoLabel).colspan(3);
-
-        levelTable.pack();
-        container.add(levelTable).pad(Cfg.TITLE_PAD);
-        add(container).expandX();
 
         Button rightButton = new Button(skin, Styles.Button.ARROW_RIGHT);
         rightButton.addListener(new ClickListener() {
@@ -86,7 +95,7 @@ public class SelectLevelMenuContent extends Table {
                 callbacks.rightClicked();
             }
         });
-        rightButton.setVisible(page < Cfg.LEVEL_PAGES);
+        rightButton.setVisible(page < EXTRA_PAGE);
         add(rightButton).pad(16f).center();
 
         pack();

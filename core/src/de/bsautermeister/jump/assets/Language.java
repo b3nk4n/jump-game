@@ -12,6 +12,7 @@ public interface Language {
 
     String SELECT_LEVEL = "selectLevel";
     String MISSING_FOR_UNLOCK = "missingForUnlock";
+    String TO_BE_CONTINUED = "toBeContinued";
 
     String DEVELOPER = "developer";
     String GRAPHICS = "graphics";

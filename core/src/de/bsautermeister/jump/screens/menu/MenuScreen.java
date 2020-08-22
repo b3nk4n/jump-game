@@ -113,16 +113,16 @@ public class MenuScreen extends ScreenBase {
         });
     }
 
-    private Table createSelectLevelContent(int page) {
+    private Table createSelectLevelContent(final int page) {
         return new SelectLevelMenuContent(page, getAssetManager(), new SelectLevelMenuContent.Callbacks() {
             @Override
             public void leftClicked() {
-                setContent(createSelectLevelContent(1));
+                setContent(createSelectLevelContent(page - 1));
             }
 
             @Override
             public void rightClicked() {
-                setContent(createSelectLevelContent(2));
+                setContent(createSelectLevelContent(page + 1));
             }
 
             @Override
