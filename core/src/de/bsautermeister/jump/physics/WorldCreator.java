@@ -275,8 +275,11 @@ public class WorldCreator {
         for (RectangleMapObject mapObject : getRectObjects(map)) {
             if (isType(mapObject, BOUNCER_TYPE)) {
                 Integer angle = (Integer) mapObject.getProperties().get("bounceAngle");
+                Float speed = (Float) mapObject.getProperties().get("speed");
                 PlatformBouncer platformBouncer = new PlatformBouncer(
-                        toPPM(mapObject.getRectangle()), angle != null ? angle : 0
+                        toPPM(mapObject.getRectangle()),
+                        angle != null ? angle : 0,
+                        speed != null ? speed : Platform.DEFAULT_SPEED
                 );
                 bouncerRegions.add(platformBouncer);
             }

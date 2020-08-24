@@ -28,7 +28,7 @@ import de.bsautermeister.jump.physics.Bits;
 import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Platform extends Sprite implements BinarySerializable {
-    private static final float SPEED = 2.5f;
+    public static final float DEFAULT_SPEED = 2.5f;
     private static final float SHAKE_TIME = 0.5f;
     private static final Vector2 FALLING_VELOCITY = new Vector2(0, Cfg.GRAVITY);
 
@@ -59,7 +59,7 @@ public class Platform extends Sprite implements BinarySerializable {
         setRegion(getTextureRegion(atlas, bounds, breakable));
 
         body = defineBody();
-        targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(SPEED);
+        targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(DEFAULT_SPEED);
         this.breakable = breakable;
         this.bouncerRegions = bouncerRegions;
         setActive(true); // sleep and activate as soon as player gets close
@@ -149,7 +149,7 @@ public class Platform extends Sprite implements BinarySerializable {
             for (PlatformBouncer bouncer : bouncerRegions) {
                 Rectangle rect = getBoundingRectangle();
                 if (Intersector.overlaps(bouncer.getRegion(), rect)) {
-                    bounce(bouncer.getAngle());
+                    bounce(bouncer.getAngle(), bouncer.getSpeed());
                     break;
                 }
             }
@@ -186,8 +186,8 @@ public class Platform extends Sprite implements BinarySerializable {
                 body.getPosition().y + yOffset - getHeight() / 2);
     }
 
-    public void bounce(int angle) {
-        targetVelocity = getDirectionOfSimpleAngle(angle).scl(SPEED);
+    public void bounce(int angle, float speed) {
+        targetVelocity = getDirectionOfSimpleAngle(angle).scl(speed);
     }
 
     public void touch(float delta) {
