@@ -214,10 +214,12 @@ public class WorldCreator {
                 Rectangle rect = mapObject.getRectangle();
                 Integer startAngle = (Integer) mapObject.getProperties().get("startAngle");
                 Boolean breakable = (Boolean) mapObject.getProperties().get("breakable");
+                Float speed = (Float) mapObject.getProperties().get("speed");
                 Platform platform = new Platform(callbacks, world, atlas,
                         toPPM(rect),
                         startAngle != null ? startAngle : 0,
                         breakable != null ? breakable : false,
+                        speed != null ? speed : Platform.DEFAULT_SPEED,
                         bouncerRegions);
                 platforms.add(platform);
             }

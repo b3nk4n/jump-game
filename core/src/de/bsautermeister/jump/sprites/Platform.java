@@ -49,7 +49,7 @@ public class Platform extends Sprite implements BinarySerializable {
     private Array<PlatformBouncer> bouncerRegions;
 
     public Platform(GameCallbacks callbacks, World world, TextureAtlas atlas, Rectangle bounds,
-                    int startAngle, boolean breakable, Array<PlatformBouncer> bouncerRegions) {
+                    int startAngle, boolean breakable, float speed, Array<PlatformBouncer> bouncerRegions) {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
@@ -59,7 +59,7 @@ public class Platform extends Sprite implements BinarySerializable {
         setRegion(getTextureRegion(atlas, bounds, breakable));
 
         body = defineBody();
-        targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(DEFAULT_SPEED);
+        targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(speed);
         this.breakable = breakable;
         this.bouncerRegions = bouncerRegions;
         setActive(true); // sleep and activate as soon as player gets close
