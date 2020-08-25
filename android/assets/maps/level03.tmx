@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="443">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
- <imagelayer id="22" name="bgImageStatic" offsetx="0" offsety="384">
-  <image source="sky1.png" width="256" height="640"/>
+ <imagelayer id="22" name="bgImageStatic">
+  <image source="sky1.png" width="256" height="1024"/>
  </imagelayer>
  <imagelayer id="21" name="bgImageClouds2" offsetx="0" offsety="384">
   <image source="sky2.png" width="256" height="640"/>
@@ -13,10 +13,10 @@
  <imagelayer id="20" name="bgImageClouds1" opacity="0.9" offsetx="0" offsety="384">
   <image source="clouds.png" width="256" height="640"/>
  </imagelayer>
- <imagelayer id="33" name="bgImageMunich2" offsetx="64" offsety="654">
+ <imagelayer id="33" name="bgImageMunich2" offsetx="0" offsety="654">
   <image source="munich-2.png" width="715" height="250"/>
  </imagelayer>
- <imagelayer id="32" name="bgImageMunich1" offsetx="192" offsety="664">
+ <imagelayer id="32" name="bgImageMunich1" offsetx="64" offsety="664">
   <image source="munich-1.png" width="715" height="250"/>
  </imagelayer>
  <imagelayer id="23" name="bgImageForrest2" offsetx="0" offsety="720">
@@ -242,7 +242,7 @@
   <object id="289" type="coin" x="2272" y="112" width="16" height="16"/>
   <object id="290" type="coin" x="2272" y="96" width="16" height="16"/>
   <object id="291" type="coin" x="2272" y="80" width="16" height="16"/>
-  <object id="292" type="bouncer" x="2272" y="208" width="16" height="16">
+  <object id="292" type="bouncer" x="2264" y="208" width="16" height="16">
    <properties>
     <property name="bounceAngle" type="int" value="270"/>
    </properties>
@@ -301,7 +301,7 @@
   </object>
   <object id="344" type="info" x="3664" y="928" width="16" height="16">
    <properties>
-    <property name="languageKey" value="infoGoodRide"/>
+    <property name="languageKey" value="infoCrouch"/>
    </properties>
   </object>
   <object id="345" type="info" x="2896" y="608" width="16" height="16">
@@ -321,7 +321,7 @@
   <object id="355" type="coin" x="3480" y="112" width="16" height="16"/>
   <object id="356" type="coin" x="3416" y="112" width="16" height="16"/>
   <object id="357" type="coin" x="3352" y="112" width="16" height="16"/>
-  <object id="358" type="drunkenGuy" x="3080" y="64" width="16" height="24"/>
+  <object id="358" type="drunkenGuy" x="3080" y="80" width="16" height="24"/>
   <object id="359" type="collider" x="2384" y="80" width="16" height="16"/>
   <object id="360" type="collider" x="2512" y="80" width="16" height="16"/>
   <object id="361" type="collider" x="2304" y="144" width="16" height="16"/>
@@ -380,7 +380,7 @@
   <object id="400" type="hedgehog" x="3168" y="464" width="16" height="16"/>
   <object id="401" type="collider" x="3056" y="464" width="16" height="16"/>
   <object id="402" type="collider" x="3200" y="464" width="16" height="16"/>
-  <object id="403" type="spike" x="2992" y="512" width="24" height="16"/>
+  <object id="403" type="spike" x="2992" y="512" width="20" height="16"/>
   <object id="404" type="brick" x="2400" y="96" width="16" height="16"/>
   <object id="405" type="brick" x="2416" y="96" width="16" height="16"/>
   <object id="406" type="brick" x="2448" y="96" width="16" height="16"/>
