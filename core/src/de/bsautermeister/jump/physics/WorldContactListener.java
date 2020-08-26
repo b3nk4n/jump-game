@@ -59,7 +59,6 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
-                System.out.println("enemy with collider");
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).waitAndThenChangeDirectionBySideSensorTag(taggedEnemy.getTag());
