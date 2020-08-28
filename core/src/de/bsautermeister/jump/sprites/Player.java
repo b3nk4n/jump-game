@@ -39,6 +39,9 @@ import de.bsautermeister.jump.tools.GameTimer;
 
 public class Player extends Sprite implements BinarySerializable, Drownable {
 
+    private static final short LOWER_BODY_IDX = 0;
+    private static final int UPPER_BODY_IDX = 1;
+
     private static final short NO_ENEMY_FILTER_BITS = Bits.ENVIRONMENT_ONLY |
             Bits.ENEMY_SIDE | // to still block the DrunkenGuy
             Bits.ITEM;
@@ -46,6 +49,12 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     private static final short NORMAL_FILTER_BITS = NO_ENEMY_FILTER_BITS |
             Bits.ENEMY |
             Bits.ENEMY_HEAD;
+
+    private static final Filter NOTHING_FILTER;
+    static {
+        NOTHING_FILTER = new Filter();
+        NOTHING_FILTER.maskBits = Bits.NOTHING;
+    }
 
     private GameCallbacks callbacks;
     private World world;
@@ -151,6 +160,22 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         initTextures(atlas);
 
         state = new GameObjectState<>(State.STANDING);
+        state.setStateCallback(new GameObjectState.StateCallback<State>() {
+            @Override
+            public void changed(State previousState, State newState) {
+                if (newState == State.CROUCHING) {
+                    Fixture upperBodyFixture = body.getFixtureList().get(UPPER_BODY_IDX);
+                    Filter filter = upperBodyFixture.getFilterData();
+                    filter.maskBits = Bits.NOTHING;
+                    upperBodyFixture.setFilterData(filter);
+                } else if (previousState == State.CROUCHING) {
+                    Fixture upperBodyFixture = body.getFixtureList().get(UPPER_BODY_IDX);
+                    Filter filter = upperBodyFixture.getFilterData();
+                    filter.maskBits = NORMAL_FILTER_BITS;
+                    upperBodyFixture.setFilterData(filter);
+                }
+            }
+        });
         runningRight = !start.leftDirection;
 
         defineSmallBody(start.centerPosition, true);
@@ -191,8 +216,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         Filter filter = new Filter();
         filter.categoryBits = Bits.PLAYER;
         filter.maskBits = maskBits;
-        getBody().getFixtureList().get(0).setFilterData(filter);
-        getBody().getFixtureList().get(1).setFilterData(filter);
+        getBody().getFixtureList().get(LOWER_BODY_IDX).setFilterData(filter);
+        getBody().getFixtureList().get(UPPER_BODY_IDX).setFilterData(filter);
     }
 
     private TextureRegion[] createTextureArray(String templateName, int count) {
@@ -719,8 +744,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         headShape.set(new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM),
                 new Vector2(width / 2 / Cfg.PPM, topY / Cfg.PPM));
         fixtureDef.filter.categoryBits = Bits.PLAYER_HEAD;
-        fixtureDef.filter.maskBits = Bits.GROUND |
-                Bits.ITEM_BOX |
+        fixtureDef.filter.maskBits = Bits.ITEM_BOX |
                 Bits.BRICK;
         fixtureDef.shape = headShape;
         fixtureDef.isSensor = true;
@@ -888,10 +912,9 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
         state.set(State.DEAD);
 
-        Filter filter = new Filter();
-        filter.maskBits = Bits.NOTHING;
+
         for (Fixture fixture : getBody().getFixtureList()) {
-            fixture.setFilterData(filter);
+            fixture.setFilterData(NOTHING_FILTER);
         }
 
         // stop player effects

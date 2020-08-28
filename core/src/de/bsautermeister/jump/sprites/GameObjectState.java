@@ -41,7 +41,6 @@ public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
             return;
         }
 
-        T beforeChange = previous;
         previous = current;
         current = state;
         resetTimer();
@@ -49,7 +48,7 @@ public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
         frozen = false;
 
         if (stateCallback != null) {
-            stateCallback.changed(beforeChange, current);
+            stateCallback.changed(previous, current);
         }
     }
 
