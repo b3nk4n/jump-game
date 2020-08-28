@@ -808,8 +808,13 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     private void checkPlayerSpikesCollision() {
+        if (spikesList.isEmpty()) {
+            return;
+        }
+
+        Rectangle playerBodyBounds = player.getBodyBoundingRectangle();
         for (Rectangle spikeRect : spikesList) {
-            if (spikeRect.overlaps(player.getBoundingRectangle())) {
+            if (spikeRect.overlaps(playerBodyBounds)) {
                 player.hit(spikeRect);
             }
         }

@@ -1006,6 +1006,26 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         this.characterProgress = MathUtils.clamp(characterProgress, 0, 1);
     }
 
+    private final Rectangle bodyRect = new Rectangle();
+    public Rectangle getBodyBoundingRectangle() {
+        float minX = Float.MIN_VALUE;
+        float maxX = -Float.MIN_VALUE;
+        float minY = Float.MIN_VALUE;
+        float maxY = -Float.MIN_VALUE;
+        for (Fixture f : body.getFixtureList()) {
+            if (f.getShape() instanceof CircleShape && f.getFilterData().maskBits != Bits.NOTHING) {
+                CircleShape shape = (CircleShape) f.getShape();
+                minX = Math.min(minX, shape.getPosition().x - shape.getRadius());
+                maxX = Math.max(maxX, shape.getPosition().x + shape.getRadius());
+                minY = Math.min(minY, shape.getPosition().y - shape.getRadius());
+                maxY = Math.max(maxY, shape.getPosition().y + shape.getRadius());
+            }
+        }
+        Vector2 bodyPos = body.getPosition();
+        bodyRect.set(bodyPos.x + minX, bodyPos.y + minY, maxX - minX, maxY - minY);
+        return bodyRect;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         started.write(out);
