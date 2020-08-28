@@ -195,8 +195,10 @@ public class WorldCreator {
                 String group = (String) mapObject.getProperties().get("group");
                 boolean rightDirection = mapObject.getProperties().get("rightDirection", false, Boolean.class);
                 boolean swinging = mapObject.getProperties().get("swinging", false, Boolean.class);
+                boolean autoAttack = mapObject.getProperties().get("autoAttack", true, Boolean.class);
                 Raven raven = new Raven(callbacks, world, atlas,
-                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM, rightDirection, swinging);
+                        rect.getX() / Cfg.PPM, rect.getY() / Cfg.PPM,
+                        rightDirection, swinging, autoAttack);
                 raven.setGroup(group);
                 enemies.add(raven);
             }

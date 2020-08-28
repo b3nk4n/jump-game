@@ -1292,7 +1292,7 @@ public class GameController  implements BinarySerializable, Disposable {
             } else if (enemyType.equals(Frog.class.getName())) {
                 enemy = new Frog(callbacks, world, atlas, 0, 0, false);
             } else if (enemyType.equals(Raven.class.getName())) {
-                enemy = new Raven(callbacks, world, atlas, 0, 0, false, false);
+                enemy = new Raven(callbacks, world, atlas, 0, 0, false, false, false);
             } else {
                 throw new IllegalArgumentException("Unknown enemy type: " + enemyType);
             }

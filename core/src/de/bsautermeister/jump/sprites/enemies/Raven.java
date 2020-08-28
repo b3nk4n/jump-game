@@ -40,6 +40,7 @@ public class Raven extends Enemy implements Drownable {
     private GameObjectState<State> state;
     private boolean drowning;
     private boolean isLeft;
+    private  boolean autoAttack;
 
     private boolean upwards;
     private float upperY;
@@ -53,9 +54,10 @@ public class Raven extends Enemy implements Drownable {
     private final Animation<TextureRegion> crashingAnimation;
 
     public Raven(GameCallbacks callbacks, World world, TextureAtlas atlas, float posX, float posY,
-                 boolean rightDirection, boolean swinging) {
+                 boolean rightDirection, boolean swinging, boolean autoAttack) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
         this.isLeft = !rightDirection;
+        this.autoAttack = autoAttack;
         this.upperY = getBody().getPosition().y + SWING_DISTANCE;
         this.lowerY = getBody().getPosition().y - SWING_DISTANCE;
         this.upwards = true;
@@ -129,7 +131,7 @@ public class Raven extends Enemy implements Drownable {
                 }
             }
 
-            if (state.is(State.SWINGING) || state.is(State.WAITING)) {
+            if (autoAttack && (state.is(State.SWINGING) || state.is(State.WAITING))) {
                 float angle = MathUtils.atan2(
                         playerPosition.y - getBody().getPosition().y,
                         playerPosition.x - getBody().getPosition().x
@@ -341,6 +343,7 @@ public class Raven extends Enemy implements Drownable {
         out.writeBoolean(upwards);
         out.writeFloat(playerPosition.x);
         out.writeFloat(playerPosition.y);
+        out.writeBoolean(autoAttack);
     }
 
     @Override
@@ -352,5 +355,6 @@ public class Raven extends Enemy implements Drownable {
         lowerY = in.readFloat();
         upwards = in.readBoolean();
         playerPosition.set(in.readFloat(), in.readFloat());
+        autoAttack = in.readBoolean();
     }
 }
