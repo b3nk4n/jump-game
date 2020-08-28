@@ -147,8 +147,8 @@ public class Frog extends Enemy implements Drownable {
         bodyShape.dispose();
 
         EdgeShape feetShape = new EdgeShape();
-        feetShape.set(-3f / Cfg.PPM, -6f / Cfg.PPM,
-                3f / Cfg.PPM, -6f / Cfg.PPM);
+        feetShape.set(-2.25f / Cfg.PPM, -6f / Cfg.PPM,
+                2.25f / Cfg.PPM, -6f / Cfg.PPM);
         fixtureDef.shape = feetShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
         fixtureDef.filter.maskBits = Bits.GROUND |
