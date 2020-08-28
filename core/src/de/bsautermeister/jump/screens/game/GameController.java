@@ -994,7 +994,7 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Platform platform : platforms) {
             platform.update(delta);
 
-            if (platform.getX() < player.getX() + Cfg.WORLD_WIDTH * 0.75f / Cfg.PPM) {
+            if (isVisibleInRenderArea(platform.getBoundingRectangle())) {
                 platform.setActive(true);
             }
         }

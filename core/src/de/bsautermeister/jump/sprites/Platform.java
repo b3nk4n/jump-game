@@ -62,7 +62,7 @@ public class Platform extends Sprite implements BinarySerializable {
         targetVelocity = getDirectionOfSimpleAngle(startAngle).scl(speed);
         this.breakable = breakable;
         this.bouncerRegions = bouncerRegions;
-        setActive(true); // sleep and activate as soon as player gets close
+        setActive(false); // sleep and activate as soon as player gets close
     }
 
     private TextureAtlas.AtlasRegion getTextureRegion(TextureAtlas atlas, Rectangle bounds,
