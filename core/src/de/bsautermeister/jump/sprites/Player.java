@@ -460,9 +460,6 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             // horizontally decelerate fast, but don't stop immediately
             body.applyForceToCenter(-6 * relativeBodyVelocity.x, 0, true);
         }
-        if (down) {
-            body.applyForceToCenter(-6 * relativeBodyVelocity.x, -3f, true);
-        }
 
         if (state.is(State.JUMPING) && !didDoubleJump && !canDoubleJump && !up) {
             canDoubleJump = true;
