@@ -238,7 +238,9 @@ public class Fox extends Enemy implements Drownable {
                 return;
             }
         }
-        runAwayFrom(enemy);
+        if (state.is(State.WALKING)) {
+            runAwayFrom(enemy);
+        }
         getCallbacks().hitWall(this);
     }
 
