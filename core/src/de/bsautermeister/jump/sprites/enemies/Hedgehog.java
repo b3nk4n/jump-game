@@ -192,8 +192,8 @@ public class Hedgehog extends Enemy implements Drownable {
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape bodyShape = new PolygonShape();
         Vector2[] bodyVertices = new Vector2[4];
-        bodyVertices[0] = new Vector2(-7f, 0f).scl(1 / Cfg.PPM);
-        bodyVertices[1] = new Vector2(7f, 0f).scl(1 / Cfg.PPM);
+        bodyVertices[0] = new Vector2(-6.5f, 0f).scl(1 / Cfg.PPM);
+        bodyVertices[1] = new Vector2(6.5f, 0f).scl(1 / Cfg.PPM);
         bodyVertices[2] = new Vector2(-2.5f, -5.5f).scl(1 / Cfg.PPM);
         bodyVertices[3] = new Vector2(2.5f, -5.5f).scl(1 / Cfg.PPM);
         bodyShape.set(bodyVertices);
