@@ -781,6 +781,8 @@ public class GameController  implements BinarySerializable, Disposable {
             }
 
             foregroundMusic.update(delta);
+        } else {
+            foregroundMusic.fadeOutStop();
         }
     }
 
