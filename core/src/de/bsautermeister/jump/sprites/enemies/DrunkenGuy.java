@@ -110,7 +110,9 @@ public class DrunkenGuy extends Enemy {
         bodyShape.set(bodyVertices);
         fixtureDef.shape = bodyShape;
         fixtureDef.filter.categoryBits = Bits.ENEMY;
-        fixtureDef.filter.maskBits = Bits.PLAYER | Bits.BULLET;
+        fixtureDef.filter.maskBits = Bits.PLAYER
+                | Bits.BULLET
+                | Bits.ENEMY;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         bodyShape.dispose();
@@ -136,7 +138,13 @@ public class DrunkenGuy extends Enemy {
 
     @Override
     public void onEnemyHit(Enemy enemy) {
-        // NOOP
+        if (enemy instanceof Hedgehog) {
+            Hedgehog hedgehog = (Hedgehog) enemy;
+            if (hedgehog.getState() == Hedgehog.State.ROLLING) {
+                kill(false);
+                return;
+            }
+        }
     }
 
     @Override
