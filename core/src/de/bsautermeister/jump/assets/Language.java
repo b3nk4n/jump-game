@@ -6,7 +6,7 @@ public interface Language {
     String GAME = "game";
 
     String PLAY = "play";
-    String RESUME = "resume";
+    String RESUME_GAME = "resume";
     String ACHIEVEMENTS = "achievements";
     String ABOUT = "about";
 
@@ -27,6 +27,8 @@ public interface Language {
     String QUIT = "quit";
     String RETRY = "retry";
     String PAUSED = "paused";
+    String RESUME = "resume";
+    String RESTART = "restart";
 
     String CONGRATS = "congrats";
     String SCORE = "score";

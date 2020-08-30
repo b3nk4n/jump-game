@@ -22,6 +22,7 @@ public class PauseOverlay extends Table {
     public interface Callback {
         void quit(Vector2 clickScreenPosition);
         void resume();
+        void restart();
     }
 
     private AnimatedLabel titleLabel;
@@ -56,6 +57,24 @@ public class PauseOverlay extends Table {
                 Actions.show()
         ));
 
+        Button resumeButton = new TextButton(i18n.get(Language.RESUME), getSkin());
+        resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                callback.resume();
+            }
+        });
+        buttonTable.add(resumeButton).row();
+
+        Button restartButton = new TextButton(i18n.get(Language.RESTART), getSkin());
+        restartButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                callback.restart();
+            }
+        });
+        buttonTable.add(restartButton).row();
+
         Button quitButton = new TextButton(i18n.get(Language.QUIT), getSkin());
         quitButton.addListener(new ClickListener() {
             @Override
@@ -66,16 +85,8 @@ public class PauseOverlay extends Table {
                 callback.quit(clickScreenPosition);
             }
         });
-        buttonTable.add(quitButton);
+        buttonTable.add(quitButton).row();
 
-        Button resumeButton = new TextButton(i18n.get(Language.RESUME), getSkin());
-        resumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                callback.resume();
-            }
-        });
-        buttonTable.add(resumeButton);
         add(buttonTable);
 
         center();

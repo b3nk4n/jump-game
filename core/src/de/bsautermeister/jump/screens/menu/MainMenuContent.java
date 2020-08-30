@@ -68,7 +68,7 @@ public class MainMenuContent extends Table {
                 .row();
 
         if (JumpGame.hasSavedData()) {
-            Button continueButton = new TextButton(i18n.get(Language.RESUME), skin);
+            Button continueButton = new TextButton(i18n.get(Language.RESUME_GAME), skin);
             continueButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {

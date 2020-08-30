@@ -57,6 +57,15 @@ public class GameOverOverlay extends Table {
                 Actions.show()
         ));
 
+        Button retryButton = new TextButton(i18n.get(Language.RETRY), getSkin());
+        retryButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                callback.restart();
+            }
+        });
+        buttonTable.add(retryButton).row();
+
         Button quitButton = new TextButton(i18n.get(Language.QUIT), getSkin());
         quitButton.addListener(new ClickListener() {
             @Override
@@ -67,16 +76,8 @@ public class GameOverOverlay extends Table {
                 callback.quit(clickScreenPosition);
             }
         });
-        buttonTable.add(quitButton);
+        buttonTable.add(quitButton).row();
 
-        Button retryButton = new TextButton(i18n.get(Language.RETRY), getSkin());
-        retryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                callback.restart();
-            }
-        });
-        buttonTable.add(retryButton);
         add(buttonTable);
 
         center();

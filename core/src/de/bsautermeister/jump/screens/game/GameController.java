@@ -487,6 +487,11 @@ public class GameController  implements BinarySerializable, Disposable {
             LOG.debug("RESUME pressed");
             state = GameState.PLAYING;
         }
+
+        @Override
+        public void restart() {
+            markReset = true;
+        }
     };
 
     private final GameOverOverlay.Callback gameOverCallback = new GameOverOverlay.Callback() {
