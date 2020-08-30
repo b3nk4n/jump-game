@@ -29,7 +29,7 @@ import de.bsautermeister.jump.serializer.BinarySerializable;
 
 public class Platform extends Sprite implements BinarySerializable {
     public static final float DEFAULT_SPEED = 2.5f;
-    private static final float SHAKE_TIME = 0.5f;
+    private static final float SHAKE_TIME = 0.66f;
     private static final Vector2 FALLING_VELOCITY = new Vector2(0, Cfg.GRAVITY);
 
     private enum State {
@@ -42,8 +42,8 @@ public class Platform extends Sprite implements BinarySerializable {
     private Body body;
     private Vector2 targetVelocity;
 
-    private GameObjectState<State> state; // TODO: due to the state, restore/removable logic in GameScreen has to be changed, because Platforms can now disappear
-    private float touchTTL = 1f;
+    private GameObjectState<State> state;
+    private float touchTTL = 0.33f;
     private boolean breakable;
 
     private Array<PlatformBouncer> bouncerRegions;
@@ -186,7 +186,7 @@ public class Platform extends Sprite implements BinarySerializable {
                 body.getPosition().y + yOffset - getHeight() / 2);
     }
 
-    public void bounce(int angle, float speed) {
+    private void bounce(int angle, float speed) {
         targetVelocity = getDirectionOfSimpleAngle(angle).scl(speed);
     }
 
@@ -194,7 +194,7 @@ public class Platform extends Sprite implements BinarySerializable {
         touchTTL -= delta;
         if (touchTTL < 0 && breakable && state.is(State.MOVING)) {
             state.set(State.BREAKING);
-            Gdx.input.vibrate(500);
+            Gdx.input.vibrate((int)(SHAKE_TIME) * 1000);
         }
     }
 
