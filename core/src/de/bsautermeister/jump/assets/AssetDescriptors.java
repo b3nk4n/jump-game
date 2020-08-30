@@ -79,6 +79,10 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Sounds.SWEARING_GENERATOR.get(), Sound.class);
         AssetDescriptor<Sound> SWEARING8 =
                 new AssetDescriptor<>(AssetPaths.Sounds.SWEARING_GENERATOR.get(), Sound.class);
+        AssetDescriptor<Sound> SWEARING9 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING_GENERATOR.get(), Sound.class);
+        AssetDescriptor<Sound> SWEARING10 =
+                new AssetDescriptor<>(AssetPaths.Sounds.SWEARING_GENERATOR.get(), Sound.class);
         AssetDescriptor<Sound> DROWN1 =
                 new AssetDescriptor<>(AssetPaths.Sounds.DRWON_GENERATOR.get(), Sound.class);
         AssetDescriptor<Sound> DROWN2 =
@@ -199,6 +203,7 @@ public interface AssetDescriptors {
             Sounds.COMPLAIN1, Sounds.COMPLAIN2, Sounds.COMPLAIN3, Sounds.COMPLAIN4, Sounds.COMPLAIN5,
             Sounds.SWEARING1, Sounds.SWEARING2, Sounds.SWEARING3, Sounds.SWEARING4,
             Sounds.SWEARING5, Sounds.SWEARING6, Sounds.SWEARING7, Sounds.SWEARING8,
+            Sounds.SWEARING9, Sounds.SWEARING10,
             Sounds.DROWN1, Sounds.DROWN2, Sounds.DROWN3, Sounds.DROWN4, Sounds.DROWN5,
             Sounds.SHOUT1, Sounds.SHOUT2, Sounds.SHOUT3, Sounds.SHOUT4, Sounds.SHOUT5,
             Sounds.BEER1, Sounds.BEER2, Sounds.BEER3, Sounds.BEER4, Sounds.BEER5,

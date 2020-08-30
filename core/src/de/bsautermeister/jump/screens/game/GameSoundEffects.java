@@ -57,25 +57,31 @@ public class GameSoundEffects implements Disposable {
                 assetManager.get(AssetDescriptors.Sounds.SWEARING4),
                 assetManager.get(AssetDescriptors.Sounds.SWEARING5),
                 assetManager.get(AssetDescriptors.Sounds.SWEARING6),
-                assetManager.get(AssetDescriptors.Sounds.SWEARING7)
+                assetManager.get(AssetDescriptors.Sounds.SWEARING7),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING8),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING9),
+                assetManager.get(AssetDescriptors.Sounds.SWEARING10)
         };
         drownSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.DROWN1),
                 assetManager.get(AssetDescriptors.Sounds.DROWN2),
                 assetManager.get(AssetDescriptors.Sounds.DROWN3),
-                assetManager.get(AssetDescriptors.Sounds.DROWN4)
+                assetManager.get(AssetDescriptors.Sounds.DROWN4),
+                assetManager.get(AssetDescriptors.Sounds.DROWN5)
         };
         shoutSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.SHOUT1),
                 assetManager.get(AssetDescriptors.Sounds.SHOUT2),
                 assetManager.get(AssetDescriptors.Sounds.SHOUT3),
-                assetManager.get(AssetDescriptors.Sounds.SHOUT4)
+                assetManager.get(AssetDescriptors.Sounds.SHOUT4),
+                assetManager.get(AssetDescriptors.Sounds.SHOUT5)
         };
         beerSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.BEER1),
                 assetManager.get(AssetDescriptors.Sounds.BEER2),
                 assetManager.get(AssetDescriptors.Sounds.BEER3),
-                assetManager.get(AssetDescriptors.Sounds.BEER4)
+                assetManager.get(AssetDescriptors.Sounds.BEER4),
+                assetManager.get(AssetDescriptors.Sounds.BEER5)
         };
         ozapftSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.OZAPFT1),
@@ -102,19 +108,22 @@ public class GameSoundEffects implements Disposable {
                 assetManager.get(AssetDescriptors.Sounds.START1),
                 assetManager.get(AssetDescriptors.Sounds.START2),
                 assetManager.get(AssetDescriptors.Sounds.START3),
-                assetManager.get(AssetDescriptors.Sounds.START4)
+                assetManager.get(AssetDescriptors.Sounds.START4),
+                assetManager.get(AssetDescriptors.Sounds.START5)
         };
         victorySounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.VICTORY1),
                 assetManager.get(AssetDescriptors.Sounds.VICTORY2),
                 assetManager.get(AssetDescriptors.Sounds.VICTORY3),
-                assetManager.get(AssetDescriptors.Sounds.VICTORY4)
+                assetManager.get(AssetDescriptors.Sounds.VICTORY4),
+                assetManager.get(AssetDescriptors.Sounds.VICTORY5)
         };
         complainSounds = new Sound[] {
                 assetManager.get(AssetDescriptors.Sounds.COMPLAIN1),
                 assetManager.get(AssetDescriptors.Sounds.COMPLAIN2),
                 assetManager.get(AssetDescriptors.Sounds.COMPLAIN3),
-                assetManager.get(AssetDescriptors.Sounds.COMPLAIN4)
+                assetManager.get(AssetDescriptors.Sounds.COMPLAIN4),
+                assetManager.get(AssetDescriptors.Sounds.COMPLAIN5)
         };
         jumpSound = assetManager.get(AssetDescriptors.Sounds.JUMP);
         landingSound = assetManager.get(AssetDescriptors.Sounds.LANDING);
