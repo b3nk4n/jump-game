@@ -287,7 +287,6 @@ public class GameController  implements BinarySerializable, Disposable {
             Enemy enemy = enemies.get(objectId);
             if (enemy != null) {
                 enemy.kill(1.0f);
-                notifyAndShowKill(enemy);
             }
         }
 
