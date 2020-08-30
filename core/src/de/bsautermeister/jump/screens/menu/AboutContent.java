@@ -32,7 +32,7 @@ public class AboutContent extends Table {
         credits = new CreditEntry[] {
                 new CreditEntry(i18n.get(Language.DEVELOPER), "Benjamin Sautermeister"),
                 // https://hdst.itch.io/fox (Copyright/Attribution Notice: HDST or link to this page)
-                new CreditEntry(i18n.get(Language.GRAPHICS), "Benjamin Sautermeister", "Vanessa Kan", "HDST"),
+                new CreditEntry(i18n.get(Language.GRAPHICS), "Benjamin Sautermeister", "Vanessa Kan", "vnitti", "sanctumpixel", "Elthen's Pixel Art Shop", "HDST"),
                 new CreditEntry(i18n.get(Language.ANIMATIONS), "Benjamin Sautermeister"),
                 new CreditEntry(i18n.get(Language.VOICE), "Lukas Woehrl"),
                 new CreditEntry(i18n.get(Language.SFX), "Benjamin Sautermeister"),

@@ -128,7 +128,6 @@ public interface AssetPaths {
     interface Music {
         String MENU_AUDIO = "audio/music/Dee_Yan-Key_-_03_-_Zeam.mp3";
         String NORMAL_AUDIO = "audio/music/Dee_Yan-Key_-_01_-_Schlini.mp3";
-        String GAME_OVER_AUDIO = "audio/music/Dee_Yan-Key_-_02_-_Ldschad.mp3";
         String HURRY_AUDIO = "audio/music/Dee_Yan-Key_-_04_-_Ruaschad.mp3";
 
         String PROSIT_AUDIO = "audio/music/prosit.mp3";
