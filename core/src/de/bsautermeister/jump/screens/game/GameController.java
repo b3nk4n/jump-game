@@ -615,6 +615,7 @@ public class GameController  implements BinarySerializable, Disposable {
         infoSings = worldCreator.getInfoSigns();
 
         camera.position.set(player.getBody().getPosition(), 0);
+        updateCameraPosition();
 
         waterList = worldCreator.getWaterRegions();
         waterInteractionManager.reset();
@@ -711,7 +712,7 @@ public class GameController  implements BinarySerializable, Disposable {
             }
         }
 
-        upateCameraPosition();
+        updateCameraPosition();
         camera.update();
 
         if (getTimeToLive() == Cfg.HURRY_WARNING_TIME) {
@@ -1067,7 +1068,7 @@ public class GameController  implements BinarySerializable, Disposable {
         }
     }
 
-    private void upateCameraPosition() {
+    private void updateCameraPosition() {
         if (player.isDead()) {
             return;
         }
