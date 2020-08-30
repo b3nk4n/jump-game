@@ -164,7 +164,7 @@
 </data>
  </layer>
  <objectgroup id="39" name="objects">
-  <object id="254" type="start" x="2448" y="880" width="16" height="16">
+  <object id="254" type="start" x="2304" y="880" width="16" height="16">
    <properties>
     <property name="leftDirection" type="bool" value="true"/>
    </properties>
