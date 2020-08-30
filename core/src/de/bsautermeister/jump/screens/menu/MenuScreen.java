@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
@@ -42,7 +42,7 @@ public class MenuScreen extends ScreenBase {
 
     public MenuScreen(GameApp game, boolean skipIntroTransition, String contentType, int lastLevel) {
         super(game);
-        this.uiViewport = new FitViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
+        this.uiViewport = new StretchViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
         backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
         if (skipIntroTransition) {
             backgroundRenderer.skipIntroTransition();
