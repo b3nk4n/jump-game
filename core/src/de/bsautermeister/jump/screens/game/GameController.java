@@ -286,7 +286,7 @@ public class GameController  implements BinarySerializable, Disposable {
         public void indirectObjectHit(InteractiveTileObject tileObject, String objectId) {
             Enemy enemy = enemies.get(objectId);
             if (enemy != null) {
-                enemy.kill(true);
+                enemy.kill(1.0f);
                 notifyAndShowKill(enemy);
             }
         }
@@ -299,14 +299,8 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void kicked(Enemy enemy, boolean firstKick) {
+        public void kicked(Enemy enemy) {
             soundEffects.kickedSound.play();
-
-            if (firstKick) {
-                score += Cfg.FIRST_KICK_SCORE;
-                showMessage(new StringUiMessage(Cfg.FIRST_KICK_SCORE_STRING),
-                        enemy.getBoundingRectangle());
-            }
         }
 
         @Override

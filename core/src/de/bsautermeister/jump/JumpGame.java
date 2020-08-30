@@ -6,6 +6,8 @@ import com.badlogic.gdx.files.FileHandle;
 
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.loading.LoadingScreen;
+import de.bsautermeister.jump.serializer.BinarySerializable;
+import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.services.GameServiceManager;
 import de.bsautermeister.jump.services.GameServices;
 
@@ -40,7 +42,13 @@ public class JumpGame extends GameApp {
     }
 
     public static boolean hasSavedData() {
-        return getSavedDataHandle().exists();
+        FileHandle handle = getSavedDataHandle();
+
+        if (!handle.exists()) {
+            return false;
+        }
+
+        return BinarySerializer.isCompatibleVersion(handle.read());
     }
 
     public static GameServiceManager getGameServiceManager() {

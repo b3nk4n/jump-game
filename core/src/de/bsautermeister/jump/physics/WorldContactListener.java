@@ -238,7 +238,7 @@ public class WorldContactListener implements ContactListener {
                 pretzelBullet = (PretzelBullet) resolveUserData(fixtureA, fixtureB, Bits.BULLET);
                 enemy = (Enemy) resolveUserData(fixtureA, fixtureB, Bits.ENEMY | Bits.ENEMY_HEAD);
                 pretzelBullet.explode(pretzelBullet.getBody().getPosition());
-                enemy.kill(true);
+                enemy.kill(1.0f);
                 contact.setEnabled(false);
                 break;
             case Bits.ENEMY: // enemy with enemy

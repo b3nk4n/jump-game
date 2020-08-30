@@ -52,7 +52,6 @@ public class Hedgehog extends Enemy implements Drownable {
 
     private boolean previousDirectionLeft;
 
-    private boolean firstKick = true;
     private int wallHitsInSingleRoll;
 
     public Hedgehog(GameCallbacks callbacks, World world, TextureAtlas atlas,
@@ -272,7 +271,7 @@ public class Hedgehog extends Enemy implements Drownable {
         if (!state.is(State.ROLL)) {
             stomp();
         } else {
-            kick(player.getX() <= getX());
+            kill(0.5f);
         }
     }
 
@@ -296,7 +295,7 @@ public class Hedgehog extends Enemy implements Drownable {
         if (enemy instanceof Hedgehog) {
             Hedgehog otherHedgehog = (Hedgehog) enemy;
             if (!state.is(State.ROLLING) && otherHedgehog.getState() == State.ROLLING) {
-                kill(true);
+                kill(1.0f);
                 return;
             }
         }
@@ -332,8 +331,8 @@ public class Hedgehog extends Enemy implements Drownable {
             wallHitsInSingleRoll++;
 
             if (wallHitsInSingleRoll >= WALL_HITS_TO_KILL) {
-                kill(true);
-                // apply additional impuls in opposite direction, because the hedgehog otherwise
+                kill(0.5f);
+                // apply additional impulse in opposite direction, because the hedgehog otherwise
                 // stopped due to the wall, which looked odd
                 getBody().applyLinearImpulse(new Vector2(-speed, 0), getBody().getWorldCenter(), true);
             }
@@ -353,8 +352,7 @@ public class Hedgehog extends Enemy implements Drownable {
     public void kick(boolean directionRight) {
         state.set(State.ROLLING);
         speed = directionRight ? KICK_SPEED : -KICK_SPEED;
-        getCallbacks().kicked(this, firstKick);
-        firstKick = false;
+        getCallbacks().kicked(this);
         wallHitsInSingleRoll = 0;
     }
 
@@ -396,7 +394,6 @@ public class Hedgehog extends Enemy implements Drownable {
         state.write(out);
         out.writeFloat(speed);
         out.writeBoolean(previousDirectionLeft);
-        out.writeBoolean(firstKick);
         out.writeInt(wallHitsInSingleRoll);
     }
 
@@ -406,7 +403,6 @@ public class Hedgehog extends Enemy implements Drownable {
         state.read(in);
         speed = in.readFloat();
         previousDirectionLeft = in.readBoolean();
-        firstKick = in.readBoolean();
         wallHitsInSingleRoll = in.readInt();
     }
 }

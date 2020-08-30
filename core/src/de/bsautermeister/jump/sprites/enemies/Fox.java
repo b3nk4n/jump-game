@@ -234,7 +234,7 @@ public class Fox extends Enemy implements Drownable {
         if (enemy instanceof Hedgehog) {
             Hedgehog hedgehog = (Hedgehog) enemy;
             if (hedgehog.getState() == Hedgehog.State.ROLLING) {
-                kill(true);
+                kill(1.0f);
                 return;
             }
         }

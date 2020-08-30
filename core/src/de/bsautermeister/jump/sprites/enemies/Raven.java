@@ -263,7 +263,7 @@ public class Raven extends Enemy implements Drownable {
     }
 
     @Override
-    public void kill(boolean applyPush) {
+    public void kill(float pushFactor) {
         getCallbacks().killed(this);
 
         state.set(State.CRASHING);

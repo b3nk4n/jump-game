@@ -13,7 +13,7 @@ public class BinarySerializer {
     /**
      * The version to check for compatibility, in case the expected data has changed.
      */
-    private final static byte VERSION = 0x01;
+    private final static byte VERSION = 0x02;
 
     /**
      * The header written to the binary file.
@@ -36,10 +36,22 @@ public class BinarySerializer {
     public static boolean read(BinarySerializable serializable, InputStream input) {
         DataInputStream in = new DataInputStream(input);
         try {
-            if (checkHeader(in)); {
+            if (checkHeader(in)) {
                 serializable.read(in);
                 return true;
             }
+            return false;
+        } catch (IOException ex) {
+            return false;
+        } finally {
+            tryClose(in);
+        }
+    }
+
+    public static boolean isCompatibleVersion(InputStream input) {
+        DataInputStream in = new DataInputStream(input);
+        try {
+            return checkHeader(in);
         } catch (IOException ex) {
             return false;
         } finally {
@@ -50,7 +62,8 @@ public class BinarySerializer {
     private static boolean checkHeader(DataInputStream in) throws IOException {
         byte[] savedBuffer = new byte[HEADER.length];
         in.readFully(savedBuffer);
-        return Arrays.equals(savedBuffer, HEADER);
+        boolean res =  Arrays.equals(savedBuffer, HEADER);
+        return res;
     }
 
 

@@ -141,15 +141,15 @@ public class DrunkenGuy extends Enemy {
         if (enemy instanceof Hedgehog) {
             Hedgehog hedgehog = (Hedgehog) enemy;
             if (hedgehog.getState() == Hedgehog.State.ROLLING) {
-                kill(false);
+                kill(0f);
                 return;
             }
         }
     }
 
     @Override
-    public void kill(boolean applyPush) {
-        super.kill(applyPush);
+    public void kill(float pushFactor) {
+        super.kill(pushFactor);
         state.set(State.KILLED);
     }
 

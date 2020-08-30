@@ -198,8 +198,12 @@ public class Platform extends Sprite implements BinarySerializable {
         }
     }
 
+    private final Vector2 otherBodyLinearVelocity = new Vector2();
     public Vector2 getRelativeVelocityOf(Body otherBody) {
-        return otherBody.getLinearVelocity().sub(body.getLinearVelocity());
+        // take copy, otherwise other calls to otherBody.getLinearVelocity() would override this
+        // value because they happen on the same (inside LibGdx) recycled reference
+        otherBodyLinearVelocity.set(otherBody.getLinearVelocity());
+        return otherBodyLinearVelocity.sub(body.getLinearVelocity());
     }
 
     public String getId() {

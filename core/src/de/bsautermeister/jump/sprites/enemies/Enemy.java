@@ -83,15 +83,15 @@ public abstract class Enemy extends Sprite implements BinarySerializable, Dispos
         }
     }
 
-    public void kill(boolean applyPush) {
+    public void kill(float pushFactor) {
         dead = true;
         updateMaskFilter(Bits.NOTHING);
 
         callbacks.killed(this);
 
-        if (applyPush) {
+        if (pushFactor > 0) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x / 2, 0);
-            getBody().applyLinearImpulse(new Vector2(0, 8f), getBody().getWorldCenter(), true);
+            getBody().applyLinearImpulse(new Vector2(0, 8f * pushFactor), getBody().getWorldCenter(), true);
         }
     }
 

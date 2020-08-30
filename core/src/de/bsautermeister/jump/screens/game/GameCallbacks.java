@@ -27,7 +27,7 @@ public interface GameCallbacks {
     void hitWall(PretzelBullet pretzelBullet);
     void spotted(ItemBox itemBox);
     void killed(Enemy enemy);
-    void kicked(Enemy enemy, boolean firstKick);
+    void kicked(Enemy enemy);
     void touchedWater(Drownable drownable);
     void collectCoin();
     void fire();

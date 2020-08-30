@@ -146,9 +146,9 @@ public class Fish extends Enemy implements Drownable {
     }
 
     @Override
-    public void kill(boolean applyPush) {
+    public void kill(float pushFactor) {
         getBody().setGravityScale(1.0f);
-        super.kill(applyPush);
+        super.kill(pushFactor);
     }
 
     @Override
