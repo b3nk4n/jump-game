@@ -61,7 +61,7 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Fox) {
-                    ((Fox) taggedEnemy.getUserData()).waitAndThenChangeDirectionBySideSensorTag(taggedEnemy.getTag());
+                    ((Fox) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), true);
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), false);
                 }
@@ -73,11 +73,11 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.ENEMY:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Fox) {
-                    ((Fox) taggedEnemy.getUserData()).changeDirectionBySideSensorTag(taggedEnemy.getTag());
+                    ((Fox) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), false);
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), true);
                 } else if (taggedEnemy.getUserData() instanceof Frog) {
-                    ((Frog) taggedEnemy.getUserData()).reactOnSideSensor(taggedEnemy.getTag());
+                    ((Frog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Raven) {
                     ((Raven) taggedEnemy.getUserData()).touchGround();
                 }
@@ -189,6 +189,12 @@ public class WorldContactListener implements ContactListener {
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Hedgehog) {
                     ((Hedgehog) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag());
+                }
+                if (taggedEnemy.getUserData() instanceof Fox) {
+                    ((Fox) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag());
+                }
+                if (taggedEnemy.getUserData() instanceof Frog) {
+                    ((Frog) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag());
                 }
                 break;
         }

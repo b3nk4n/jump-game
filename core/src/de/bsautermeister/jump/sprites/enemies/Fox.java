@@ -43,6 +43,9 @@ public class Fox extends Enemy implements Drownable {
     private final Animation<TextureRegion> standingAnimation;
     private final Animation<TextureRegion> stompedAnimation;
 
+    private int leftSensorContacts;
+    private int rightSensorContacts;
+
     public Fox(GameCallbacks callbacks, World world, TextureAtlas atlas,
                float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
@@ -75,6 +78,10 @@ public class Fox extends Enemy implements Drownable {
                 speed = previousDirectionLeft ? SPEED : - SPEED;
             }
 
+            if (state.is(State.WALKING)) {
+                updateDirection();
+            }
+
             if (isDrowning()) {
                 getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
             }
@@ -83,6 +90,15 @@ public class Fox extends Enemy implements Drownable {
                 markDestroyBody();
                 markRemovable();
             }
+        }
+    }
+
+    private void updateDirection() {
+        float absSpeed = Math.abs(speed);
+        if (leftSensorContacts > 0 && rightSensorContacts == 0) {
+            speed = absSpeed;
+        } else if (leftSensorContacts == 0 && rightSensorContacts > 0) {
+            speed = -absSpeed;
         }
     }
 
@@ -231,21 +247,26 @@ public class Fox extends Enemy implements Drownable {
                 ? -SPEED : SPEED;
     }
 
-    public void changeDirectionBySideSensorTag(String sideSensorTag) {
-        float absoluteSpeed = Math.abs(speed);
-        if (sideSensorTag.equals(TAG_LEFT)) {
-            speed = absoluteSpeed;
-        } else {
-            speed = -absoluteSpeed;
+    public void beginContactSensor(String sideSensorTag, boolean wait) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorContacts += 1;
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorContacts += 1;
         }
 
-        getCallbacks().hitWall(this);
+        if (wait) {
+            state.set(State.STANDING);
+            previousDirectionLeft = speed <= 0;
+            speed = 0;
+        }
     }
 
-    public void waitAndThenChangeDirectionBySideSensorTag(String sideSensorTag) {
-        state.set(State.STANDING);
-        previousDirectionLeft = speed <= 0;
-        speed = 0;
+    public void endContactSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorContacts = Math.max(0, leftSensorContacts - 1);
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorContacts = Math.max(0, rightSensorContacts -1 );
+        }
     }
 
     private void stomp() {

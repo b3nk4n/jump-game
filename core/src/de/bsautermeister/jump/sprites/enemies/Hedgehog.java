@@ -28,6 +28,7 @@ import de.bsautermeister.jump.sprites.GameObjectState;
 import de.bsautermeister.jump.sprites.Player;
 
 public class Hedgehog extends Enemy implements Drownable {
+    private static final float SPEED_VALUE = 3.0f;
     private static final float KICK_SPEED = 8f;
     private static final float ROTATION_SPEED = 540f;
     private static final float WAIT_FOR_UNROLL_TIME = 5f;
@@ -45,8 +46,6 @@ public class Hedgehog extends Enemy implements Drownable {
     private final Animation<TextureRegion> rollAnimation;
     private final Animation<TextureRegion> unrollAnimation;
     private final TextureRegion rollingTexture;
-
-    private static final float SPEED_VALUE = 3.0f;
 
     private int leftSensorContacts;
     private int rightSensorContacts;

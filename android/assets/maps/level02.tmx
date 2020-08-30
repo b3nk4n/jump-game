@@ -237,7 +237,7 @@
   <object id="285" type="ground" x="0" y="448" width="736" height="32"/>
   <object id="286" type="ground" x="0" y="176" width="48" height="272"/>
   <object id="287" type="ground" x="48" y="384" width="64" height="16"/>
-  <object id="288" type="start" x="96" y="672" width="16" height="16"/>
+  <object id="288" type="start" x="112" y="672" width="16" height="16"/>
   <object id="289" type="box" x="3392" y="208" width="16" height="16">
    <properties>
     <property name="beer" type="bool" value="true"/>
@@ -444,8 +444,16 @@
   <object id="425" type="collider" x="1808" y="624" width="16" height="16"/>
   <object id="426" type="collider" x="2544" y="352" width="16" height="16"/>
   <object id="427" type="collider" x="2416" y="352" width="16" height="16"/>
-  <object id="428" type="hedgehog" x="2512" y="352" width="16" height="16"/>
-  <object id="429" type="fox" x="2560" y="560" width="16" height="16"/>
+  <object id="428" type="hedgehog" x="2512" y="352" width="16" height="16">
+   <properties>
+    <property name="group" value="hf1"/>
+   </properties>
+  </object>
+  <object id="429" type="fox" x="2560" y="560" width="16" height="16">
+   <properties>
+    <property name="group" value="hf1"/>
+   </properties>
+  </object>
   <object id="430" type="frog" x="3024" y="320" width="16" height="16">
    <properties>
     <property name="group" value="g2"/>

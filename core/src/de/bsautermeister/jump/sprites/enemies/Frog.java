@@ -42,6 +42,9 @@ public class Frog extends Enemy implements Drownable {
     private final Animation<TextureRegion> jumpingAnimation;
     private final Animation<TextureRegion> stompedAnimation;
 
+    private int leftSensorContacts;
+    private int rightSensorContacts;
+
     public Frog(GameCallbacks callbacks, World world, TextureAtlas atlas,
                 float posX, float posY, boolean rightDirection) {
         super(callbacks, world, posX, posY, Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
@@ -76,6 +79,8 @@ public class Frog extends Enemy implements Drownable {
                 }
             }
 
+            updateDirection();
+
             if (isDrowning()) {
                 getBody().setLinearVelocity(getBody().getLinearVelocity().x * 0.95f, getBody().getLinearVelocity().y * 0.33f);
             }
@@ -84,6 +89,14 @@ public class Frog extends Enemy implements Drownable {
                 markDestroyBody();
                 markRemovable();
             }
+        }
+    }
+
+    private void updateDirection() {
+        if (leftSensorContacts > 0 && rightSensorContacts == 0) {
+            isLeft = false;
+        } else if (leftSensorContacts == 0 && rightSensorContacts > 0) {
+            isLeft = true;
         }
     }
 
@@ -237,17 +250,23 @@ public class Frog extends Enemy implements Drownable {
         isLeft = getBody().getPosition().x < otherEnemy.getBody().getPosition().x;
     }
 
-    public void reactOnSideSensor(String sideSensorTag) {
-        if (sideSensorTag.equals(TAG_LEFT)) {
-            isLeft = false;
-            getCallbacks().hitWall(this);
-        } else if (sideSensorTag.equals(TAG_RIGHT)) {
-            isLeft = true;
-            getCallbacks().hitWall(this);
+    public void beginContactSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorContacts += 1;
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorContacts += 1;
         } else if (sideSensorTag.equals(TAG_BOTTOM)) {
             if (state.is(State.JUMPING) && !isDrowning() && !isDead()) {
                 state.set(State.STANDING);
             }
+        }
+    }
+
+    public void endContactSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorContacts = Math.max(0, leftSensorContacts - 1);
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorContacts = Math.max(0, rightSensorContacts -1 );
         }
     }
 
