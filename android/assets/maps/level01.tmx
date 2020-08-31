@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="264" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="394">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="264" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="425">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="256" height="1024"/>
@@ -313,16 +313,12 @@
    </properties>
   </object>
   <object id="376" type="coin" x="2672" y="256" width="16" height="16"/>
-  <object id="378" type="coin" x="2672" y="272" width="16" height="16"/>
   <object id="379" type="coin" x="2672" y="288" width="16" height="16"/>
-  <object id="380" type="coin" x="2752" y="336" width="16" height="16"/>
   <object id="381" type="coin" x="2752" y="352" width="16" height="16"/>
   <object id="382" type="coin" x="2752" y="320" width="16" height="16"/>
   <object id="383" type="coin" x="2672" y="384" width="16" height="16"/>
-  <object id="384" type="coin" x="2672" y="400" width="16" height="16"/>
   <object id="385" type="coin" x="2672" y="416" width="16" height="16"/>
   <object id="386" type="coin" x="2752" y="448" width="16" height="16"/>
-  <object id="387" type="coin" x="2752" y="464" width="16" height="16"/>
   <object id="389" type="coin" x="2752" y="480" width="16" height="16"/>
   <object id="390" type="fox" x="3360" y="544" width="16" height="16">
    <properties>
@@ -335,6 +331,50 @@
    </properties>
   </object>
   <object id="392" type="collider" x="2736" y="576" width="16" height="16"/>
-  <object id="393" type="fox" x="2800" y="576" width="16" height="16"/>
+  <object id="393" type="fox" x="2800" y="576" width="16" height="16">
+   <properties>
+    <property name="group" value="ff1"/>
+   </properties>
+  </object>
+  <object id="394" type="collider" x="448" y="512" width="16" height="16"/>
+  <object id="395" type="collider" x="576" y="512" width="16" height="16"/>
+  <object id="396" type="collider" x="736" y="544" width="16" height="16"/>
+  <object id="398" type="collider" x="16" y="544" width="16" height="16"/>
+  <object id="399" type="fox" x="544" y="512" width="16" height="16"/>
+  <object id="400" type="collider" x="1344" y="480" width="16" height="16"/>
+  <object id="401" type="hedgehog" x="1568" y="480" width="16" height="16">
+   <properties>
+    <property name="group" value="hh1"/>
+   </properties>
+  </object>
+  <object id="402" type="hedgehog" x="1520" y="480" width="16" height="16">
+   <properties>
+    <property name="group" value="hh1"/>
+   </properties>
+  </object>
+  <object id="403" type="fox" x="2768" y="576" width="16" height="16">
+   <properties>
+    <property name="group" value="ff1"/>
+   </properties>
+  </object>
+  <object id="404" type="coin" x="816" y="496" width="16" height="16"/>
+  <object id="405" type="coin" x="832" y="496" width="16" height="16"/>
+  <object id="406" type="coin" x="816" y="480" width="16" height="16"/>
+  <object id="407" type="coin" x="832" y="480" width="16" height="16"/>
+  <object id="408" type="coin" x="1760" y="336" width="16" height="16"/>
+  <object id="409" type="coin" x="1792" y="320" width="16" height="16"/>
+  <object id="410" type="coin" x="1824" y="336" width="16" height="16"/>
+  <object id="411" type="coin" x="1952" y="336" width="16" height="16"/>
+  <object id="414" type="coin" x="1984" y="320" width="16" height="16"/>
+  <object id="415" type="coin" x="2016" y="336" width="16" height="16"/>
+  <object id="416" type="coin" x="3168" y="464" width="16" height="16"/>
+  <object id="417" type="coin" x="3184" y="464" width="16" height="16"/>
+  <object id="418" type="coin" x="3168" y="448" width="16" height="16"/>
+  <object id="419" type="coin" x="3184" y="448" width="16" height="16"/>
+  <object id="420" type="coin" x="3232" y="448" width="16" height="16"/>
+  <object id="421" type="coin" x="3216" y="448" width="16" height="16"/>
+  <object id="422" type="coin" x="3216" y="432" width="16" height="16"/>
+  <object id="423" type="coin" x="3232" y="432" width="16" height="16"/>
+  <object id="424" type="coin" x="512" y="384" width="16" height="16"/>
  </objectgroup>
 </map>

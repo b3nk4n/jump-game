@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="445">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="64" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="493">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="256" height="1024"/>
@@ -179,13 +179,13 @@
     <property name="bounceAngle" type="int" value="90"/>
    </properties>
   </object>
-  <object id="258" type="frog" x="2960" y="864" width="16" height="16">
+  <object id="258" type="frog" x="2976" y="864" width="16" height="16">
    <properties>
     <property name="group" value="fr1"/>
     <property name="rightDirection" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="259" type="frog" x="2944" y="864" width="16" height="16">
+  <object id="259" type="fox" x="2944" y="864" width="16" height="16">
    <properties>
     <property name="group" value="fr1"/>
    </properties>
@@ -224,8 +224,10 @@
     <property name="bounceAngle" type="int" value="180"/>
    </properties>
   </object>
-  <object id="279" type="raven" x="3376" y="80" width="16" height="16">
+  <object id="279" type="raven" x="3440" y="80" width="16" height="16">
    <properties>
+    <property name="autoAttack" type="bool" value="false"/>
+    <property name="group" value="toprav"/>
     <property name="rightDirection" type="bool" value="true"/>
     <property name="swinging" type="bool" value="true"/>
    </properties>
@@ -367,17 +369,25 @@
     <property name="coin" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="388" type="coin" x="3328" y="384" width="16" height="16"/>
-  <object id="389" type="coin" x="3328" y="368" width="16" height="16"/>
+  <object id="388" type="coin" x="3328" y="336" width="16" height="16"/>
+  <object id="389" type="coin" x="3328" y="320" width="16" height="16"/>
   <object id="390" type="coin" x="3328" y="352" width="16" height="16"/>
-  <object id="393" type="coin" x="2928" y="384" width="16" height="16"/>
+  <object id="393" type="coin" x="2928" y="336" width="16" height="16"/>
   <object id="394" type="coin" x="2928" y="368" width="16" height="16"/>
   <object id="395" type="coin" x="2928" y="352" width="16" height="16"/>
   <object id="396" type="collider" x="2864" y="608" width="16" height="16"/>
   <object id="397" type="collider" x="3392" y="608" width="16" height="16"/>
-  <object id="398" type="fox" x="3360" y="608" width="16" height="16"/>
+  <object id="398" type="fox" x="3360" y="608" width="16" height="16">
+   <properties>
+    <property name="group" value="centerhf"/>
+   </properties>
+  </object>
   <object id="399" type="fox" x="3072" y="608" width="16" height="16"/>
-  <object id="400" type="hedgehog" x="3168" y="464" width="16" height="16"/>
+  <object id="400" type="hedgehog" x="3168" y="464" width="16" height="16">
+   <properties>
+    <property name="group" value="centerhf"/>
+   </properties>
+  </object>
   <object id="401" type="collider" x="3056" y="464" width="16" height="16"/>
   <object id="402" type="collider" x="3200" y="464" width="16" height="16"/>
   <object id="403" type="spike" x="2992" y="512" width="20" height="16"/>
@@ -462,5 +472,96 @@
   <object id="442" type="raven" x="1584" y="640" width="16" height="16"/>
   <object id="443" type="spike" x="3248" y="923" width="48" height="16"/>
   <object id="444" type="spi" x="3696" y="928" width="16" height="16"/>
+  <object id="445" type="collider" x="2912" y="864" width="16" height="16"/>
+  <object id="446" type="collider" x="2992" y="864" width="16" height="16"/>
+  <object id="449" type="coin" x="3120" y="352" width="16" height="16"/>
+  <object id="450" type="coin" x="3136" y="352" width="16" height="16"/>
+  <object id="451" type="collider" x="3360" y="160" width="16" height="16"/>
+  <object id="452" type="collider" x="3408" y="160" width="16" height="16"/>
+  <object id="453" type="fox" x="3376" y="160" width="16" height="16">
+   <properties>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="454" type="coin" x="1088" y="848" width="16" height="16"/>
+  <object id="455" type="coin" x="1072" y="848" width="16" height="16"/>
+  <object id="456" type="coin" x="1072" y="832" width="16" height="16"/>
+  <object id="457" type="coin" x="1088" y="832" width="16" height="16"/>
+  <object id="458" type="coin" x="1040" y="832" width="16" height="16"/>
+  <object id="459" type="coin" x="1040" y="816" width="16" height="16"/>
+  <object id="460" type="coin" x="1024" y="832" width="16" height="16"/>
+  <object id="461" type="coin" x="1024" y="816" width="16" height="16"/>
+  <object id="462" type="hedgehog" x="928" y="944" width="16" height="16">
+   <properties>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="463" type="collider" x="848" y="928" width="16" height="16"/>
+  <object id="464" type="collider" x="784" y="896" width="16" height="16"/>
+  <object id="465" type="collider" x="464" y="912" width="16" height="16"/>
+  <object id="466" type="collider" x="528" y="880" width="16" height="16"/>
+  <object id="467" type="fox" x="816" y="928" width="16" height="16">
+   <properties>
+    <property name="group" value="fofox"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="468" type="fox" x="752" y="896" width="16" height="16">
+   <properties>
+    <property name="group" value="fofox"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="469" type="fox" x="560" y="880" width="16" height="16">
+   <properties>
+    <property name="group" value="fofox"/>
+    <property name="rightDirection" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="470" type="fox" x="496" y="912" width="16" height="16">
+   <properties>
+    <property name="group" value="fofox"/>
+    <property name="rightDirection" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="471" type="collider" x="1440" y="848" width="16" height="16"/>
+  <object id="472" type="collider" x="1552" y="848" width="16" height="16"/>
+  <object id="474" type="fox" x="1520" y="848" width="16" height="16">
+   <properties>
+    <property name="group" value="f9"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="475" type="fox" x="1488" y="784" width="16" height="16">
+   <properties>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="476" type="fox" x="1472" y="848" width="16" height="16">
+   <properties>
+    <property name="group" value="f9"/>
+    <property name="rightDirection" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="477" type="enemySignalTrigger" x="3568" y="48" width="16" height="160">
+   <properties>
+    <property name="group" value="toprav"/>
+   </properties>
+  </object>
+  <object id="478" type="coin" x="3024" y="64" width="16" height="16"/>
+  <object id="479" type="coin" x="3136" y="64" width="16" height="16"/>
+  <object id="480" type="coin" x="2992" y="96" width="16" height="16"/>
+  <object id="481" type="coin" x="3168" y="96" width="16" height="16"/>
+  <object id="482" type="collider" x="3648" y="544" width="16" height="16"/>
+  <object id="483" type="collider" x="3696" y="544" width="16" height="16"/>
+  <object id="484" type="fox" x="3680" y="544" width="16" height="16"/>
+  <object id="485" type="coin" x="736" y="784" width="16" height="16"/>
+  <object id="486" type="coin" x="752" y="784" width="16" height="16"/>
+  <object id="487" type="coin" x="752" y="768" width="16" height="16"/>
+  <object id="488" type="coin" x="736" y="768" width="16" height="16"/>
+  <object id="489" type="coin" x="544" y="784" width="16" height="16"/>
+  <object id="490" type="coin" x="528" y="784" width="16" height="16"/>
+  <object id="491" type="coin" x="544" y="768" width="16" height="16"/>
+  <object id="492" type="coin" x="528" y="768" width="16" height="16"/>
  </objectgroup>
 </map>

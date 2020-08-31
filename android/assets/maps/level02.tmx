@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="520">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="545">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="256" height="1024"/>
@@ -559,5 +559,56 @@
   <object id="517" type="box" x="1088" y="192" width="16" height="16"/>
   <object id="518" type="box" x="1104" y="192" width="16" height="16"/>
   <object id="519" type="box" x="1120" y="192" width="16" height="16"/>
+  <object id="520" type="coin" x="272" y="240" width="16" height="16"/>
+  <object id="521" type="coin" x="224" y="208" width="16" height="16"/>
+  <object id="522" type="coin" x="208" y="208" width="16" height="16"/>
+  <object id="523" type="coin" x="256" y="224" width="16" height="16"/>
+  <object id="524" type="coin" x="224" y="224" width="16" height="16"/>
+  <object id="525" type="coin" x="256" y="240" width="16" height="16"/>
+  <object id="526" type="coin" x="272" y="224" width="16" height="16"/>
+  <object id="527" type="coin" x="208" y="224" width="16" height="16"/>
+  <object id="528" type="coin" x="560" y="304" width="16" height="16"/>
+  <object id="529" type="coin" x="496" y="304" width="16" height="16"/>
+  <object id="530" type="collider" x="736" y="240" width="16" height="16"/>
+  <object id="531" type="collider" x="1184" y="240" width="16" height="16"/>
+  <object id="532" type="fox" x="928" y="240" width="16" height="16">
+   <properties>
+    <property name="group" value="ffo1"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="533" type="fox" x="1024" y="240" width="16" height="16">
+   <properties>
+    <property name="group" value="ffo1"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="534" type="fox" x="2128" y="272" width="16" height="16">
+   <properties>
+    <property name="group" value="ffhh1"/>
+   </properties>
+  </object>
+  <object id="535" type="hedgehog" x="2208" y="272" width="16" height="16">
+   <properties>
+    <property name="group" value="ffhh1"/>
+   </properties>
+  </object>
+  <object id="536" type="collider" x="2448" y="672" width="16" height="16"/>
+  <object id="537" type="collider" x="2496" y="672" width="16" height="16"/>
+  <object id="538" type="fox" x="2480" y="672" width="16" height="16"/>
+  <object id="539" type="collider" x="2928" y="672" width="16" height="16"/>
+  <object id="540" type="hedgehog" x="3136" y="672" width="16" height="16">
+   <properties>
+    <property name="group" value="hed3"/>
+   </properties>
+  </object>
+  <object id="541" type="hedgehog" x="3200" y="672" width="16" height="16">
+   <properties>
+    <property name="group" value="hed3"/>
+   </properties>
+  </object>
+  <object id="542" type="collider" x="3360" y="192" width="16" height="16"/>
+  <object id="543" type="collider" x="3424" y="192" width="16" height="16"/>
+  <object id="544" type="fox" x="3392" y="192" width="16" height="16"/>
  </objectgroup>
 </map>

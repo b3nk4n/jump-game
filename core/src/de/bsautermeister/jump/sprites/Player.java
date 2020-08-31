@@ -178,7 +178,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         });
         runningRight = !start.leftDirection;
 
-        defineSmallBody(start.centerPosition, true);
+        defineSmallBody(start.centerPosition, Vector2.Zero, true);
 
         setBounds(body.getPosition().x, body.getPosition().y,
                 Cfg.BLOCK_SIZE_PPM, Cfg.BLOCK_SIZE_PPM);
@@ -327,13 +327,15 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         // these are called outside of the physics update loop
         if (markRedefineBody && isBig()) {
             Vector2 currentPosition = getBody().getPosition();
+            Vector2 velocity = getBody().getLinearVelocity();
             world.destroyBody(getBody());
-            defineBigBody(currentPosition, false);
+            defineBigBody(currentPosition, velocity, false);
             markRedefineBody = false;
         } else if (markRedefineBody && !isBig()) {
             Vector2 position = getBody().getPosition();
+            Vector2 velocity = getBody().getLinearVelocity();
             world.destroyBody(getBody());
-            defineSmallBody(position, false);
+            defineSmallBody(position, velocity, false);
             markRedefineBody = false;
         }
 
@@ -653,9 +655,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         return state.current();
     }
 
-    private void defineSmallBody(Vector2 position, boolean normalFilterMask) {
+    private void defineSmallBody(Vector2 position, Vector2 velocity, boolean normalFilterMask) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
+        bodyDef.linearVelocity.set(velocity);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
@@ -671,9 +674,10 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         shape.dispose();
     }
 
-    private void defineBigBody(Vector2 position, boolean normalFilterMask) {
+    private void defineBigBody(Vector2 position, Vector2 velocity, boolean normalFilterMask) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
+        bodyDef.linearVelocity.set(velocity);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
         body = world.createBody(bodyDef);
@@ -1085,7 +1089,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (isBig) {
             Vector2 currentPosition = body.getPosition();
             world.destroyBody(getBody());
-            defineBigBody(currentPosition, !changeSizeTimer.isRunning());
+            defineBigBody(currentPosition, Vector2.Zero, !changeSizeTimer.isRunning());
         }
 
         if (isVictory()) {
