@@ -407,7 +407,8 @@
   </object>
   <object id="410" type="box" x="2464" y="96" width="16" height="16">
    <properties>
-    <property name="foodIfSmall" type="bool" value="true"/>
+    <property name="food" type="bool" value="true"/>
+    <property name="foodIfSmall" type="bool" value="false"/>
    </properties>
   </object>
   <object id="411" type="drunkenGuy" x="616" y="848" width="16" height="24"/>

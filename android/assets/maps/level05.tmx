@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="62" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="581">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="62" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="599">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="256" height="1024"/>
@@ -600,7 +600,7 @@
    </properties>
   </object>
   <object id="504" type="collider" x="80" y="416" width="16" height="16"/>
-  <object id="505" type="fox" x="128" y="416" width="16" height="16"/>
+  <object id="505" type="fox" x="112" y="336" width="16" height="16"/>
   <object id="506" type="collider" x="432" y="240" width="16" height="16"/>
   <object id="507" type="hedgehog" x="560" y="240" width="16" height="16"/>
   <object id="508" type="collider" x="656" y="144" width="16" height="16"/>
@@ -630,7 +630,11 @@
   <object id="529" type="fox" x="1168" y="144" width="16" height="16"/>
   <object id="530" type="collider" x="2736" y="864" width="16" height="16"/>
   <object id="531" type="collider" x="2848" y="864" width="16" height="16"/>
-  <object id="532" type="fox" x="2800" y="864" width="16" height="16"/>
+  <object id="532" type="fox" x="2768" y="864" width="16" height="16">
+   <properties>
+    <property name="group" value="fifox2"/>
+   </properties>
+  </object>
   <object id="533" type="collider" x="2848" y="672" width="16" height="16"/>
   <object id="534" type="collider" x="2784" y="672" width="16" height="16"/>
   <object id="535" type="hedgehog" x="2816" y="672" width="16" height="16"/>
@@ -679,5 +683,65 @@
   <object id="578" type="coin" x="256" y="80" width="16" height="16"/>
   <object id="579" type="coin" x="240" y="64" width="16" height="16"/>
   <object id="580" type="coin" x="256" y="64" width="16" height="16"/>
+  <object id="581" type="collider" x="1216" y="688" width="16" height="16"/>
+  <object id="582" type="collider" x="1264" y="720" width="16" height="16"/>
+  <object id="583" type="collider" x="1312" y="752" width="16" height="16"/>
+  <object id="584" type="hedgehog" x="1184" y="688" width="16" height="16">
+   <properties>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="585" type="hedgehog" x="1280" y="752" width="16" height="16">
+   <properties>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="586" type="collider" x="80" y="576" width="16" height="16"/>
+  <object id="587" type="collider" x="144" y="496" width="16" height="16"/>
+  <object id="588" type="collider" x="144" y="336" width="16" height="16"/>
+  <object id="589" type="hedgehog" x="96" y="496" width="16" height="16">
+   <properties>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="591" type="raven" x="432" y="48" width="16" height="16">
+   <properties>
+    <property name="autoAttack" type="bool" value="false"/>
+    <property name="group" value="sr1"/>
+   </properties>
+  </object>
+  <object id="592" type="enemySignalTrigger" x="304" y="112" width="48" height="48">
+   <properties>
+    <property name="group" value="sr1"/>
+   </properties>
+  </object>
+  <object id="593" type="enemySignalTrigger" x="80" y="192" width="64" height="80">
+   <properties>
+    <property name="group" value="cr5"/>
+   </properties>
+  </object>
+  <object id="594" type="raven" x="48" y="160" width="16" height="16">
+   <properties>
+    <property name="autoAttack" type="bool" value="false"/>
+    <property name="group" value="cr5"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="595" type="raven" x="720" y="72" width="16" height="16">
+   <properties>
+    <property name="group" value="ar2"/>
+   </properties>
+  </object>
+  <object id="596" type="enemySignalTrigger" x="560" y="128" width="48" height="128">
+   <properties>
+    <property name="group" value="ar2"/>
+   </properties>
+  </object>
+  <object id="598" type="fox" x="2816" y="864" width="16" height="16">
+   <properties>
+    <property name="group" value="fifox2"/>
+    <property name="rightDirection" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

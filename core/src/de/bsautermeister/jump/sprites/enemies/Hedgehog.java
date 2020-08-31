@@ -341,7 +341,12 @@ public class Hedgehog extends Enemy implements Drownable {
         getCallbacks().hitWall(this);
     }
 
-    public void endContactSensor(String sideSensorTag) {
+    public void endContactSensor(String sideSensorTag, boolean hitWall) {
+        if (state.is(State.ROLLING) && !hitWall) {
+            // ignore collider when rolling
+            return;
+        }
+
         if (TAG_LEFT.equals(sideSensorTag)) {
             leftSensorContacts = Math.max(0, leftSensorContacts - 1);
         } else if (TAG_RIGHT.equals(sideSensorTag)) {
