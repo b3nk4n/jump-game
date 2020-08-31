@@ -192,7 +192,11 @@
   </object>
   <object id="260" type="bouncer" x="2720" y="688" width="16" height="16"/>
   <object id="261" type="ground" x="3616" y="944" width="224" height="80"/>
-  <object id="262" type="start" x="3728" y="928" width="16" height="16"/>
+  <object id="262" type="start" x="3728" y="928" width="16" height="16">
+   <properties>
+    <property name="leftDirection" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="263" type="goal" x="160" y="928" width="64" height="16"/>
   <object id="265" type="bouncer" x="2864" y="656" width="16" height="16">
    <properties>

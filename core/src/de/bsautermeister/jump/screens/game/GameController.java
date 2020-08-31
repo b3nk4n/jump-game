@@ -150,7 +150,7 @@ public class GameController  implements BinarySerializable, Disposable {
                 public void run() {
                     soundEffects.playRandomStartSound();
                 }
-            }, 0.33f);
+            }, 0.5f);
         }
 
         @Override
@@ -647,7 +647,6 @@ public class GameController  implements BinarySerializable, Disposable {
     }
 
     public void update(float delta) {
-        System.out.println(gameTime);
         if (state.isPaused() || state.isGameOver()) {
             postUpdate();
             return;

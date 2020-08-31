@@ -85,14 +85,14 @@ public class TransitionContext {
             // render to texture only once
             if (!renderedToTexture) {
                 renderedToTexture = true;
-                renderScreensToTexture();
+                renderScreensToTexture(delta);
             }
 
             updateTransition();
         }
     }
 
-    private void renderScreensToTexture() {
+    private void renderScreensToTexture(float delta) {
         // render current screen to buffer
         if (currentScreen != null) {
             frameBufferManager.begin(currentFrameBuffer);
@@ -102,7 +102,7 @@ public class TransitionContext {
 
         // render next screen to buffer
         frameBufferManager.begin(nextFrameBuffer);
-        nextScreen.render(0f);
+        nextScreen.render(delta);
         frameBufferManager.end();
     }
 
@@ -149,7 +149,7 @@ public class TransitionContext {
             nextScreen.resize(width, height);
         }
 
-        // set world size to width/heigth to keep pixel per unit ratio
+        // set world size to width/height to keep pixel per unit ratio
         transitionViewport.setWorldSize(width, height);
         transitionViewport.update(width, height, true);
     }
