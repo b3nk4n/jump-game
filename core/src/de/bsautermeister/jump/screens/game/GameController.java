@@ -278,7 +278,7 @@ public class GameController  implements BinarySerializable, Disposable {
             soundEffects.coinSpawnSound.play();
             BoxCoin boxCoin = new BoxCoin(atlas, itemBox.getBody().getWorldCenter());
             activeBoxCoins.add(boxCoin);
-            score += Cfg.COIN_SCORE;
+            score += Cfg.BOX_COIN_SCORE;
             // score is shown later when the itemBox disappears
         }
 
@@ -697,7 +697,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
         for(BoxCoin boxCoin : activeBoxCoins) {
             if (boxCoin.isFinished()) {
-                showMessage(new StringUiMessage(Cfg.COIN_SCORE_STRING),
+                showMessage(new StringUiMessage(Cfg.BOX_COIN_SCORE_STRING),
                         boxCoin.getBoundingRectangle());
                 activeBoxCoins.removeValue(boxCoin, true);
             } else {

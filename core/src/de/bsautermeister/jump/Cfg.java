@@ -33,7 +33,8 @@ public interface Cfg {
     float GOAL_REACHED_FINISH_DELAY = 5f;
 
     int COIN_SCORE = 100;
-    String COIN_SCORE_STRING = String.valueOf(COIN_SCORE);
+    int BOX_COIN_SCORE = 100;
+    String BOX_COIN_SCORE_STRING = String.valueOf(BOX_COIN_SCORE);
 
     float MAX_FALLING_SPEED = -20f;
     float MAX_HORIZONTAL_SPEED = 8f;

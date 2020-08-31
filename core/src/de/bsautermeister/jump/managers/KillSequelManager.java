@@ -8,7 +8,7 @@ import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.tools.GameTimer;
 
 public class KillSequelManager implements BinarySerializable {
-    private static final long SIMPLE_KILL_SCORE = 100;
+    private static final long SIMPLE_KILL_SCORE = 200;
     private final int MAX_KILL_SEQUEL = 5;
     private final String[] scoreStrings = new String[MAX_KILL_SEQUEL];
 
