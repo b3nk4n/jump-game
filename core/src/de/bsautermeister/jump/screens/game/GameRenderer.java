@@ -325,7 +325,7 @@ public class GameRenderer implements Disposable {
     }
 
     private void renderInfoSignMessage(SpriteBatch batch) {
-        if (controller.hasInfoSignMessage()) {
+        if (controller.hasInfoSignMessage() && controller.getState().isPlaying()) {
             String message = i18n.get(controller.getInfoSignMessageKey());
 
             batch.begin();
