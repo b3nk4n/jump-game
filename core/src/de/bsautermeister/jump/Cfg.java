@@ -32,6 +32,7 @@ public interface Cfg {
 
     float GOAL_REACHED_FINISH_DELAY = 5f;
 
+    int SCORE_PER_SEC = 25;
     int COIN_SCORE = 100;
     int BOX_COIN_SCORE = 100;
     String BOX_COIN_SCORE_STRING = String.valueOf(BOX_COIN_SCORE);

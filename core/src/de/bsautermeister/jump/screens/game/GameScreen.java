@@ -36,7 +36,7 @@ public class GameScreen extends ScreenBase {
         public void success(int level, Vector2 goalCenterPosition) {
             int score = controller.getScore();
             int ttl = controller.getTimeToLive();
-            int totalScore = score + ttl * 20;
+            int totalScore = score + ttl * Cfg.SCORE_PER_SEC;
             LevelInfo levelInfo = LevelMetadata.getLevelInfo(level);
             int stars = levelInfo.getStarsForScore(totalScore);
 
