@@ -955,7 +955,7 @@ public class GameController  implements BinarySerializable, Disposable {
                 enemy.setActive(true);
 
                 if (enemy.hasGroup()) {
-                    wakeUp(enemy.getGroup());
+                    wakeUpEnemies(enemy.getGroup());
                 }
             }
 
@@ -983,7 +983,7 @@ public class GameController  implements BinarySerializable, Disposable {
         return null;
     }
 
-    private void wakeUp(String enemyGroup) {
+    private void wakeUpEnemies(String enemyGroup) {
         if (enemyGroup == null) {
             return;
         }
@@ -1000,7 +1000,24 @@ public class GameController  implements BinarySerializable, Disposable {
         for (Platform platform : platforms) {
             platform.update(delta);
 
-            if (isVisibleInRenderArea(platform.getBoundingRectangle())) {
+            if (!platform.isActive() && isVisibleInRenderArea(platform.getBoundingRectangle())) {
+                platform.setActive(true);
+
+                if (platform.hasGroup()) {
+                    wakeUpPlatforms(platform.getGroup());
+                }
+            }
+        }
+    }
+
+    private void wakeUpPlatforms(String group) {
+        if (group == null) {
+            return;
+        }
+
+        for (int i = 0; i < platforms.size; ++i) {
+            Platform platform = platforms.get(i);
+            if (group.equals(platform.getGroup()) && !platform.isActive()) {
                 platform.setActive(true);
             }
         }

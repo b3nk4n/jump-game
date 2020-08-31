@@ -217,8 +217,10 @@ public class WorldCreator {
                 Integer startAngle = (Integer) mapObject.getProperties().get("startAngle");
                 Boolean breakable = (Boolean) mapObject.getProperties().get("breakable");
                 Float speed = (Float) mapObject.getProperties().get("speed");
+                String group = (String) mapObject.getProperties().get("group");
                 Platform platform = new Platform(callbacks, world, atlas,
                         toPPM(rect),
+                        group,
                         startAngle != null ? startAngle : 0,
                         breakable != null ? breakable : false,
                         speed != null ? speed : Platform.DEFAULT_SPEED,

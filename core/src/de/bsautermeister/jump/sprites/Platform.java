@@ -48,8 +48,11 @@ public class Platform extends Sprite implements BinarySerializable {
 
     private Array<PlatformBouncer> bouncerRegions;
 
+    private String group;
+
     public Platform(GameCallbacks callbacks, World world, TextureAtlas atlas, Rectangle bounds,
-                    int startAngle, boolean breakable, float speed, Array<PlatformBouncer> bouncerRegions) {
+                    String group, int startAngle, boolean breakable, float speed,
+                    Array<PlatformBouncer> bouncerRegions) {
         this.id = UUID.randomUUID().toString();
         this.callbacks = callbacks;
         this.world = world;
@@ -63,6 +66,7 @@ public class Platform extends Sprite implements BinarySerializable {
         this.breakable = breakable;
         this.bouncerRegions = bouncerRegions;
         setActive(false); // sleep and activate as soon as player gets close
+        this.group = group;
     }
 
     private TextureAtlas.AtlasRegion getTextureRegion(TextureAtlas atlas, Rectangle bounds,
@@ -214,6 +218,10 @@ public class Platform extends Sprite implements BinarySerializable {
         body.setActive(active);
     }
 
+    public boolean isActive() {
+        return body.isActive();
+    }
+
     public World getWorld() {
         return world;
     }
@@ -226,9 +234,18 @@ public class Platform extends Sprite implements BinarySerializable {
         return callbacks;
     }
 
+    public boolean hasGroup() {
+        return group != null;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
     @Override
     public void write(DataOutputStream out) throws IOException {
         out.writeUTF(id);
+        out.writeUTF(group != null ? group : "null");
         out.writeFloat(body.getPosition().x);
         out.writeFloat(body.getPosition().y);
         out.writeFloat(body.getLinearVelocity().x);
@@ -242,6 +259,10 @@ public class Platform extends Sprite implements BinarySerializable {
     @Override
     public void read(DataInputStream in) throws IOException {
         id = in.readUTF();
+        group = in.readUTF();
+        if (group.equals("null")) {
+            group = null;
+        }
         body.setTransform(in.readFloat(), in.readFloat(), 0);
         body.setLinearVelocity(in.readFloat(), in.readFloat());
         targetVelocity.set(in.readFloat(), in.readFloat());

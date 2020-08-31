@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="546">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="240" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="550">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
  <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="256" height="1024"/>
@@ -175,13 +175,14 @@
   </object>
   <object id="264" type="platform" x="1520" y="640" width="64" height="16">
    <properties>
-    <property name="breakable" type="bool" value="true"/>
+    <property name="breakable" type="bool" value="false"/>
     <property name="startAngle" type="int" value="90"/>
    </properties>
   </object>
-  <object id="265" type="platform" x="1872" y="624" width="64" height="16">
+  <object id="265" type="platform" x="1872" y="608" width="64" height="16">
    <properties>
-    <property name="startAngle" type="int" value="90"/>
+    <property name="group" value="pl1"/>
+    <property name="startAngle" type="int" value="270"/>
    </properties>
   </object>
   <object id="266" type="bouncer" x="1904" y="640" width="16" height="16">
@@ -204,9 +205,10 @@
     <property name="bounceAngle" type="int" value="270"/>
    </properties>
   </object>
-  <object id="270" type="platform" x="1968" y="336" width="64" height="16">
+  <object id="270" type="platform" x="1968" y="352" width="64" height="16">
    <properties>
-    <property name="startAngle" type="int" value="270"/>
+    <property name="group" value="pl1"/>
+    <property name="startAngle" type="int" value="90"/>
    </properties>
   </object>
   <object id="271" type="bouncer" x="2720" y="704" width="16" height="16">
@@ -615,5 +617,9 @@
     <property name="food" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="546" type="collider" x="2048" y="272" width="16" height="16"/>
+  <object id="547" type="collider" x="2832" y="672" width="16" height="16"/>
+  <object id="548" type="collider" x="2880" y="672" width="16" height="16"/>
+  <object id="549" type="fox" x="2864" y="672" width="16" height="16"/>
  </objectgroup>
 </map>
