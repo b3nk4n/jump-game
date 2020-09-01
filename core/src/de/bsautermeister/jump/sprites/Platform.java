@@ -147,7 +147,7 @@ public class Platform extends Sprite implements BinarySerializable {
     }
 
     public void update(float delta) {
-        state.upate(delta);
+        state.update(delta);
 
         if (!state.is(State.FALLING)) {
             for (PlatformBouncer bouncer : bouncerRegions) {

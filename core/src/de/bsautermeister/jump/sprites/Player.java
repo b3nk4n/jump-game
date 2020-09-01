@@ -283,7 +283,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
     }
 
     public void update(float delta) {
-        state.upate(delta);
+        state.update(delta);
 
         if (!started.isDone()) {
             started.mark();
@@ -880,6 +880,11 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         if (enemy instanceof Hedgehog) {
             Hedgehog hedgehog = (Hedgehog) enemy;
             if (hedgehog.getState() == Hedgehog.State.ROLL) {
+                // reduce player speed after kick, to have some feedback, as well as to minimize
+                // the chance that the player is right running in to the player
+                Vector2 playerVelocity = getLinearVelocity();
+                body.setLinearVelocity(playerVelocity.x / 2, playerVelocity.y);
+
                 hedgehog.kick(getX() <= enemy.getX());
                 return;
             }

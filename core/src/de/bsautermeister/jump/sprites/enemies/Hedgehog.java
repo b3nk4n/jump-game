@@ -99,7 +99,7 @@ public class Hedgehog extends Enemy implements Drownable {
     public void update(float delta) {
         super.update(delta);
 
-        state.upate(delta);
+        state.update(delta);
         if (!isDead() && !isDrowning()) {
             getBody().setLinearVelocity(speed, getBody().getLinearVelocity().y);
 

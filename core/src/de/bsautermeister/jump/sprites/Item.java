@@ -60,7 +60,7 @@ public abstract class Item extends Sprite implements CollectableItem, BinarySeri
     public abstract Body defineBody(float x, float y);
 
     public void update(float delta) {
-        state.upate(delta);
+        state.update(delta);
         if (state.is(State.SPAWNING)) {
             float progress = state.timer() / SPAWN_TIME;
             setY(spawnInterpolation.apply(spawnY, targetY, progress));

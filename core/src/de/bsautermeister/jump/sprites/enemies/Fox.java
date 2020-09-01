@@ -63,7 +63,7 @@ public class Fox extends Enemy implements Drownable {
     public void update(float delta) {
         super.update(delta);
 
-        state.upate(delta);
+        state.update(delta);
 
         setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2 + 1.75f / Cfg.PPM);
         setRegion(getFrame());

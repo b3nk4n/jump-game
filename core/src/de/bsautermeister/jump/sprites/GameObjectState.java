@@ -28,7 +28,7 @@ public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
         this.stateCallback = stateCallback;
     }
 
-    public void upate(float delta) {
+    public void update(float delta) {
         if (frozen) {
             return;
         }
