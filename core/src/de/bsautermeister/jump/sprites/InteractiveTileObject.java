@@ -98,6 +98,7 @@ public abstract class InteractiveTileObject implements BinarySerializable {
         Filter filter = new Filter();
         filter.maskBits = filterBit;
         for (Fixture fixture : getBody().getFixtureList()) {
+            filter.categoryBits = fixture.getFilterData().categoryBits;
             fixture.setFilterData(filter);
         }
     }

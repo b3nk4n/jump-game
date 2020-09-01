@@ -947,6 +947,8 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
 
     public void leftGround(Object ground) {
         groundContactCounter--;
+        groundContactCounter = Math.max(0, groundContactCounter);
+
         if (ground == platformContact) {
             platformContact = null;
         }
