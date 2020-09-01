@@ -47,8 +47,10 @@ public class Hedgehog extends Enemy implements Drownable {
     private final Animation<TextureRegion> unrollAnimation;
     private final TextureRegion rollingTexture;
 
-    private int leftSensorContacts;
-    private int rightSensorContacts;
+    private int leftSensorWallContacts;
+    private int rightSensorWallContacts;
+    private int leftSensorColliderContacts;
+    private int rightSensorColliderContacts;
 
     private boolean previousDirectionLeft;
 
@@ -134,9 +136,14 @@ public class Hedgehog extends Enemy implements Drownable {
 
     private void updateDirection() {
         float absSpeed = Math.abs(speed);
-        if (leftSensorContacts > 0 && rightSensorContacts == 0) {
+
+        boolean isRolling = state.is(State.ROLLING);
+        int leftContacts = isRolling ? leftSensorWallContacts : leftSensorWallContacts + leftSensorColliderContacts;
+        int rightContacts = isRolling ? rightSensorWallContacts : rightSensorWallContacts + rightSensorColliderContacts;
+
+        if (leftContacts > 0 && rightContacts == 0) {
             speed = absSpeed;
-        } else if (leftSensorContacts == 0 && rightSensorContacts > 0) {
+        } else if (leftContacts == 0 && rightContacts > 0) {
             speed = -absSpeed;
         }
     }
@@ -315,16 +322,11 @@ public class Hedgehog extends Enemy implements Drownable {
                 ? -SPEED_VALUE : SPEED_VALUE;
     }
 
-    public void beginContactSensor(String sideSensorTag, boolean hitWall) {
-        if (state.is(State.ROLLING) && !hitWall) {
-            // ignore collider when rolling
-            return;
-        }
-
+    public void beginContactWallSensor(String sideSensorTag) {
         if (TAG_LEFT.equals(sideSensorTag)) {
-            leftSensorContacts += 1;
+            leftSensorWallContacts += 1;
         } else if (TAG_RIGHT.equals(sideSensorTag)) {
-            rightSensorContacts += 1;
+            rightSensorWallContacts += 1;
         }
 
         if (state.is(State.ROLLING)) {
@@ -341,16 +343,27 @@ public class Hedgehog extends Enemy implements Drownable {
         getCallbacks().hitWall(this);
     }
 
-    public void endContactSensor(String sideSensorTag, boolean hitWall) {
-        if (state.is(State.ROLLING) && !hitWall) {
-            // ignore collider when rolling
-            return;
-        }
-
+    public void beginContactColliderSensor(String sideSensorTag) {
         if (TAG_LEFT.equals(sideSensorTag)) {
-            leftSensorContacts = Math.max(0, leftSensorContacts - 1);
+            leftSensorColliderContacts += 1;
         } else if (TAG_RIGHT.equals(sideSensorTag)) {
-            rightSensorContacts = Math.max(0, rightSensorContacts -1 );
+            rightSensorColliderContacts += 1;
+        }
+    }
+
+    public void endContactWallSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorWallContacts = Math.max(0, leftSensorWallContacts - 1);
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorWallContacts = Math.max(0, rightSensorWallContacts -1 );
+        }
+    }
+
+    public void endContactColliderSensor(String sideSensorTag) {
+        if (TAG_LEFT.equals(sideSensorTag)) {
+            leftSensorColliderContacts = Math.max(0, leftSensorColliderContacts - 1);
+        } else if (TAG_RIGHT.equals(sideSensorTag)) {
+            rightSensorColliderContacts = Math.max(0, rightSensorColliderContacts -1 );
         }
     }
 

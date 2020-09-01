@@ -63,7 +63,7 @@ public class WorldContactListener implements ContactListener {
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), true);
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
-                    ((Hedgehog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), false);
+                    ((Hedgehog) taggedEnemy.getUserData()).beginContactColliderSensor(taggedEnemy.getTag());
                 }
                 break;
             case Bits.ENEMY_SIDE | Bits.GROUND:
@@ -75,7 +75,7 @@ public class WorldContactListener implements ContactListener {
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), false);
                 } else if (taggedEnemy.getUserData() instanceof Hedgehog) {
-                    ((Hedgehog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag(), true);
+                    ((Hedgehog) taggedEnemy.getUserData()).beginContactWallSensor(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Frog) {
                     ((Frog) taggedEnemy.getUserData()).beginContactSensor(taggedEnemy.getTag());
                 } else if (taggedEnemy.getUserData() instanceof Raven) {
@@ -183,7 +183,7 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.COLLIDER:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Hedgehog) {
-                    ((Hedgehog) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag(), false);
+                    ((Hedgehog) taggedEnemy.getUserData()).endContactColliderSensor(taggedEnemy.getTag());
                 }
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag());
@@ -200,7 +200,7 @@ public class WorldContactListener implements ContactListener {
             case Bits.ENEMY_SIDE | Bits.ENEMY:
                 taggedEnemy = (TaggedUserData<Enemy>) resolveUserData(fixtureA, fixtureB, Bits.ENEMY_SIDE);
                 if (taggedEnemy.getUserData() instanceof Hedgehog) {
-                    ((Hedgehog) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag(), true);
+                    ((Hedgehog) taggedEnemy.getUserData()).endContactWallSensor(taggedEnemy.getTag());
                 }
                 if (taggedEnemy.getUserData() instanceof Fox) {
                     ((Fox) taggedEnemy.getUserData()).endContactSensor(taggedEnemy.getTag());

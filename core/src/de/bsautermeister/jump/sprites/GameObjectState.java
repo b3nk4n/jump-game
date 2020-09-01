@@ -116,7 +116,9 @@ public class GameObjectState<T extends Enum<T>> implements BinarySerializable {
     public String toString() {
         return "GameObjectState{" +
                 "current=" + current +
+                ", previous=" + previous +
                 ", stateTimer=" + stateTimer +
+                ", stateCallback=" + stateCallback +
                 ", frozen=" + frozen +
                 '}';
     }
