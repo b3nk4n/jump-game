@@ -70,6 +70,7 @@ public class FinishScreen extends ScreenBase {
 
         stage = new Stage(uiViewport, batch);
         stage.setDebugAll(Cfg.DEBUG_MODE);
+
         Table ui;
         if (level == 0) {
             ui = buildTutorialUi(getAssetManager());
@@ -81,7 +82,6 @@ public class FinishScreen extends ScreenBase {
 
     private Table buildTutorialUi(AssetManager assetManager) {
         Skin skin = assetManager.get(AssetDescriptors.Skins.UI);
-        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.UI);
         I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
 
         Table content = new Table();

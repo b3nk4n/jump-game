@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Logger;
 public interface Cfg {
     int LOG_LEVEL = Logger.DEBUG;
     boolean DEBUG_MODE = false;
+    boolean SCREENSHOT_MODE = false;
 
     float UI_WIDTH = 1280;
     float UI_HEIGHT = 720;

@@ -171,6 +171,10 @@ public class Hud implements Disposable {
     }
 
     private void drawControls(SpriteBatch batch) {
+        if (Cfg.SCREENSHOT_MODE) {
+            return;
+        }
+
         batch.setColor(1.0f, 1.0f, 1.0f, 0.33f);
         batch.draw(controlLeft, 64, 32);
         batch.draw(controlRight, 320, 32);
