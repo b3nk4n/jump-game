@@ -198,7 +198,7 @@ public class Platform extends Sprite implements BinarySerializable {
         touchTTL -= delta;
         if (touchTTL < 0 && breakable && state.is(State.MOVING)) {
             state.set(State.BREAKING);
-            Gdx.input.vibrate((int)(SHAKE_TIME) * 1000);
+            Gdx.input.vibrate((int)((SHAKE_TIME) * 1000));
         }
     }
 
