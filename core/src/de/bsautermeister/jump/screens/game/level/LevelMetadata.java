@@ -8,7 +8,14 @@ public class LevelMetadata {
             new LevelInfo(240, 9000, 12000, 14000, 1),
             new LevelInfo(240, 9000, 12000, 13500, 3),
             new LevelInfo(180, 8000, 11000, 13000, 6),
-            new LevelInfo(210, 9000, 12000, 14000, 9)
+            new LevelInfo(210, 9000, 12000, 14000, 9),
+
+            new LevelInfo(330, 11000, 14000, 16000, 12),
+            new LevelInfo(180, 8000, 10000, 12000, 15), // make this level 1?
+            new LevelInfo(999, 9999, 99999, 999999, 99),
+            new LevelInfo(999, 9999, 99999, 999999, 99),
+            new LevelInfo(999, 9999, 99999, 999999, 99),
+            new LevelInfo(999, 9999, 99999, 999999, 99)
     };
 
     private LevelMetadata() {}

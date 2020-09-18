@@ -26,7 +26,7 @@ public interface Cfg {
     int WINDOW_WIDTH = Cfg.WORLD_WIDTH * 3;
     int WINDOW_HEIGHT = Cfg.WORLD_HEIGHT * 3;
 
-    int LEVEL_PAGES = 1;
+    int LEVEL_PAGES = 2;
     int LEVEL_ROWS = 2;
     int LEVEL_COLUMNS = 3;
     int LEVELS_PER_PAGE = LEVEL_COLUMNS * LEVEL_ROWS;
