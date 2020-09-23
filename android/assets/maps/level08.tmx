@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="300" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="501">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
- <imagelayer id="22" name="bgImageStatic" offsetx="0" offsety="128">
+ <imagelayer id="22" name="bgImageStatic">
   <image source="sky1.png" width="256" height="1024"/>
  </imagelayer>
  <imagelayer id="21" name="bgImageClouds2" offsetx="0" offsety="128">
@@ -476,9 +476,7 @@
     <property name="group" value="ravenA"/>
    </properties>
   </object>
-  <object id="450" type="coin" x="2160" y="96" width="16" height="16"/>
   <object id="452" type="coin" x="2160" y="112" width="16" height="16"/>
-  <object id="453" type="coin" x="2160" y="128" width="16" height="16"/>
   <object id="454" type="coin" x="2160" y="144" width="16" height="16"/>
   <object id="455" type="coin" x="2160" y="80" width="16" height="16"/>
   <object id="456" type="coin" x="2144" y="96" width="16" height="16"/>
