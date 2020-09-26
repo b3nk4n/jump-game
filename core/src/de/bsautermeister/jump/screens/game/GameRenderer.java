@@ -280,9 +280,6 @@ public class GameRenderer implements Disposable {
             }
         }
 
-        Player player = controller.getPlayer();
-        player.getPretzelBullet().draw(batch);
-
         renderWater(batch, waterTexture, 0.5f);
 
         mapRenderer.setView(camera);
@@ -294,6 +291,8 @@ public class GameRenderer implements Disposable {
             }
         }
 
+        Player player = controller.getPlayer();
+        player.getPretzelBullet().draw(batch);
         player.draw(batch);
 
         for (InteractiveTileObject tileObject : controller.getTileObjects()) {
