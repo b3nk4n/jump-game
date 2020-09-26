@@ -15,7 +15,7 @@ public class LevelMetadata {
             new LevelInfo(240, 9000, 11000, 13000, 18),
             new LevelInfo(270, 10000, 13500, 15000, 21),
             new LevelInfo(240, 8000, 11500, 13000, 23),
-            new LevelInfo(999, 9999, 99999, 999999, 99)
+            new LevelInfo(210, 8000, 11000, 12500, 24)
     };
 
     private LevelMetadata() {}
