@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.Cfg;
@@ -87,6 +88,8 @@ public class GameRenderer implements Disposable {
 
     private final FrameBufferManager frameBufferManager;
 
+    private final ObjectMap<String, TextureRegion> infoHelpRegions;
+
     public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
                         GameController controller, FrameBufferManager frameBufferManager) {
         this.batch = batch;
@@ -126,6 +129,9 @@ public class GameRenderer implements Disposable {
         skin = assetManager.get(AssetDescriptors.Skins.UI);
         overlayStage = new Stage(uiViewport, batch);
         overlayStage.setDebugAll(Cfg.DEBUG_MODE);
+
+        infoHelpRegions = new ObjectMap<>();
+        infoHelpRegions.put(RegionNames.DOUBLE_JUMP_HELP, atlas.findRegion(RegionNames.DOUBLE_JUMP_HELP));
 
         Gdx.input.setInputProcessor(overlayStage);
     }
@@ -194,6 +200,8 @@ public class GameRenderer implements Disposable {
         batch.setShader(null);
 
         batch.end();
+
+        renderInfoSignHelp(batch);
 
         if (Cfg.DEBUG_MODE) {
             float zoomX = Cfg.BLOCKS_X / (4f + Cfg.BLOCKS_X);
@@ -330,6 +338,23 @@ public class GameRenderer implements Disposable {
             batch.begin();
             drawCentered(infoFont, batch, message, 0f, 0f, Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
             batch.end();
+        }
+    }
+
+    private void renderInfoSignHelp(SpriteBatch batch) {
+        if (controller.hasInfoSignMessage() && controller.getState().isPlaying()) {
+            String languageKey = controller.getInfoSignMessageKey();
+            WorldCreator.InfoRect help = controller.getInfoHelpForKey(languageKey);
+            if (help != null) {
+                TextureRegion textureRegion = infoHelpRegions.get(help.languageKey);
+                if (textureRegion != null) {
+                    batch.begin();
+                    batch.draw(textureRegion, help.rect.x, help.rect.y - help.rect.height,
+                            textureRegion.getRegionWidth() / Cfg.PPM,
+                            textureRegion.getRegionHeight() / Cfg.PPM);
+                    batch.end();
+                }
+            }
         }
     }
 

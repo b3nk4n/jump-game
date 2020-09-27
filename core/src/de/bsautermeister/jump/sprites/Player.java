@@ -261,7 +261,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
                 0.1f, Animation.PlayMode.LOOP_PINGPONG);
         bigPlayerTurn = createTextureArray(RegionNames.BIG_PLAYER_TURN_TPL, CHARACTER_LEVELS);
         bigPlayerJump = createAnimationArray(RegionNames.BIG_PLAYER_JUMP_TPL, CHARACTER_LEVELS,
-                0.1f, Animation.PlayMode.NORMAL);
+                0.05f, Animation.PlayMode.NORMAL);
         bigPlayerCrouch = createTextureArray(RegionNames.BIG_PLAYER_CROUCH_TPL, CHARACTER_LEVELS);
         bigPlayerDrown = createAnimationArray(RegionNames.BIG_PLAYER_DROWN_TPL, CHARACTER_LEVELS,
                 0.25f, Animation.PlayMode.LOOP);
@@ -441,7 +441,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             body.applyLinearImpulse(0f, 15.25f, body.getWorldCenter().x, body.getWorldCenter().y, true);
             state.set(State.JUMPING);
             blockJumpTimer = 0.01f;
-            callbacks.jump();
+            callbacks.jump(1.0f);
             return;
         }
         if (canDoubleJump && !didDoubleJump && state.is(State.JUMPING) && up) {
@@ -449,7 +449,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
             body.applyLinearImpulse(0, 12.66f, body.getWorldCenter().x, body.getWorldCenter().y, true);
             state.setTimer(isBig ? 0.05f : 0f);
             blockJumpTimer = 0.01f;
-            callbacks.jump();
+            callbacks.jump(0.8f);
             didDoubleJump = true;
         }
         if (right && body.getLinearVelocity().x <= Cfg.MAX_HORIZONTAL_SPEED && !down && !left) {

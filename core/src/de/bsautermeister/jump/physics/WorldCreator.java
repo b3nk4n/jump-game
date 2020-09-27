@@ -68,6 +68,7 @@ public class WorldCreator {
     private static final String SNORER_TYPE = "snorer";
     private static final String ENEMY_SIGNAL_TRIGGER_TYPE = "enemySignalTrigger";
     private static final String INFO_TYPE = "info";
+    private static final String INFO_HELP_TYPE = "infoHelp";
 
     private static final String OBJECTS_LAYER = "objects";
 
@@ -320,15 +321,26 @@ public class WorldCreator {
         return signalTriggers;
     }
 
-    public Array<InfoSign> getInfoSigns() {
-        Array<InfoSign> infos = new Array<>();
+    public Array<InfoRect> getInfoSigns() {
+        Array<InfoRect> infos = new Array<>();
         for (RectangleMapObject mapObject : getRectObjects(map)) {
             if (isType(mapObject, INFO_TYPE)) {
                 String languageKey = (String) mapObject.getProperties().get("languageKey");
-                infos.add(new InfoSign(toPPM(mapObject.getRectangle()), languageKey));
+                infos.add(new InfoRect(toPPM(mapObject.getRectangle()), languageKey));
             }
         }
         return infos;
+    }
+
+    public Array<InfoRect> getInfoHelps() {
+        Array<InfoRect> helps = new Array<>();
+        for (RectangleMapObject mapObject : getRectObjects(map)) {
+            if (isType(mapObject, INFO_HELP_TYPE)) {
+                String languageKey = (String) mapObject.getProperties().get("languageKey");
+                helps.add(new InfoRect(toPPM(mapObject.getRectangle()), languageKey));
+            }
+        }
+        return helps;
     }
 
     public static class StartParams {
@@ -352,11 +364,11 @@ public class WorldCreator {
         }
     }
 
-    public static class InfoSign {
+    public static class InfoRect {
         public final Rectangle rect;
         public final String languageKey;
 
-        InfoSign(Rectangle rect, String languageKey) {
+        InfoRect(Rectangle rect, String languageKey) {
             this.rect = rect;
             this.languageKey = languageKey;
         }

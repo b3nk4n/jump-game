@@ -137,7 +137,8 @@ public class GameController  implements BinarySerializable, Disposable {
     private float munichRatio;
 
     private Array<WorldCreator.EnemySignalTrigger> enemySignalTriggers;
-    private Array<WorldCreator.InfoSign> infoSings;
+    private Array<WorldCreator.InfoRect> infoSings;
+    private Array<WorldCreator.InfoRect> infoHelps;
 
     private float infoSignMessageTtl;
     private String infoSignMessageKey;
@@ -154,8 +155,8 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         @Override
-        public void jump() {
-            soundEffects.playRandomJumpSound(0.66f);
+        public void jump(float volumeFactor) {
+            soundEffects.playRandomJumpSound(0.66f * volumeFactor);
         }
 
         @Override
@@ -606,6 +607,7 @@ public class GameController  implements BinarySerializable, Disposable {
         enemySignalTriggers = worldCreator.getEnemySignalTriggers();
 
         infoSings = worldCreator.getInfoSigns();
+        infoHelps = worldCreator.getInfoHelps();
 
         camera.position.set(player.getBody().getPosition(), 0);
         updateCameraPosition();
@@ -737,7 +739,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private void updateInfoSignMessage(float delta) {
         if (player.isResting()) {
-            for (WorldCreator.InfoSign infoSign : infoSings) {
+            for (WorldCreator.InfoRect infoSign : infoSings) {
                 if (infoSign.rect.contains(player.getWorldCenter())) {
                     showInfoSignMessage(infoSign.languageKey);
                     break;
@@ -761,6 +763,15 @@ public class GameController  implements BinarySerializable, Disposable {
 
     public String getInfoSignMessageKey() {
         return infoSignMessageKey;
+    }
+
+    public WorldCreator.InfoRect getInfoHelpForKey(String languageKey) {
+        for (WorldCreator.InfoRect help : infoHelps) {
+            if (help.languageKey.equals(languageKey)) {
+                return help;
+            }
+        }
+        return null;
     }
 
     private void updateTent(float delta) {

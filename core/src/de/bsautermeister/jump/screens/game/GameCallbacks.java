@@ -13,7 +13,7 @@ import de.bsautermeister.jump.sprites.Player;
 
 public interface GameCallbacks {
     void started();
-    void jump();
+    void jump(float volumeFactor);
     void landed(float landingHeight);
     void stomp(Enemy enemy);
     void attack(Enemy enemy);
