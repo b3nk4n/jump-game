@@ -13,15 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.logging.Level;
+
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
+import de.bsautermeister.jump.commons.JumpGameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.game.GameScreen;
 import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
 import de.bsautermeister.jump.utils.GdxUtils;
+import de.bsautermeister.jump.utils.LevelUtils;
 
 public class MenuScreen extends ScreenBase {
     private final Viewport uiViewport;
@@ -79,8 +83,7 @@ public class MenuScreen extends ScreenBase {
         if (MainMenuContent.TYPE.equals(contentType)) {
             return createMainContent();
         } else if (SelectLevelMenuContent.TYPE.equals(contentType)) {
-            int page = lastLevel / Cfg.LEVELS_PER_PAGE + 1;
-            page = Math.min(page, Cfg.LEVEL_PAGES);
+            int page = LevelUtils.levelToPage(lastLevel + 1);
             return createSelectLevelContent(page);
         } else if (AboutContent.TYPE.equals(contentType)) {
             return createAboutContent();
@@ -93,7 +96,9 @@ public class MenuScreen extends ScreenBase {
         return new MainMenuContent(getAssetManager(), new MainMenuContent.Callbacks() {
             @Override
             public void playClicked() {
-                setContent(createSelectLevelContent(1));
+                int highestFinishedLevel = JumpGameStats.INSTANCE.getHighestFinishedLevel();
+                int page = LevelUtils.levelToPage(highestFinishedLevel + 1);
+                setContent(createSelectLevelContent(page));
             }
 
             @Override
