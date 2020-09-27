@@ -3,7 +3,7 @@ package de.bsautermeister.jump;
 import com.badlogic.gdx.utils.Logger;
 
 public interface Cfg {
-    int LOG_LEVEL = Logger.DEBUG;
+    int LOG_LEVEL = Logger.ERROR;
     boolean DEBUG_MODE = false;
     boolean SCREENSHOT_MODE = false;
 

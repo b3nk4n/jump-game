@@ -13,7 +13,7 @@ public class BinarySerializer {
     /**
      * The version to check for compatibility, in case the expected data has changed.
      */
-    private final static byte VERSION = 0x02;
+    private final static byte VERSION = 0x03;
 
     /**
      * The header written to the binary file.
