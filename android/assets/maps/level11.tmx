@@ -700,6 +700,6 @@
     <property name="group" value="fsq3"/>
    </properties>
   </object>
-  <object id="570" type="start" x="3980" y="898.5" width="16" height="16"/>
+  <object id="570" type="start" x="96" y="928" width="16" height="16"/>
  </objectgroup>
 </map>

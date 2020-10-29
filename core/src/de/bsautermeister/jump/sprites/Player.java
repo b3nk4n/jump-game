@@ -637,7 +637,7 @@ public class Player extends Sprite implements BinarySerializable, Drownable {
         }
         super.draw(batch);
 
-        if (canThrowPretzel() && !isDrowning() && !isDead() && pretzelizedTexture != null) {
+        if (canThrowPretzel() && !isDrowning() && !isDead() && !isVictory() && pretzelizedTexture != null) {
             float origU = getU();
             float origU2 = getU2();
             float origV = getV();

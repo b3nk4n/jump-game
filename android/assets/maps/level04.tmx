@@ -149,7 +149,7 @@
   <object id="264" type="coin" x="736" y="416" width="16" height="16"/>
   <object id="265" type="coin" x="720" y="432" width="16" height="16"/>
   <object id="266" type="coin" x="768" y="416" width="16" height="16"/>
-  <object id="267" type="start" x="3280" y="432" width="16" height="16"/>
+  <object id="267" type="start" x="256" y="672" width="16" height="16"/>
   <object id="269" type="ground" x="0" y="688" width="880" height="80"/>
   <object id="270" type="ground" x="0" y="656" width="80" height="32"/>
   <object id="271" type="ground" x="432" y="672" width="448" height="16"/>
