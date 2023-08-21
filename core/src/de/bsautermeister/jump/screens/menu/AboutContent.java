@@ -30,12 +30,12 @@ public class AboutContent extends Table {
         I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
 
         credits = new CreditEntry[] {
-                new CreditEntry(i18n.get(Language.DEVELOPER), "Benjamin Sautermeister"),
+                new CreditEntry(i18n.get(Language.DEVELOPER), "Benjamin Kan"),
                 // https://hdst.itch.io/fox (Copyright/Attribution Notice: HDST or link to this page)
-                new CreditEntry(i18n.get(Language.GRAPHICS), "Benjamin Sautermeister", "Vanessa Kan", "vnitti", "sanctumpixel", "Elthen's Pixel Art Shop", "HDST"),
-                new CreditEntry(i18n.get(Language.ANIMATIONS), "Benjamin Sautermeister"),
+                new CreditEntry(i18n.get(Language.GRAPHICS), "Benjamin Kan", "Vanessa Kan", "vnitti", "sanctumpixel", "Elthen's Pixel Art Shop", "HDST"),
+                new CreditEntry(i18n.get(Language.ANIMATIONS), "Benjamin Kan"),
                 new CreditEntry(i18n.get(Language.VOICE), "Lukas Woehrl"),
-                new CreditEntry(i18n.get(Language.SFX), "Benjamin Sautermeister"),
+                new CreditEntry(i18n.get(Language.SFX), "Benjamin Kan"),
                 new CreditEntry(i18n.get(Language.MUSIC), "Dee Yan-Key"),
         };
 

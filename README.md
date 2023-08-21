@@ -31,6 +31,10 @@ What did users think about this app?
 
 Thanks to Dee Yan-Key for allowing me to use [his songs](https://freemusicarchive.org/music/Dee_Yan-Key/Bavarian_Symphony) in this non-commercial game. The song is free under [CC BY-NC-SA 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
+## Technical Setup
+
+Use Java 11 to build and run the project.
+
 ## License
 
 This work is published under [MIT][mit] License.
