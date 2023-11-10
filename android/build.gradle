@@ -1,6 +1,7 @@
 android {
-    buildToolsVersion "29.0.3"
-    compileSdkVersion 33
+    namespace "de.bsautermeister.jump.game"
+    compileSdk 34
+    buildToolsVersion '34.0.0'
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -15,18 +16,20 @@ android {
 
 
     packagingOptions {
-        exclude 'META-INF/robovm/ios/robovm.xml'
+        resources {
+            excludes += ['META-INF/robovm/ios/robovm.xml']
+        }
     }
     defaultConfig {
         applicationId "de.bsautermeister.jump"
         minSdkVersion 14
-        targetSdkVersion 33
-        versionCode 8
-        versionName "1.1.2"
+        targetSdkVersion 34
+        versionCode 9
+        versionName "1.2"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -38,7 +41,6 @@ android {
 // so they get packed with the APK.
 task copyAndroidNatives {
     doFirst {
-        file("libs/armeabi/").mkdirs()
         file("libs/armeabi-v7a/").mkdirs()
         file("libs/arm64-v8a/").mkdirs()
         file("libs/x86_64/").mkdirs()
@@ -48,7 +50,6 @@ task copyAndroidNatives {
             def outputDir = null
             if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
             if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-            if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
             if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
             if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
             if(outputDir != null) {
@@ -62,13 +63,11 @@ task copyAndroidNatives {
     }
 }
 
-tasks.whenTaskAdded { packageTask ->
-    if (packageTask.name.contains("package")) {
-        packageTask.dependsOn 'copyAndroidNatives'
-    }
+tasks.matching { it.name.contains("merge") && it.name.contains("JniLibFolders") }.configureEach { packageTask ->
+    packageTask.dependsOn 'copyAndroidNatives'
 }
 
-task run(type: Exec) {
+tasks.register('run', Exec) {
     def path
     def localProperties = project.file("../local.properties")
     if (localProperties.exists()) {
@@ -91,7 +90,7 @@ task run(type: Exec) {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-games:7.8.0'
+    implementation "com.google.android.gms:play-services-games:${gmsLibraryVersion}"
 }
 
 eclipse.project.name = appName + "-android"
