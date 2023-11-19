@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import de.bsautermeister.jump.GameEnv;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.transition.ScreenTransition;
@@ -13,12 +14,18 @@ public abstract class GameApp implements ApplicationListener {
     private AssetManager assetManager;
     private SpriteBatch batch;
 
+    private final GameEnv gameEnv;
+
     private TransitionContext transitionContext;
 
     private MusicPlayer backgroundMusic;
     private MusicPlayer foregroundMusic;
 
     private FrameBufferManager frameBufferManager;
+
+    public GameApp(GameEnv gameEnv) {
+        this.gameEnv = gameEnv;
+    }
 
     @Override
     public void create() {
@@ -90,6 +97,10 @@ public abstract class GameApp implements ApplicationListener {
 
     public SpriteBatch getBatch() {
         return batch;
+    }
+
+    public GameEnv getEnv() {
+        return gameEnv;
     }
 
     public MusicPlayer getBackgroundMusic() {

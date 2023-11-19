@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import de.bsautermeister.jump.Cfg;
+
 public class GooglePlayGameServices implements GameServices {
-    private GameHelper gameHelper;
+    private final GameHelper gameHelper;
     private final static int requestCode = 1;
 
     private final Activity activity;
@@ -27,7 +29,7 @@ public class GooglePlayGameServices implements GameServices {
         this.activity = activity;
 
         gameHelper = new GameHelper(activity, GameHelper.CLIENT_GAMES);
-        gameHelper.enableDebugLog(true);
+        gameHelper.enableDebugLog(Cfg.DEBUG_MODE);
 
         GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
         {

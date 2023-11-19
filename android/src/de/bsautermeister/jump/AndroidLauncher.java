@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import de.bsautermeister.jump.game.BuildConfig;
 import de.bsautermeister.jump.services.GameServices;
 import de.bsautermeister.jump.services.GooglePlayGameServices;
 
@@ -18,7 +19,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
 		this.gameServices = new GooglePlayGameServices(this);
-		initialize(new JumpGame(gameServices), config);
+		initialize(new JumpGame(gameServices, new AndroidGameEnv()), config);
 	}
 
 	@Override

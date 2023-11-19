@@ -2,10 +2,12 @@ package de.bsautermeister.jump.screens.menu;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.I18NBundle;
 
+import de.bsautermeister.jump.GameEnv;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
@@ -24,10 +26,13 @@ public class AboutContent extends Table {
 
     private int currentCreditIndex = 0;
 
+    private final String versionText;
 
-    public AboutContent(AssetManager assetManager) {
+
+    public AboutContent(AssetManager assetManager, String version) {
         skin = assetManager.get(AssetDescriptors.Skins.UI);
         I18NBundle i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
+        versionText = version;
 
         credits = new CreditEntry[] {
                 new CreditEntry(i18n.get(Language.DEVELOPER), "Benjamin Kan"),
@@ -42,6 +47,8 @@ public class AboutContent extends Table {
         initialize();
     }
 
+    // TODO show version label in bottom (right) of the screen
+
     private void initialize() {
         center();
         setFillParent(true);
@@ -49,6 +56,14 @@ public class AboutContent extends Table {
         addActor(creditContainer);
         creditContainer.center().setFillParent(true);
         updateLabels(credits[currentCreditIndex]);
+
+        final Label versionLabel = new Label(versionText, skin, Styles.Label.SMALL);
+        add(versionLabel)
+                .right()
+                .bottom()
+                .padBottom(16f)
+                .padRight(16f)
+                .expand();
     }
 
     private void updateLabels(CreditEntry entry) {
@@ -80,6 +95,7 @@ public class AboutContent extends Table {
                         })
                 )
         );
+
         pack();
     }
 

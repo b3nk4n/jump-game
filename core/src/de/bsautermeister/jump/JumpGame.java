@@ -15,9 +15,11 @@ public class JumpGame extends GameApp {
     private final static String SAVE_DAT_FILENAME = "save_game.dat";
 
     private final GameServices gameServices;
+
     private static GameServiceManager gameServiceManager;
 
-    public JumpGame(GameServices gameServices) {
+    public JumpGame(GameServices gameServices, GameEnv gameEnv) {
+        super(gameEnv);
         this.gameServices = gameServices;
     }
 
