@@ -63,6 +63,15 @@ to ensure the proper Gradle task to run the desktop project is used.
    4. Select _Simulator_ toggle (which does not need a provisioning profile)
 4. Launch the run configuration
 
+## Troubleshooting
+
+### Using texture wrapping for non-power-of-two textures on iOS
+
+This is unfortunately not supported, and in line with the OpenGL ES spec. While this works fine on
+Desktop or Android, a render operation using e.g. `GLTexture#setWrap(TextureWrap u, TextureWrap v)`
+with `Texture.TextureWrap.Repeat` using a non-power-of-two texture, is simply ignored.
+See more details in [LibGDX Issue #3178](https://github.com/libgdx/libgdx/issues/3178)
+
 ## License
 
 This work is published under [MIT][mit] License.

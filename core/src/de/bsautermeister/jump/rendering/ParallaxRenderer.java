@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import org.w3c.dom.Text;
+
 import de.bsautermeister.jump.Cfg;
 
 public class ParallaxRenderer {

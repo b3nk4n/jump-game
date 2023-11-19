@@ -31,7 +31,7 @@ public class MenuScreen extends ScreenBase {
     private final Viewport uiViewport;
     private Stage stage;
 
-    private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
+    private final TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
 
     private final MenuBackgroundRenderer backgroundRenderer;
 
