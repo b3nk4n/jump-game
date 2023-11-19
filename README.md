@@ -35,6 +35,22 @@ Thanks to Dee Yan-Key for allowing me to use [his songs](https://freemusicarchiv
 
 Use Java 11 to build and run the project.
 
+### Troubleshooting
+
+### Desktop run configuration
+
+On MacOS, the VM argument `-XstartOnFirstThread` is required to launch the project on desktop.
+Setting this flag is already defined the in the `desktop:run` Gradle task. However, if you simply
+run the main method of the `DesktopLaumcher` class, the auto-created IntelliJ run configuration does
+not actually use that Gradle task. Instead, simply create this run configuration yourself:
+
+1. Select _Edit configurations..._
+2. Add a new _Gradle_ configuration
+3. Use `desktop:run` as the command to _Run_
+
+While this might only be strictly necessary for MacOS, it does not harm to do that for any platform,
+to ensure the proper Gradle task to run the desktop project is used.
+
 ## License
 
 This work is published under [MIT][mit] License.
