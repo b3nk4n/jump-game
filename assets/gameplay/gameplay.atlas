@@ -1,8 +1,8 @@
 
 gameplay.png
-size: 1024,512
+size: 1024, 512
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Nearest, Nearest
 repeat: none
 beer
   rotate: false
