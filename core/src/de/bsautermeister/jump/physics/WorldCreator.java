@@ -74,10 +74,10 @@ public class WorldCreator {
 
     private final World world;
     private final TiledMap map;
-    private TextureAtlas atlas;
-    private GameCallbacks callbacks;
+    private final TextureAtlas atlas;
+    private final GameCallbacks callbacks;
 
-    private Array<InteractiveTileObject> tileObjects = new Array<>();
+    private final Array<InteractiveTileObject> tileObjects = new Array<>();
 
     public WorldCreator(GameCallbacks callbacks, World world, TiledMap map, TextureAtlas atlas) {
         this.callbacks = callbacks;

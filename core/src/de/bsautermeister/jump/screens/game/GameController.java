@@ -2,6 +2,7 @@ package de.bsautermeister.jump.screens.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,8 +31,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
+import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.assets.Language;
+import de.bsautermeister.jump.assets.TiledImageLayerAtlasSupport;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.managers.Drownable;
@@ -142,6 +145,8 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private float infoSignMessageTtl;
     private String infoSignMessageKey;
+
+    private final AssetManager assetManager;
 
     private GameCallbacks callbacks = new GameCallbacks() {
         @Override
@@ -511,7 +516,8 @@ public class GameController  implements BinarySerializable, Disposable {
         this.gameToResume = gameToResume;
         this.screenCallbacks = screenCallbacks;
         this.soundEffects = soundEffects;
-        this.atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
+        this.assetManager = game.getAssetManager();
+        this.atlas = game.getAssetManager().get(AssetDescriptors.Atlas.GAMEPLAY);
 
         mapLoader = new TmxMapLoader();
         enemies = new ObjectMap<>();
@@ -640,6 +646,8 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         this.map = mapLoader.load(String.format(Locale.ROOT, "maps/level%02d.tmx", level));
+        TiledImageLayerAtlasSupport.replaceMapImagesWithAtlas(map, assetManager);
+
         float mapWidth = map.getProperties().get("width", Integer.class);
         float mapHeight = map.getProperties().get("height", Integer.class);
         float tilePixelWidth = map.getProperties().get("tilewidth", Integer.class);

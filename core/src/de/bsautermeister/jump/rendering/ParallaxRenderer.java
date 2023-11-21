@@ -33,8 +33,7 @@ public class ParallaxRenderer {
         renderLayer(layer, factorX, factorY, 0f);
     }
 
-    public void renderLayer(String layer, float factorX,
-                                     float factorY, float yOffset) {
+    public void renderLayer(String layer, float factorX, float factorY, float yOffset) {
         parallaxCamera.setToOrtho(false, globalCamera.viewportWidth, globalCamera.viewportHeight);
         parallaxCamera.position.set(
                 globalCamera.viewportWidth * (1 - factorX) + globalCamera.position.x * factorX,
@@ -43,10 +42,20 @@ public class ParallaxRenderer {
         parallaxCamera.update();
         mapRenderer.setView(parallaxCamera);
 
-        // repeat image along x axis
         TiledMapImageLayer imageLayer = (TiledMapImageLayer) map.getLayers().get(layer);
-        imageLayer.getTextureRegion().getTexture().setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
-        imageLayer.getTextureRegion().setRegionWidth(Cfg.WORLD_WIDTH * 100);
+
+        /*
+        While texture wrapping worked well on Android/Desktop for any texture, the use of
+        OpenGL ES on iOS requires image textures to be POT. NPOT textures are causing rendering
+        glitches (black screen). Also, individual image textures are loaded to fit the next largest
+        POT, so loading multiple individual images into memory is wasting a lot of memory.
+        And the use of TextureAtlas also does not help, because texture wrapping unfortunately only
+        works for the edges of an entire texture, and not for texture regions.
+        See also: https://stackoverflow.com/questions/25084794/can-i-get-a-repeating-texture-with-libgdx-when-using-textureatlas
+         */
+        // repeat image along x axis
+        // imageLayer.getTextureRegion().getTexture().setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
+        // imageLayer.getTextureRegion().setRegionWidth(Cfg.WORLD_WIDTH * 100);
 
         mapRenderer.renderImageLayer(imageLayer);
     }

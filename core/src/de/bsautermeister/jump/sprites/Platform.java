@@ -37,16 +37,16 @@ public class Platform extends Sprite implements BinarySerializable {
     }
 
     private String id;
-    private GameCallbacks callbacks;
-    private World world;
-    private Body body;
+    private final GameCallbacks callbacks;
+    private final World world;
+    private final Body body;
     private Vector2 targetVelocity;
 
-    private GameObjectState<State> state;
+    private final GameObjectState<State> state;
     private float touchTTL = 0.33f;
     private boolean breakable;
 
-    private Array<PlatformBouncer> bouncerRegions;
+    private final Array<PlatformBouncer> bouncerRegions;
 
     private String group;
 
@@ -170,9 +170,8 @@ public class Platform extends Sprite implements BinarySerializable {
         float yOffset = 0f;
 
         if (state.is(State.BREAKING)) {
-
-            xOffset = (float)Math.sin(state.timer() * 31f) * 1f / Cfg.PPM;
-            yOffset = (float)Math.sin(state.timer() * 51f) * 1f / Cfg.PPM;
+            xOffset = (float) Math.sin(state.timer() * 31f) / Cfg.PPM;
+            yOffset = (float) Math.sin(state.timer() * 51f) / Cfg.PPM;
 
             if (state.timer() > SHAKE_TIME) {
                 state.set(State.FALLING);

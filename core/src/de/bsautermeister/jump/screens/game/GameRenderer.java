@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import de.bsautermeister.jump.Cfg;
@@ -38,6 +37,7 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.commons.FrameBufferManager;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
 import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.screens.menu.GameOverOverlay;
@@ -90,16 +90,16 @@ public class GameRenderer implements Disposable {
 
     private final ObjectMap<String, TextureRegion> infoHelpRegions;
 
-    public GameRenderer(SpriteBatch batch, AssetManager assetManager, TextureAtlas atlas,
-                        GameController controller, FrameBufferManager frameBufferManager) {
+    public GameRenderer(SpriteBatch batch, AssetManager assetManager, GameController controller,
+                        FrameBufferManager frameBufferManager) {
         this.batch = batch;
         this.controller = controller;
         this.camera = controller.getCamera();
         this.viewport = controller.getViewport();
         this.frameBufferManager = frameBufferManager;
 
-        float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
-        float screenPixelPerTileY = Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
+        float screenPixelPerTileX = (float) Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTileY = (float) Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
         frameBuffer = new FrameBuffer(
                 Pixmap.Format.RGBA8888,
                 (int)(screenPixelPerTileX * (Cfg.BLOCKS_X + 2 * Cfg.BLOCKS_PAD)),
@@ -113,13 +113,14 @@ public class GameRenderer implements Disposable {
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
         stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/grayscale.fs");
 
+        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.GAMEPLAY);
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
         i18n = assetManager.get(AssetDescriptors.I18n.LANGUAGE);
         font = assetManager.get(AssetDescriptors.Fonts.S);
         infoFont = assetManager.get(AssetDescriptors.Fonts.M);
 
-        mapRenderer = new OrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
+        mapRenderer = new RepeatedXOrthogonalTiledMapRenderer(controller.getMap(), 1 / Cfg.PPM, batch);
         this.parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
 
         box2DDebugRenderer = new Box2DDebugRenderer(true, true, false, true, true, true);

@@ -20,8 +20,11 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.bsautermeister.jump.Cfg;
+import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
+import de.bsautermeister.jump.assets.TiledImageLayerAtlasSupport;
 import de.bsautermeister.jump.physics.WorldCreator;
+import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
 import de.bsautermeister.jump.sprites.Snorer;
 import de.bsautermeister.jump.utils.GdxUtils;
@@ -47,19 +50,22 @@ public class MenuBackgroundRenderer implements Disposable {
     private final static float IN_TRANSITION_TIME = 3f;
     private float gameTime;
 
-    public MenuBackgroundRenderer(AssetManager assetManager, SpriteBatch batch, TextureAtlas atlas) {
+    public MenuBackgroundRenderer(AssetManager assetManager, SpriteBatch batch) {
         this.batch = batch;
         camera = new OrthographicCamera();
         viewport = new StretchViewport(Cfg.WORLD_WIDTH / Cfg.PPM, Cfg.WORLD_HEIGHT / Cfg.PPM, camera);
 
         waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
 
+        TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.GAMEPLAY);
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("maps/menu_background.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
+        mapRenderer = new RepeatedXOrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
         parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
+
+        TiledImageLayerAtlasSupport.replaceMapImagesWithAtlas(map, assetManager);
         parallaxRenderer.setMap(map);
 
         WorldCreator worldCreator = new WorldCreator(null, null, map, atlas);
@@ -68,6 +74,7 @@ public class MenuBackgroundRenderer implements Disposable {
 
         snorer = new Snorer(assetManager, atlas, worldCreator.getSnorerRegion());
     }
+
 
     public void update(float delta) {
         gameTime += delta;

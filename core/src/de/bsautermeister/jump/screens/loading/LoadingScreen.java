@@ -74,7 +74,7 @@ public class LoadingScreen extends ScreenBase {
         loadingBg = new Image(atlas.findRegion(RegionNames.LOADING_FRAME_BACKGROUND));
 
         // Add the loading bar animation
-        Animation anim = new Animation<TextureAtlas.AtlasRegion>(0.05f, atlas.findRegions(RegionNames.LOADING_ANIMATION));
+        Animation<TextureAtlas.AtlasRegion> anim = new Animation<>(0.05f, atlas.findRegions(RegionNames.LOADING_ANIMATION));
         anim.setPlayMode(Animation.PlayMode.LOOP);
         loadingBar = new LoadingBar(anim);
 
@@ -90,7 +90,7 @@ public class LoadingScreen extends ScreenBase {
     }
 
     private void loadAssets() {
-        for (AssetDescriptor assetDescriptor : AssetDescriptors.ALL) {
+        for (AssetDescriptor<?> assetDescriptor : AssetDescriptors.ALL) {
             getAssetManager().load(assetDescriptor);
         }
     }

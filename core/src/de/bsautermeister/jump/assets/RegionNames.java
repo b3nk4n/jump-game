@@ -1,6 +1,6 @@
 package de.bsautermeister.jump.assets;
 
-public class RegionNames {
+public final class RegionNames {
     public static String SMALL_PLAYER_WALK_TPL = "small_player_*_walk";
     public static String SMALL_PLAYER_STAND_TPL = "small_player_*_stand";
     public static String SMALL_PLAYER_JUMP_TPL = "small_player_*_jump";
@@ -103,7 +103,18 @@ public class RegionNames {
     public static String UI_CONTROL_LEFT = "control_left";
     public static String UI_CONTROL_RIGHT = "control_right";
     public static String UI_CONTROL_UP = "control_up";
-    public static String UI_CONTROL_FIRE ="control_fire";
+    public static String UI_CONTROL_FIRE = "control_fire";
+
+    public static String MAPS_CLOUDS = "clouds";
+    public static String MAPS_GRASS1 = "grass1";
+    public static String MAPS_GRASS2 = "grass2";
+    public static String MAPS_MOUNTAINS = "mountains";
+    public static String MAPS_MUNICH1 = "munich1";
+    public static String MAPS_MUNICH2 = "munich2";
+    public static String MAPS_PINE1 = "pine1";
+    public static String MAPS_PINE2 = "pine2";
+    public static String MAPS_SKY1 = "sky1";
+    public static String MAPS_SKY2 = "sky2";
 
     private RegionNames() {}
 

@@ -10,6 +10,7 @@ public interface AssetPaths {
         String LOADING = "loading/loading.atlas";
         String GAMEPLAY = "gameplay/gameplay.atlas";
         String UI = "ui/ui.atlas";
+        String MAPS = "maps/maps.atlas";
     }
 
     interface Fonts {

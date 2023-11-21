@@ -31,6 +31,8 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.Atlas.GAMEPLAY, TextureAtlas.class);
         AssetDescriptor<TextureAtlas> UI =
                 new AssetDescriptor<>(AssetPaths.Atlas.UI, TextureAtlas.class);
+        AssetDescriptor<TextureAtlas> MAPS =
+                new AssetDescriptor<>(AssetPaths.Atlas.MAPS, TextureAtlas.class);
     }
 
     interface Skins {
@@ -194,9 +196,9 @@ public interface AssetDescriptors {
                 new AssetDescriptor<>(AssetPaths.I18n.LOADING_LANGUAGE, I18NBundle.class);
     }
 
-    AssetDescriptor[] ALL = {
+    AssetDescriptor<?>[] ALL = {
             Fonts.S, Fonts.M, Fonts.L, Fonts.XL, Fonts.XXL, Fonts.TITLE,
-            Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI,
+            Atlas.LOADING, Atlas. GAMEPLAY, Atlas.UI, Skins.UI, Atlas.MAPS,
             Sounds.COIN, Sounds.BUMP, Sounds.BREAK_BLOCK, Sounds.BEER_SPAWN,
             Sounds.COIN_SPAWN, Sounds.EAT_FOOD, Sounds.STOMP, Sounds.LANDING,
             Sounds.JUMP, Sounds.KICKED, Sounds.SPLASH, Sounds.FIRE, Sounds.DRINKING, Sounds.SUCCESS,

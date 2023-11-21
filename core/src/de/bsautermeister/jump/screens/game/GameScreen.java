@@ -26,8 +26,6 @@ public class GameScreen extends ScreenBase {
     private GameRenderer renderer;
     private GameSoundEffects soundEffects;
 
-    private TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
-
     private int level;
     private final FileHandle gameToResume;
 
@@ -104,7 +102,7 @@ public class GameScreen extends ScreenBase {
         soundEffects = new GameSoundEffects(getAssetManager());
         controller = new GameController(callbacks, getGame(), soundEffects,
                 level, gameToResume);
-        renderer = new GameRenderer(getBatch(), getAssetManager(), atlas, controller, getGame().getFrameBufferManager());
+        renderer = new GameRenderer(getBatch(), getAssetManager(), controller, getGame().getFrameBufferManager());
 
         JumpGame.deleteSavedData();
 
@@ -132,7 +130,6 @@ public class GameScreen extends ScreenBase {
     public void dispose() {
         renderer.dispose();
         controller.dispose();
-        atlas.dispose();
     }
 
     @Override

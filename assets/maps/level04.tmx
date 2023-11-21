@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="264" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="456">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="264" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="40" nextobjectid="456">
  <tileset firstgid="1" source="OctoberBro.tsx"/>
- <imagelayer id="22" name="bgImageStatic">
+ <imagelayer id="22" name="bgImageStatic" repeatx="1">
   <image source="sky1.png" width="256" height="1024"/>
  </imagelayer>
- <imagelayer id="21" name="bgImageClouds2" offsetx="0" offsety="128">
+ <imagelayer id="21" name="bgImageClouds2" offsetx="0" offsety="128" repeatx="1">
   <image source="sky2.png" width="256" height="640"/>
  </imagelayer>
- <imagelayer id="27" name="bgImageMountains" offsetx="0" offsety="448">
+ <imagelayer id="27" name="bgImageMountains" offsetx="0" offsety="448" repeatx="1">
   <image source="mountains.png" width="384" height="320"/>
  </imagelayer>
- <imagelayer id="20" name="bgImageClouds1" opacity="0.9" offsetx="64" offsety="128">
+ <imagelayer id="20" name="bgImageClouds1" opacity="0.9" offsetx="64" offsety="128" repeatx="1">
   <image source="clouds.png" width="256" height="640"/>
  </imagelayer>
- <imagelayer id="33" name="bgImageMunich2" offsetx="-200" offsety="398">
+ <imagelayer id="33" name="bgImageMunich2" offsetx="-200" offsety="398" repeatx="1">
   <image source="munich-2.png" width="715" height="250"/>
  </imagelayer>
- <imagelayer id="32" name="bgImageMunich1" offsetx="0" offsety="408">
+ <imagelayer id="32" name="bgImageMunich1" offsetx="0" offsety="408" repeatx="1">
   <image source="munich-1.png" width="715" height="250"/>
  </imagelayer>
- <imagelayer id="23" name="bgImageForrest2" offsetx="0" offsety="464">
+ <imagelayer id="23" name="bgImageForrest2" offsetx="0" offsety="464" repeatx="1">
   <image source="pine2.png" width="688" height="264"/>
  </imagelayer>
- <imagelayer id="24" name="bgImageForrest1" offsetx="0" offsety="496">
+ <imagelayer id="24" name="bgImageForrest1" offsetx="0" offsety="496" repeatx="1">
   <image source="pine1.png" width="688" height="200"/>
  </imagelayer>
- <imagelayer id="35" name="bgImageGrass2" offsetx="0" offsety="464">
+ <imagelayer id="35" name="bgImageGrass2" offsetx="0" offsety="464" repeatx="1">
   <image source="grass2.png" width="400" height="232"/>
  </imagelayer>
- <imagelayer id="34" name="bgImageGrass1" offsetx="0" offsety="488">
+ <imagelayer id="34" name="bgImageGrass1" offsetx="0" offsety="488" repeatx="1">
   <image source="grass1.png" width="400" height="240"/>
  </imagelayer>
  <layer id="4" name="bgTiles" width="264" height="48">

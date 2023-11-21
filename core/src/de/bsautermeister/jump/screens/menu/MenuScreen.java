@@ -31,8 +31,6 @@ public class MenuScreen extends ScreenBase {
     private final Viewport uiViewport;
     private Stage stage;
 
-    private final TextureAtlas atlas = new TextureAtlas(AssetPaths.Atlas.GAMEPLAY);
-
     private final MenuBackgroundRenderer backgroundRenderer;
 
     private Table content;
@@ -47,7 +45,7 @@ public class MenuScreen extends ScreenBase {
     public MenuScreen(GameApp game, boolean skipIntroTransition, String contentType, int lastLevel) {
         super(game);
         this.uiViewport = new StretchViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
-        backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch(), atlas);
+        backgroundRenderer = new MenuBackgroundRenderer(getAssetManager(), getBatch());
         if (skipIntroTransition) {
             backgroundRenderer.skipIntroTransition();
         }
@@ -177,7 +175,6 @@ public class MenuScreen extends ScreenBase {
     public void dispose() {
         stage.dispose();
         backgroundRenderer.dispose();
-        atlas.dispose();
     }
 
     @Override
