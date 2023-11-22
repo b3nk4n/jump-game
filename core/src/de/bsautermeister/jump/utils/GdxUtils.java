@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.utils;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -27,5 +28,9 @@ public class GdxUtils {
         }
 
         return shader;
+    }
+
+    public static boolean isNotIOS() {
+        return Gdx.app.getType() != Application.ApplicationType.iOS;
     }
 }

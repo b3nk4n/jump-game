@@ -37,8 +37,8 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.commons.FrameBufferManager;
 import de.bsautermeister.jump.physics.WorldCreator;
-import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
+import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
 import de.bsautermeister.jump.scenes.Hud;
 import de.bsautermeister.jump.screens.menu.GameOverOverlay;
 import de.bsautermeister.jump.screens.menu.PauseOverlay;
@@ -66,7 +66,11 @@ public class GameRenderer implements Disposable {
     private final Viewport uiViewport;
     private final Hud hud;
 
-    private final FrameBuffer frameBuffer;
+    /**
+     * Note that frame buffer is not unproblematic on iOS. See:
+     * <a href="https://github.com/libgdx/libgdx/issues/3864">LibGdx Issue#3864</a>
+     */
+    private FrameBuffer frameBuffer = null;
 
     private final ShaderProgram waterShader;
     private final TextureRegion waterTexture;
@@ -100,16 +104,20 @@ public class GameRenderer implements Disposable {
 
         float screenPixelPerTileX = (float) Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         float screenPixelPerTileY = (float) Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
-        frameBuffer = new FrameBuffer(
-                Pixmap.Format.RGBA8888,
-                (int)(screenPixelPerTileX * (Cfg.BLOCKS_X + 2 * Cfg.BLOCKS_PAD)),
-                (int)(screenPixelPerTileY * (Cfg.BLOCKS_Y + 2 * Cfg.BLOCKS_PAD)),
-                false);
+
+        if (GdxUtils.isNotIOS()) {
+            // iOS seems to have problems when frame buffers are used
+            frameBuffer = new FrameBuffer(
+                    Pixmap.Format.RGBA8888,
+                    (int) (screenPixelPerTileX * (Cfg.BLOCKS_X + 2 * Cfg.BLOCKS_PAD)),
+                    (int) (screenPixelPerTileY * (Cfg.BLOCKS_Y + 2 * Cfg.BLOCKS_PAD)),
+                    false);
+        }
 
         uiViewport = new StretchViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
         hud = new Hud(batch, uiViewport, assetManager, controller.getTotalBeers());
 
-        waterShader = GdxUtils.loadCompiledShader("shader/default.vs","shader/water.fs");
+        waterShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/water.fs");
         drunkShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/wave_distortion.fs");
         stonedShader = GdxUtils.loadCompiledShader("shader/default.vs", "shader/grayscale.fs");
 
@@ -150,7 +158,10 @@ public class GameRenderer implements Disposable {
         GdxUtils.clearScreen(Color.BLACK);
         viewport.apply();
 
-        frameBufferManager.begin(frameBuffer);
+        if (frameBuffer != null) {
+            frameBufferManager.begin(frameBuffer);
+        }
+
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
@@ -163,7 +174,10 @@ public class GameRenderer implements Disposable {
         renderEffects(batch);
         batch.setShader(null);
         batch.end();
-        frameBufferManager.end();
+
+        if (frameBuffer != null) {
+            frameBufferManager.end();
+        }
 
         batch.begin();
 
@@ -176,25 +190,32 @@ public class GameRenderer implements Disposable {
             drunkShader.setUniformf("u_velocity", 71f, 111f);
         }
 
-        float screenPixelPerTileX = Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
-        float screenPixelPerTileY = Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
-        batch.draw(frameBuffer.getColorBufferTexture(),
-                camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                (int)screenPixelPerTileX * 2, (int)screenPixelPerTileY * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+        float screenPixelPerTileX = (float) Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
+        float screenPixelPerTileY = (float) Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
+
+        if (frameBuffer != null) {
+            batch.draw(frameBuffer.getColorBufferTexture(),
+                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
+                    (int) screenPixelPerTileX * 2, (int) screenPixelPerTileY * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+        }
 
         if (player.isHammered()) {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, player.getHammeredRatio());
-            float offsetX1 =  screenPixelPerTileX * 0.66f * (float)Math.sin(-gameTime) * player.getHammeredRatio();
-            float offsetY1 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.8f) * player.getHammeredRatio();
-            float offsetX2 =  screenPixelPerTileX * 0.66f * (float)Math.sin(gameTime * 0.9f) * player.getHammeredRatio();
-            float offsetY2 =  screenPixelPerTileY * 0.66f * (float)Math.cos(gameTime * 0.7f) * player.getHammeredRatio();
-            batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTileX * 2 + offsetX1), (int)(screenPixelPerTileY * 2 - offsetY1), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-            batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int)(screenPixelPerTileX * 2 - offsetX2), (int)(screenPixelPerTileY * 2 + offsetY2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+            float offsetX1 = screenPixelPerTileX * 0.66f * (float) Math.sin(-gameTime) * player.getHammeredRatio();
+            float offsetY1 = screenPixelPerTileY * 0.66f * (float) Math.cos(gameTime * 0.8f) * player.getHammeredRatio();
+            float offsetX2 = screenPixelPerTileX * 0.66f * (float) Math.sin(gameTime * 0.9f) * player.getHammeredRatio();
+            float offsetY2 = screenPixelPerTileY * 0.66f * (float) Math.cos(gameTime * 0.7f) * player.getHammeredRatio();
+
+            if (frameBuffer != null) {
+                batch.draw(frameBuffer.getColorBufferTexture(),
+                        camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
+                        (int) (screenPixelPerTileX * 2 + offsetX1), (int) (screenPixelPerTileY * 2 - offsetY1), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+                batch.draw(frameBuffer.getColorBufferTexture(),
+                        camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
+                        (int) (screenPixelPerTileX * 2 - offsetX2), (int) (screenPixelPerTileY * 2 + offsetY2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+            }
+
             batch.setColor(Color.WHITE);
         }
 
@@ -321,13 +342,13 @@ public class GameRenderer implements Disposable {
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_opacity", opacity);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
-           int regionHeightInPixel = MathUtils.round(waterRegion.getHeight() * Cfg.PPM);
-           batch.draw(waterTexture.getTexture(),
-                   waterRegion.getX(), (waterRegion.getY()),
-                   waterRegion.getWidth(), waterRegion.getHeight(),
-                   waterTexture.getRegionX(), waterTexture.getRegionY(),
-                   waterTexture.getRegionWidth(), regionHeightInPixel,
-                   false, false);
+            int regionHeightInPixel = MathUtils.round(waterRegion.getHeight() * Cfg.PPM);
+            batch.draw(waterTexture.getTexture(),
+                    waterRegion.getX(), (waterRegion.getY()),
+                    waterRegion.getWidth(), waterRegion.getHeight(),
+                    waterTexture.getRegionX(), waterTexture.getRegionY(),
+                    waterTexture.getRegionWidth(), regionHeightInPixel,
+                    false, false);
         }
         batch.setShader(prevShader);
     }
@@ -451,7 +472,9 @@ public class GameRenderer implements Disposable {
         waterShader.dispose();
         drunkShader.dispose();
         stonedShader.dispose();
-        frameBuffer.dispose();
+        if (frameBuffer != null) {
+            frameBuffer.dispose();
+        }
         font.dispose();
         infoFont.dispose();
         hud.dispose();
