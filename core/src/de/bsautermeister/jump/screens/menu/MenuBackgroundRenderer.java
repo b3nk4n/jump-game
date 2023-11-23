@@ -24,8 +24,8 @@ import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
 import de.bsautermeister.jump.assets.TiledImageLayerAtlasSupport;
 import de.bsautermeister.jump.physics.WorldCreator;
-import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
+import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
 import de.bsautermeister.jump.sprites.Snorer;
 import de.bsautermeister.jump.utils.GdxUtils;
 
@@ -38,7 +38,6 @@ public class MenuBackgroundRenderer implements Disposable {
     private final ShaderProgram waterShader;
     private final TextureRegion waterTexture;
 
-    private final TmxMapLoader mapLoader;
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final ParallaxRenderer parallaxRenderer;
@@ -60,7 +59,7 @@ public class MenuBackgroundRenderer implements Disposable {
         TextureAtlas atlas = assetManager.get(AssetDescriptors.Atlas.GAMEPLAY);
         waterTexture = atlas.findRegion(RegionNames.WATER);
 
-        mapLoader = new TmxMapLoader();
+        TmxMapLoader mapLoader = new TmxMapLoader();
         map = mapLoader.load("maps/menu_background.tmx");
         mapRenderer = new RepeatedXOrthogonalTiledMapRenderer(map, 1 / Cfg.PPM, batch);
         parallaxRenderer = new ParallaxRenderer(camera, mapRenderer);
@@ -81,17 +80,19 @@ public class MenuBackgroundRenderer implements Disposable {
 
         camera.position.x = viewport.getWorldWidth() / 2 + Cfg.BLOCK_SIZE_PPM;
         camera.position.y = viewport.getWorldHeight() / 2 + interpolation.apply(
-                32f, 2 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / IN_TRANSITION_TIME, 0f, 1f));
+                32f, -4 * Cfg.BLOCK_SIZE_PPM, MathUtils.clamp(gameTime / IN_TRANSITION_TIME, 0f, 1f));
 
         snorer.update(delta);
     }
 
-    public void render() {
+    public void render(boolean usedInFbo) {
         GdxUtils.clearScreen(Color.BLACK);
-        viewport.apply();
 
-        GdxUtils.clearScreen(Color.BLACK);
-        batch.setProjectionMatrix(camera.combined);
+        if (!usedInFbo) {
+            viewport.apply();
+            batch.setProjectionMatrix(camera.combined);
+        }
+
         batch.begin();
 
         if (gameTime < 0.5f) {
@@ -118,8 +119,6 @@ public class MenuBackgroundRenderer implements Disposable {
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS2_KEY, 0.85f, 0.425f);
         parallaxRenderer.renderLayer(WorldCreator.BG_IMG_GRASS1_KEY, 0.90f, 0.45f);
 
-        mapRenderer.setView(camera);
-
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.BG_TILES_KEY));
     }
 
@@ -127,7 +126,6 @@ public class MenuBackgroundRenderer implements Disposable {
         renderWater(batch, waterTexture, 1f);
         renderWater(batch, waterTexture, 0.5f);
 
-        mapRenderer.setView(camera);
         mapRenderer.renderTileLayer((TiledMapTileLayer) map.getLayers().get(WorldCreator.FG_TILES_KEY));
 
         snorer.draw(batch);

@@ -1,6 +1,5 @@
 package de.bsautermeister.jump.screens.transition;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
@@ -8,8 +7,8 @@ import com.badlogic.gdx.math.Interpolation;
 import de.bsautermeister.jump.utils.GdxUtils;
 
 public class SlideScreenTransition extends ScreenTransitionBase {
-    private boolean slideIn;
-    private Direction direction;
+    private final boolean slideIn;
+    private final Direction direction;
 
     public SlideScreenTransition(float duration, Interpolation interpolation, boolean slideIn, Direction direction) {
         super(duration, interpolation);
@@ -75,11 +74,11 @@ public class SlideScreenTransition extends ScreenTransitionBase {
         batch.draw(topTexture,
                 x, y,
                 0, 0,
-                bottomTextureWidth, bottomTextureHeight,
+                topTextureWidth, topTextureHeight,
                 1, 1,
                 0,
                 0, 0,
-                bottomTextureWidth, bottomTextureHeight,
+                topTextureWidth, topTextureHeight,
                 false, true);
 
         batch.end();

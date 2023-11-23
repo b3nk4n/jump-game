@@ -842,7 +842,7 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private void postUpdate() {
         for (Enemy enemy : enemies.values()) {
-            enemy.postUpdate();
+            enemy.postUpdate(); // FIXME why did I see multiple NPEs here?
 
             if (enemy.isRemovable()) {
                 LOG.debug("Remove: " + enemy);
