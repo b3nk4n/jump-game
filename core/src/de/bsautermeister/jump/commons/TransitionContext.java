@@ -17,19 +17,18 @@ public class TransitionContext {
     private ScreenTransition transition;
     private boolean renderedToTexture;
     private boolean transitionInProgress;
-    private Viewport transitionViewport;
+    private final Viewport transitionViewport;
     private ScreenBase currentScreen;
     private ScreenBase nextScreen;
-    private final FrameBufferManager frameBufferManager;
+    private final FrameBufferSupport frameBufferSupport = new FrameBufferSupport();
     private FrameBuffer currentFrameBuffer;
     private FrameBuffer nextFrameBuffer;
 
-    private SpriteBatch batch;
+    private final SpriteBatch batch;
 
-    TransitionContext(SpriteBatch batch, FrameBufferManager frameBufferManager) {
+    TransitionContext(SpriteBatch batch) {
         transitionViewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.batch = batch;
-        this.frameBufferManager = frameBufferManager;
     }
 
     public void setScreen(ScreenBase screen, ScreenTransition transition) {
@@ -95,15 +94,15 @@ public class TransitionContext {
     private void renderScreensToTexture(float delta) {
         // render current screen to buffer
         if (currentScreen != null) {
-            frameBufferManager.begin(currentFrameBuffer);
+            frameBufferSupport.begin(currentFrameBuffer);
             currentScreen.render(0f, true);
-            frameBufferManager.end();
+            frameBufferSupport.end();
         }
 
         // render next screen to buffer
-        frameBufferManager.begin(nextFrameBuffer);
+        frameBufferSupport.begin(nextFrameBuffer);
         nextScreen.render(delta, true);
-        frameBufferManager.end();
+        frameBufferSupport.end();
     }
 
     private void updateTransition() {

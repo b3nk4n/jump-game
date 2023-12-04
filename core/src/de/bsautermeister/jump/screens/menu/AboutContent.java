@@ -47,8 +47,6 @@ public class AboutContent extends Table {
         initialize();
     }
 
-    // TODO show version label in bottom (right) of the screen
-
     private void initialize() {
         center();
         setFillParent(true);

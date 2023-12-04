@@ -1,5 +1,6 @@
 package de.bsautermeister.jump.screens.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -103,7 +104,11 @@ public class MainMenuContent extends Table {
                     .row();
         }
 
-        Button aboutButton = new TextButton(i18n.get(Language.ABOUT), skin);
+        //Button aboutButton = new TextButton(i18n.get(Language.ABOUT), skin);
+
+        String buttonText = Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight();
+
+        Button aboutButton = new TextButton(buttonText, skin);
         aboutButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

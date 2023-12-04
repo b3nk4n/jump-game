@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.JumpGame;
-import de.bsautermeister.jump.assets.AssetPaths;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.commons.JumpGameStats;
 import de.bsautermeister.jump.screens.ScreenBase;
@@ -26,7 +24,7 @@ public class GameScreen extends ScreenBase {
     private GameRenderer renderer;
     private GameSoundEffects soundEffects;
 
-    private int level;
+    private final int level;
     private final FileHandle gameToResume;
 
     private final GameScreenCallbacks callbacks = new GameScreenCallbacks() {
@@ -42,7 +40,7 @@ public class GameScreen extends ScreenBase {
             JumpGameStats.INSTANCE.updateLevelStars(level, stars);
 
             setScreen(new FinishScreen(getGame(), level, score, ttl, totalScore, stars),
-                    new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth,
+                    new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, // TODO this animation does not seem to be visible anymore (iOS, Desktop). Not yet tested on Android.
                             true, goalCenterPosition));
         }
 
@@ -102,7 +100,7 @@ public class GameScreen extends ScreenBase {
         soundEffects = new GameSoundEffects(getAssetManager());
         controller = new GameController(callbacks, getGame(), soundEffects,
                 level, gameToResume);
-        renderer = new GameRenderer(getBatch(), getAssetManager(), controller, getGame().getFrameBufferManager());
+        renderer = new GameRenderer(getBatch(), getAssetManager(), controller);
 
         JumpGame.deleteSavedData();
 

@@ -30,7 +30,7 @@ public class GdxUtils {
         return shader;
     }
 
-    public static boolean isNotIOS() {
-        return Gdx.app.getType() != Application.ApplicationType.iOS;
+    public static boolean isIOS() {
+        return Gdx.app.getType() == Application.ApplicationType.iOS;
     }
 }

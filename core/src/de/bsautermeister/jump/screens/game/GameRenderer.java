@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -35,7 +36,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
-import de.bsautermeister.jump.commons.FrameBufferManager;
+import de.bsautermeister.jump.commons.FrameBufferSupport;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
 import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
@@ -70,7 +71,7 @@ public class GameRenderer implements Disposable {
      * Note that frame buffer is not unproblematic on iOS. See:
      * <a href="https://github.com/libgdx/libgdx/issues/3864">LibGdx Issue#3864</a>
      */
-    private FrameBuffer frameBuffer = null;
+    private final FrameBuffer frameBuffer;
 
     private final ShaderProgram waterShader;
     private final TextureRegion waterTexture;
@@ -90,29 +91,24 @@ public class GameRenderer implements Disposable {
     private final Stage overlayStage;
     private final TextureRegion backgroundOverlayRegion;
 
-    private final FrameBufferManager frameBufferManager;
+    private final FrameBufferSupport frameBufferSupport = new FrameBufferSupport();
 
     private final ObjectMap<String, TextureRegion> infoHelpRegions;
 
-    public GameRenderer(SpriteBatch batch, AssetManager assetManager, GameController controller,
-                        FrameBufferManager frameBufferManager) {
+    public GameRenderer(SpriteBatch batch, AssetManager assetManager, GameController controller) {
         this.batch = batch;
         this.controller = controller;
         this.camera = controller.getCamera();
         this.viewport = controller.getViewport();
-        this.frameBufferManager = frameBufferManager;
 
         float screenPixelPerTileX = (float) Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         float screenPixelPerTileY = (float) Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
 
-        if (GdxUtils.isNotIOS()) {
-            // iOS seems to have problems when frame buffers are used
             frameBuffer = new FrameBuffer(
                     Pixmap.Format.RGBA8888,
                     (int) (screenPixelPerTileX * (Cfg.BLOCKS_X + 2 * Cfg.BLOCKS_PAD)),
                     (int) (screenPixelPerTileY * (Cfg.BLOCKS_Y + 2 * Cfg.BLOCKS_PAD)),
                     false);
-        }
 
         uiViewport = new StretchViewport(Cfg.UI_WIDTH, Cfg.UI_HEIGHT);
         hud = new Hud(batch, uiViewport, assetManager, controller.getTotalBeers());
@@ -155,29 +151,32 @@ public class GameRenderer implements Disposable {
         mapRenderer.setMap(controller.getMap());
         parallaxRenderer.setMap(controller.getMap());
 
-        GdxUtils.clearScreen(Color.BLACK);
+        GdxUtils.clearScreen(Color.RED);
+
         viewport.apply();
 
-        if (frameBuffer != null) {
-            frameBufferManager.begin(frameBuffer);
-        }
+        frameBufferSupport.begin(frameBuffer);
 
-        batch.setProjectionMatrix(camera.combined);
+        GdxUtils.clearScreen(Color.GREEN);
 
+        batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         if (player.isHammered()) {
             batch.setShader(stonedShader);
             stonedShader.setUniformf("u_effectRatio", player.getHammeredRatio());
         }
+
         renderBackground(batch);
         renderForeground(batch);
         renderEffects(batch);
         batch.setShader(null);
         batch.end();
 
-        if (frameBuffer != null) {
-            frameBufferManager.end();
-        }
+        frameBufferSupport.end();
+
+        viewport.apply();
+        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
 
@@ -193,11 +192,10 @@ public class GameRenderer implements Disposable {
         float screenPixelPerTileX = (float) Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         float screenPixelPerTileY = (float) Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
 
-        if (frameBuffer != null) {
-            batch.draw(frameBuffer.getColorBufferTexture(),
-                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                    (int) screenPixelPerTileX * 2, (int) screenPixelPerTileY * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-        }
+        Texture bufferTexture = frameBuffer.getColorBufferTexture();
+        batch.draw(bufferTexture,
+                camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
+                (int) screenPixelPerTileX * 2, (int) screenPixelPerTileY * 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
         if (player.isHammered()) {
             Color c = batch.getColor();
@@ -338,7 +336,7 @@ public class GameRenderer implements Disposable {
         ShaderProgram prevShader = batch.getShader();
         Array<Rectangle> waterList = controller.getWaterList();
         for (Rectangle waterRegion : waterList) {
-            batch.setShader(waterShader);
+            //batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_opacity", opacity);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
@@ -350,7 +348,7 @@ public class GameRenderer implements Disposable {
                     waterTexture.getRegionWidth(), regionHeightInPixel,
                     false, false);
         }
-        batch.setShader(prevShader);
+        //batch.setShader(prevShader);
     }
 
     private void renderInfoSignMessage(SpriteBatch batch) {
