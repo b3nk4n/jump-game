@@ -74,7 +74,7 @@ public class MenuScreen extends ScreenBase {
         stage.addActor(newContent);
     }
 
-    private final Table createContent(String contentType, int lastLevel) {
+    private Table createContent(String contentType, int lastLevel) {
         if (MainMenuContent.TYPE.equals(contentType)) {
             return createMainContent();
         } else if (SelectLevelMenuContent.TYPE.equals(contentType)) {

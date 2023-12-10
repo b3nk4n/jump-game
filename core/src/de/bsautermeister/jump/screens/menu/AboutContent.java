@@ -7,11 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.I18NBundle;
 
-import de.bsautermeister.jump.GameEnv;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.Language;
 import de.bsautermeister.jump.assets.Styles;
 import de.bsautermeister.jump.screens.menu.controls.AnimatedLabel;
+import de.bsautermeister.jump.utils.GdxUtils;
 
 public class AboutContent extends Table {
 
@@ -56,12 +56,17 @@ public class AboutContent extends Table {
         updateLabels(credits[currentCreditIndex]);
 
         final Label versionLabel = new Label(versionText, skin, Styles.Label.SMALL);
+        // use extra padding in iOS due to round screen edges
+        final float rightPad = GdxUtils.isIOS() ? 42f : 16f;
         add(versionLabel)
                 .right()
                 .bottom()
                 .padBottom(16f)
-                .padRight(16f)
+                .padRight(rightPad)
                 .expand();
+        addAction(Actions.sequence(
+                Actions.alpha(0f),
+                Actions.alpha(1f, 0.5f)));
     }
 
     private void updateLabels(CreditEntry entry) {
