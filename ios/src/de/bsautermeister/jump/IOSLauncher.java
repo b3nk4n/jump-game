@@ -14,6 +14,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
         config.orientationLandscape = true;
         config.orientationPortrait = false;
+        // TODO Replace custom game service impl https://github.com/MrStahlfelge/gdx-gamesvcs/wiki/Apple-Game-Center
         return new IOSApplication(new JumpGame(new NoopGameServices(), new GameEnv() {
             @Override
             public String getVersion() {

@@ -151,13 +151,11 @@ public class GameRenderer implements Disposable {
         mapRenderer.setMap(controller.getMap());
         parallaxRenderer.setMap(controller.getMap());
 
-        GdxUtils.clearScreen(Color.RED);
+        GdxUtils.clearScreen(Color.BLACK);
 
         viewport.apply();
 
         frameBufferSupport.begin(frameBuffer);
-
-        GdxUtils.clearScreen(Color.GREEN);
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
@@ -175,7 +173,6 @@ public class GameRenderer implements Disposable {
         frameBufferSupport.end();
 
         viewport.apply();
-        batch.setProjectionMatrix(camera.combined);
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
@@ -205,14 +202,12 @@ public class GameRenderer implements Disposable {
             float offsetX2 = screenPixelPerTileX * 0.66f * (float) Math.sin(gameTime * 0.9f) * player.getHammeredRatio();
             float offsetY2 = screenPixelPerTileY * 0.66f * (float) Math.cos(gameTime * 0.7f) * player.getHammeredRatio();
 
-            if (frameBuffer != null) {
-                batch.draw(frameBuffer.getColorBufferTexture(),
-                        camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                        (int) (screenPixelPerTileX * 2 + offsetX1), (int) (screenPixelPerTileY * 2 - offsetY1), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-                batch.draw(frameBuffer.getColorBufferTexture(),
-                        camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
-                        (int) (screenPixelPerTileX * 2 - offsetX2), (int) (screenPixelPerTileY * 2 + offsetY2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
-            }
+            batch.draw(frameBuffer.getColorBufferTexture(),
+                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
+                    (int) (screenPixelPerTileX * 2 + offsetX1), (int) (screenPixelPerTileY * 2 - offsetY1), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
+            batch.draw(frameBuffer.getColorBufferTexture(),
+                    camera.position.x - camera.viewportWidth / 2, camera.position.y - camera.viewportHeight / 2, camera.viewportWidth, camera.viewportHeight,
+                    (int) (screenPixelPerTileX * 2 - offsetX2), (int) (screenPixelPerTileY * 2 + offsetY2), Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, true);
 
             batch.setColor(Color.WHITE);
         }
