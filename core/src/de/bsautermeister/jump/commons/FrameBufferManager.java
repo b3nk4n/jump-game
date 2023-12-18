@@ -8,12 +8,17 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.BufferUtils;
 
 import java.nio.IntBuffer;
+import java.util.Stack;
 
 import de.bsautermeister.jump.utils.GdxUtils;
 
-public class FrameBufferSupport {
+public class FrameBufferManager {
 
-    private FrameBuffer fbo;
+    /**
+     * Using a stack is helpful when using FBOs within an FBO context.
+     * In this game, this is for example the case during screen transitions of the game scene.
+     */
+    private final Stack<FrameBuffer> fboStack = new Stack<>();
 
     /**
      * Only strictly needed for iOS, but generally working, there is a bug in LibGdx 1.12.1, that
@@ -24,26 +29,34 @@ public class FrameBufferSupport {
      * Because when using different screens with different back buffers, the value can actually
      * differ within a single game. And therefore should better be set each time.
      */
-    private int previousFboIdx;
+    private int defaultFboIdx;
 
-    public void begin(FrameBuffer fbo) {
-        this.fbo = fbo;
-
-        if (GdxUtils.isIOS()) {
-            IntBuffer oldFbo = BufferUtils.newIntBuffer(1);
-            Gdx.gl.glGetIntegerv(GL_FRAMEBUFFER_BINDING, oldFbo);
-            previousFboIdx = oldFbo.get();
+    public void begin(FrameBuffer buffer) {
+        if (!fboStack.isEmpty()) {
+            fboStack.peek().end();
         }
 
-        fbo.begin();
+        if (fboStack.isEmpty()) {
+            if (GdxUtils.isIOS()) {
+                IntBuffer oldFbo = BufferUtils.newIntBuffer(1);
+                Gdx.gl.glGetIntegerv(GL_FRAMEBUFFER_BINDING, oldFbo);
+                defaultFboIdx = oldFbo.get();
+            }
+        }
+
+        fboStack.push(buffer).begin();
     }
 
     public void end() {
-        fbo.end();
-        fbo = null;
+        fboStack.pop().end();
+        if (!fboStack.isEmpty()) {
+            fboStack.peek().begin();
+        }
 
-        if (GdxUtils.isIOS()) {
-            Gdx.gl.glBindFramebuffer(GL_FRAMEBUFFER, previousFboIdx);
+        if (fboStack.isEmpty()) {
+            if (GdxUtils.isIOS()) {
+                Gdx.gl.glBindFramebuffer(GL_FRAMEBUFFER, defaultFboIdx);
+            }
         }
     }
 }

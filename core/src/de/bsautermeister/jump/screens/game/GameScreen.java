@@ -100,7 +100,8 @@ public class GameScreen extends ScreenBase {
         soundEffects = new GameSoundEffects(getAssetManager());
         controller = new GameController(callbacks, getGame(), soundEffects,
                 level, gameToResume);
-        renderer = new GameRenderer(getBatch(), getAssetManager(), controller);
+        renderer = new GameRenderer(getBatch(), getAssetManager(), controller,
+                getGame().getFrameBufferManager());
 
         JumpGame.deleteSavedData();
 
@@ -115,8 +116,13 @@ public class GameScreen extends ScreenBase {
 
     @Override
     public void render(float delta) {
+        render(delta, false);
+    }
+
+    @Override
+    public void render(float delta, boolean usedInFbo) {
         controller.update(delta);
-        renderer.render(delta);
+        renderer.render(delta, usedInFbo);
     }
 
     @Override

@@ -50,7 +50,7 @@ public abstract class ScreenBase extends ScreenAdapter {
      * can be required when rendering the screen to a frame buffer as render target.
      */
     public void render(float delta, boolean usedInFbo) {
-        super.render(delta);
+        this.render(delta);
     }
 
     @Override

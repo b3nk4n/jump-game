@@ -36,7 +36,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.assets.AssetDescriptors;
 import de.bsautermeister.jump.assets.RegionNames;
-import de.bsautermeister.jump.commons.FrameBufferSupport;
+import de.bsautermeister.jump.commons.FrameBufferManager;
 import de.bsautermeister.jump.physics.WorldCreator;
 import de.bsautermeister.jump.rendering.ParallaxRenderer;
 import de.bsautermeister.jump.rendering.RepeatedXOrthogonalTiledMapRenderer;
@@ -91,15 +91,17 @@ public class GameRenderer implements Disposable {
     private final Stage overlayStage;
     private final TextureRegion backgroundOverlayRegion;
 
-    private final FrameBufferSupport frameBufferSupport = new FrameBufferSupport();
+    private final FrameBufferManager frameBufferManager;
 
     private final ObjectMap<String, TextureRegion> infoHelpRegions;
 
-    public GameRenderer(SpriteBatch batch, AssetManager assetManager, GameController controller) {
+    public GameRenderer(SpriteBatch batch, AssetManager assetManager, GameController controller,
+                        FrameBufferManager frameBufferManager) {
         this.batch = batch;
         this.controller = controller;
         this.camera = controller.getCamera();
         this.viewport = controller.getViewport();
+        this.frameBufferManager = frameBufferManager;
 
         float screenPixelPerTileX = (float) Gdx.graphics.getWidth() / Cfg.BLOCKS_X;
         float screenPixelPerTileY = (float) Gdx.graphics.getHeight() / Cfg.BLOCKS_Y;
@@ -141,7 +143,7 @@ public class GameRenderer implements Disposable {
         Gdx.input.setInputProcessor(overlayStage);
     }
 
-    public void render(float delta) {
+    public void render(float delta, boolean usedInFbo) {
         float gameTime = controller.getGameTime();
         Player player = controller.getPlayer();
         int score = controller.getScore();
@@ -153,11 +155,15 @@ public class GameRenderer implements Disposable {
 
         GdxUtils.clearScreen(Color.BLACK);
 
-        viewport.apply();
+        if (!usedInFbo) {
+            viewport.apply();
+        }
 
-        frameBufferSupport.begin(frameBuffer);
+        frameBufferManager.begin(frameBuffer);
 
-        batch.setProjectionMatrix(viewport.getCamera().combined);
+        if (!usedInFbo) {
+            batch.setProjectionMatrix(viewport.getCamera().combined);
+        }
         batch.begin();
         if (player.isHammered()) {
             batch.setShader(stonedShader);
@@ -170,10 +176,12 @@ public class GameRenderer implements Disposable {
         batch.setShader(null);
         batch.end();
 
-        frameBufferSupport.end();
+        frameBufferManager.end();
 
-        viewport.apply();
-        batch.setProjectionMatrix(viewport.getCamera().combined);
+        if (!usedInFbo) {
+            viewport.apply();
+            batch.setProjectionMatrix(viewport.getCamera().combined);
+        }
 
         batch.begin();
 
@@ -232,8 +240,11 @@ public class GameRenderer implements Disposable {
             camera.update();
         }
 
-        uiViewport.apply();
-        batch.setProjectionMatrix(hud.getCamera().combined);
+        if (!usedInFbo) {
+            uiViewport.apply();
+            batch.setProjectionMatrix(hud.getCamera().combined);
+        }
+
         hud.update(collectedBeers, score, player.getRemainingPretzels(), ttl);
         renderHud(batch);
         renderInfoSignMessage(batch);
@@ -331,7 +342,7 @@ public class GameRenderer implements Disposable {
         ShaderProgram prevShader = batch.getShader();
         Array<Rectangle> waterList = controller.getWaterList();
         for (Rectangle waterRegion : waterList) {
-            //batch.setShader(waterShader);
+            batch.setShader(waterShader);
             waterShader.setUniformf("u_time", gameTime);
             waterShader.setUniformf("u_opacity", opacity);
             waterShader.setUniformf("u_width", waterRegion.getWidth() * Cfg.PPM);
@@ -343,7 +354,7 @@ public class GameRenderer implements Disposable {
                     waterTexture.getRegionWidth(), regionHeightInPixel,
                     false, false);
         }
-        //batch.setShader(prevShader);
+        batch.setShader(prevShader);
     }
 
     private void renderInfoSignMessage(SpriteBatch batch) {
