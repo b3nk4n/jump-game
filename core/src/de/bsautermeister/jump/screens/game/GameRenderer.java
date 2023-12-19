@@ -161,10 +161,9 @@ public class GameRenderer implements Disposable {
 
         frameBufferManager.begin(frameBuffer);
 
-        if (!usedInFbo) {
-            batch.setProjectionMatrix(viewport.getCamera().combined);
-        }
+        batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
+
         if (player.isHammered()) {
             batch.setShader(stonedShader);
             stonedShader.setUniformf("u_effectRatio", player.getHammeredRatio());
@@ -180,9 +179,9 @@ public class GameRenderer implements Disposable {
 
         if (!usedInFbo) {
             viewport.apply();
-            batch.setProjectionMatrix(viewport.getCamera().combined);
         }
 
+        batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
 
         if (player.isDrunk()) {
@@ -242,8 +241,8 @@ public class GameRenderer implements Disposable {
 
         if (!usedInFbo) {
             uiViewport.apply();
-            batch.setProjectionMatrix(hud.getCamera().combined);
         }
+        batch.setProjectionMatrix(hud.getCamera().combined);
 
         hud.update(collectedBeers, score, player.getRemainingPretzels(), ttl);
         renderHud(batch);
