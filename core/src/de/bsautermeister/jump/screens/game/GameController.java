@@ -842,12 +842,16 @@ public class GameController  implements BinarySerializable, Disposable {
 
     private void postUpdate() {
         for (Enemy enemy : enemies.values()) {
-            enemy.postUpdate(); // FIXME why did I see multiple NPEs here?
+            enemy.postUpdate();
 
             if (enemy.isRemovable()) {
                 LOG.debug("Remove: " + enemy);
                 enemy.dispose();
                 enemies.remove(enemy.getId());
+
+                // For now, only remove one element at a time, due to a bug in LibGdx since 1.9.11,
+                // see: https://github.com/libgdx/libgdx/issues/7314
+                break;
             }
         }
 
@@ -861,6 +865,10 @@ public class GameController  implements BinarySerializable, Disposable {
                 if (item instanceof Drownable) {
                     waterInteractionManager.remove((Drownable) item);
                 }
+
+                // For now, only remove one element at a time, due to a bug in LibGdx since 1.9.11,
+                // see: https://github.com/libgdx/libgdx/issues/7314
+                break;
             }
         }
 
@@ -870,6 +878,10 @@ public class GameController  implements BinarySerializable, Disposable {
             if (coin.isRemovable()) {
                 coin.dispose();
                 coins.removeValue(coin, true);
+
+                // For now, only remove one element at a time, due to a bug in LibGdx since 1.9.11,
+                // see: https://github.com/libgdx/libgdx/issues/7314
+                break;
             }
         }
 

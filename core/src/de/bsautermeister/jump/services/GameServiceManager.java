@@ -19,7 +19,7 @@ public class GameServiceManager {
 
     private final IGameServiceClient gameServiceClient;
 
-    private Map<String, Boolean> onlineAchievements = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> onlineAchievements = new HashMap<String, Boolean>();
 
     public GameServiceManager(IGameServiceClient gameServiceClient) {
         this.gameServiceClient = gameServiceClient;
