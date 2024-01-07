@@ -27,7 +27,7 @@ allprojects {
         ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.2.1'
-        gmsLibraryVersion = '7.8.0' // https://mvnrepository.com/artifact/com.google.android.gms/play-services-games
+        gdxgamesvcsVersion = '1.1.0'
     }
 
     repositories {
@@ -71,7 +71,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
-        implementation project(":libraries:BaseGameUtils")
+        implementation "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gdxgamesvcsVersion"
     }
 }
 
@@ -95,6 +95,6 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        
+        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gdxgamesvcsVersion"
     }
 }

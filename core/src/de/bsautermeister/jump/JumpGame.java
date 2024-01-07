@@ -6,21 +6,17 @@ import com.badlogic.gdx.files.FileHandle;
 
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.loading.LoadingScreen;
-import de.bsautermeister.jump.serializer.BinarySerializable;
 import de.bsautermeister.jump.serializer.BinarySerializer;
 import de.bsautermeister.jump.services.GameServiceManager;
-import de.bsautermeister.jump.services.GameServices;
+import de.golfgl.gdxgamesvcs.IGameServiceClient;
 
 public class JumpGame extends GameApp {
     private final static String SAVE_DAT_FILENAME = "save_game.dat";
 
-    private final GameServices gameServices;
-
     private static GameServiceManager gameServiceManager;
 
-    public JumpGame(GameServices gameServices, GameEnv gameEnv) {
-        super(gameEnv);
-        this.gameServices = gameServices;
+    public JumpGame(GameEnv gameEnv, IGameServiceClient gameServiceClient) {
+        super(gameEnv, gameServiceClient);
     }
 
     @Override
@@ -28,7 +24,7 @@ public class JumpGame extends GameApp {
         super.create();
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-        gameServiceManager = new GameServiceManager(gameServices);
+        gameServiceManager = new GameServiceManager(getGameServiceClient());
 
         setScreen(new LoadingScreen(this));
     }

@@ -4,17 +4,25 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Logger;
 
+import de.bsautermeister.jump.Cfg;
 import de.bsautermeister.jump.GameEnv;
 import de.bsautermeister.jump.audio.MusicPlayer;
 import de.bsautermeister.jump.screens.ScreenBase;
 import de.bsautermeister.jump.screens.transition.ScreenTransition;
+import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.IGameServiceListener;
 
 public abstract class GameApp implements ApplicationListener {
+
+    private static final Logger LOG = new Logger(GameApp.class.getSimpleName(), Cfg.LOG_LEVEL);
+
     private AssetManager assetManager;
     private SpriteBatch batch;
 
     private final GameEnv gameEnv;
+    private final IGameServiceClient gameServiceClient;
 
     private TransitionContext transitionContext;
 
@@ -23,8 +31,9 @@ public abstract class GameApp implements ApplicationListener {
 
     private FrameBufferManager frameBufferManager;
 
-    public GameApp(GameEnv gameEnv) {
+    public GameApp(GameEnv gameEnv, IGameServiceClient gameServiceClient) {
         this.gameEnv = gameEnv;
+        this.gameServiceClient = gameServiceClient;
     }
 
     @Override
@@ -37,6 +46,25 @@ public abstract class GameApp implements ApplicationListener {
 
         backgroundMusic = new MusicPlayer();
         foregroundMusic = new MusicPlayer();
+
+        gameServiceClient.setListener(new IGameServiceListener() {
+            @Override
+            public void gsOnSessionActive() {
+                LOG.info("Game service session active");
+            }
+
+            @Override
+            public void gsOnSessionInactive() {
+                LOG.info("Game service session inactive");
+            }
+
+            @Override
+            public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
+                LOG.error("Game service error: " + msg, t);
+            }
+        });
+
+        gameServiceClient.resumeSession();
     }
 
     public void setScreen(ScreenBase screen) {
@@ -73,6 +101,7 @@ public abstract class GameApp implements ApplicationListener {
         if (foregroundMusic.isPlaying()) {
             foregroundMusic.pause();
         }
+        gameServiceClient.pauseSession();
     }
 
     @Override
@@ -80,6 +109,7 @@ public abstract class GameApp implements ApplicationListener {
         transitionContext.resume();
         backgroundMusic.resumeOrPlay();
         foregroundMusic.resumeOrPlay();
+        gameServiceClient.resumeSession();
     }
 
     @Override
@@ -113,5 +143,9 @@ public abstract class GameApp implements ApplicationListener {
 
     public FrameBufferManager getFrameBufferManager() {
         return frameBufferManager;
+    }
+
+    public IGameServiceClient getGameServiceClient() {
+        return gameServiceClient;
     }
 }

@@ -1,21 +1,28 @@
 package de.bsautermeister.jump.services;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import de.bsautermeister.jump.Cfg;
+import de.golfgl.gdxgamesvcs.GameServiceException;
+import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.MockGameServiceClient;
+import de.golfgl.gdxgamesvcs.NoGameServiceClient;
+import de.golfgl.gdxgamesvcs.achievement.IAchievement;
+import de.golfgl.gdxgamesvcs.achievement.IFetchAchievementsResponseListener;
 
-public class GameServiceManager implements OnlineServices, PlatformDependentService {
+public class GameServiceManager {
     private static final Logger LOG = new Logger(GameServiceManager.class.getSimpleName(), Cfg.LOG_LEVEL);
 
-    private final GameServices gameServices;
+    private final IGameServiceClient gameServiceClient;
 
     private Map<String, Boolean> onlineAchievements = new HashMap<String, Boolean>();
 
-    public GameServiceManager(GameServices gameServices) {
-        this.gameServices = gameServices;
+    public GameServiceManager(IGameServiceClient gameServiceClient) {
+        this.gameServiceClient = gameServiceClient;
     }
 
     public void refresh() {
@@ -23,15 +30,17 @@ public class GameServiceManager implements OnlineServices, PlatformDependentServ
     }
 
     private void refreshAchievements() {
-        gameServices.loadAchievementsAsync(false, new GameServices.LoadAchievementsCallback() {
+        gameServiceClient.fetchAchievements(new IFetchAchievementsResponseListener() {
             @Override
-            public void success(Map<String, Boolean> achievementsResult) {
-                onlineAchievements = achievementsResult;
-            }
-
-            @Override
-            public void error(String message) {
-                LOG.error("Failed to load online achievements: " + message);
+            public void onFetchAchievementsResponse(Array<IAchievement> achievements) {
+                for (String achievementKey : AchievementKeys.ALL_KEYS) {
+                    for (IAchievement achievement : achievements) {
+                        // Check via IAchievement#isAchievementId is needed to respect the key mappings
+                        if (achievement.isAchievementId(achievementKey)) {
+                            onlineAchievements.put(achievementKey, achievement.isUnlocked());
+                        }
+                    }
+                }
             }
         });
     }
@@ -62,41 +71,25 @@ public class GameServiceManager implements OnlineServices, PlatformDependentServ
 
     private void unlockAchievement(String achievementKey) {
         onlineAchievements.put(achievementKey, true);
-        gameServices.unlockAchievement(achievementKey);
+        gameServiceClient.unlockAchievement(achievementKey);
     }
 
     public boolean hasOnlineAchievements () {
         return onlineAchievements != null ? onlineAchievements.size() > 0 : false;
     }
 
-    @Override
     public boolean isSupported() {
-        return gameServices.isSupported();
+        return !(gameServiceClient instanceof MockGameServiceClient || gameServiceClient instanceof NoGameServiceClient);
     }
 
-
-    @Override
-    public void signIn() {
-        gameServices.signIn();
-    }
-
-    @Override
-    public boolean isSignedIn() {
-        return gameServices.isSignedIn();
-    }
-
-    @Override
-    public void signOut() {
-        gameServices.signOut();
-    }
-
-    @Override
-    public void rateGame() {
-        gameServices.rateGame();
-    }
-
-    @Override
     public void showAchievements() {
-        gameServices.showAchievements();
+        try {
+            gameServiceClient.showAchievements();
+        } catch (GameServiceException.NoSessionException nse) {
+            LOG.info("Signing in");
+            gameServiceClient.logIn();
+        } catch (GameServiceException e) {
+            LOG.error("Showing achievements failed", e);
+        }
     }
 }
