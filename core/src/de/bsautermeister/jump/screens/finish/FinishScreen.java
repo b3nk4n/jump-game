@@ -281,6 +281,11 @@ public class FinishScreen extends ScreenBase {
 
     @Override
     public void render(float delta) {
+        render(delta, false);
+    }
+
+    @Override
+    public void render(float delta, boolean usedInFbo) {
         insideTentRenderer.update(delta);
 
         if (Gdx.input.isTouched()) {
@@ -291,7 +296,7 @@ public class FinishScreen extends ScreenBase {
 
         GdxUtils.clearScreen(Color.BLACK);
 
-        insideTentRenderer.render(batch);
+        insideTentRenderer.render(batch, usedInFbo);
 
         stage.act();
         stage.draw();

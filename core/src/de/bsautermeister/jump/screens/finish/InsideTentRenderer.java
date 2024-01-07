@@ -89,10 +89,14 @@ public class InsideTentRenderer {
     public void update(float delta) {
         personFormation.update(delta);
         camera.update();
-        viewport.apply();
+
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, boolean usedInFbo) {
+        if (!usedInFbo) {
+            viewport.apply();
+        }
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
