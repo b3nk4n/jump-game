@@ -3,5 +3,6 @@
 
     <string name="app_name">October Bro</string>
     <string name="app_id">687640865173</string>
+    <string name="ad_app_id" translatable="false">ca-app-pub-8102925760359189~5416542234</string>
 
 </resources>

@@ -7,7 +7,9 @@ import com.badlogic.gdx.files.FileHandle;
 import de.bsautermeister.jump.commons.GameApp;
 import de.bsautermeister.jump.screens.loading.LoadingScreen;
 import de.bsautermeister.jump.serializer.BinarySerializer;
+import de.bsautermeister.jump.services.AdService;
 import de.bsautermeister.jump.services.GameServiceManager;
+import de.bsautermeister.jump.services.RateService;
 import de.golfgl.gdxgamesvcs.IGameServiceClient;
 
 public class JumpGame extends GameApp {
@@ -15,8 +17,13 @@ public class JumpGame extends GameApp {
 
     private static GameServiceManager gameServiceManager;
 
-    public JumpGame(GameEnv gameEnv, IGameServiceClient gameServiceClient) {
+    private final RateService rateService;
+    private final AdService adService;
+
+    public JumpGame(GameEnv gameEnv, IGameServiceClient gameServiceClient, RateService rateService, AdService adService) {
         super(gameEnv, gameServiceClient);
+        this.rateService = rateService;
+        this.adService = adService;
     }
 
     @Override
@@ -51,5 +58,13 @@ public class JumpGame extends GameApp {
 
     public static GameServiceManager getGameServiceManager() {
         return gameServiceManager;
+    }
+
+    public RateService getRateService() {
+        return rateService;
+    }
+
+    public AdService getAdService() {
+        return adService;
     }
 }

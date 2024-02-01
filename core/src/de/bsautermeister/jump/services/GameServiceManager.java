@@ -33,6 +33,12 @@ public class GameServiceManager {
         gameServiceClient.fetchAchievements(new IFetchAchievementsResponseListener() {
             @Override
             public void onFetchAchievementsResponse(Array<IAchievement> achievements) {
+                if (achievements == null) {
+                    // Paranoia guarding because I've at least once received a NULL parameter for
+                    // fetched achievements during debugging, which caused the app to crash
+                    achievements = new Array<>();
+                }
+
                 for (String achievementKey : AchievementKeys.ALL_KEYS) {
                     for (IAchievement achievement : achievements) {
                         // Check via IAchievement#isAchievementId is needed to respect the key mappings

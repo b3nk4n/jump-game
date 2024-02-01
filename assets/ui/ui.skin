@@ -127,5 +127,15 @@
       "font": "font_title",
       "fontColor": "white"
     }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
+    "star": {
+        "up": "star",
+        "down": "star-down"
+    },
+    "privacy": {
+        "up": "privacy",
+        "down": "privacy-down"
+    }
   }
 }

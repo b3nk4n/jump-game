@@ -5,6 +5,15 @@ import com.badlogic.gdx.utils.Logger;
 public interface Cfg {
     int LOG_LEVEL = Logger.ERROR;
     boolean DEBUG_MODE = false;
+    boolean DEBUG_ADS = false;
+
+    /**
+     * Enable consent form debugging using a local device.
+     * To get the hased ID, start the app with {@link Cfg#DEBUG_ADS} enabled and check for the log:
+     * Use new ConsentDebugSettings.Builder().addTestDeviceHashedId("XXXXXX") to set this as a debug device.
+     */
+    String DEBUG_ADS_TEST_DEVICE_HASHED_ID = "6AF04AC20756A978832ACC7053531D1B"; // Pixel 4
+
     boolean SCREENSHOT_MODE = false;
 
     float UI_WIDTH = 1280;

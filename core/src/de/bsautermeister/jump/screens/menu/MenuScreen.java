@@ -110,7 +110,17 @@ public class MenuScreen extends ScreenBase {
             public void aboutClicked() {
                 setContent(createAboutContent());
             }
-        });
+
+            @Override
+            public void rateClicked() {
+                ((JumpGame) getGame()).getRateService().rateGame();
+            }
+
+            @Override
+            public void privacyClicked() {
+                ((JumpGame) getGame()).getAdService().showPrivacyConsentForm();
+            }
+        }, ((JumpGame) getGame()).getAdService().isPrivacyOptionsRequired());
     }
 
     private Table createSelectLevelContent(final int page) {

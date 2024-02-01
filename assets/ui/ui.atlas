@@ -214,6 +214,34 @@ pretzel
   orig: 36, 30
   offset: 0, 0
   index: -1
+privacy
+  rotate: false
+  xy: 970, 972
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+privacy-down
+  rotate: false
+  xy: 781, 565
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 387, 212
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+star-down
+  rotate: false
+  xy: 970, 920
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 star_empty
   rotate: false
   xy: 854, 908
@@ -230,7 +258,7 @@ star_full
   index: -1
 time
   rotate: false
-  xy: 970, 990
+  xy: 476, 496
   size: 36, 30
   orig: 36, 30
   offset: 0, 0

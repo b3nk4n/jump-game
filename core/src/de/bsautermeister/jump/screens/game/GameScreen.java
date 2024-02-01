@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import de.bsautermeister.jump.Cfg;
@@ -17,17 +18,26 @@ import de.bsautermeister.jump.screens.game.level.LevelInfo;
 import de.bsautermeister.jump.screens.game.level.LevelMetadata;
 import de.bsautermeister.jump.screens.menu.MenuScreen;
 import de.bsautermeister.jump.screens.transition.ScaleScreenTransition;
+import de.bsautermeister.jump.services.AdService;
 
 public class GameScreen extends ScreenBase {
 
     private GameController controller;
     private GameRenderer renderer;
     private GameSoundEffects soundEffects;
+    private final AdService adService;
 
     private final int level;
     private final FileHandle gameToResume;
 
     private final GameScreenCallbacks callbacks = new GameScreenCallbacks() {
+        @Override
+        public void start() {
+            if (adService.isSupported()) {
+                adService.load();
+            }
+        }
+
         @Override
         public void success(int level, Vector2 goalCenterPosition) {
             int score = controller.getScore();
@@ -39,8 +49,12 @@ public class GameScreen extends ScreenBase {
             JumpGameStats.INSTANCE.updateHighestFinishedLevel(level);
             JumpGameStats.INSTANCE.updateLevelStars(level, stars);
 
+            if (adService.isSupported()) {
+                adService.show();
+            }
+
             setScreen(new FinishScreen(getGame(), level, score, ttl, totalScore, stars),
-                    new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth, // TODO this animation does not seem to be visible anymore (iOS, Desktop). Not yet tested on Android.
+                    new ScaleScreenTransition(Cfg.SCREEN_TRANSITION_TIME, Interpolation.smooth,
                             true, goalCenterPosition));
         }
 
@@ -72,6 +86,15 @@ public class GameScreen extends ScreenBase {
             int count = JumpGameStats.INSTANCE.incrementTotalBeers();
             JumpGame.getGameServiceManager().checkAndUnlockBeerAchievement(count);
         }
+
+        @Override
+        public void gameOver() {
+            if (adService.isSupported()
+                    // not always show an ad after game over to make it a little less annoying
+                    && MathUtils.random() < 0.33f) {
+                adService.show();
+            }
+        }
     };
 
     /**
@@ -81,6 +104,7 @@ public class GameScreen extends ScreenBase {
         super(game);
         this.level = level;
         this.gameToResume = null;
+        this.adService = ((JumpGame) game).getAdService();
         JumpGameStats.INSTANCE.updateLastStartedLevel(level);
     }
 
@@ -91,6 +115,7 @@ public class GameScreen extends ScreenBase {
         super(game);
         this.level = JumpGameStats.INSTANCE.getLastStartedLevel();
         this.gameToResume = JumpGame.getSavedDataHandle();
+        this.adService = ((JumpGame) game).getAdService();
     }
 
     @Override

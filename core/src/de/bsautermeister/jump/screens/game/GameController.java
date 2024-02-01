@@ -636,6 +636,8 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         munichRatio = 0f;
+
+        screenCallbacks.start();
     }
 
     private void initMap(int level) {
@@ -739,6 +741,9 @@ public class GameController  implements BinarySerializable, Disposable {
         }
 
         if (player.isDead() && player.getStateTimer() > 3f) {
+            if (state != GameState.GAME_OVER) {
+                screenCallbacks.gameOver();
+            }
             state = GameState.GAME_OVER;
         }
 
@@ -1254,7 +1259,7 @@ public class GameController  implements BinarySerializable, Disposable {
     public void save() {
         // don't do anything in case player is dead, kind of dead or level is finished
         if (player.isDead() || player.isDrowning() || player.isVictory() || gameIsCanceled) {
-            LOG.error("Did NOT save game state");
+            LOG.info("Did NOT save game state");
             JumpGame.deleteSavedData();
             return;
         }

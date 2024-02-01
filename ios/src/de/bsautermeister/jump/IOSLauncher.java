@@ -9,6 +9,8 @@ import org.robovm.apple.foundation.NSDictionary;
 import org.robovm.apple.foundation.NSString;
 import org.robovm.apple.uikit.UIApplication;
 
+import de.bsautermeister.jump.services.NoopAdService;
+import de.bsautermeister.jump.services.NoopRateService;
 import de.golfgl.gdxgamesvcs.NoGameServiceClient;
 
 public class IOSLauncher extends IOSApplication.Delegate {
@@ -18,13 +20,19 @@ public class IOSLauncher extends IOSApplication.Delegate {
         config.orientationLandscape = true;
         config.orientationPortrait = false;
 
-        return new IOSApplication(new JumpGame(new GameEnv() {
-            @Override
-            public String getVersion() {
-                NSDictionary<NSString, ?> infoDictionary = NSBundle.getMainBundle().getInfoDictionary();
-                return infoDictionary.get(new NSString("CFBundleShortVersionString")).toString();
-            }
-        }, new NoGameServiceClient()), config);
+        return new IOSApplication(
+                new JumpGame(
+                        new GameEnv() {
+                            @Override
+                            public String getVersion() {
+                                NSDictionary<NSString, ?> infoDictionary = NSBundle.getMainBundle().getInfoDictionary();
+                                return infoDictionary.get(new NSString("CFBundleShortVersionString")).toString();
+                            }
+                        },
+                        new NoGameServiceClient(),
+                        new NoopRateService(),
+                        new NoopAdService()),
+                config);
     }
 
     public static void main(String[] argv) {

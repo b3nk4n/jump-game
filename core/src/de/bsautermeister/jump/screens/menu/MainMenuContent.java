@@ -1,9 +1,13 @@
 package de.bsautermeister.jump.screens.menu;
 
+import static de.bsautermeister.jump.assets.Styles.ImageButton.PRIVACY;
+import static de.bsautermeister.jump.assets.Styles.ImageButton.STAR;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -25,8 +29,11 @@ public class MainMenuContent extends Table {
 
     private final Callbacks callbacks;
 
-    public MainMenuContent(AssetManager assetManager, Callbacks callbacks) {
+    private final boolean privacyOptionRequired;
+
+    public MainMenuContent(AssetManager assetManager, Callbacks callbacks, boolean privacyOptionRequired) {
         this.callbacks = callbacks;
+        this.privacyOptionRequired = privacyOptionRequired;
         initialize(assetManager);
     }
 
@@ -38,15 +45,29 @@ public class MainMenuContent extends Table {
         setFillParent(true);
 
         defaults()
+                .pad(8f);
+
+        Table contentTable = new Table();
+        contentTable.defaults()
                 .padLeft(Cfg.BUTTON_HORIZONTAL_PAD)
                 .padRight(Cfg.BUTTON_HORIZONTAL_PAD)
                 .padTop(Cfg.BUTTON_VERTICAL_PAD)
                 .padBottom(Cfg.BUTTON_VERTICAL_PAD);
+        add(contentTable).expand().row();
+
+        Table rightFooterTable = new Table();
+        rightFooterTable.defaults().pad(8f);
+        rightFooterTable.addAction(Actions.sequence(
+                Actions.alpha(0f),
+                Actions.delay(3.0f),
+                Actions.alpha(1f, 0.5f)
+        ));
+        add(rightFooterTable).right();
 
         String gameTitle = i18n.get(Language.GAME);
         AnimatedLabel title = new AnimatedLabel(skin, Styles.Label.TITLE, Float.MAX_VALUE, gameTitle.length())
                 .typeText(gameTitle);
-        add(title)
+        contentTable.add(title)
                 .pad(Cfg.TITLE_PAD)
                 .row();
 
@@ -64,7 +85,7 @@ public class MainMenuContent extends Table {
                 Actions.show()
         ));
         delay += DELAY_OFFSET;
-        add(playButton)
+        contentTable.add(playButton)
                 .row();
 
         if (JumpGame.hasSavedData()) {
@@ -81,7 +102,7 @@ public class MainMenuContent extends Table {
                     Actions.show()
             ));
             delay += DELAY_OFFSET;
-            add(continueButton)
+            contentTable.add(continueButton)
                     .row();
         }
 
@@ -99,7 +120,7 @@ public class MainMenuContent extends Table {
                     Actions.show()
             ));
             delay += DELAY_OFFSET;
-            add(aboutButton)
+            contentTable.add(aboutButton)
                     .row();
         }
 
@@ -115,8 +136,28 @@ public class MainMenuContent extends Table {
                 Actions.delay(delay),
                 Actions.show()
         ));
-        add(aboutButton)
+        contentTable.add(aboutButton)
                 .row();
+
+        if (privacyOptionRequired) {
+            ImageButton privacyOptionButton = new ImageButton(skin, PRIVACY);
+            privacyOptionButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    callbacks.privacyClicked();
+                }
+            });
+            rightFooterTable.add(privacyOptionButton);
+        }
+
+        final ImageButton rateButton = new ImageButton(skin, STAR);
+        rateButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                callbacks.rateClicked();
+            }
+        });
+        rightFooterTable.add(rateButton);
 
         pack();
     }
@@ -126,5 +167,7 @@ public class MainMenuContent extends Table {
         void continueClicked();
         void achievementsClicked();
         void aboutClicked();
+        void rateClicked();
+        void privacyClicked();
     }
 }

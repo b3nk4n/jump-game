@@ -25,6 +25,11 @@ public interface Styles {
         String TITLE = "title";
     }
 
+    interface ImageButton {
+        String STAR = "star";
+        String PRIVACY = "privacy";
+    }
+
     interface Fonts {
         String FONT_S = "font_s";
         String FONT_M = "font_m";
